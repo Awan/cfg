@@ -1,0 +1,8 @@
+keycode 115 = Super_L
+keycode 110 = Escape
+keycode   9 = Escape asciitilde Escape
+!keycode 115 = Alt_L
+!keycode 29 115 = KP_Insert
+!keycode 118 = grave
+keycode 49 = grave Insert grave
+

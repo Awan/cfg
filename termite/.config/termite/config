@@ -1,0 +1,60 @@
+[options]
+font = Tamzen medium normal 17
+#font = Tamsyn 15
+boldfont =  TamzenForPowerline10x20b 17
+#font = Terminus Bold Italic 15
+#font = Terminus italic 17
+#font = Terminus 14
+
+
+
+allow_bold = on
+bold_is_bright = on
+browser = /usr/bin/google-chrome-stable
+clickable_url = on
+hyperlinks = on
+cursor_blink = off
+cursor_shape = underline
+dynamic_title = off
+filter_unmatched_urls = on
+mouse_autohide = on
+fullscreen = off
+scrollback_lines = -1
+scrollbar = off
+scroll_on_keystroke = on
+scroll_on_output = off
+search_wrap = on
+size_hints = on
+urgent_on_bell = on
+borderColor =     #000030
+highlight = #2f2f2f
+
+[colors]
+
+# Colorscheme I use for 256 color support
+
+color0     =      #3f3f3f
+color1     =      #705050
+color2     =      #00b45a
+color3     =      #dfcf8f
+color4     =      #506070
+color5     =      #dc8cc3
+color6     =      #8cd0d3
+color7     =      #dcdccc
+color8     =      #709080
+color9     =      #cc5454
+color10    =      #4d9f4d
+color11    =      #f0dfaf
+color12    =      #4186be
+color13    =      #ec93d3
+color14    =      #93e0e3
+color15    =      #ffffff
+
+
+# background and cursor etc.
+
+foreground = #dcdccc
+foreground_bold = #ffffff
+#background = rgba(63, 63, 63, 0.8)
+background = #000000
+#vim: ft=dosini cms=#%s

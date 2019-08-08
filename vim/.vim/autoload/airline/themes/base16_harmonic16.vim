@@ -1,0 +1,1 @@
+/usr/share/vim/addons/autoload/airline/themes/base16_harmonic16.vim
