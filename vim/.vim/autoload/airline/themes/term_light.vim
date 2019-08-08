@@ -1,0 +1,1 @@
+/usr/share/vim/addons/autoload/airline/themes/term_light.vim

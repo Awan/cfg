@@ -1,0 +1,297 @@
+#!/bin/bash
+
+function mkd {
+  mkdir -p "$@" && cd "$_";
+}
+
+# for webm videos to mp4
+
+function webm2mp4 {
+  for file in *.webm
+  do 
+    ffmpeg -i "$file" "`basename "$file" .webm` .mp4"
+  done
+}
+
+# mp4 to mp3
+
+function mp42mp3 {
+  CURRENTMP4HERE=$(ls *.mp4 | wc -l)
+  notify-send "Found $CURRENTMP4HERE mp4s, gonna convert them now, be patient"
+
+
+
+  for file in *.mp4
+  do
+    ffmpeg -y -i "$file" "`basename "$file" .mp4`.mp3"
+  done
+
+
+
+  notify-send "All $CURRENTMP4HERE mp4s have been converted to mp3s and now we are moving them to your music dir"
+  CURRENTMP3INMPD=$(ls $HOME/mus/*.mp3 | wc -l)
+
+
+
+  notify-send "You have $CURRENTMP3INMPD mp3s in your database"
+  mv *.mp3 ~/mus/ -v
+
+
+
+  notify-send "All mp3s have been moved to music dir."
+  TOTAL=$(($CURRENTMP3INMPD + $CURRENTMP4HERE))
+
+
+  notify-send "You have got $CURRENTMP4HERE new mp3s. Now you have $TOTAL songs in database. Enjoy your music"
+}
+
+# 
+
+function speedup {
+  base=$(basename $1)
+  ext="${base##*.}"
+  base="${base%.*}"
+
+  ffmpeg -i $1 -filter:v "setpts=0.5*PTS"  $base'_speed.'$ext
+
+
+  notify-send "your video has got speed. Enjoy"
+}
+
+
+# Jobs mail
+
+function apply {
+
+  gpg -dq $HOME/bin/misc/job.gpg | mutt -s "Applying for Job"  $1
+}
+
+# Encrypt a file to myself
+
+function ei {
+  gpg -er C19D1580 $1
+}
+
+# Decrypt a file
+
+function di {
+  gpg -do $1 $2
+}
+
+# Bakchod
+
+function bakchod {
+  echo "$@" | tr a-zA-Z n-za-mN-ZA-M 
+}
+
+# mail 
+
+function alish {
+  mutt -s Important bar <<<"$@";
+}
+
+# mailto
+
+function mailto {
+  $TERMINAL -e mutt "$@"
+}
+
+function aa_256 () 
+{ 
+  local o= i= x=`tput op` cols=`tput cols` y= oo= yy=;
+  y=`printf %$(($cols-6))s`;
+  yy=${y// /=};
+  for i in {0..256};
+  do
+    o=00${i};
+    oo=`echo -en "setaf ${i}\nsetab ${i}\n"|tput -S`;
+    echo -e "${o:${#o}-3:3} ${oo}${yy}${x}";
+  done
+}
+
+function aa_c666 () 
+{ 
+  local r= g= b= c= CR="`tput sgr0;tput init`" C="`tput op`" n="\n\n\n" t="  " s="    ";
+  echo -e "${CR}${n}";
+  function c666 () 
+  { 
+    local b= g=$1 r=$2;
+    for ((b=0; b<6; b++))
+    do
+      c=$(( 16 + ($r*36) + ($g*6) + $b ));
+      echo -en "setaf ${c}\nsetab ${c}\n" | tput -S;
+      echo -en "${s}";
+    done
+  };
+function c666b () 
+{ 
+  local g=$1 r=;
+  for ((r=0; r<6; r++))
+  do
+    echo -en " `c666 $g $r`${C} ";
+  done
+};
+for ((g=0; g<6; g++))
+do
+  c666b=`c666b $g`;
+  echo -e " ${c666b}";
+  echo -e " ${c666b}";
+  echo -e " ${c666b}";
+  echo -e " ${c666b}";
+  echo -e " ${c666b}";
+done;
+echo -e "${CR}${n}${n}"
+}
+
+ht() { 
+  a=$(cat); curl -X POST -s -d "$a" https://hastebin.com/documents | awk -F '"' '{print "https://hastebin.com/"$4}' | xclip ; 
+}
+
+function fs() {
+  if du -b /dev/null > /dev/null 2>&1; then
+    local arg=-sbh;
+  else
+    local arg=-sh;
+  fi
+  if [[ -n "$@" ]]; then
+    du $arg -- "$@";
+  else
+    du $arg .[^.]* ./*;
+    fi;
+  }
+
+function dataurl() {
+  local mimeType=$(file -b --mime-type "$1");
+  if [[ $mimeType == text/* ]]; then
+    mimeType="${mimeType};charset=utf-8";
+  fi
+  echo "data:${mimeType};base64,$(openssl base64 -in "$1" | tr -d '\n')";
+}
+
+function escape() {
+  printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u);
+  # print a newline unless we’re piping the output to another program
+  if [ -t 1 ]; then
+    echo ""; # newline
+    fi;
+  }
+
+function v() {
+  if [ $# -eq 0 ]; then
+    vim .;
+  else
+    vim "$@";
+    fi;
+  }
+
+function o() {
+  if [ $# -eq 0 ]; then
+    ranger .;
+  else
+    ranger "$@";
+    fi;
+  }
+
+function tre() {
+  tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
+}
+
+ix() {
+  local opts
+  local OPTIND
+  [ -f "$HOME/.netrc" ] && opts='-n'
+  while getopts ":hd:i:n:" x; do
+    case $x in
+      h) echo "ix [-d ID] [-i ID] [-n N] [opts]"; return;;
+      d) $echo curl $opts -X DELETE ix.io/$OPTARG; return;;
+      i) opts="$opts -X PUT"; local id="$OPTARG";;
+      n) opts="$opts -F read:1=$OPTARG";;
+    esac
+  done
+  shift $(($OPTIND - 1))
+  [ -t 0 ] && {
+    local filename="$1"
+      shift
+      [ "$filename" ] && {
+        curl $opts -F f:1=@"$filename" $* ix.io/$id
+              return
+            }
+          echo "^C to cancel, ^D to send."
+        }
+      curl $opts -F f:1='<-' $* ix.io/$id
+    }
+shebang() {
+    if i=$(which $1);
+    then
+        printf '#!/usr/bin/env %s\n\n' $1 > $2 && chmod 755 $2 && vim + $2 && chmod 755 $2;
+    else
+        echo "'which' could not find $1, is it in your \$PATH?";
+    fi;
+    # in case the new script is in path, this throw out the command hash table and
+    # start over  (man zshbuiltins)
+    rehash
+}
+function webcam () {
+    mplayer -cache 128 -tv driver=v4l2:width=350:height=350 -vo xv tv:// -noborder -geometry "+1340+445" -ontop -quiet 2>/dev/null >/dev/null
+}
+
+function psg () {
+  pass generate "$1"  --clip
+}
+
+function weather() {
+    curl wttr.in/"$1"
+}
+
+function cnsp () {
+  sudo /etc/rc.d/crond stop
+  sleep 1
+  sudo /etc/rc.d/crond status
+}
+
+function cnst () {
+  sudo /etc/rc.d/crond start
+  sleep 1
+  sudo /etc/rc.d/crond status
+}
+
+function ko () { 
+  a=$(cat)
+  curl -X POST -s -d "raw:$a" http://kopy.io/documents | awk -F '"' '{print "http://kopy.io/"$4}'
+}
+
+function pb()
+{
+    local url='https://paste.c-net.org/'
+    if (( $# )); then
+        local file
+        for file; do
+            curl -s \
+                --data-binary @"$file" \
+                --header "X-FileName: ${file##*/}" \
+                "$url"
+        done
+    else
+        curl -s --data-binary @- "$url"
+    fi
+}
+function pg()
+{
+    local url='https://paste.c-net.org/'
+    if (( $# )); then
+        local arg
+        for arg; do
+            curl -s "${url}${arg##*/}"
+        done
+    else
+        local arg
+        while read -r arg; do
+            curl -s "${url}${arg##*/}"
+        done
+    fi
+}
+
+function ap()
+{
+  sudo apt update && sudo apt upgrade 
+}

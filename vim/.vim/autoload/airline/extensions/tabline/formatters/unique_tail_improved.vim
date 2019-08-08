@@ -1,0 +1,1 @@
+/usr/share/vim/addons/autoload/airline/extensions/tabline/formatters/unique_tail_improved.vim

@@ -1,0 +1,127 @@
+126
+Tamsyn10x20b.pcf -misc-tamsyn-bold-r-normal--20-145-100-100-c-100-iso8859-1
+Tamsyn10x20r.pcf -misc-tamsyn-medium-r-normal--20-145-100-100-c-100-iso8859-1
+Tamsyn5x9b.pcf -misc-tamsyn-bold-r-normal--9-65-100-100-c-50-iso8859-1
+Tamsyn5x9r.pcf -misc-tamsyn-medium-r-normal--9-65-100-100-c-50-iso8859-1
+Tamsyn6x12b.pcf -misc-tamsyn-bold-r-normal--12-87-100-100-c-60-iso8859-1
+Tamsyn6x12r.pcf -misc-tamsyn-medium-r-normal--12-87-100-100-c-60-iso8859-1
+Tamsyn7x13b.pcf -misc-tamsyn-bold-r-normal--13-94-100-100-c-70-iso8859-1
+Tamsyn7x13r.pcf -misc-tamsyn-medium-r-normal--13-94-100-100-c-70-iso8859-1
+Tamsyn7x14b.pcf -misc-tamsyn-bold-r-normal--14-101-100-100-c-70-iso8859-1
+Tamsyn7x14r.pcf -misc-tamsyn-medium-r-normal--14-101-100-100-c-70-iso8859-1
+Tamsyn8x15b.pcf -misc-tamsyn-bold-r-normal--15-108-100-100-c-80-iso8859-1
+Tamsyn8x15r.pcf -misc-tamsyn-medium-r-normal--15-108-100-100-c-80-iso8859-1
+Tamsyn8x16b.pcf -misc-tamsyn-bold-r-normal--16-116-100-100-c-80-iso8859-1
+Tamsyn8x16r.pcf -misc-tamsyn-medium-r-normal--16-116-100-100-c-80-iso8859-1
+Tamzen10x20b-20.fnt -misc-tamzen10x20b 20.fnt-medium-r-normal--22-96-75-165-p-60-ascii-0
+Tamzen10x20b-20.fnt -misc-tamzen10x20b 20.fnt-medium-r-normal--22-96-75-165-p-60-iso10646-1
+Tamzen10x20b-20.fnt -misc-tamzen10x20b 20.fnt-medium-r-normal--22-96-75-165-p-60-iso8859-1
+Tamzen10x20b.pcf -misc-tamzen-bold-r-normal--20-145-100-100-c-100-iso8859-1
+Tamzen10x20r-20.fnt -misc-tamzen10x20r 20.fnt-medium-r-normal--22-96-75-165-p-60-ascii-0
+Tamzen10x20r-20.fnt -misc-tamzen10x20r 20.fnt-medium-r-normal--22-96-75-165-p-60-iso10646-1
+Tamzen10x20r-20.fnt -misc-tamzen10x20r 20.fnt-medium-r-normal--22-96-75-165-p-60-iso8859-1
+Tamzen10x20r.pcf -misc-tamzen-medium-r-normal--20-145-100-100-c-100-iso8859-1
+Tamzen5x9b-9.fnt -misc-tamzen5x9b 9.fnt-medium-r-normal--10-48-75-150-p-60-ascii-0
+Tamzen5x9b-9.fnt -misc-tamzen5x9b 9.fnt-medium-r-normal--10-48-75-150-p-60-iso10646-1
+Tamzen5x9b-9.fnt -misc-tamzen5x9b 9.fnt-medium-r-normal--10-48-75-150-p-60-iso8859-1
+Tamzen5x9b.pcf -misc-tamzen-bold-r-normal--9-65-100-100-c-50-iso8859-1
+Tamzen5x9r-9.fnt -misc-tamzen5x9r 9.fnt-medium-r-normal--10-48-75-150-p-60-ascii-0
+Tamzen5x9r-9.fnt -misc-tamzen5x9r 9.fnt-medium-r-normal--10-48-75-150-p-60-iso10646-1
+Tamzen5x9r-9.fnt -misc-tamzen5x9r 9.fnt-medium-r-normal--10-48-75-150-p-60-iso8859-1
+Tamzen5x9r.pcf -misc-tamzen-medium-r-normal--9-65-100-100-c-50-iso8859-1
+Tamzen6x12b-12.fnt -misc-tamzen6x12b 12.fnt-medium-r-normal--13-58-75-162-p-60-ascii-0
+Tamzen6x12b-12.fnt -misc-tamzen6x12b 12.fnt-medium-r-normal--13-58-75-162-p-60-iso10646-1
+Tamzen6x12b-12.fnt -misc-tamzen6x12b 12.fnt-medium-r-normal--13-58-75-162-p-60-iso8859-1
+Tamzen6x12b.pcf -misc-tamzen-bold-r-normal--12-87-100-100-c-60-iso8859-1
+Tamzen6x12r-12.fnt -misc-tamzen6x12r 12.fnt-medium-r-normal--13-58-75-162-p-60-ascii-0
+Tamzen6x12r-12.fnt -misc-tamzen6x12r 12.fnt-medium-r-normal--13-58-75-162-p-60-iso10646-1
+Tamzen6x12r-12.fnt -misc-tamzen6x12r 12.fnt-medium-r-normal--13-58-75-162-p-60-iso8859-1
+Tamzen6x12r.pcf -misc-tamzen-medium-r-normal--12-87-100-100-c-60-iso8859-1
+Tamzen7x13b-13.fnt -misc-tamzen7x13b 13.fnt-medium-r-normal--14-67-75-150-p-60-ascii-0
+Tamzen7x13b-13.fnt -misc-tamzen7x13b 13.fnt-medium-r-normal--14-67-75-150-p-60-iso10646-1
+Tamzen7x13b-13.fnt -misc-tamzen7x13b 13.fnt-medium-r-normal--14-67-75-150-p-60-iso8859-1
+Tamzen7x13b.pcf -misc-tamzen-bold-r-normal--13-94-100-100-c-70-iso8859-1
+Tamzen7x13r-13.fnt -misc-tamzen7x13r 13.fnt-medium-r-normal--14-67-75-150-p-60-ascii-0
+Tamzen7x13r-13.fnt -misc-tamzen7x13r 13.fnt-medium-r-normal--14-67-75-150-p-60-iso10646-1
+Tamzen7x13r-13.fnt -misc-tamzen7x13r 13.fnt-medium-r-normal--14-67-75-150-p-60-iso8859-1
+Tamzen7x13r.pcf -misc-tamzen-medium-r-normal--13-94-100-100-c-70-iso8859-1
+Tamzen7x14b-14.fnt -misc-tamzen7x14b 14.fnt-medium-r-normal--15-68-75-160-p-60-ascii-0
+Tamzen7x14b-14.fnt -misc-tamzen7x14b 14.fnt-medium-r-normal--15-68-75-160-p-60-iso10646-1
+Tamzen7x14b-14.fnt -misc-tamzen7x14b 14.fnt-medium-r-normal--15-68-75-160-p-60-iso8859-1
+Tamzen7x14b.pcf -misc-tamzen-bold-r-normal--14-101-100-100-c-70-iso8859-1
+Tamzen7x14r-14.fnt -misc-tamzen7x14r 14.fnt-medium-r-normal--15-68-75-160-p-60-ascii-0
+Tamzen7x14r-14.fnt -misc-tamzen7x14r 14.fnt-medium-r-normal--15-68-75-160-p-60-iso10646-1
+Tamzen7x14r-14.fnt -misc-tamzen7x14r 14.fnt-medium-r-normal--15-68-75-160-p-60-iso8859-1
+Tamzen7x14r.pcf -misc-tamzen-medium-r-normal--14-101-100-100-c-70-iso8859-1
+Tamzen8x15b-15.fnt -misc-tamzen8x15b 15.fnt-medium-r-normal--16-77-75-150-p-60-ascii-0
+Tamzen8x15b-15.fnt -misc-tamzen8x15b 15.fnt-medium-r-normal--16-77-75-150-p-60-iso10646-1
+Tamzen8x15b-15.fnt -misc-tamzen8x15b 15.fnt-medium-r-normal--16-77-75-150-p-60-iso8859-1
+Tamzen8x15b.pcf -misc-tamzen-bold-r-normal--15-108-100-100-c-80-iso8859-1
+Tamzen8x15r-15.fnt -misc-tamzen8x15r 15.fnt-medium-r-normal--16-77-75-150-p-60-ascii-0
+Tamzen8x15r-15.fnt -misc-tamzen8x15r 15.fnt-medium-r-normal--16-77-75-150-p-60-iso10646-1
+Tamzen8x15r-15.fnt -misc-tamzen8x15r 15.fnt-medium-r-normal--16-77-75-150-p-60-iso8859-1
+Tamzen8x15r.pcf -misc-tamzen-medium-r-normal--15-108-100-100-c-80-iso8859-1
+Tamzen8x16b-16.fnt -misc-tamzen8x16b 16.fnt-medium-r-normal--17-77-75-159-p-60-ascii-0
+Tamzen8x16b-16.fnt -misc-tamzen8x16b 16.fnt-medium-r-normal--17-77-75-159-p-60-iso10646-1
+Tamzen8x16b-16.fnt -misc-tamzen8x16b 16.fnt-medium-r-normal--17-77-75-159-p-60-iso8859-1
+Tamzen8x16b.pcf -misc-tamzen-bold-r-normal--16-116-100-100-c-80-iso8859-1
+Tamzen8x16r-16.fnt -misc-tamzen8x16r 16.fnt-medium-r-normal--17-77-75-159-p-60-ascii-0
+Tamzen8x16r-16.fnt -misc-tamzen8x16r 16.fnt-medium-r-normal--17-77-75-159-p-60-iso10646-1
+Tamzen8x16r-16.fnt -misc-tamzen8x16r 16.fnt-medium-r-normal--17-77-75-159-p-60-iso8859-1
+Tamzen8x16r.pcf -misc-tamzen-medium-r-normal--16-116-100-100-c-80-iso8859-1
+TamzenForPowerline10x20b-20.fnt -misc-tamzenforpowerline10x20b 20.fnt-medium-r-normal--22-96-75-165-p-60-ascii-0
+TamzenForPowerline10x20b-20.fnt -misc-tamzenforpowerline10x20b 20.fnt-medium-r-normal--22-96-75-165-p-60-iso10646-1
+TamzenForPowerline10x20b-20.fnt -misc-tamzenforpowerline10x20b 20.fnt-medium-r-normal--22-96-75-165-p-60-iso8859-1
+TamzenForPowerline10x20b.pcf -misc-tamzenforpowerline-bold-r-normal--20-145-100-100-c-100-iso8859-1
+TamzenForPowerline10x20r-20.fnt -misc-tamzenforpowerline10x20r 20.fnt-medium-r-normal--22-96-75-165-p-60-ascii-0
+TamzenForPowerline10x20r-20.fnt -misc-tamzenforpowerline10x20r 20.fnt-medium-r-normal--22-96-75-165-p-60-iso10646-1
+TamzenForPowerline10x20r-20.fnt -misc-tamzenforpowerline10x20r 20.fnt-medium-r-normal--22-96-75-165-p-60-iso8859-1
+TamzenForPowerline10x20r.pcf -misc-tamzenforpowerline-medium-r-normal--20-145-100-100-c-100-iso8859-1
+TamzenForPowerline5x9b-9.fnt -misc-tamzenforpowerline5x9b 9.fnt-medium-r-normal--10-48-75-150-p-60-ascii-0
+TamzenForPowerline5x9b-9.fnt -misc-tamzenforpowerline5x9b 9.fnt-medium-r-normal--10-48-75-150-p-60-iso10646-1
+TamzenForPowerline5x9b-9.fnt -misc-tamzenforpowerline5x9b 9.fnt-medium-r-normal--10-48-75-150-p-60-iso8859-1
+TamzenForPowerline5x9b.pcf -misc-tamzenforpowerline-bold-r-normal--9-65-100-100-c-50-iso8859-1
+TamzenForPowerline5x9r-9.fnt -misc-tamzenforpowerline5x9r 9.fnt-medium-r-normal--10-48-75-150-p-60-ascii-0
+TamzenForPowerline5x9r-9.fnt -misc-tamzenforpowerline5x9r 9.fnt-medium-r-normal--10-48-75-150-p-60-iso10646-1
+TamzenForPowerline5x9r-9.fnt -misc-tamzenforpowerline5x9r 9.fnt-medium-r-normal--10-48-75-150-p-60-iso8859-1
+TamzenForPowerline5x9r.pcf -misc-tamzenforpowerline-medium-r-normal--9-65-100-100-c-50-iso8859-1
+TamzenForPowerline6x12b-12.fnt -misc-tamzenforpowerline6x12b 12.fnt-medium-r-normal--13-58-75-162-p-60-ascii-0
+TamzenForPowerline6x12b-12.fnt -misc-tamzenforpowerline6x12b 12.fnt-medium-r-normal--13-58-75-162-p-60-iso10646-1
+TamzenForPowerline6x12b-12.fnt -misc-tamzenforpowerline6x12b 12.fnt-medium-r-normal--13-58-75-162-p-60-iso8859-1
+TamzenForPowerline6x12b.pcf -misc-tamzenforpowerline-bold-r-normal--12-87-100-100-c-60-iso8859-1
+TamzenForPowerline6x12r-12.fnt -misc-tamzenforpowerline6x12r 12.fnt-medium-r-normal--13-58-75-162-p-60-ascii-0
+TamzenForPowerline6x12r-12.fnt -misc-tamzenforpowerline6x12r 12.fnt-medium-r-normal--13-58-75-162-p-60-iso10646-1
+TamzenForPowerline6x12r-12.fnt -misc-tamzenforpowerline6x12r 12.fnt-medium-r-normal--13-58-75-162-p-60-iso8859-1
+TamzenForPowerline6x12r.pcf -misc-tamzenforpowerline-medium-r-normal--12-87-100-100-c-60-iso8859-1
+TamzenForPowerline7x13b-13.fnt -misc-tamzenforpowerline7x13b 13.fnt-medium-r-normal--14-67-75-150-p-60-ascii-0
+TamzenForPowerline7x13b-13.fnt -misc-tamzenforpowerline7x13b 13.fnt-medium-r-normal--14-67-75-150-p-60-iso10646-1
+TamzenForPowerline7x13b-13.fnt -misc-tamzenforpowerline7x13b 13.fnt-medium-r-normal--14-67-75-150-p-60-iso8859-1
+TamzenForPowerline7x13b.pcf -misc-tamzenforpowerline-bold-r-normal--13-94-100-100-c-70-iso8859-1
+TamzenForPowerline7x13r-13.fnt -misc-tamzenforpowerline7x13r 13.fnt-medium-r-normal--14-67-75-150-p-60-ascii-0
+TamzenForPowerline7x13r-13.fnt -misc-tamzenforpowerline7x13r 13.fnt-medium-r-normal--14-67-75-150-p-60-iso10646-1
+TamzenForPowerline7x13r-13.fnt -misc-tamzenforpowerline7x13r 13.fnt-medium-r-normal--14-67-75-150-p-60-iso8859-1
+TamzenForPowerline7x13r.pcf -misc-tamzenforpowerline-medium-r-normal--13-94-100-100-c-70-iso8859-1
+TamzenForPowerline7x14b-14.fnt -misc-tamzenforpowerline7x14b 14.fnt-medium-r-normal--15-68-75-160-p-60-ascii-0
+TamzenForPowerline7x14b-14.fnt -misc-tamzenforpowerline7x14b 14.fnt-medium-r-normal--15-68-75-160-p-60-iso10646-1
+TamzenForPowerline7x14b-14.fnt -misc-tamzenforpowerline7x14b 14.fnt-medium-r-normal--15-68-75-160-p-60-iso8859-1
+TamzenForPowerline7x14b.pcf -misc-tamzenforpowerline-bold-r-normal--14-101-100-100-c-70-iso8859-1
+TamzenForPowerline7x14r-14.fnt -misc-tamzenforpowerline7x14r 14.fnt-medium-r-normal--15-68-75-160-p-60-ascii-0
+TamzenForPowerline7x14r-14.fnt -misc-tamzenforpowerline7x14r 14.fnt-medium-r-normal--15-68-75-160-p-60-iso10646-1
+TamzenForPowerline7x14r-14.fnt -misc-tamzenforpowerline7x14r 14.fnt-medium-r-normal--15-68-75-160-p-60-iso8859-1
+TamzenForPowerline7x14r.pcf -misc-tamzenforpowerline-medium-r-normal--14-101-100-100-c-70-iso8859-1
+TamzenForPowerline8x15b-15.fnt -misc-tamzenforpowerline8x15b 15.fnt-medium-r-normal--16-77-75-150-p-60-ascii-0
+TamzenForPowerline8x15b-15.fnt -misc-tamzenforpowerline8x15b 15.fnt-medium-r-normal--16-77-75-150-p-60-iso10646-1
+TamzenForPowerline8x15b-15.fnt -misc-tamzenforpowerline8x15b 15.fnt-medium-r-normal--16-77-75-150-p-60-iso8859-1
+TamzenForPowerline8x15b.pcf -misc-tamzenforpowerline-bold-r-normal--15-108-100-100-c-80-iso8859-1
+TamzenForPowerline8x15r-15.fnt -misc-tamzenforpowerline8x15r 15.fnt-medium-r-normal--16-77-75-150-p-60-ascii-0
+TamzenForPowerline8x15r-15.fnt -misc-tamzenforpowerline8x15r 15.fnt-medium-r-normal--16-77-75-150-p-60-iso10646-1
+TamzenForPowerline8x15r-15.fnt -misc-tamzenforpowerline8x15r 15.fnt-medium-r-normal--16-77-75-150-p-60-iso8859-1
+TamzenForPowerline8x15r.pcf -misc-tamzenforpowerline-medium-r-normal--15-108-100-100-c-80-iso8859-1
+TamzenForPowerline8x16b-16.fnt -misc-tamzenforpowerline8x16b 16.fnt-medium-r-normal--17-77-75-159-p-60-ascii-0
+TamzenForPowerline8x16b-16.fnt -misc-tamzenforpowerline8x16b 16.fnt-medium-r-normal--17-77-75-159-p-60-iso10646-1
+TamzenForPowerline8x16b-16.fnt -misc-tamzenforpowerline8x16b 16.fnt-medium-r-normal--17-77-75-159-p-60-iso8859-1
+TamzenForPowerline8x16b.pcf -misc-tamzenforpowerline-bold-r-normal--16-116-100-100-c-80-iso8859-1
+TamzenForPowerline8x16r-16.fnt -misc-tamzenforpowerline8x16r 16.fnt-medium-r-normal--17-77-75-159-p-60-ascii-0
+TamzenForPowerline8x16r-16.fnt -misc-tamzenforpowerline8x16r 16.fnt-medium-r-normal--17-77-75-159-p-60-iso10646-1
+TamzenForPowerline8x16r-16.fnt -misc-tamzenforpowerline8x16r 16.fnt-medium-r-normal--17-77-75-159-p-60-iso8859-1
+TamzenForPowerline8x16r.pcf -misc-tamzenforpowerline-medium-r-normal--16-116-100-100-c-80-iso8859-1
