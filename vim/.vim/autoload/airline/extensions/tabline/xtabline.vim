@@ -1,1 +1,0 @@
-/usr/share/vim/addons/autoload/airline/extensions/tabline/xtabline.vim
