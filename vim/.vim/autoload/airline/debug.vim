@@ -1,1 +1,0 @@
-/usr/share/vim/addons/autoload/airline/debug.vim
