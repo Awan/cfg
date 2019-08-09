@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+
+import sys
+from mutagen._tools.mid3v2 import entry_point
+if __name__ == "__main__":
+    sys.exit(entry_point())
+

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+cd /tmp 
+scripts_dir="/tmp"
+script_file="$scripts_dir/$1"
+
+
+if [[ -f $script_file ]]; then
+	vim +3 $script_file
+else
+	echo '#!/usr/bin/env python3
+	
+
+
+
+		' > $script_file
+	chmod +x $script_file
+	vim +3 $script_file
+fi

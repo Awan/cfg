@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "https://api.whatsapp.com/send?phone="$1
