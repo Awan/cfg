@@ -1,0 +1,7 @@
+#!/bin/bash
+	
+#slock  &
+
+# After screen is locked for 15 seconds, we will turn off the screen.
+#
+#sleep 5 && pgrep slock && xset dpms force off

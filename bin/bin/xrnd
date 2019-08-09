@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+
+# A xrandr helper
+
+import subprocess as sb
+
+check_current_screens = sb.check_output('xrandr -q', shell=True, universal_newlines=True)
+
+if r'HDMI2 connected' in check_current_screens:
+    sb.run('xrandr --output HDMI2 --auto --output HDMI2 --auto --above eDP1', shell=True)
+else:
+    sb.run('xrandr --output HDMI2 --off', shell=True)

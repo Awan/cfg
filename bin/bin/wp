@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+
+pars = argparse.ArgumentParser()
+pars.add_argument('number', type=int, help='phone number without + or 00, just with country code')
+args = pars.parse_args()
+
+x = f"https://api.whatsapp.com/send?phone={args.number}"
+os.system(f"echo {x} | xclip")
