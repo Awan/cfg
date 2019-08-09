@@ -1,0 +1,11 @@
+[Unit]
+Description=Auto change the wallpapers
+After=xorg.target
+
+[Service]
+Environment=DISPLAY=:0
+ExecStart=/home/ak/bin/beautify /home/ak/pix/wall/collection 300
+Restart=always
+
+[Install]
+WantedBy=default.target

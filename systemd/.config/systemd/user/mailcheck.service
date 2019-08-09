@@ -1,0 +1,10 @@
+[Unit]
+Description=Mail Checker Daemon 
+
+[Service]
+Environment=DISPLAY=:0
+ExecStart=/home/ak/bin/mailchecker
+Restart=always
+
+[Install]
+WantedBy=default.target
