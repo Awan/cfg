@@ -104,4 +104,5 @@ command! -range=% CL  <line1>,<line2>w !curl -F 'clbin=<-' https://clbin.com | t
 command! -range=% VP  <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net | tr -d '\n' | xclip -i -selection clipboard
 command! -range=% PB  <line1>,<line2>w !curl -F 'c=@-' https://ptpb.pw/ | sed -n 's/^url: //p' | xclip
 command! -range=% TB  <line1>,<line2>w !fb
+command! -range=% GT <line1>,<line2>w !gist-paste -c
 " vim: set ft=vim :
