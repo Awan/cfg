@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+fortune -a | cowsay
+
 for f in  ~/.zsh/*(DN); do source $f; done
 
 # GpG Agent with SSH support
