@@ -4,3 +4,4 @@ mpd/
 bin/bin
 mutt/.config/mutt/credentials/
 mpv/.config/mpv/watch_later/
+elinks/.elinks/bookmarks
