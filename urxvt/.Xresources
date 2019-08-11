@@ -208,3 +208,102 @@ polybar*color14:      #83a5a1
 polybar*color7:       #a8b298
 polybar*color15:      #ccd2be
 
+!! XTERM
+
+xterm*font:             -misc-tamzen-medium-r-normal--20-145-100-100-c-100-iso8859-1, xft:DejaVu Sans Mono for Powerline-10, xft:Terminus (TTF) for Powerline:MediumForPowerline:size=13:antialias=true, xft:Inconsolata\ For\ Powerline:size=13:antialias=true
+!                         xft:Consolas:size=13, \
+!                         xft:Inconsolata for Powerline, \
+!                         xft:Terminess Powerline:size=12, \
+!                        -misc-tamzenforpowerline-medium-r-normal--20-145-100-100-c-100-iso10646-1, \
+!                        xterm: -misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso10646-1, \
+!                        xft:PowerlineSymbols,\
+!                        xft:FontAwesome:size=28:minspace=False,\
+!                        xft:DejaVu Sans:pixelsize=18
+!xterm*boldFont:          -misc-tamzenforpowerline-bold-r-normal--20-145-100-100-c-100-iso8859-1, xft:Inconsolata:bold:size=16:antialias=true, xft:DejaVu Sans:bold:size=16:antialias=true, xft:FontAwesome
+xterm*termName:                       xterm-256color
+xterm*geometry:                       96x30
+!xterm*chdir:                          /home/ak
+xterm*reverseVideo:                   0
+xterm*loginShell:                     1
+!xterm*multiClickTime:                 0.1
+!xterm*jumpScroll:                     1
+!xterm*skipScroll:                     1
+!xterm*pastableTabs:                   1
+!xterm*scrollstyle:                    plain
+!xterm*scrollBar:                      0
+!xterm*scrollBar_right:                0
+!xterm*scrollBar_floating:             0
+!xterm*scrollBar_align:                centre
+!xterm*thickness:                      0
+!xterm*scrollTtyOutput:                0
+!xterm*scrollTtyKeypress:              1
+!xterm*scrollWithBuffer:               1
+!xterm*inheritPixmap:                  0
+!xterm*transparent:                    0
+!xterm*tintColor:                      #ffffff
+!xterm*shading:                        145
+!xterm*blurRadius:                     1x65
+!xterm*fading:                         25
+!xterm*fadeColor:                      #008B8B
+!xterm*utmpInhibit:                    1
+!xterm*urgentOnBell:                   1
+!xterm*visualBell:                     0
+!xterm*mapAlert:                       0
+!xterm*meta8:                          0
+!xterm*mouseWheelScrollPage:           0
+!xterm*tripleclickwords:               0
+!xterm*insecure:                       0
+!xterm*cursorUnderline:                1
+!xterm*cursorBlink:                    0
+!xterm*pointerBlank:                   1
+!xterm*colorBD:                        color
+!xterm*colorIT:                        color
+!xterm*colorUL:                        color
+!xterm*colorRV:                        color
+!xterm*underlineColor:                 color
+!xterm*scrollColor:                    color
+!xterm*troughColor:                    color
+!xterm*highlightColor:                 color
+!xterm*highlightTextColor:             color
+!xterm*cursorColor:                    color
+!xterm*cursorColor2:                   color
+!xterm*pointerColor:                   color
+!xterm*pointerColor2:                  color
+!xterm*borderColor:                    color
+!xterm*path:                           /home/abdullah/pix
+!xterm*backgroundPixmap:               /home/abdullah/pix/bg.jpg;op=keep-aspect
+!xterm*iconFile:                       /usr/share/pixmaps/terminal-tango.svg
+!xterm*pointerShape:                   ul_angle
+!xterm*italicFont:                     fontname
+!xterm*boldItalicFont:                 fontname
+!xterm*intensityStyles:                1
+!xterm*inputMethod:                    ibus
+!xterm*preeditType:                    xim
+!xterm*imLocale:                       ja_JP.EUC-JP
+!xterm*imFont:                         xft:Fura Code for Powerline:17
+!xterm*title:                          rxvt
+!xterm*iconName:                       rxvt
+!xterm*saveLines:                      9999
+!xterm*buffered:                       1
+!xterm*depth:                          96
+!xterm*visual:                         0x20
+!xterm*transient-for:
+!xterm*override-redirect:              0
+!xterm*hold:                           1
+!xterm*externalBorder:                 15
+!xterm*internalBorder:                 15
+!xterm*borderLess:                     0
+!xterm*lineSpace:                      0
+!xterm*letterSpace:                    0
+!xterm*skipBuiltinGlyphs:              0
+!xterm*pointerBlankDelay:              1
+!xterm*backspacekey:                   
+!xterm*deletekey:                      
+!xterm*print-pipe:                     cat >  /tmp/$(echo urxvt.dump.$(date +'%Y%M%d%H%m%S'))
+!xterm*modifier:                       
+xterm*cutchars:                       \"()*,<>[]{}|''"\
+!xterm*cutchars:                       BACKSLASH '"'&()*,;<=>?@[]^{|}
+
+!xterm*
+!xterm*answerbackString:               
+!xterm*secondaryScreen:                1

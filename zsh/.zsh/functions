@@ -295,3 +295,8 @@ function ap()
 {
   sudo apt update && sudo apt upgrade 
 }
+
+function gc()
+{
+  git commit $* -m $1
+}
