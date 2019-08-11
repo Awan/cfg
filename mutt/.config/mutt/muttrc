@@ -24,7 +24,7 @@ source ~/.config/mutt/aliases
 # IMAP 
 set imap_user = "abdullah@abdullah.today"
 set imap_pass = $my_pass
-set folder    = imaps://mail.privateemail.com:993
+set folder    = imaps://imap.yandex.com:993
 set from      ="abdullah@abdullah.today"
 set realname  = "Abdullah"
 set spoolfile = +INBOX
@@ -40,7 +40,7 @@ set message_cachedir = ~/.cache/mutt
 set smtp_pass = $my_pass
 set my_user = "abdullah@abdullah.today"
 set use_from = yes
-set smtp_url = smtps://$imap_user@mail.privateemail.com
+set smtp_url = smtps://$imap_user@smtp.yandex.com:465/
 set ssl_starttls = yes
 set ssl_force_tls = yes
 set record = +Sent
