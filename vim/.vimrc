@@ -1,5 +1,8 @@
 set nocompatible
 source ~/.vim/autoload/supertab.vim
+colorscheme zenburn
+let g:zenburn_old_Visual = 1
+cmap w!! %!sudo tee > /dev/null %
 set nu
 set hlsearch
 autocmd! bufwritepost ~/.Xresources !xrdb -load ~/.Xresources
@@ -21,10 +24,13 @@ set nu
 set ai
 set sc
 set noincsearch
+set completeopt=menuone
+set ignorecase
+set smartcase
+set cursorline
 set noexpandtab
 set backspace=indent,eol,start
 syntax on
-colorscheme koehler
 set mouse=a
 let mapleader=" "
 set hidden
@@ -48,6 +54,7 @@ set undofile
 set undodir=~/.vim/undodir
 set viminfo='10,\"100,:20,%,n~/.viminfo
 set nobackup
+set showcmd
 set whichwrap=b,s,<,>,[,]
 set laststatus=2
 let g:powerline_pycmd = 'py3'
