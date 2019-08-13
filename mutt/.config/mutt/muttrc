@@ -1,231 +1,60 @@
-#           ▐▌   ▐▌            
-#▐█▙█▖▐▌ ▐▌▐███ ▐███  █▟█▌ ▟██▖
-#▐▌█▐▌▐▌ ▐▌ ▐▌   ▐▌   █▘  ▐▛  ▘
-#▐▌█▐▌▐▌ ▐▌ ▐▌   ▐▌   █   ▐▌   
-#▐▌█▐▌▐▙▄█▌ ▐▙▄  ▐▙▄  █   ▝█▄▄▌
-#▝▘▀▝▘ ▀▀▝▘  ▀▀   ▀▀  ▀    ▝▀▀ 
-#                              
-#                              
-#  ▓▓▓▓▓▓▓▓▓▓
-# ░▓ Author ▓ AK <abdullah@abdullah.today>
-# ░▓▓▓▓▓▓▓▓▓▓
-# ░░░░░░░░░░
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+#
 
-
-
-# Passwords and other files
 
 source "gpg -dq $HOME/.config/mutt/credentials/ak.gpg |"
-source $HOME/.config/mutt/gpgforak.rc
 source $HOME/.config/mutt/colorrc
+source $HOME/.config/mutt/gpgforak.rc
 source ~/.config/mutt/aliases
-#source $HOME/.config/mutt/sidebar
 
-# IMAP 
-set imap_user = "abdullah@abdullah.today"
-set imap_pass = $my_pass
 set folder    = imaps://imap.yandex.com:993
 set from      ="abdullah@abdullah.today"
-set realname  = "Abdullah"
-set spoolfile = +INBOX
-set imap_check_subscribed 
-unset imap_passive
-set imap_keepalive = 300
-set mail_check     = 60
-set postponed      = +Drafts
-set header_cache   = ~/.cache/mutt
-set message_cachedir = ~/.cache/mutt
-
-# SMTP
-set smtp_pass = $my_pass
 set my_user = "abdullah@abdullah.today"
-set use_from = yes
-set smtp_url = smtps://$imap_user@smtp.yandex.com:465/
-set ssl_starttls = yes
-set ssl_force_tls = yes
-set record = +Sent
+set imap_pass = $my_pass
+set imap_user = "abdullah@abdullah.today"
+set realname  = "Abdullah"
+set smtp_pass = $my_pass
+set smtp_url = smtps://$imap_user@smtp.yandex.com:465
 
-# Reading
+alternative_order text/enriched text/plain text/html 
+alternative_order text/plain text/enriched text/html
 alternative_order text/plain text/html
+auto_view application/pgp-encrypted
 auto_view text/html
-set smart_wrap
-set sort = threads
-set sort_aux = reverse-last-date-received
-set index_format = "%4C %Z %{%b %d} %-15.15L %?M?(#%03M)&(%4l)? %?y?{%.20y}? %?g?{%.20g} ?%s (%c)"
-set status_chars  = " *%A"
-set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
-set pager_index_lines = 8 
-color index red white "~v~(~F)!~N"
-color header blue default "^(Subject)"
-
-# Mailcap
-set mailcap_path = ~/.config/mutt/mailcap
-
-# Charset
-set send_charset = utf-8
-
-# Editor
-set editor = 'vim + -c "set textwidth=66" -c "set wrap" -c "set spell spelllang=en"'
-
-# Don't ask me stupid questions please ;-)
-set include = yes
-set fast_reply 
-
-# Sidebar
-set sidebar_visible = yes
-set sidebar_width = 35
-color sidebar_new yellow default
-
-
-
-
-
-
-
-
-set ssl_force_tls = yes
-set ssl_starttls = yes
-unset imap_passive
-set imap_keepalive = 300
-set pager=vim
-set prompt_after=no
-set editor=vim
-set visual=vim
-#set editor="nvim -c 'normal! }' -c 'redraw'"
-set sidebar_format = "%B%?F? [%F]?%* %?N?%N/?%S"
-set mail_check_stats = yes
-set mail_check = 120
-set sidebar_visible = yes
-set fast_reply = yes
-set include = yes
-set message_cachedir=~/.cache/mutt/messages
-set pgp_use_gpg_agent = yes
-
-# key bindings
-
-bind pager j next-line
-bind pager k previous-line
+bind attach <return> view-mailcap
+bind attach,index G last-entry
+bind attach,index g first-entry
 bind attach,index,pager \CD next-page
 bind attach,index,pager \CU previous-page
-bind pager g top
-bind pager G bottom
-bind attach,index g first-entry
-bind attach,index G last-entry
 bind browser $ check-new
 bind index   \t   next-unread
 bind index  ,\t previous-unread
-
-# GpG
-set pgp_autosign = yes
-set pgp_sign_as = 0x5CBC7BC7
-set pgp_timeout = 3600
-set crypt_autosign = yes
-set crypt_replyencrypt = yes
-#set pgp_autoencrypt = yes 
-set pgp_replysign = yes
-set pgp_replysignencrypted = yes
-set postpone_encrypt = yes
-set postpone_encrypt_as = F91E4C1A
-
-# HTML
-#alternative_order text/plain text/html
-alternative_order text/enriched text/plain text/html 
-auto_view text/html
-auto_view application/pgp-encrypted
-set rfc2047_parameters = yes
-
-# Signature
-set signature = ~/.config/mutt/signature
-set sig_dashes = no
-
-# mailcap
-set mailcap_path = ~/.config/mutt/mailcap
-
-# Attribution
-set attribution="* %n <%a> [%(%y%m%d %H:%M)]:"
-
-# User-Agent
-my_hdr User-Agent: 'Eat your heart out, Windows Lusers'
-
-# status bar
-set status_chars = " *%A"
-set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
-
-# Misc settings
-set wait_key = no
-set mbox_type = Maildir
-set timeout = 3
-#set sleep_time = 0
-#set mail_check = 0
-set delete
-unset confirmappend
-set quit
-unset mark_old
-set beep_new
-set pipe_decode
-set thorough_search
-#set sidebar_delim = '  │'
-set sidebar_width = 24
-color sidebar_new color221 color233
-#ignore *
-#unignore from: to: cc: date: subject:
-unhdr_order *
-hdr_order from: to: cc: date: subject:
-set date_format = "%d/%m"
-set index_format = "[%Z]  %D  %-20.20F  %s"
-set sort = threads
-set sort_aux = reverse-last-date-received
-set uncollapse_jump
-set sort_re
-set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
-#bind index gg       first-entry
+bind index <space>  collapse-thread
+bind index <tab>    sync-mailbox
 bind index G        last-entry
 bind index R        group-reply
-bind index <tab>    sync-mailbox
-bind index <space>  collapse-thread
-macro index \Cr "T~U<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" "mark all messages as read"
-macro index O "<shell-escape>mbsync -Va<enter>"           "run offlineimap to sync all mail"
+bind index,pager <down>   sidebar-next
+bind index,pager <right>  sidebar-open
+bind index,pager <up>     sidebar-prev
+bind pager G bottom
+bind pager R  group-reply
+bind pager g top
+bind pager gg top
+bind pager j  next-line
+bind pager k  previous-line
+color header blue default "^(Subject)"
+color index red white "~v~(~F)!~N"
+color sidebar_new yellow default
+hdr_order from: to: cc: date: subject:
 macro index C "<copy-message>?<toggle-mailboxes>" "copy a message to a mailbox"
 macro index M "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"
-bind index,pager <down>   sidebar-next
-bind index,pager <up>     sidebar-prev
-bind index,pager <right>  sidebar-open
-
-# Pager options
-set pager_index_lines = 10 # number of index lines to show
-set pager_context = 3      # number of context lines to show
-set pager_stop             # don't go to next message automatically
-set menu_scroll            # scroll in menus
-set tilde                  # show tildes like in vim
-unset markers              # no ugly plus signs
-
-set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
-alternative_order text/plain text/enriched text/html
-
-# Pager keybindings
-bind pager k  previous-line
-bind pager j  next-line
-bind pager gg top
-bind pager G  bottom
-bind pager R  group-reply
-# View attachments properly.
-bind attach <return> view-mailcap
-
-# Call urlview to open links
-#macro index \cb "\
-#:set my_tmp_pipe_decode=\$pipe_decode\n\
-#:set pipe_decode\n\
-#|urlview\n\
-#:set pipe_decode=\$my_tmp_pipe_decode\n\
-#:unset my_tmp_pipe_decode\n" \
-#'call urlview to extract URLs out of a message'
-
-#macro index \cb |urlview\n
-#macro pager \cb |urlview\n
-
+macro index O "<shell-escape>mbsync -Va<enter>"           "run offlineimap to sync all mail"
+macro index \Cr "T~U<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" "mark all messages as read"
 macro index,pager U "<enter-command>set pipe_decode = yes<enter><pipe-message>urlview<enter><enter-command>set pipe_decode = no<enter>""view URLs"
-#ignore *
-#unignore from to cc subject resent-from reply-to x-mailer
+my_hdr User-Agent: 'Eat your heart out, Windows Lusers'
 set abort_noattach = "no"
 set abort_noattach_regexp = "attach"
 set abort_nosubject = "ask-yes"
@@ -253,4 +82,68 @@ set bounce_delivered = "no"
 set braille_friendly = "no"
 set browser_abbreviate_mailboxes = "yes"
 set certificate_file = "~/.config/mutt/certs"
+set crypt_autosign = yes
+set crypt_replyencrypt = yes
+set date_format = "%d/%m"
+set delete
+set editor = 'vim + -c "set textwidth=66" -c "set wrap" -c "set spell spelllang=en"'
+set fast_reply = yes
+set header_cache   = ~/.cache/mutt
+set imap_check_subscribed 
+set imap_keepalive = 300
+set include = yes
+set index_format = "%4C %Z %{%b %d} %-15.15L %?M?(#%03M)&(%4l)? %?y?{%.20y}? %?g?{%.20g} ?%s (%c)"
+set mail_check     = 60
+set mail_check_stats = yes
+set mailcap_path = ~/.config/mutt/mailcap
+set mbox_type = Maildir
+set menu_scroll            # scroll in menus
+set message_cachedir=~/.cache/mutt/messages
+set pager=vim
+set pager_context = 3      # number of context lines to show
+set pager_index_lines = 8 
+set pager_stop             # don't go to next message automatically
+set pgp_autosign = yes
+set pgp_replysign = yes
+set pgp_replysignencrypted = yes
+set pgp_sign_as = 0x5CBC7BC7
+set pgp_timeout = 3600
+set pgp_use_gpg_agent = yes
+set pipe_decode
+set postpone_encrypt = yes
+set postpone_encrypt_as = 0xE6E81782
+set postponed      = +Drafts
+set prompt_after=no
+set quit
+set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
+set record = +Sent
+set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
+set rfc2047_parameters = yes
+set send_charset = utf-8
+set sidebar_format = "%B%?F? [%F]?%* %?N?%N/?%S"
+set sidebar_visible = yes
+set sidebar_width = 24
+set sig_dashes = no
+set signature = ~/.config/mutt/signature
+set smart_wrap
+set sort = threads
+set sort_aux = reverse-last-date-received
+set sort_re
+set spoolfile = +INBOX
+set ssl_force_tls = yes
+set ssl_starttls = yes
+set status_chars  = " *%A"
+set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
+set thorough_search
+set tilde                  # show tildes like in vim
+set timeout = 3
+set uncollapse_jump
+set use_from = yes
+set visual=vim
+set wait_key = no
+unhdr_order *
+unset confirmappend
+unset imap_passive
+unset mark_old
+unset markers              # no ugly plus signs
 # vim: filetype=muttrc
