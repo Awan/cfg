@@ -1,4 +1,5 @@
 alias ls='ls --color=auto'
+alias ipp='curl ipinfo.io/ip'
 alias ta='\tmux a -t'
 alias nc='ncmpcpp 2>/dev/null'
 alias gr='grep -r'
