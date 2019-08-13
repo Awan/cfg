@@ -1,7 +1,9 @@
 set nocompatible
 source ~/.vim/autoload/supertab.vim
-colorscheme zenburn
 let g:zenburn_old_Visual = 1
+let g:zenburn_high_contrast = 1
+let g:zenburn_force_dark_Background = 1
+colorscheme zenburn
 cmap w!! %!sudo tee > /dev/null %
 set nu
 set hlsearch
@@ -57,6 +59,10 @@ set nobackup
 set showcmd
 set whichwrap=b,s,<,>,[,]
 set laststatus=2
+set shell=bash\ -i
+let g:instant_markdown_browser = "/usr/bin/google-chrome-stable --new-window"
+let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
+let g:instant_markdown_port = 47479
 let g:powerline_pycmd = 'py3'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'default'
@@ -90,6 +96,7 @@ let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
 :noremap <leader>u :w<Home>silent <End> !urlview<CR>
+autocmd BufEnter *.md exe 'noremap <F5> :!google-chrome-stable %:p<CR>'
 autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
      \   exe "normal! g`\"" |
