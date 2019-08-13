@@ -1,0 +1,12 @@
+[Desktop Entry]
+Categories=Office;Network;Email;
+Comment=Simple text-based Mail User Agent
+Comment[de]=Einfaches, Text-basiertes Mailprogramm
+Exec=urxvtc -e mutt 
+Icon=mutt
+Name=mutt
+Name[de]=Mutt
+MimeType=x-scheme-handler/mailto;
+NoDisplay=false
+Terminal=true
+Type=Application
