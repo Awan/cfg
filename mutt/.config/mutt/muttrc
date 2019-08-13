@@ -86,7 +86,7 @@ set crypt_autosign = yes
 set crypt_replyencrypt = yes
 set date_format = "%d/%m"
 set delete
-set editor = 'vim + -c "set textwidth=66" -c "set wrap" -c "set spell spelllang=en"'
+set editor = vim
 set fast_reply = yes
 set header_cache   = ~/.cache/mutt
 set imap_check_subscribed 
