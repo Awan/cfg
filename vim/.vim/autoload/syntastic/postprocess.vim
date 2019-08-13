@@ -1,0 +1,1 @@
+/usr/share/vim/addons/autoload/syntastic/postprocess.vim

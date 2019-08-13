@@ -1,0 +1,1 @@
+/usr/share/vim/addons/syntax_checkers/dockerfile/dockerfile_lint.vim
