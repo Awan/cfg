@@ -1,0 +1,1 @@
+/usr/share/vim/addons/syntax_checkers/erlang/erlang_check_file.erl

@@ -1,0 +1,1 @@
+/usr/share/vim/addons/syntax_checkers/c/clang_check.vim

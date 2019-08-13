@@ -123,8 +123,7 @@ URxvt*pointerBlankDelay:              1
 !URxvt*deletekey:                      
 URxvt*print-pipe:                     cat >  /tmp/$(echo urxvt.dump.$(date +'%Y%M%d%H%m%S'))
 URxvt*modifier:                       
-!URxvt*cutchars:                       \"()*,<>[]{}|''"\
-URxvt*cutchars:                       BACKSLASH '"'&()*,;<=>?@[]^{|}
+URxvt*cutchars:                       BACKSLASH " " '"'&()*,;<=>?@[]^{|}\"()*,<>[]{}|''"\
 
 !URxvt*
 !URxvt*answerbackString:               
@@ -210,7 +209,9 @@ polybar*color15:      #ccd2be
 
 !! XTERM
 
-xterm*font:             -misc-tamzen-medium-r-normal--20-145-100-100-c-100-iso8859-1, xft:DejaVu Sans Mono for Powerline-10, xft:Terminus (TTF) for Powerline:MediumForPowerline:size=13:antialias=true, xft:Inconsolata\ For\ Powerline:size=13:antialias=true
+!xterm*font:             -misc-tamzen-medium-r-normal--20-145-100-100-c-100-iso8859-1, xft:DejaVu Sans Mono for Powerline-10, xft:Terminus (TTF) for Powerline:MediumForPowerline:size=13:antialias=true, xft:Inconsolata\ For\ Powerline:size=13:antialias=true
+!xterm*font:              -misc-tamzen-medium-r-normal--20-145-100-100-c-100-iso8859-1
+xterm*faceName:         -misc-tamzen-medium-r-normal--20-145-100-100-c-100-iso8859-1
 !                         xft:Consolas:size=13, \
 !                         xft:Inconsolata for Powerline, \
 !                         xft:Terminess Powerline:size=12, \
