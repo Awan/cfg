@@ -237,6 +237,9 @@ function webcam () {
 
 function psg () {
   pass generate "$1"  --clip
+  cd ~/.password-store
+  git push
+  cd -
 }
 
 function weather() {
@@ -293,7 +296,7 @@ function pg()
 
 function ap()
 {
-  sudo apt update && sudo apt upgrade 
+  sudo apt update && sudo apt full-upgrade 
 }
 
 function gc()
