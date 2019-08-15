@@ -46,7 +46,7 @@
     Shift+Alt + equal 
 
 #Screeenshot
-"import -window root /tmp/foo.png"
+"import -window root /tmp/foo.png; cat /tmp/foo.png | xclip -selection clipboard -t image/png"
     m:0x0 + c:107
     Print 
 
