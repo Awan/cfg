@@ -303,3 +303,11 @@ function gc()
 {
   git commit $* -m $1
 }
+
+function gct()
+{
+  token=$(pass gist/github)
+  curl -u Awan:$token -X POST https://api.github.com/user/repos -d '{"name":"'$1'"}'
+  git init
+  git remote add origin git@github.com:Awan/$1.git
+}
