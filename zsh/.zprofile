@@ -21,6 +21,5 @@ if [[ ! $DISPLAY && "$(tty)" = "/dev/tty1" ]]; then
 fi   
 
 if [[ ! $DISPLAY && "$(tty)" != "/dev/tty1" ]]; then
-  tmux has-session -t $USER || tmux new-session -t $USER && tmux attach-session -t $USER
-  sudo loadkeys ~/.loadkeysrc
+  tmux has-session -t $USER || tmux new-session -t $USER && tmux attach-session -t $USER ; sudo loadkeys $HOME/.loadkeysrc ;
 fi

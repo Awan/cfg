@@ -1,4 +1,4 @@
-#!/usr/bin/env python3 
+#!/usr/bin/env/python3
 
 #  ▓▓▓▓▓▓▓▓▓▓ 
 # ░▓ Author ▓ Abdullah <https://abdullah.today/> 
@@ -37,7 +37,7 @@ def update(msgs_were):
         print(0)
 
     if msgs_were < msgs and msgs > 0:
-        sp.run(['canberra-gtk-play', '-f', '/home/ak/bin/music4scripts/phansi.wav'])
+        sp.run(['mpv', '--no-video', '/home/ak/bin/music4scripts/phansi.wav'])
     if msgs > 0:
         with open('/tmp/newmails/newmails', 'w+') as f:
            f.write(str(msgs) + ' new mails arrived!') 
