@@ -42,7 +42,7 @@ URxvt*boldFont:          -misc-tamzenforpowerline-bold-r-normal--20-145-100-100-
                         xft:Inconsolata:bold:size=16:antialias=true, \
                         xft:DejaVu Sans:bold:size=16:antialias=true, \
                         xft:FontAwesome
-URxvt*termName:                       rxvt-256color
+URxvt*termName:                       rxvt-unicode-256color
 URxvt*geometry:                       96x30
 !URxvt*chdir:                          /home/ak
 URxvt*reverseVideo:                   0
