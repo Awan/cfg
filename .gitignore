@@ -6,3 +6,6 @@ mutt/.config/mutt/credentials/
 mpv/.config/mpv/watch_later/
 elinks/.elinks/bookmarks
 gpg/
+fonts/.local/share/ranger/
+fonts/.local/share/recently-used.xbel
+fonts/.local/share/xorg/
