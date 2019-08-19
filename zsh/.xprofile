@@ -42,6 +42,6 @@ redshift &
 nm-applet &   # available from network-manager-gnome
 #xrandr --output HDMI2 --auto --output HDMI2 --auto --left-of eDP1 &
 #~/.config/polybar/launch.sh &
-xrandr --output eDP-1 --mode 1600x900 --panning 1920x1080 --scale 1.2x1.2
+#xrandr --output eDP-1 --mode 1600x900 --panning 1920x1080 --scale 1.2x1.2
 
 [ -z $TMUX ] && tmux new-session -s $USER -d 
