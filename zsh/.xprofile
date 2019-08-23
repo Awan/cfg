@@ -28,7 +28,7 @@ xrdb -load ~/.Xresources
 #export LC_ALL=en_US.UTF-8 
 dunst -c $HOME/.config/dunst/dunstrc &
 urxvtd -q -o -f &
-compton --config ~/.config/compton/compton.conf &
+compton --config ~/.config/compton/compton.conf -b &
 
 xset dpms 180 &
 xss-lock -- slock &
