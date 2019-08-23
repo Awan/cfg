@@ -3,7 +3,7 @@ source ~/.vim/autoload/supertab.vim
 let g:zenburn_old_Visual = 1
 let g:zenburn_high_contrast = 1
 let g:zenburn_force_dark_Background = 1
-colorscheme zenburn
+colorscheme distinguished
 cmap w!! %!sudo tee > /dev/null %
 set nu
 set hlsearch

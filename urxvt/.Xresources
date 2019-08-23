@@ -107,7 +107,7 @@ URxvt*intensityStyles:                1
 !URxvt*iconName:                       rxvt
 URxvt*saveLines:                      9999
 URxvt*buffered:                       1
-URxvt*depth:                          96
+URxvt*depth:                          32
 URxvt*visual:                         0x20
 !URxvt*transient-for:
 URxvt*override-redirect:              0
@@ -137,6 +137,7 @@ URxvt*iso14755:                       1
 URxvt*iso14755_52:                    1
 !URxvt*xrm:                            
 !URxvt*keysym.sym:                     
+URxvt*background:                     rgba:0000/0000/0200/c800
 !URxvt*background.border:              
 !URxvt*background.expr:                
 !URxvt*background.interval:            
