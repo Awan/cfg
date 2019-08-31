@@ -3,13 +3,14 @@ source ~/.vim/autoload/supertab.vim
 let g:zenburn_old_Visual = 1
 let g:zenburn_high_contrast = 1
 let g:zenburn_force_dark_Background = 1
-colorscheme distinguished
+set fo+=w
+colorscheme wombat256dave
 cmap w!! %!sudo tee > /dev/null %
 set nu
 set hlsearch
 autocmd! bufwritepost ~/.Xresources !xrdb -load ~/.Xresources
 autocmd! bufwritepost ~/.zshrc	!source ~/.zshrc
-autocmd! bufwritepost ~/.zsh/custom-alias !source ~/.zsh/custom-alias
+autocmd! bufwritepost ~/cfg/zsh/.zsh/custom-alias !source ~/cfg/zsh/.zsh/custom-alias
 set nocp
 "execute pathogen#infect()
 filetype on
@@ -40,7 +41,7 @@ set history=10000
 filetype indent on
 filetype plugin on
 set linebreak 
-set nowrap
+set wrap
 set tabstop=2
 set shiftwidth=2
 set expandtab
@@ -59,7 +60,6 @@ set nobackup
 set showcmd
 set whichwrap=b,s,<,>,[,]
 set laststatus=2
-set shell=bash\ -i
 let g:instant_markdown_browser = "/usr/bin/google-chrome-stable --new-window"
 let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
 let g:instant_markdown_port = 47479
@@ -113,10 +113,22 @@ endfunction
 "  autocmd BufWinEnter * call ResCur()
 "augroup END
 autocmd FileType python set breakindentopt=shift:4
-command! -range=% SP  <line1>,<line2>w !curl -F 'sprunge=<-' http://sprunge.us | tr -d '\n' | xclip -i -selection clipboard
-command! -range=% CL  <line1>,<line2>w !curl -F 'clbin=<-' https://clbin.com | tr -d '\n' | xclip -i -selection clipboard
-command! -range=% VP  <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net | tr -d '\n' | xclip -i -selection clipboard
 command! -range=% PB  <line1>,<line2>w !curl -F 'c=@-' https://ptpb.pw/ | sed -n 's/^url: //p' | xclip
 command! -range=% TB  <line1>,<line2>w !fb
-command! -range=% GT <line1>,<line2>w !gist-paste -c
+command! -range=% GT <line1>,<line2>w !gist-paste -c -p 
+
+" comfortable navigation
+noremap <buffer> j gj
+noremap <buffer> k gk
+noremap <buffer> gj j
+noremap <buffer> gk k
+
+
+" some pastebins commands
+" for GUI apps like browsers, paste the URL with CTRL+v
+command! -range=% CL  <line1>,<line2>w !curl -F 'clbin=<-' https://clbin.com | tr -d '\n' | xclip -i -selection clipboard
+
+" Another good pastebin same as CTRL+v paste.
+command! -range=% VP  <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net | tr -d '\n' | xclip -i -selection clipboard
+
 " vim: set ft=vim :
