@@ -63,6 +63,7 @@ set alias_format = "%4n %2f %t %-10a   %r"
 set allow_8bit = "yes"
 set allow_ansi = "no"
 set arrow_cursor = "yes"
+set text_flowed
 set ascii_chars = "no"
 set askbcc = "no"
 set askcc = "no"
@@ -86,7 +87,7 @@ set crypt_autosign = yes
 set crypt_replyencrypt = yes
 set date_format = "%d/%m"
 set delete
-set editor = vim
+set editor = 'vim +/^$ "+setlocal fo+=w spell" +noh'
 set fast_reply = yes
 set header_cache   = ~/.cache/mutt
 set imap_check_subscribed 
