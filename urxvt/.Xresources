@@ -94,7 +94,7 @@ URxvt*pointerBlank:                   1
 !URxvt*borderColor:                    color
 URxvt*path:                           /home/abdullah/pix
 !URxvt*backgroundPixmap:               /home/abdullah/pix/bg.jpg;op=keep-aspect
-URxvt*iconFile:                       /usr/share/pixmaps/terminal-tango.svg
+URxvt*iconFile:                       /usr/share/pixmaps/urxvt.xpm
 URxvt*pointerShape:                   ul_angle
 !URxvt*italicFont:                     fontname
 !URxvt*boldItalicFont:                 fontname
