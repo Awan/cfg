@@ -136,10 +136,10 @@ docs/_build/
 target/
 
 #  CRUX
-Pkgfile
-.footprint
-.md5sum
-.signature
+#Pkgfile
+#.footprint
+#.md5sum
+#.signature
 
 # Fonts
 fonts/.local/share/fonts/.uuid
