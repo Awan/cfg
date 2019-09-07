@@ -311,3 +311,4 @@ function gct()
   git init
   git remote add origin git@github.com:Awan/$1.git
 }
+
