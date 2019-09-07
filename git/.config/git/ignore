@@ -147,3 +147,7 @@ fonts/.local/share/fonts/fonts.dir
 
 # Systemd junk
 systemd/.config/systemd/user/default.target.wants/*
+systemd/.config/systemd/user/sockets.target.wants/*
+
+# iPython
+ipython/.ipython/profile_default/db/

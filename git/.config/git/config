@@ -37,8 +37,8 @@
 [alias]
 	last = log -1 HEAD
 	co = checkout
-    cob = checkout -b
-    cp = cherry-pick
+  cob = checkout -b
+  cp = cherry-pick
 	cm = checkout master
 	b = branch
 	lg = log --pretty=oneline --abbrev-commit

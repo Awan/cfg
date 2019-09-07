@@ -1,4 +1,5 @@
 set nocompatible
+set ruler
 source ~/.vim/autoload/supertab.vim
 let g:zenburn_old_Visual = 1
 let g:zenburn_high_contrast = 1
@@ -31,10 +32,11 @@ set completeopt=menuone
 set ignorecase
 set smartcase
 set cursorline
+set scrolloff=8
 set noexpandtab
 set backspace=indent,eol,start
 syntax on
-set mouse=a
+if has('mouse') | set mouse=a | endif 
 let mapleader=" "
 set hidden
 set history=10000
@@ -45,7 +47,7 @@ set wrap
 set tabstop=2
 set shiftwidth=2
 set expandtab
-set clipboard=unnamed
+set clipboard=unnamed,unnamedplus
 set ttyfast
 set smartindent
 set autoindent
@@ -108,6 +110,31 @@ function! ResCur()
   endif
 endfunction
 
+if !exists(":DiffOrig")
+  command DiffOrig vert new | set bt=nofile | r ++edit | 0d_ | diffthis 
+        \ wincmd p | diffthis
+endif
+
+" duplicate lines
+function! HighlightRepeats() range
+    let lineCounts = {}
+    let lineNum = a:firstline
+    while lineNum <= a:lastline
+        let lineText = getline(lineNum)
+        if lineText != ""
+            let lineCounts[lineText] = (has_key(lineCounts, lineText) ? lineCounts[lineText] : 0) + 1
+        endif
+        let lineNum = lineNum + 1
+    endwhile
+    exe 'syn clear Repeat'
+    for lineText in keys(lineCounts)
+        if lineCounts[lineText] >= 2
+            exe 'syn match Repeat "^' . escape(lineText, '".\^$*[]') . '$"'
+        endif
+    endfor
+endfunction
+command! -range=% HighlightRepeats <line1>,<line2>call HighlightRepeats()
+
 "augroup resCur
 "  autocmd!
 "  autocmd BufWinEnter * call ResCur()
@@ -130,5 +157,7 @@ command! -range=% CL  <line1>,<line2>w !curl -F 'clbin=<-' https://clbin.com | t
 
 " Another good pastebin same as CTRL+v paste.
 command! -range=% VP  <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net | tr -d '\n' | xclip -i -selection clipboard
+
+map <F3> :! ( urxvt & ) &>/dev/null &<CR><CR>
 
 " vim: set ft=vim :
