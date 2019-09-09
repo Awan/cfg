@@ -9,6 +9,7 @@ import subprocess as sp
 import imaplib
 import time
 import socket
+from pathlib import Path
 
 
 
@@ -16,17 +17,19 @@ import socket
 
 msgs_were = 0
 password_store = sp.check_output(['which', 'pass'])
+
 """ For DWM bar, you can create a directory and then if you get a mail,
 you will get a file created by python. You can use slstatus's module 'run_command' to show if a new mail has arrived.
 Example for slstatus:
     { run_command, "%s   ", "cat /tmp/newmails/newmails" },
 """
-sp.os.makedirs('/tmp/newmails', exist_ok=True)
+# sp.os.makedirs('/tmp/newmails', exist_ok=True)
 
 def update(msgs_were):
     user = 'abdullah@abdullah.today'
     completed_process = sp.run(['gpg', '-dq', '/home/ak/.config/mutt/credentials/abdullah.gpg'], check=True, stdout=sp.PIPE, stderr=sp.PIPE, encoding='utf-8')
     password = completed_process.stdout[:-1]
+    local_new_messages = len(sp.os.listdir(Path.home()/'.mail/INBOX/new'))
     box = imaplib.IMAP4_SSL('imap.yandex.com', 993)
     box.login(user, password)
     box.select()
@@ -37,13 +40,21 @@ def update(msgs_were):
         print(0)
 
     if msgs_were < msgs and msgs > 0:
+        sp.run(['/usr/bin/offlineimap', '-o'])
         sp.run(['mpv', '--no-video', '/home/ak/bin/music4scripts/phansi.wav'])
-    if msgs > 0:
-        with open('/tmp/newmails/newmails', 'w+') as f:
-           f.write(str(msgs) + ' new mails arrived!') 
-    elif msgs == 0:
-        with open('/tmp/newmails/newmails', 'w+') as f:
-            f.write('no mails!')
+
+    if msgs != local_new_messages:
+        sp.run(['/usr/bin/offlineimap', '-o'])
+
+
+""" Uncomment these lines if you don't use offlineimap to see  new mails
+"""
+#    if msgs > 0:
+#        with open('/tmp/newmails/newmails', 'w+') as f:
+#           f.write(str(msgs) + ' new mails arrived!') 
+#    elif msgs == 0:
+#        with open('/tmp/newmails/newmails', 'w+') as f:
+#            f.write('no mails!')
 
     return msgs
 
