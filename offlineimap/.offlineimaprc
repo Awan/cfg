@@ -1,0 +1,29 @@
+[general]
+accounts = abdullah
+starttls = yes
+ssl = yes
+pythonfile = ~/.config/mutt/credentials/imappwd.py
+maxsyncaccounts = 1
+
+[Account abdullah]
+localrepository = abdullah-local
+remoterepository = abdullah-remote
+postsynchook = notmuch new
+autorefresh = 0.5
+quick = 10
+
+[Repository abdullah-remote]
+auth_mechanisms = LOGIN
+type = IMAP
+remoteuser = abdullah@abdullah.today
+remotepasseval = mailpasswd("abdullah")
+remotehost = imap.yandex.com
+remoteport = 993
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+keepalive = 60
+holdconnectionopen = yes
+
+[Repository abdullah-local]
+type = Maildir
+localfolders = ~/.mail
+restoreatime = no
