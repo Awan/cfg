@@ -10,3 +10,4 @@ fonts/.local/share/ranger/
 fonts/.local/share/recently-used.xbel
 fonts/.local/share/xorg/
 ipython/.ipython/profile_default/startup/
+*.uuid
