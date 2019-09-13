@@ -12,21 +12,21 @@ video/*                  ; /usr/bin/mpv %s                             ; copious
 text/plain;                     urxvtc -name attach -e /usr/bin/vim -f %s;
 #text/plain;charset=us-ascii	less; needsterminal
 #text/*;                         less 
-application/msword;             libreoffice %s; copiousoutput
-application/vnd.msword;         libreoffice %s copiousoutput
-application/excel;              libreoffice %s; copiousoutput
-application/msexcel;            libreoffice %s; copiousoutput
-application/vnd.ms-excel;       libreoffice %s; copiousoutput
-application/x-excel;            libreoffice %s; copiousoutput
-application/x-msexcel;          libreoffice %s; copiousoutput
-application/vnd.ms-powerpoint;  libreoffice %s; copiousoutput
-application/x-mspowerpoint;     libreoffice %s; copiousoutput
-application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; libreoffice '%s';  description="Office Open XML Spreadsheet"; nametemplate=%s.xlsx
-application/ppt;                libreoffice %s; copiousoutput
+application/msword;             catdoc %s; copiousoutput
+application/vnd.msword;         catdoc %s copiousoutput
+application/excel;              catdoc %s; copiousoutput
+application/msexcel;            catdoc %s; copiousoutput
+application/vnd.ms-excel;       catdoc %s; copiousoutput
+application/x-excel;            catdoc %s; copiousoutput
+application/x-msexcel;          catdoc %s; copiousoutput
+application/vnd.ms-powerpoint;  catdoc %s; copiousoutput
+application/x-mspowerpoint;     catdoc %s; copiousoutput
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; catdoc '%s';  description="Office Open XML Spreadsheet"; nametemplate=%s.xlsx
+application/ppt;                catdoc %s; copiousoutput
 application/zip;                file-roller %s; copiousoutput
 application/x-rar;              file-roller %s; copiousoutput
-application/msword;		libreoffice %s; copiousoutput
-application/vnd.msword;         libreoffice %s; copiousoutput
+application/msword;		catdoc %s; copiousoutput
+application/vnd.msword;         catdoc %s; copiousoutput
 application/postscript;		evince %s; copiousoutput
 application/rtf;		rtf2text %s; copiousoutput
 application/ms-tnef;		mutt_bgrun tnef -w %s
