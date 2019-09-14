@@ -1,4 +1,4 @@
-#!/usr/bin/env/python3
+#!/usr/bin/env python3
 
 #  ▓▓▓▓▓▓▓▓▓▓ 
 # ░▓ Author ▓ Abdullah <https://abdullah.today/> 
@@ -34,6 +34,26 @@ def update(msgs_were):
     box.login(user, password)
     box.select()
     msgs = len(box.search(None, 'UnSeen')[1][0].split())
+    unread_mails_remote = len(box.search(None, 'UnSeen')[1][0].split())
+    box.select('Sent')
+    sent_mails_remote = len(box.search(None, 'All')[1][0].split())
+    box.select('Outbox')
+    postponed_mails_remote = len(box.search(None, 'All')[1][0].split())
+    box.select('Trash')
+    deleted_mails_remote = len(box.search(None, 'All')[1][0].split())
+    box.select('Spam')
+    spam_mails_remote = len(box.search(None, 'All')[1][0].split())
+    box.select('Drafts')
+    drafts_mails_remote = len(box.search(None, 'All')[1][0].split())
+    
+    
+    unread_mails_local = len(sp.os.listdir(Path.home()/'.mail/INBOX/new'))
+    sent_mails_local = len(sp.os.listdir(Path.home()/'.mail/Sent/cur'))
+    postponed_mails_local = len(sp.os.listdir(Path.home()/'.mail/Outbox/cur'))
+    deleted_mails_local = len(sp.os.listdir(Path.home()/'.mail/Trash/cur'))
+    spam_mails_local = len(sp.os.listdir(Path.home()/'.mail/Spam/cur'))
+    drafts_mails_local = len(sp.os.listdir(Path.home()/'.mail/Drafts/cur'))
+
     if msgs > 0:
         print(msgs)
     else:
@@ -43,18 +63,21 @@ def update(msgs_were):
         sp.run(['/usr/bin/offlineimap', '-o'])
         sp.run(['mpv', '--no-video', '/home/ak/bin/music4scripts/phansi.wav'])
 
-    if msgs != local_new_messages:
+# if remote server mails (unread) aren't equal to local mails, (they have been
+# read since last sync, resync mailboxes.
+    
+    if unread_mails_remote != unread_mails_local or sent_mails_remote != sent_mails_local or postponed_mails_remote != postponed_mails_local or deleted_mails_remote != deleted_mails_local or spam_mails_remote != spam_mails_local or drafts_mails_remote != drafts_mails_local: 
         sp.run(['/usr/bin/offlineimap', '-o'])
+    
+# Uncomment these lines if you don't use offlineimap to see  new mails
 
-
-""" Uncomment these lines if you don't use offlineimap to see  new mails
-"""
 #    if msgs > 0:
 #        with open('/tmp/newmails/newmails', 'w+') as f:
 #           f.write(str(msgs) + ' new mails arrived!') 
 #    elif msgs == 0:
 #        with open('/tmp/newmails/newmails', 'w+') as f:
 #            f.write('no mails!')
+
 
     return msgs
 
