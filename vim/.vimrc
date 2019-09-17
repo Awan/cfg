@@ -13,7 +13,6 @@ autocmd! bufwritepost ~/.Xresources !xrdb -load ~/.Xresources
 autocmd! bufwritepost ~/.zshrc	!source ~/.zshrc
 autocmd! bufwritepost ~/cfg/zsh/.zsh/custom-alias !source ~/cfg/zsh/.zsh/custom-alias
 set nocp
-"execute pathogen#infect()
 filetype on
 set bg=dark
 au BufNewFile,BufRead *Pkgfile set filetype=sh
