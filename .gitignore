@@ -11,3 +11,5 @@ fonts/.local/share/recently-used.xbel
 fonts/.local/share/xorg/
 ipython/.ipython/profile_default/startup/
 *.uuid
+fonts/.local/share/zathura/
+fonts/.local/share/virtualenvs/

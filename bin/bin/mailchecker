@@ -91,6 +91,6 @@ while True:
             time.sleep(2)
     except (socket.gaierror, ConnectionAbortedError, ConnectionError, ConnectionRefusedError, ConnectionResetError) as error:
         print('No Network')
-        with open('/tmp/newmails/newmails', 'w+') as f:
-            f.write('no network!')
+#   with open('/tmp/newmails/newmails', 'w+') as f:
+#            f.write('no network!')
         time.sleep(5)
