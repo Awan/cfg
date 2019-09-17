@@ -36,6 +36,8 @@
 	excludesfile = ~/.config/git/ignore
 [alias]
 	last = log -1 HEAD
+  bD = branch -D  # delete branch
+  bm = branch -m # rename current branch to $name
 	co = checkout
   cob = checkout -b
   cp = cherry-pick
