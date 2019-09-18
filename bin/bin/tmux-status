@@ -27,6 +27,10 @@ battery()
   echo $st#[fg=$bc]$bp"%"
 }
 
+wifi()
+{
+  iw dev wlp3s0 link | awk -F: '/SSID/ {print $NF}'
+}
 
 mails()
 {
@@ -100,4 +104,4 @@ temperature()
 
 
 
-echo `music` -  `temperature`  - `mails` - `just_ram` - `battery` - `date_time`
+echo `music` -  `temperature`  - `mails` - `wifi` - `just_ram` - `battery` - `date_time`
