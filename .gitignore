@@ -13,3 +13,5 @@ ipython/.ipython/profile_default/startup/
 *.uuid
 fonts/.local/share/zathura/
 fonts/.local/share/virtualenvs/
+fonts/.local/share/misc/
+elinks/
