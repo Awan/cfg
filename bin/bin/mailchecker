@@ -27,7 +27,7 @@ Example for slstatus:
 
 def update(msgs_were):
     user = 'abdullah@abdullah.today'
-    completed_process = sp.run(['gpg', '-dq', '/home/ak/.config/mutt/credentials/abdullah.gpg'], check=True, stdout=sp.PIPE, stderr=sp.PIPE, encoding='utf-8')
+    completed_process = sp.run(['gpg', '-dq', '/home/ak/.local/share/misc/adullah.gpg'], check=True, stdout=sp.PIPE, stderr=sp.PIPE, encoding='utf-8')
     password = completed_process.stdout[:-1]
     local_new_messages = len(sp.os.listdir(Path.home()/'.mail/INBOX/new'))
     box = imaplib.IMAP4_SSL('imap.yandex.com', 993)
@@ -61,7 +61,7 @@ def update(msgs_were):
 
     if msgs_were < msgs and msgs > 0:
         sp.run(['/usr/bin/offlineimap', '-o'])
-        sp.run(['mpv', '--no-video', '/home/ak/bin/music4scripts/phansi.wav'])
+        sp.run(['mpv', '--no-video', '/home/ak/.local/share/misc/phansi.aac'])
 
 # if remote server mails (unread) aren't equal to local mails, (they have been
 # read since last sync, resync mailboxes.
