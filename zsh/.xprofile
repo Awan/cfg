@@ -38,8 +38,8 @@ xbacklight = 5 &
 pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 #vpn &
 xbindkeys &
-redshift &
-nm-applet &   # available from network-manager-gnome
+redshift -c ~/.config/redshift/redshift.conf &
+# nm-applet &   # available from network-manager-gnome
 #xrandr --output HDMI2 --auto --output HDMI2 --auto --left-of eDP1 &
 #~/.config/polybar/launch.sh &
 #xrandr --output eDP-1 --mode 1600x900 --panning 1920x1080 --scale 1.2x1.2
