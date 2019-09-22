@@ -1,0 +1,22 @@
+IMAPAccount abdullah
+Host imap.yandex.com
+User abdullah@abdullah.today
+PassCmd "gpg -dq ~/.local/share/misc/abdullah.gpg"
+# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.mailpass.gpg"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore abdullah-remote
+Account abdullah
+
+MaildirStore abdullah-local
+Subfolders Verbatim
+Path ~/.mail/
+Inbox ~/.mail/Inbox
+
+Channel abdullah
+Master :abdullah-remote:
+Slave :abdullah-local:
+Patterns *
+Create Both
+SyncState *
