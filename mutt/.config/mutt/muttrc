@@ -13,8 +13,8 @@ source ~/.config/mutt/aliases
 
 
 
-set folder                                                                                               = ~/.mail
-mailboxes                     = `echo $HOME/.mail/*`
+set folder                                                                                               = ~/.mail/
+mailboxes                     = $HOME/.mail/Inbox $HOME/.mail/Sent $HOME/.mail/Outbox $HOME/.mail/Drafts $HOME/.mail/Spam $HOME/.mail/Trash
 set from                                                                                                 = abdullah@abdullah.today
 set sendmail                                                                                             = msmtp
 set abort_noattach                                                                                       = "no"
@@ -85,7 +85,7 @@ set sig_dashes                                                                  
 set signature                                                                                            = ~/.config/mutt/signature
 set sort                                                                                                 = threads
 set sort_aux                                                                                             = reverse-last-date-received
-set spoolfile                                                                                            = ~/.mail/INBOX
+set spoolfile                                                                                            = ~/.mail/Inbox
 set ssl_force_tls                                                                                        = yes
 set ssl_starttls                                                                                         = yes
 set timeout                                                                                              = 3
