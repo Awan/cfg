@@ -1,5 +1,5 @@
 function mailsnow {
-    mails=(~/.mail/abdullah/INBOX/new/*(N))
+    mails=(~/.mail/Inbox/new/*(N))
     (( $#mails )) && print  ✉ $#mails
 }
 

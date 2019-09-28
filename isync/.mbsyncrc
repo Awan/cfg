@@ -18,5 +18,6 @@ Channel abdullah
 Master :abdullah-remote:
 Slave :abdullah-local:
 Patterns *
+CopyArrivalDate yes
 Create Both
 SyncState *

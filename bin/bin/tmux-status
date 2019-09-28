@@ -34,7 +34,7 @@ wifi()
 
 mails()
 {
-  mails_count=$(find $HOME/.mail/INBOX/new -type f -printf . | wc -c)
+  mails_count=$(find $HOME/.mail/Inbox/new -type f -printf . | wc -c)
   if [ $mails_count -eq 0 ]
   then
     echo 'No new mails'

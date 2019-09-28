@@ -327,3 +327,13 @@ dedot ()
   tar xvf encrypted.tar.gz
   rm encrypted.tar.gz
 }
+
+sne ()
+{
+  sudo systemctl --now enable $1
+}
+
+snd ()
+{
+  sudo systemctl stop $1
+}
