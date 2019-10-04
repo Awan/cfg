@@ -28,7 +28,7 @@ bspc rule -a Sxiv state=floating follow=on
 bspc rule -a Chromium desktop='^2'
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
-bspc rule -a URxvt follow=on focus=on
+#bspc rule -a URxvt follow=on focus=on
 bspc rule -a feh state=floating follow=on
 bspc rule -a Gpicview state=floating follow=on
 bspc rule -a Pavucontrol state=floating follow=on
@@ -51,6 +51,5 @@ bspc config focused_border_color "#d8dee8"
 bspc config normal_border_color "#2f343f"
 
 # Scratchpad 
-bspc rule -a scratchpad sticky=on state=floating hidden=on
-urxvtc -e $HOME/.local/bin/scratchpad -name scratchpad &
-
+bspc rule title=scratchpad class=scratchpad sticky=on state=floating hidden=on
+urxvtc -name scratchpad -geometry 75x20 &

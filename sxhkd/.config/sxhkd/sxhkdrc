@@ -1,5 +1,3 @@
-scatchpad_id=$(cat /tmp/scratchpad_id)
-
 # Reload functions
 #super + Escape
 #	"$XDG_CONFIG_HOME"/sxhkd/functions
@@ -20,10 +18,13 @@ super + t
 super + g
 	bspc node -s biggest
 
+# Kill a window
+super + q
+  bspc node -c
+
 # Scratchpad
 super + i
- id=$(cat /tmp/scratchid);\
- bspc node $id --flag hidden;bspc node -f $id
+  ~/.local/bin/scratchtoggle
 
 super + Return
   urxvtc
@@ -54,6 +55,10 @@ super + {t,shift + t,s,f}
 super + ctrl + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
 
+# Music
+XF86LaunchA
+  mpc toggle
+
 #
 # focus/swap
 #
@@ -75,8 +80,8 @@ super + bracket{left,right}
 	bspc desktop -f {prev,next}.local
 
 # focus the last node/desktop
-super + {grave,Tab}
-	bspc {node,desktop} -f last
+super + {Tab,semicolon}
+	bspc {node,desktop} -f next
 
 # focus the older or newer node in the focus history
 super + {o,i}
@@ -166,5 +171,28 @@ Print
 # File Manager
 XF86Explorer
     urxvtc -e ranger
+
+## Mouse buttons
+#super + button{1-3}
+#   bspc pointer -g {move,resize_side,resize_corner}
+#
+#super + !button{1-3}
+#   bspc pointer -t %i %i
+#
+#super + @button{1-3}
+#   bspc pointer -u
+#
+
+# Music little backward/forward
+alt + bracket{left,right}
+  mpc seek {-10,+10}
+
+# Music backward/forward
+alt + shift + bracket{left,right}
+  mpc seek {-120,+120}
+ 
+# Lock the screen
+super + x
+  slock
 
 # vim:ft=sxhkdrc
