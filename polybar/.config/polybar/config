@@ -103,7 +103,7 @@ format-foreground = ${colors.foreground}
 format-background = ${colors.background}
 
 
-[module/ewmh]
+[module/xworkspaces]
 type = internal/xworkspaces
 pin-workspaces = true
 ; Create click handler used to focus desktop
@@ -489,6 +489,63 @@ bar-volume-empty =
 bar-volume-empty-font = 2
 bar-volume-empty-foreground = ${colors.foreground-alt}
 
+[module/tags]
+type = internal/xworkspaces
+
+label-active = %name%
+label-active-padding = 2
+label-active-background = ${colors.background}
+label-active-foreground = ${colors.foreground}
+
+label-occupied = %name%
+label-occupied-background = #ff0000
+
+label-empty = %name%
+label-empty-padding = 2
+
+label-urgent = %name%
+label-urgent-padding = 2
+label-urgent-background = ${colors.background}
+label-urgent-foreground = ${colors.foreground}
+
+
+[bar/dwm]
+inherit = settings
+background = ${colors.background}
+foreground = ${colors.foreground}
+override-redirect = true
+
+;width = 55%
+;height = 26
+;offset-x = 45%
+
+modules-left = date wlan memory cpu pulseaudio xbacklight battery 
+modules-right = mpd-new
+modules-center = tags
+
+font-0 =  FontAwesome
+font-1 = DejaVu Sans:pixelsize=11
+
+bottom = true
+width = 100%
+height = 20
+;offset-x = 1%
+offset-y = -1
+radius = 0
+fixed-center = true
+
+
+line-size = 0
+line-color = #f00
+
+border-size = 0
+border-color = #00000000
+
+padding-left = 0
+padding-right = 1
+
+module-margin-left = 2
+module-margin-right = 2
 
 
 ; vim:ft=dosini

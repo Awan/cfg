@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Reload functions
 #super + Escape
 #	"$XDG_CONFIG_HOME"/sxhkd/functions
@@ -28,6 +30,9 @@ super + i
 
 super + Return
   urxvtc
+
+Alt + Return
+  termite
 
 super + d
   dmenu_run

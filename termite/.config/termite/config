@@ -1,12 +1,10 @@
 [options]
-font = Tamzen medium normal 17
+font = Tamzen Bold Italic normal 19
 #font = Tamsyn 15
 boldfont =  TamzenForPowerline10x20b 17
 #font = Terminus Bold Italic 15
 #font = Terminus italic 17
 #font = Terminus 14
-
-
 
 allow_bold = on
 bold_is_bright = on

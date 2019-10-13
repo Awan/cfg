@@ -1,3 +1,9 @@
+"  ▓▓▓▓▓▓▓▓▓▓ 
+" ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+" ░▓▓▓▓▓▓▓▓▓▓ 
+" ░░░░░░░░░░ 
+
+
 set nocompatible
 set ruler
 source ~/.vim/autoload/supertab.vim
