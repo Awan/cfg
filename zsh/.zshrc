@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-fortune -a | cowsay
+#fortune -a | cowsay
 
 for f in  ~/.zsh/*(DN); do source $f; done
 
