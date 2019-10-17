@@ -2,6 +2,7 @@
 background = #00000000
 background-alt = ${xrdb:polybar*color8}
 foreground = ${xrdb:polybar*foreground}
+urgent = #B34747
 foreground-alt = #555
 primary = ${xrdb:polybar*color3}
 secondary = ${xrdb:polybar*color1}
@@ -40,9 +41,9 @@ font-0 =  FontAwesome
 font-1 = DejaVu Sans:pixelsize=11
 
 #modules-left = date wlan memory cpu xbacklight mic pavolume battery abdullah gmail
-modules-left = date wlan memory cpu pulseaudio xbacklight battery 
-#modules-center = i3
-modules-center = bspwm
+modules-left = date wlan memory cpu pulseaudio xbacklight temperature battery 
+modules-center = tags
+#modules-center = bspwm
 modules-right = mpd-new
 #modules-right =  mpd mic pavolume backlight memory cpu battery date menu
 
@@ -508,6 +509,36 @@ label-urgent-padding = 2
 label-urgent-background = ${colors.background}
 label-urgent-foreground = ${colors.foreground}
 
+[module/temperature]
+type = internal/temperature
+interval = 3
+thermal-zone = 0
+warn-temperature = 70
+
+format = <ramp><label>
+format-padding = 1
+;label = %{A1:termite --exec='watch sensors' & disown:} %temperature%%{A}
+
+ramp-0 = ""
+ramp-0-foreground = ${xrdb:polybar*color4}
+ramp-1 = ""
+ramp-1-foreground = ${xrdb:polybar*color16}
+ramp-2 = ""
+ramp-2-foreground = ${xrdb:polybar*color17}
+ramp-3 = ""
+ramp-3-foreground = ${xrdb:polybar*urgent}
+
+format-warn = <label-warn>
+label-warn = " %temperature-c%"
+label-warn-padding = 1
+label-warn-foreground = ${colors.urgent}
+
+[module/window_switch]
+type = custom/script
+interval = 5
+label = "%{A1:skippy-xd:} %{A3:skippy-xd:} %output% %{A} %{A}"
+exec = echo ""
+format = <label>
 
 [bar/dwm]
 inherit = settings
@@ -521,7 +552,7 @@ override-redirect = true
 
 modules-left = date wlan memory cpu pulseaudio xbacklight battery 
 modules-right = mpd-new
-modules-center = tags
+modules-center = window_switch
 
 font-0 =  FontAwesome
 font-1 = DejaVu Sans:pixelsize=11
@@ -546,6 +577,7 @@ padding-right = 1
 
 module-margin-left = 2
 module-margin-right = 2
+
 
 
 ; vim:ft=dosini

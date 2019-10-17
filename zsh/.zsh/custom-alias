@@ -1,4 +1,5 @@
 alias ls='ls --color=auto'
+alias awr="awesome-client 'awesome.restart()'"
 alias z='zathura $1'
 alias info='info --vi-keys'
 alias vac='$EDITOR $HOME/.new_vimrc'

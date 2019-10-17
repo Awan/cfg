@@ -197,6 +197,7 @@ polybar*fadeColor              : black
 polybar*cursorColor            : #16A085
 polybar*pointerColorBackground : #2B2C2B
 polybar*pointerColorForeground : #16A085
+polybar*urgent                 : #B34747
 
 !! black dark/light
 polybar*color0                 : #24292A
@@ -229,6 +230,12 @@ polybar*color14                : #83a5a1
 !! white dark/light
 polybar*color7                 : #a8b298
 polybar*color15                : #ccd2be
+
+!! pink
+polybar*color16                : #9181E7
+
+!! purple
+polybar*color17                : #D7AFF9
 
 !! XTERM
 
