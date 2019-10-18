@@ -1,5 +1,5 @@
 [colors]
-background = #00000000
+background = #FF000000
 background-alt = ${xrdb:polybar*color8}
 foreground = ${xrdb:polybar*foreground}
 urgent = #B34747
@@ -15,7 +15,7 @@ screenchange = true
 #monitor = ${env:MONITOR:eDP-1}
 bottom = true
 width = 100%
-height = 20
+height = 25
 ;offset-x = 1%
 offset-y = -1
 radius = 0
@@ -42,8 +42,8 @@ font-1 = DejaVu Sans:pixelsize=11
 
 #modules-left = date wlan memory cpu xbacklight mic pavolume battery abdullah gmail
 modules-left = date wlan memory cpu pulseaudio xbacklight temperature battery 
-modules-center = tags
-#modules-center = bspwm
+#modules-center = tags
+modules-center = bspwm
 modules-right = mpd-new
 #modules-right =  mpd mic pavolume backlight memory cpu battery date menu
 
@@ -163,7 +163,7 @@ interface = wlp3s0
 tail = true
 format-connected = <ramp-signal> <label-connected>
 format-connected-underline = #9f78e1
-label-connected = %{A1:urxvt -e nmtui:} %essid%%{A}
+label-connected =  %essid%%{A}
 label-disconnected = 
 format-disconnected = <label-disconnected>
 ramp-signal-0 = 

@@ -25,13 +25,18 @@ super + q
   bspc node -c
 
 # Scratchpad
+#super + i
+#  ~/.local/bin/scratchtoggle
+
+# Scratchpad
 super + i
-  ~/.local/bin/scratchtoggle
+id=$(cat /tmp/scratchid);\
+bspc node $id --flag hidden;bspc node -f $id
 
 super + Return
   urxvtc
 
-Alt + Return
+alt + Return
   termite
 
 super + d
@@ -49,8 +54,8 @@ super + alt + {0-9}
 super + {_,alt + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
 
-#XF86Audio{RaiseVolume,LowerVolume,Mute}
-#	amixer {-q set Master 5%+,-q set Master 5%-,set Master toggle}
+XF86Audio{RaiseVolume,LowerVolume,Mute}
+	amixer {-q set Master 5%+,-q set Master 5%-,set Master toggle}
 
 # set the window state
 super + {t,shift + t,s,f}
@@ -157,16 +162,16 @@ XF86MonBrightnessUp
   xbacklight +5
 
 # Raise Volume
-XF86AudioRaiseVolume
+#XF86AudioRaiseVolume
         amixer set Master 10%+
 
 
 # Lower Volume
-XF86AudioLowerVolume
+#XF86AudioLowerVolume
         amixer set Master 10%-
 
 # Mute 
-XF86AudioMute
+#XF86AudioMute
         amixer -D pulse set Master 1+ toggle
 
 # Screenshot
