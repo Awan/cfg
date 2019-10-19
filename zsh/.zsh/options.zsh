@@ -57,3 +57,6 @@ setopt no_clobber
 
 # **.c is equivalent to **/*.c
 setopt GLOBSTARSHORT
+
+# wait 10 seconds if using rm with *
+setopt RM_STAR_WAIT
