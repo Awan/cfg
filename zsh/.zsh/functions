@@ -337,3 +337,78 @@ snd ()
 {
   sudo systemctl stop $1
 }
+
+gadd ()
+{
+  sudo gpasswd -a "$USER" "$1"
+}
+
+ed ()
+{
+  "$EDITOR" "$@"
+}
+
+mpgo ()
+{
+  mkdir /tmp/mpv -p
+  if [[ -n $1 ]]; then
+    clipboard=$1
+  else
+    clipboard=$(xsel -b)
+  fi
+  if [[ $clipboard =~ ^http ]] || [[ -f $clipboard ]]; then
+		echo "$clipboard" > /tmp/mpv/last_link
+		# ytdl messes up direct links for some reason (slow)
+		mpv --no-ytdl --screenshot-template="./%tY.%tm.%td_%tH:%tM:%tS" "$clipboard"
+	elif [[ $clipboard =~ ^magnet ]]; then
+		echo "$clipboard" > /tmp/mpv/last_link
+		 peerflix  "$clipboard" --mpv -- --no-ytdl \
+			--screenshot-template="./%tY.%tm.%td_%tH:%tM:%tS"
+	fi
+}
+
+mplast ()
+{
+  mpgo "$(< /tmp/mpv/last_link)"
+}
+
+arec ()
+{
+  if [[ $# -ne 1 ]]; then
+    return 1
+  fi
+  arecord -vv -f wav "$1"
+}
+
+ram () 
+{
+	local sum
+	local items
+	local app="$1"
+	if [ -z "$app" ]; then
+		echo "First argument - pattern to grep from processes"
+	else
+		sum=0
+		for i in `ps aux | grep -i "$app" | grep -v "grep" | awk '{print $6}'`; do
+		sum=$(($i + $sum))
+	done
+		sum=$(echo "scale=2; $sum / 1024.0" | bc)
+	if [[ $sum != "0" ]]; then
+		echo "${fg[blue]}${app}${reset_color} uses ${fg[green]}${sum}${reset_color} MBs of RAM."
+	else
+		echo "There are no processes with pattern '${fg[blue]}${app}${reset_color}' are running."
+	fi
+	fi
+}
+
+pdfmerge () 
+{
+	local tomerge
+	tomerge=""
+	for file in "$@"; do
+		tomerge="$tomerge $file"
+	done
+	pdftk "$tomerge" cat output mergd.pdf
+}
+
+

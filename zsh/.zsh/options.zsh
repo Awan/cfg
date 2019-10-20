@@ -60,3 +60,30 @@ setopt GLOBSTARSHORT
 
 # wait 10 seconds if using rm with *
 setopt RM_STAR_WAIT
+
+# Allow comments with #
+setopt interactive_comments
+
+# Spell check arguments
+setopt correct_all
+
+# In completion, go to the end of the word
+unsetopt always_to_end
+
+# No first completion entry
+unsetopt menu_complete
+
+# No first item
+setopt auto_list
+
+# Show directory name
+setopt auto_name_dirs
+
+# Put a slash for ~
+setopt auto_param_slash
+
+# allow completion from within a word/phrase
+setopt complete_in_word
+
+# Glob complete
+setopt glob_complete
