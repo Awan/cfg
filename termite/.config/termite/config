@@ -53,6 +53,6 @@ color15    =      #ffffff
 
 foreground = #dcdccc
 foreground_bold = #ffffff
-#background = rgba(63, 63, 63, 0.8)
-background = #000000
+background = rgba(63, 63, 63, 0.8)
+#background = #000000
 #vim: ft=dosini cms=#%s
