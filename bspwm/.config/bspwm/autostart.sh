@@ -17,6 +17,8 @@ fi
 $HOME/.config/polybar/launch.sh &
 xmodmap $HOME/.Xmodmap &
 compton -b --config $HOME/.config/compton/compton.conf &
+xsetroot -cursor_name left_ptr &
+#xcompmgr -c -f D 5 &
 xrdb -load $HOME/.Xresources &
 xset +fp $HOME/.local/share/fonts/ &
 xset fp rehash &

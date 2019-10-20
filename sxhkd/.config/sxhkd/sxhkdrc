@@ -18,7 +18,7 @@ super + t
 
 # Swap the current node and the biggest node
 super + g
-	bspc node -s biggest
+	bspc node -s biggest.local
 
 # Kill a window
 super + q
@@ -29,9 +29,17 @@ super + q
 #  ~/.local/bin/scratchtoggle
 
 # Scratchpad
+#super + i
+#id=$(cat /tmp/scratchid);\
+#bspc node $id --flag hidden;bspc node -f $id
+
+
+# Scratchpad
 super + i
-id=$(cat /tmp/scratchid);\
-bspc node $id --flag hidden;bspc node -f $id
+  $HOME/.config/bspwm/scratchpad.sh switch-app
+
+super + shift + i
+  $HOME/.config/bspwm/scratchpad.sh toggle-flag
 
 super + Return
   urxvtc
