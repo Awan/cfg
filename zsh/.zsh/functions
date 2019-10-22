@@ -411,4 +411,7 @@ pdfmerge ()
 	pdftk "$tomerge" cat output mergd.pdf
 }
 
-
+bkmeup ()
+{
+  cp -riv $1 ${1}-$(date +%d-%m-%Y-%H:%M).bak
+}
