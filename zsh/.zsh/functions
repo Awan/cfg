@@ -296,7 +296,7 @@ function pg()
 
 function ap()
 {
-  sudo apt update && sudo apt full-upgrade 
+  sudo apt update && sudo apt full-upgrade -V
 }
 
 function gc()
