@@ -415,3 +415,9 @@ bkmeup ()
 {
   cp -riv $1 ${1}-$(date +%d-%m-%Y-%H:%M).bak
 }
+
+
+sprunge ()
+{
+  tail -n +1 -- "$@" | curl -F 'sprunge=<-' http://sprunge.us
+}
