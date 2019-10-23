@@ -1,0 +1,182 @@
+#!/usr/bin/env bash
+
+# set the colors
+fg=$'\e[39m'
+ac=$'\e[38;5;243m'
+re=$'\e[37m'
+
+# get os
+get_os() {
+  os=$(source /etc/os-release && echo "$ID $VERSION_ID")
+}
+
+# get kernel
+get_kernel() {
+  kernel=$(uname -r)
+  kernel=${kernel//-amd64}
+}
+
+# get model
+get_model() {
+  model=$(< /sys/devices/virtual/dmi/id/product_version)
+  model=${model,,}
+}
+
+# get uptime
+get_uptime() {
+  seconds="$(< /proc/uptime)"
+  seconds="${seconds/.*}"
+  days="$((seconds / 60 / 60 / 24)) days"
+  hours="$((seconds / 60 / 60 % 24)) hours"
+  mins="$((seconds / 60 % 60)) minutes"
+  strip_date() {
+    case "$1" in
+      "0 "*) unset "${1/* }" ;;
+      "1 "*) printf "%s" "${1/s}" ;;
+      *)     printf "%s" "$1" ;;
+    esac
+  }
+  days="$(strip_date "$days")"
+  hours="$(strip_date "$hours")"
+  mins="$(strip_date "$mins")"
+  uptime="${days:+$days, }${hours:+$hours, }${mins}"
+}
+
+# get wm
+get_wm() {
+  wm_id=$(xprop -root -notype _NET_SUPPORTING_WM_CHECK)
+  wm_id=${wm_id##* }
+  wm=$(xprop -id "$wm_id" -notype -len 100 -f _NET_WM_NAME 8t)
+  wm=${wm/*_NET_WM_NAME = }
+  wm=${wm/\"}
+  wm=${wm/\"*}
+}
+
+# get number of packages
+get_packages() {
+  packages=$(dpkg --get-selections | grep -cv deinstall)
+}
+
+# get cpu info
+get_cpu() {
+  # Get CPU name.
+  cpu_file="/proc/cpuinfo"
+  case "$machine_arch" in
+    "frv" | "hppa" | "m68k" | "openrisc" | "or"* | "powerpc" | "ppc"* | "sparc"*)
+      cpu="$(awk -F':' '/^cpu\t|^CPU/ {printf $2; exit}' "$cpu_file")"
+    ;;
+    "s390"*)
+      cpu="$(awk -F'=' '/machine/ {print $4; exit}' "$cpu_file")"
+    ;;
+    "ia64" | "m32r")
+      cpu="$(awk -F':' '/model/ {print $2; exit}' "$cpu_file")"
+      [[ -z "$cpu" ]] && cpu="$(awk -F':' '/family/ {printf $2; exit}' "$cpu_file")"
+    ;;
+    *)
+      cpu="$(awk -F ': | @' '/model name|Processor|^cpu model|chip type|^cpu type/\
+        {printf $2; exit}' "$cpu_file")"
+          [[ "$cpu" == *"processor rev"* ]] && \
+          cpu="$(awk -F':' '/Hardware/ {print $2; exit}' "$cpu_file")"
+        ;;
+    esac
+    speed_dir="/sys/devices/system/cpu/cpu0/cpufreq"
+    # Get CPU speed.
+    if [[ -d "$speed_dir" ]]; then
+      # Fallback to bios_limit if $speed_type fails.
+      speed="$(< "${speed_dir}/${speed_type}")" ||\
+      speed="$(< "${speed_dir}/scaling_max_freq")" ||\
+      speed="$(< "${speed_dir}/cpuinfo_max_freq")"
+      speed="$((speed / 1000))"
+    else
+      speed="$(awk -F ': |\\.' '/cpu MHz|^clock/ {printf $2; exit}' "$cpu_file")"
+      speed="${speed/MHz}"
+    fi
+    # Get CPU cores.
+    case "$cpu_cores" in
+      "logical" | "on") cores="$(grep -c "^processor" "$cpu_file")" ;;
+      "physical") cores="$(grep "^core id" "$cpu_file" | sort -u | wc -l)" ;;
+    esac
+    cpu="${cpu//(TM)}"
+    cpu="${cpu//(tm)}"
+    cpu="${cpu//(R)}"
+    cpu="${cpu//(r)}"
+    cpu="${cpu//CPU}"
+    cpu="${cpu//Processor}"
+    cpu="${cpu//Dual-Core}"
+    cpu="${cpu//Quad-Core}"
+    cpu="${cpu//Six-Core}"
+    cpu="${cpu//Eight-Core}"
+    cpu="${cpu//, * Compute Cores}"
+    cpu="${cpu//Core}"
+    cpu="${cpu//(\"AuthenticAMD\"*)}"
+    cpu="${cpu//with Radeon * Graphics}"
+    cpu="${cpu//, altivec supported}"
+    cpu="${cpu//FPU*}"
+    cpu="${cpu//Chip Revision*}"
+    cpu="${cpu//Technologies, Inc}"
+    # Trim spaces from core and speed output
+    cores="${cores//[[:space:]]}"
+    speed="${speed//[[:space:]]}"
+    # Remove CPU brand from the output.
+    if [[ "$cpu_brand" == "off" ]]; then
+      cpu="${cpu/AMD }"
+      cpu="${cpu/Intel }"
+      cpu="${cpu/Core? Duo }"
+      cpu="${cpu/Qualcomm }"
+    fi
+    # Add CPU cores to the output.
+    [[ "$cpu_cores" != "off" && "$cores" ]] && \
+    case "$os" in
+      "Mac OS X") cpu="${cpu/@/(${cores}) @}" ;;
+      *) cpu="$cpu ($cores)" ;;
+    esac
+    # Add CPU speed to the output.
+    if [[ "$cpu_speed" != "off" && "$speed" ]]; then
+      if (( speed < 1000 )); then
+        cpu="$cpu @ ${speed}MHz"
+      else
+        [[ "$speed_shorthand" == "on" ]] && speed="$((speed / 100))"
+        speed="${speed:0:1}.${speed:1}"
+        cpu="$cpu @ ${speed}GHz"
+      fi
+    fi
+  }
+  # get ram usage and total
+  get_ram() {
+    while IFS=":" read -r a b; do
+      case "$a" in
+        "MemTotal") mem_used="$((mem_used+=${b/kB}))"; mem_total="${b/kB}" ;;
+        "Shmem") mem_used="$((mem_used+=${b/kB}))"  ;;
+        "MemFree" | "Buffers" | "Cached" | "SReclaimable")
+          mem_used="$((mem_used-=${b/kB}))"
+        ;;
+      esac
+    done < /proc/meminfo
+    mem_used="$((mem_used / 1024))"
+    mem_total="$((mem_total / 1024))"
+    ram="${mem_used}Mib / ${mem_total}Mib"
+  }
+
+  # run all functions
+  get_model
+  get_os
+  get_kernel
+  get_uptime
+  get_wm
+  get_packages
+  get_cpu
+  get_ram
+
+  # output
+
+cat << EOF
+${re}
+  [0m [0m[0m [0m[0m [0m[0;31m▄[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[0;31m▄[0m[0m [0m[0m [0m[0m  ${ac}os:${fg} ${os} ${re}
+  [0m [0m[0;31m▄[0m[31;41m▀[0m[31;41m▀[0m[0;40;31m▀[0m[0m [0m[0m [0m[0m [0m[0m [0m[0;40;31m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[0;31m▄[0m[0m  ${ac}kernel:${fg} ${kernel} ${re}
+  [31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[0m [0m[0m [0m[0;31m▄[0m[0;31m▄[0m[0;40;31m▀[0m[0m [0m[0m [0m[0m [0m[0;40;31m▀[0m[31;41m▀[0m[31;41m▀[0m[0m  ${ac}model:${fg} ${model} ${re}
+  [31;41m▀[0m[31;41m▀[0m[0m [0m[0m [0m[0m [0m[31;41m▀[0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[31;41m▀[0m[31;41m▀[0m[0m  ${ac}uptime:${fg} ${uptime} ${re}
+  [31;41m▀[0m[0m [0m[0m [0m[0m [0m[0m [0m[31;41m▀[0m[0;31m▄[0m[0m [0m[0m [0m[0m [0m[0m [0m[0;31m▄[0m[31;41m▀[0m[0;40;31m▀[0m[0m  ${ac}packages:${fg} ${packages} ${re}
+  [31;41m▀[0m[0;31m▄[0m[0m [0m[0m [0m[0m [0m[0m [0m[0;40;31m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[0;40;31m▀[0m[0m [0m[0m [0m[0m  ${ac}wm:${fg} ${wm} ${re}
+  [0;40;31m▀[0m[31;41m▀[0m[31;41m▀[0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m  ${ac}cpu:${fg} ${cpu} ${re}
+  [0m [0m[0m [0m[0;40;31m▀[0m[0;40;31m▀[0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m  ${ac}ram:${fg} ${ram}
+EOF

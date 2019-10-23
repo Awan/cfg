@@ -5,3 +5,13 @@
 # After screen is locked for 15 seconds, we will turn off the screen.
 #
 #sleep 5 && pgrep slock && xset dpms force off
+
+echo "l $(date '+%Y-%m-%d %H:%M')" >> "$HOME"/.local/share/xorg/lock.log
+
+"$HOME"/.local/bin/i3lock -i "$HOME"/pix/wall/image198.png \
+    --insidecolor=37344500 --ringcolor=ffffffff --line-uses-inside \
+    --keyhlcolor=d23c3dff --bshlcolor=d23c3dff --separatorcolor=00000000 \
+    --insidevercolor=f0c674ff --insidewrongcolor=bf616aff \
+    --ringvercolor=ffffffff --ringwrongcolor=ffffffff \
+    --radius=50 --veriftext="" --wrongtext="" --indpos="x+1850:y+1010"
+echo "u $(date '+%Y-%m-%d %H:%M')" >> "$HOME"/.local/share/xorg/lock.log
