@@ -1,17 +1,20 @@
-#!/bin/bash
-	
-#slock  &
+#!/usr/bin/env bash
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
 
-# After screen is locked for 15 seconds, we will turn off the screen.
-#
-#sleep 5 && pgrep slock && xset dpms force off
 
-echo "l $(date '+%Y-%m-%d %H:%M')" >> "$HOME"/.local/share/xorg/lock.log
+walls="$HOME"/pix/wall
 
-"$HOME"/.local/bin/i3lock -i "$HOME"/pix/wall/image198.png \
+random_wallpic="$(find "$walls" -type f -iname '*.png' -print0 | xargs -0 shuf -e -n 1 -z | xargs -0)" 
+
+
+"$HOME"/.local/bin/i3lock -i "$random_wallpic" \
     --insidecolor=37344500 --ringcolor=ffffffff --line-uses-inside \
     --keyhlcolor=d23c3dff --bshlcolor=d23c3dff --separatorcolor=00000000 \
     --insidevercolor=f0c674ff --insidewrongcolor=bf616aff \
     --ringvercolor=ffffffff --ringwrongcolor=ffffffff \
     --radius=50 --veriftext="" --wrongtext="" --indpos="x+1850:y+1010"
-echo "u $(date '+%Y-%m-%d %H:%M')" >> "$HOME"/.local/share/xorg/lock.log
+
+sleep 5 && pgrep i3lock && xset dpms force off
