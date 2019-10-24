@@ -20,3 +20,4 @@ etc/.local/share/ranger
 elinks/
 etc/.local/share/recently-used.xbel
 etc/.local/share/xorg
+vim/.vim/doc

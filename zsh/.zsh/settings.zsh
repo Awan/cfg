@@ -24,3 +24,5 @@ unsetopt ignore_eof
 unsetopt list_beep
 # ask for confirmation for `rm *' or `rm path/*'
 unsetopt rm_star_silent
+# dircolors
+eval "$(dircolors -b)"

@@ -34,7 +34,7 @@ window_instance="$3"
 window_title="$(xwininfo -id "$window_id" | sed ' /^xwininfo/!d ; s,.*"\(.*\)".*,\1,')"
 
 case "$window_class" in
-	[Mm]pv|[Xx][Cc]alc|[Pp]avucontrol|[Vv]lc|[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|[Pp]qiv|[Aa]tril|[Ee]vince|[Zz]athura|scratchpad)
+	[Mm]pv|[Gg]picview|[Nn]itrogen|[Aa]randr|[Gg]alculator|[Ff]ont-manager|[Oo]blogout|[Pp]eek|[Ss]kype|[Xx]fce4-appfinder|[Gg]pick|[Xx][Cc]alc|[Pp]avucontrol|[Vv]lc|[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|[Pp]qiv|[Aa]tril|[Ee]vince|[Zz]athura|scratchpad)
 		echo "state=floating"
 		echo "center=on"
 		;;
