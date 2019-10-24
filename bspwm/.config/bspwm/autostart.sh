@@ -30,7 +30,7 @@ dunst -c $HOME/.config/dunst/dunstrc &
 ~/.fehbg &
 xbacklight = 5 &
 pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
-redshift -c ~/.config/redshift/redshift.conf &
+#redshift -c ~/.config/redshift/redshift.conf &
 [ -z $TMUX ] && tmux new-session -s $USER -d 
 
 # if multihead available, enable it or disable if not.
