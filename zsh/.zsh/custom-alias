@@ -1,4 +1,5 @@
 alias ls='ls --color=auto'
+alias youtube='google-chrome-stable --app=https://youtube.com'
 alias colorize='toilet --gay -f term $@'
 alias xquery='xdg-mime query filetype $1'
 alias c='xclip-copyfile'
