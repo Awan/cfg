@@ -1,29 +1,29 @@
 [options]
 font = Tamzen Bold Italic normal 19
-#font = Tamsyn 15
 boldfont =  TamzenForPowerline10x20b 17
-#font = Terminus Bold Italic 15
-#font = Terminus italic 17
-#font = Terminus 14
 
+word_chars = -A-Za-z0-9,./?%&#:_=+@~
 allow_bold = on
 bold_is_bright = on
 browser = /usr/bin/google-chrome-stable
 clickable_url = on
 hyperlinks = on
-cursor_blink = off
+cursor_blink = system
 cursor_shape = underline
-dynamic_title = off
+dynamic_title = true
 filter_unmatched_urls = on
-mouse_autohide = on
+mouse_autohide = true
 fullscreen = off
 scrollback_lines = -1
-scrollbar = off
-scroll_on_keystroke = on
-scroll_on_output = off
-search_wrap = on
+scrollbar = true
+resize_grip = true
+audible_bell = true
+visible_bell = true
+scroll_on_keystroke = true
+scroll_on_output = false
+search_wrap = true
 size_hints = on
-urgent_on_bell = on
+urgent_on_bell = true
 borderColor =     #000030
 highlight = #2f2f2f
 
@@ -51,8 +51,30 @@ color15    =      #ffffff
 
 # background and cursor etc.
 
-foreground = #dcdccc
 foreground_bold = #ffffff
-background = rgba(63, 63, 63, 0.8)
+#background = rgba(63, 63, 63, 0.8)
+background  = #1d282c
+
 #background = #000000
+
+# More colors
+color0 = #1d282c
+foreground = #2B81A6
+color2 = #A9D152
+color10 = #90A959
+color4 = #1D6B8C
+color12 = #4BA9D1
+color6 = #84D5D9
+color3 = #E3B76F
+
+[hints]
+padding = 2
+foreground = #dcdccc
+background = #3f3f3f
+border = #3f3f3f
+border_width = 0.5
+roundness = 2.0
+quick_url=true
+
+
 #vim: ft=dosini cms=#%s
