@@ -63,21 +63,34 @@ scroll-down = bspwm-wsprev
 
 [module/bspwm]
 type = internal/bspwm
-label-focused = %index%
+#label-focused = %index%
 label-focused-background = ${colors.background-alt}
 label-focused-underline= ${colors.primary}
 label-focused-padding = 3
-
-label-occupied = %index%
+pin-workspaces = true
+#label-occupied = %index%
 label-occupied-padding = 3
-
-label-urgent = %index%!
+inline-mode = false
+#label-urgent = %index%!
 label-urgent-background = ${colors.alert}
 label-urgent-padding = 3
 
-label-empty = %index%
+#label-empty = %index%
 label-empty-foreground = ${colors.foreground-alt}
 label-empty-padding = 3
+
+ws-icon-0 = "I;"
+ws-icon-1 = "II;"
+ws-icon-2 = "III;"
+ws-icon-3 = "IV;"
+ws-icon-4 = "V;"
+ws-icon-5 = "VI;"
+ws-icon-6 = "VII;"
+ws-icon-7 = "VIII;"
+ws-icon-8 = "IX;"
+ws-icon-9 = "X;"
+
+
 
 [module/xwindow]
 type = internal/xwindow

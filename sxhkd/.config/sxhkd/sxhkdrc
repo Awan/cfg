@@ -9,7 +9,7 @@ super + Escape
   pkill -USR1 -x sxhkd
 
 # Exit bspwm
-super + shift + q
+alt + shift + q
   bspc quit
 
 # Alternate between the tiled and monocle layout
@@ -20,9 +20,9 @@ super + m
 super + g
 	bspc node -s biggest.local
 
-# Close a window
-super + q
-  bspc node -c
+# Close/kill a window
+super + {_,shift } + q
+  bspc node -{c,k}
 
 # Toggle music
 alt + b
