@@ -6,12 +6,13 @@ sxhkd &
 bspc monitor -d I II III IV V VI VII VIII IX X
 
 bspc config external_rules_command "$HOME"/.config/bspwm/external_rules
+bspc config top_padding	       	 0
+bspc config bottom_padding	     17
 bspc config border_width         3
 bspc config ignore_ewmh_focus   true
 bspc config initial_polarity first_child
 bspc config window_gap           11
 bspc config split_ratio          0.50
-bspc config top_padding	       	 0
 bspc config borderless_monocle   true
 bspc config gapless_monocle      false
 bspc config paddingless_monocle  false
