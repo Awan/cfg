@@ -8,12 +8,19 @@ primary = ${xrdb:polybar*color3}
 secondary = ${xrdb:polybar*color1}
 alert = ${xrdb:polybar*color13}
 
+
 [settings]
+screenchange-reload = true
 screenchange = true
+
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
 
 [bar/default]
 #monitor = ${env:MONITOR:eDP-1}
-monitor = eDP1
 bottom = true
 width = 100%
 height = 25
@@ -21,45 +28,33 @@ height = 25
 offset-y = -1
 radius = 0
 fixed-center = true
-
 background = ${colors.background}
 foreground = ${colors.foreground}
-
 line-size = 0
 line-color = #f00
-
 border-size = 0
 border-color = #00000000
-
 padding-left = 0
 padding-right = 1
-
 module-margin-left = 2
 module-margin-right = 2
-
 ;font-0 = Terminus :pixelsize=12;4
 font-0 =  FontAwesome
 font-1 = DejaVu Sans:pixelsize=11
-
 #modules-left = date wlan memory cpu xbacklight mic pavolume battery abdullah gmail
 modules-left = date wlan memory cpu pulseaudio xbacklight temperature battery 
 #modules-center = tags
 modules-center = bspwm
 modules-right = mpd-new
 #modules-right =  mpd mic pavolume backlight memory cpu battery date menu
-
 tray-position = right
 tray-padding = 6
 tray-background = #24292A00
-
-;wm-restack = i3
 wm-restack = bspwm
-
 override-redirect = false
-;override-redirect = true
-
 scroll-up = bspwm-wsnext
 scroll-down = bspwm-wsprev
+
 
 [module/bspwm]
 type = internal/bspwm
@@ -74,11 +69,9 @@ inline-mode = false
 #label-urgent = %index%!
 label-urgent-background = ${colors.alert}
 label-urgent-padding = 3
-
 #label-empty = %index%
 label-empty-foreground = ${colors.foreground-alt}
 label-empty-padding = 3
-
 ws-icon-0 = "I;"
 ws-icon-1 = "II;"
 ws-icon-2 = "III;"
@@ -91,10 +84,10 @@ ws-icon-8 = "IX;"
 ws-icon-9 = "X;"
 
 
-
 [module/xwindow]
 type = internal/xwindow
 label = "    /  %title:0:48:...%"
+
 
 [module/backlight-acpi]
 type = internal/backlight
@@ -102,7 +95,13 @@ sub = module/backlight-acpi
 base = module/xbacklight
 inherit = module/xbacklight
 card = intel_backlight
-
+format = <ramp><label>
+label = %percentage%%
+ramp-0 = 🌕
+ramp-1 = 🌔
+ramp-2 = 🌓
+ramp-3 = 🌒
+ramp-4 = 🌑
 
 [module/pavolume]
 type = custom/script
@@ -144,18 +143,15 @@ label-focused-underline = ${module/bspwm.label-focused-underline}
 label-focused-padding = ${module/bspwm.label-focused-padding}
 label-unfocused = %icon%
 label-unfocused-padding = ${module/bspwm.label-occupied-padding}
-
 ; visible = Active workspace on unfocused monitor
 label-visible = %icon%
 label-visible-background = ${self.label-focused-background}
 label-visible-underline = ${self.label-focused-underline}
 label-visible-padding = ${self.label-focused-padding}
-
 ; urgent = Workspace with urgency hint set
 label-urgent-foreground = ${xrdb:polybar*color8}
 label-urgent-background = ${module/bspwm.label-urgent-background}
 label-urgent-padding = ${module/bspwm.label-urgent-padding}
-
 ; Create scroll handlers used to cycle desktops
 enable-scroll = true
 label-monitor = %name%
@@ -169,6 +165,7 @@ label-occupied-underline = #555555
 label-urgent = %icon%
 #label-empty = %icon%
 #label-empty-foreground = #55
+
 
 [module/wlan]
 type = internal/network
@@ -192,7 +189,6 @@ ramp-signal-foreground = ${colors.foreground-alt}
 type = internal/xbacklight
 format = <label> <bar>
 bar-width = 10
-;bar-indicator = | 
 bar-indicator =  
 bar-indicator-foreground = #fff
 bar-empty = 
@@ -200,7 +196,6 @@ bar-fill =
 format-prefix = " "
 label-foreground = #3EC13F
 format-padding = 1
-
 
 
 [module/cpu]
@@ -211,6 +206,7 @@ format-prefix-foreground = ${xrdb:polybar*color3}
 format-underline = #f90000
 label = %percentage%%
 
+
 [module/memory]
 type = internal/memory
 interval = 2
@@ -219,48 +215,41 @@ format-prefix-foreground = ${xrdb:polybar*color2}
 format-underline = #4bffdc
 label = %percentage_used%%
 
+
 [module/date]
 type = internal/date
 interval = 1
-
 date = " %a %d %b -"
 date-alt = " %d %b -"
-
 time = %H:%M
 time-alt = %H:%M:%S
-
 format-prefix = " "
 format-prefix-foreground = ${xrdb:polybar*color4}
 format-underline = #0a6cf5
-
 label = %date% %time%
+
 
 [module/battery]
 type = internal/battery
 battery = BAT0
 adapter = AC0
 full-at = 100
-
 format-charging = <animation-charging> <label-charging>
 format-charging-underline = #ffb52a
 label-charging = %percentage%% - time left %time%
-
 format-discharging = <ramp-capacity> <label-discharging>
 format-discharging-underline = ${self.format-charging-underline}
 label-discharging = %percentage%% - time left %time%
-
 format-full-prefix = " "
 format-full-prefix-foreground = ${colors.foreground-alt}
 format-full-underline = ${self.format-charging-underline}
 label-full = %percentage%%
-
 ramp-capacity-0 = " "
 ramp-capacity-1 = " "
 ramp-capacity-2 = " "
 ramp-capacity-3 = " "
 ramp-capacity-4 = " "
 ramp-capacity-foreground = ${colors.foreground-alt}
-
 animation-charging-0 = " "
 animation-charging-1 = " "
 animation-charging-2 = " "
@@ -269,16 +258,6 @@ animation-charging-4 = " "
 animation-charging-foreground = ${colors.foreground-alt}
 animation-charging-framerate = 750
 
-[settings]
-screenchange-reload = true
-;compositing-background = xor
-;compositing-background = screen
-;compositing-foreground = source
-;compositing-border = over
-
-[global/wm]
-margin-top = 5
-margin-bottom = 5
 
 [module/mpd]
 type = internal/mpd
@@ -363,6 +342,7 @@ format-background = ${colors.background}
 click-left = exec smus
 click-right = mpc pause & pkill -F /tmp/smus.pid
 
+
 [module/bluetooth]
 type = custom/script
 exec = ~/.config/polybar/scripts/isactive-bluetooth.sh
@@ -372,18 +352,15 @@ format-underline = #FF00DB
 format-background = ${colors.background}
 format-prefix = ""
 
+
 [module/menu]
 type = custom/menu
-
 label-open = 
 label-open-foreground = ${colors.secondary}
 label-close =  cancel
 label-close-foreground = ${xrdb:polybar*color9}
 label-separator = |
 label-separator-foreground = ${colors.foreground-alt}
-
-
-
 format-spacing = 1
 ;label-open = "  "
 ;label-open-foreground = ${colors.foreground}
@@ -399,7 +376,6 @@ menu-0-2 = Music
 menu-0-2-exec = menu-open-3
 menu-0-3 = Power
 menu-0-3-exec = menu-open-4
-
 menu-1-0 = "  "
 menu-1-0-exec = qutebrowser
 menu-1-1 = "  "
@@ -408,7 +384,6 @@ menu-1-2 = "  "
 menu-1-2-exec = exo-open --launch FileManager
 menu-1-3 = "  "
 menu-1-3-exec = subl3
-
 menu-2-0 = "  "
 menu-2-0-exec = gimp-2.8
 menu-2-1 = "  "
@@ -421,7 +396,6 @@ menu-2-4 = "  "
 menu-2-4-exec = steam-runtime
 menu-2-5 = "  "
 menu-2-5-exec = scrot %F-%S_$wx$h_scrot.png -e 'mv $f ~/images'
-
 menu-3-0 = "  "
 menu-3-0-exec = $HOME/bin/smus
 menu-3-1 = "  "
@@ -432,7 +406,6 @@ menu-3-3 = "  "
 menu-3-3-exec = mpc pause & pkill -F /tmp/smus.pid
 menu-3-4 = "  "
 menu-3-4-exec = mpc next
-
 menu-4-0 = "  "
 menu-4-0-exec = xlock
 menu-4-1 = "  "
@@ -440,7 +413,8 @@ menu-4-1-exec = systemctl reboot
 menu-4-2 = "  "
 menu-4-2-exec = systemctl poweroff
 
-[module/backlight]
+
+[module/arch_backlight]
 type = custom/script
 exec = ~/.config/polybar/scripts/backlight.sh
 tail = true
@@ -451,12 +425,12 @@ label = %output%%
 label-foreground = #3EC13F
 format-padding = 1
 
+
 [module/mpd-new]
 type = internal/mpd
 format-online = <label-song> <icon-prev> <toggle> <icon-next> <icon-random>  <icon-repeat> <label-time> 
 format-offline = <label-offline>
 label-offline =  no music
-
 icon-prev = 
 icon-stop = o
 icon-play = 
@@ -465,28 +439,50 @@ icon-next = 
 icon-seekf = >>
 icon-random = 
 icon-repeat = 
-
 label-song = 𝄞 %artist% - %title%
 label-song-maxlen = 25
 label-song-ellipsis = true
-
 toggle-on-foreground = #e60053
 toggle-off-foreground = #66
 
-[module/icons]
-type = custom/script
-exec = ~/bin/icons
 
 [module/pulseaudio]
 type = internal/pulseaudio
+sink = alsa_output.pci-0000_00_1b.0.analog-stereo
+format-volume = <ramp-volume><label-volume> 
+label-volume =  %percentage%%
+label-volume-foreground = ${root.foreground}
+label-muted = 🔇 muted
+label-muted-foreground = #666
+bar-volume-width = 10
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = 
+bar-volume-indicator-font = 2
+bar-volume-fill = 
+bar-volume-fill-font = 2
+bar-volume-empty = 
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.foreground-alt}
+ramp-volume-0 = 🔈
+ramp-volume-1 = 🔉
+ramp-volume-2 = 🔊
 
+
+[module/mic]
+type = internal/pulseaudio
+sink = alsa_input.pci-0000_00_1b.0.analog-stereo
 format-volume = <label-volume> <bar-volume>
 label-volume =  %percentage%%
 label-volume-foreground = ${root.foreground}
-
 label-muted = 🔇 muted
 label-muted-foreground = #666
-
 bar-volume-width = 10
 bar-volume-foreground-0 = #55aa55
 bar-volume-foreground-1 = #55aa55
@@ -504,35 +500,31 @@ bar-volume-empty =
 bar-volume-empty-font = 2
 bar-volume-empty-foreground = ${colors.foreground-alt}
 
+
 [module/tags]
 type = internal/xworkspaces
-
 label-active = %name%
 label-active-padding = 2
 label-active-background = ${colors.background}
 label-active-foreground = ${colors.foreground}
-
 label-occupied = %name%
 label-occupied-background = #ff0000
-
 label-empty = %name%
 label-empty-padding = 2
-
 label-urgent = %name%
 label-urgent-padding = 2
 label-urgent-background = ${colors.background}
 label-urgent-foreground = ${colors.foreground}
+
 
 [module/temperature]
 type = internal/temperature
 interval = 3
 thermal-zone = 0
 warn-temperature = 70
-
 format = <ramp><label>
 format-padding = 1
 ;label = %{A1:termite --exec='watch sensors' & disown:} %temperature%%{A}
-
 ramp-0 = ""
 ramp-0-foreground = ${xrdb:polybar*color4}
 ramp-1 = ""
@@ -541,11 +533,11 @@ ramp-2 = ""
 ramp-2-foreground = ${xrdb:polybar*color17}
 ramp-3 = ""
 ramp-3-foreground = ${xrdb:polybar*urgent}
-
 format-warn = <label-warn>
 label-warn = " %temperature-c%"
 label-warn-padding = 1
 label-warn-foreground = ${colors.urgent}
+
 
 [module/window_switch]
 type = custom/script
@@ -554,23 +546,20 @@ label = "%{A1:skippy-xd:} %{A3:skippy-xd:} %output% %{A} %{A}"
 exec = echo ""
 format = <label>
 
+
 [bar/dwm]
 inherit = settings
 background = ${colors.background}
 foreground = ${colors.foreground}
 override-redirect = true
-
 ;width = 55%
 ;height = 26
 ;offset-x = 45%
-
 modules-left = date wlan memory cpu pulseaudio xbacklight battery 
 modules-right = mpd-new
 modules-center = window_switch
-
 font-0 =  FontAwesome
 font-1 = DejaVu Sans:pixelsize=11
-
 bottom = true
 width = 100%
 height = 20
@@ -578,19 +567,15 @@ height = 20
 offset-y = -1
 radius = 0
 fixed-center = true
-
-
 line-size = 0
 line-color = #f00
-
 border-size = 0
 border-color = #00000000
-
 padding-left = 0
 padding-right = 1
-
 module-margin-left = 2
 module-margin-right = 2
+
 
 [bar/hdmi]
 inherit = bar/default
