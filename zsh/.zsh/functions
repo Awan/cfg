@@ -421,3 +421,8 @@ sprunge ()
 {
   tail -n +1 -- "$@" | curl -F 'sprunge=<-' http://sprunge.us
 }
+
+removeaudio ()
+{
+  ffmpeg -i $1 -vcodec copy -an $2
+}

@@ -7,7 +7,7 @@ bspc monitor -d I II III IV V VI VII VIII IX X
 
 bspc config external_rules_command "$HOME"/.config/bspwm/external_rules
 bspc config top_padding	       	 0
-bspc config bottom_padding	     17
+bspc config bottom_padding	     15
 bspc config border_width         3
 bspc config ignore_ewmh_focus   true
 bspc config initial_polarity first_child
