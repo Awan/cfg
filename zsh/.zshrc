@@ -9,7 +9,9 @@ for f in  ~/.zsh/*(DN); do source $f; done
 
 precmd() {
  psvar[1]=$(mailsnow);
- battery_charge;
+ if [[ "$HOST" != 'raspberrypi' ]]; then
+ battery_charge
+ fi
 }
 
 PS1="%{$fg[green]%}╭─%n@%m %{$reset_color%}%{$fg[yellow]%}in %~ %{$reset_color%}${git_branch} %1v

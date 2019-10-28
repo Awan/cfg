@@ -38,4 +38,9 @@ export GPG_TTY=$(tty)
 export SSH_AUTH_SOCK=/run/user/$(id -u)/gnupg/S.gpg-agent.ssh
 export PYENV_ROOT="$HOME/.pyenv"
 export _JAVA_AWT_WM_NONREPARENTING=1
-export LD_PRELOAD=$HOME/.local/bin/libstderred.so${LD_PRELOAD:+:$LD_PRELOAD}
+if [[ "$HOST" != 'raspberrypi' ]]; then
+  export LD_PRELOAD=$HOME/.local/bin/libstderred.so${LD_PRELOAD:+:$LD_PRELOAD}
+else
+  export LD_PRELOAD=$HOME/.local/bin/libstderred_for_pi.so${LD_PRELOAD:+:$LD_PRELOAD}
+fi
+export STDERRED_BLACKLIST="^(git)$"
