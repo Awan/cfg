@@ -53,9 +53,9 @@ color15    =      #ffffff
 
 foreground_bold = #ffffff
 #background = rgba(63, 63, 63, 0.8)
-background  = #1d282c
+#background  = #1d282c
 
-#background = #000000
+background = #000000
 
 # More colors
 color0 = #1d282c

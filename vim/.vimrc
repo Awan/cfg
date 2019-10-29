@@ -17,6 +17,8 @@ set nu
 set hlsearch
 autocmd! bufwritepost ~/.Xresources !xrdb -load ~/.Xresources
 autocmd! bufwritepost ~/.zshrc	!source ~/.zshrc
+autocmd! bufwritepost ~/.config/sxhkd/sxhkdrc	!pkill -USR1 -x sxhkd
+autocmd! bufwritepost ~/cfg/sxhkd/.config/sxhkd/sxhkdrc	!pkill -USR1 -x sxhkd
 autocmd! bufwritepost ~/cfg/zsh/.zsh/custom-alias !source ~/cfg/zsh/.zsh/custom-alias
 set nocp
 filetype on
