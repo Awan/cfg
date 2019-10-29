@@ -43,4 +43,4 @@ if [[ "$HOST" != 'raspberrypi' ]]; then
 else
   export LD_PRELOAD=$HOME/.local/bin/libstderred_for_pi.so${LD_PRELOAD:+:$LD_PRELOAD}
 fi
-export STDERRED_BLACKLIST="^(git)$"
+export STDERRED_BLACKLIST="^(git|ffmpeg)$"
