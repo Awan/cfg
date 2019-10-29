@@ -1,5 +1,5 @@
 [options]
-font = Tamzen Bold Italic normal 19
+font = Tamzen Bold Italic normal 17
 boldfont =  TamzenForPowerline10x20b 17
 
 word_chars = -A-Za-z0-9,./?%&#:_=+@~
