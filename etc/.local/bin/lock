@@ -4,6 +4,9 @@
 # ░▓▓▓▓▓▓▓▓▓▓ 
 # ░░░░░░░░░░ 
 
+# This script picks a random image from wallpapers directory and locks the
+# screen.
+
 
 walls="$HOME"/pix/wall
 
@@ -15,6 +18,6 @@ random_wallpic="$(find "$walls" -type f -iname '*.png' -print0 | xargs -0 shuf -
     --keyhlcolor=d23c3dff --bshlcolor=d23c3dff --separatorcolor=00000000 \
     --insidevercolor=f0c674ff --insidewrongcolor=bf616aff \
     --ringvercolor=ffffffff --ringwrongcolor=ffffffff \
-    --radius=50 --veriftext="" --wrongtext="" --indpos="x+1850:y+1010"
+    --radius=50 --veriftext="" --wrongtext="Try again" --indpos="x+1850:y+1010"
 
-sleep 5 && pgrep i3lock && xset dpms force off
+sleep 10 && pgrep i3lock && xset dpms force off
