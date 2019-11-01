@@ -8,7 +8,7 @@
 # screen.
 
 
-walls="$HOME"/pix/wall
+walls="$HOME"/pix/wall/collection
 
 random_wallpic="$(find "$walls" -type f -iname '*.png' -print0 | xargs -0 shuf -e -n 1 -z | xargs -0)" 
 
