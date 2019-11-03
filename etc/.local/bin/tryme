@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+
+# A script to trim audio/video using ffmpeg
+
+# Usage:
+# tryme input.mp3 output.mp3
+
+
+input_file=$1
+output_file=$2
+
+read -p 'Enter the start of file you wanna trim from? ' start_time
+read -p 'Enter the end of the file you wanna end at? ' end_time
+
+ffmpeg -i $1 -ss $start_time -t $end_time -async 1 -c copy $output_file
+
+echo "Your output file is ${PWD}/${output_file}."
