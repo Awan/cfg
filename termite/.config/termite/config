@@ -1,6 +1,7 @@
 [options]
+
 font = Tamzen Bold Italic normal 17
-boldfont =  TamzenForPowerline10x20b 17
+bolfont = TamzenForPowerline10x20b 17
 
 word_chars = -A-Za-z0-9,./?%&#:_=+@~
 allow_bold = on
@@ -27,45 +28,27 @@ urgent_on_bell = true
 borderColor =     #000030
 highlight = #2f2f2f
 
+
 [colors]
 
-# Colorscheme I use for 256 color support
-
-color0     =      #3f3f3f
-color1     =      #705050
-color2     =      #00b45a
-color3     =      #dfcf8f
-color4     =      #506070
-color5     =      #dc8cc3
-color6     =      #8cd0d3
-color7     =      #dcdccc
-color8     =      #709080
-color9     =      #cc5454
-color10    =      #4d9f4d
-color11    =      #f0dfaf
-color12    =      #4186be
-color13    =      #ec93d3
-color14    =      #93e0e3
-color15    =      #ffffff
-
-
-# background and cursor etc.
-
-foreground_bold = #ffffff
-#background = rgba(63, 63, 63, 0.8)
-#background  = #1d282c
-
-background = #000000
-
-# More colors
-color0 = #1d282c
-foreground = #2B81A6
-color2 = #A9D152
-color10 = #90A959
-color4 = #1D6B8C
-color12 = #4BA9D1
-color6 = #84D5D9
-color3 = #E3B76F
+background = #090a18
+foreground = #b4abac
+color0     = #090a18
+color1     = #ff778a
+color2     = #6ab539
+color3     = #bfa01a
+color4     = #4aaed3
+color5     = #e58a82
+color6     = #29b3bb
+color7     = #a59ebd
+color8     = #260e22
+color9     = #f78e2f
+color10    = #60ba80
+color11    = #de9b1d
+color12    = #8ba7ea
+color13    = #e08bd6
+color14    = #2cbab6
+color15    = #b4abac
 
 [hints]
 padding = 2
@@ -75,6 +58,3 @@ border = #3f3f3f
 border_width = 0.5
 roundness = 2.0
 quick_url=true
-
-
-#vim: ft=dosini cms=#%s
