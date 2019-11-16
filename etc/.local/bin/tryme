@@ -16,6 +16,6 @@ output_file=$2
 read -p 'Enter the start of file you wanna trim from? ' start_time
 read -p 'Enter the end of the file you wanna end at? ' end_time
 
-ffmpeg -i $1 -ss $start_time -t $end_time -async 1 -c copy $output_file
+ffmpeg -i $input_file -ss $start_time -to $end_time -c:v copy -c:a copy $output_file
 
 echo "Your output file is ${PWD}/${output_file}."

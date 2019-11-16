@@ -32,6 +32,7 @@ xbacklight = 50 &
 pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 #redshift -c ~/.config/redshift/redshift.conf &
 [ -z $TMUX ] && tmux new-session -s $USER -d 
+urxvtc -T 'scratchpad' -geometry 65x20 || termite -t 'scratchpad' --display :0
 
 # if multihead available, enable it or disable if not.
 

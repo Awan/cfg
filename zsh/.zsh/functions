@@ -45,7 +45,16 @@ function mp42mp3 {
   notify-send "You have got $CURRENTMP4HERE new mp3s. Now you have $TOTAL songs in database. Enjoy your music"
 }
 
-# 
+# mp3 to aac
+
+mp3toaac () {
+  for file in *.mp3
+  do
+    ffmpeg -y -i "$file" "`basename "$file" .mp3`.aac"
+  done
+}
+
+
 
 function speedup {
   base=$(basename $1)
@@ -56,6 +65,37 @@ function speedup {
 
 
   notify-send "your video has got speed. Enjoy"
+}
+
+# aac + image = mp4
+
+aactomkv ()
+{
+  for files in *.aac
+  do
+    ffmpeg -y -loop 1 -framerate 1/25 -i image.jpg  -i "$file" -vf "scale='min(1280,iw)':-2, format=yuv420p" -c:v libx264 -preset veryslow -crf 0 -c:a copy  "`basename "$file" .aac`.mkv" 
+  done 
+}
+
+function mp3tomp4 ()
+# Makes youtube compliant mp4 from a image( must be a .jpg and its size should be a multiple of 2. Use imagemagic's identify to measure it `identify image.jpg`
+# if not a multiple of 2, `convert image.jpg -resize 1024x512! imag2.jpg`
+{
+  ffmpeg -loop 1 -r 1 -i $1 -i $2 -vcodec libx264 -acodec copy -shortest $3
+}
+
+
+function pl ()
+{
+  mpc searchplay $1
+}
+
+function mergeaudio ()
+# Create a .txt file in same directory and add files to be merged there as "file file1 and on new line, file file2"
+# Usage:
+# mergeaudio files.txt output.mp3
+{
+  ffmpeg -f concat -safe 0 -i $1 -c copy $2
 }
 
 

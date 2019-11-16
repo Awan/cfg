@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# Reload functions
-#super + Escape
-#	"$XDG_CONFIG_HOME"/sxhkd/functions
-
 # Reload sxhkd
 super + Escape
   pkill -USR1 -x sxhkd
@@ -29,16 +25,6 @@ alt + b
   mpc toggle
 
 # Scratchpad
-#super + i
-#  ~/.local/bin/scratchtoggle
-
-# Scratchpad
-#super + i
-#id=$(cat /tmp/scratchid);\
-#bspc node $id --flag hidden;bspc node -f $id
-
-
-# Scratchpad
 super + i
   $HOME/.config/bspwm/scratchpad.sh switch-app
 
@@ -46,10 +32,11 @@ super + shift + i
   $HOME/.config/bspwm/scratchpad.sh toggle-flag
 
 super + Return
-  urxvtc
+  urxvtc || termite
+  
 
 alt + Return
-  termite
+  termite && urxvtc
 
 super + d
   dmenu_run
