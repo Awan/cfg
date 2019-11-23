@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+
+# A simple bash script to set wallpaper.
+
+
+wall () {
+  echo "#!/bin/sh
+  feh --bg-scale $(shuf -n1 -e ~/pix/wall/collection/*)" > ~/.fehbg
+  ~/.fehbg
+}
+
+while true; do
+  wall
+  sleep 300
+done

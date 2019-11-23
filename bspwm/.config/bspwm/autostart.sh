@@ -27,7 +27,7 @@ unclutter -root -reset -idle 1 -noevents &
 xset dpms 180 &
 xss-lock -- $HOME/.local/bin/lock &
 dunst -c $HOME/.config/dunst/dunstrc &
-~/.fehbg &
+~/.local/bin/wallp &
 xbacklight = 50 &
 pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 #redshift -c ~/.config/redshift/redshift.conf &
