@@ -36,7 +36,7 @@ super + Return
   
 
 alt + Return
-  termite && urxvtc
+  termite 
 
 super + d
   dmenu_run
@@ -75,6 +75,14 @@ super + ctrl + {m,x,y,z}
 # Music
 XF86LaunchA
   mpc toggle
+
+# MPD next song
+alt + n
+  mpc next
+
+# MPD previous song
+alt + p
+  mpc prev
 
 #
 # focus/swap
