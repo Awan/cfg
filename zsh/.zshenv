@@ -1,5 +1,5 @@
 typeset -U path
-path=(~/bin ~/.local/bin ~/.local/lib ~/.pyenv/bin /usr/sbin /sbin $path[@])
+path=(~/.cargo/bin ~/.local/bin ~/.local/lib ~/.pyenv/bin /usr/sbin /sbin $path[@])
 BROWSER=/usr/bin/google-chrome-stable
 EDITOR=/usr/bin/vim
 VISUAL=$EDITOR
