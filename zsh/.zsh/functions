@@ -98,6 +98,13 @@ function mergeaudio ()
   ffmpeg -f concat -safe 0 -i $1 -c copy $2
 }
 
+function mergeaudiotovideo ()
+# maps audio with video, first arg should be video, second should be audio and
+# third should be the output
+{
+  ffmpeg -i $1 -i $2 -c copy -map 0:v:0 -map 1:a:0 $3
+}
+
 
 # Jobs mail
 
