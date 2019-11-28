@@ -1,18 +1,26 @@
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+
+
 [options]
 
 font = Tamzen Bold Italic normal 17
-bolfont = TamzenForPowerline10x20b 17
-
+boldfont = TamzenForPowerline10x20b 17
 word_chars = -A-Za-z0-9,./?%&#:_=+@~
-allow_bold = on
-bold_is_bright = on
+allow_bold = true
+bold_is_bright = true
 browser = /usr/bin/google-chrome-stable
-clickable_url = on
-hyperlinks = on
+clickable_url = true
+hyperlinks = true
 cursor_blink = system
+geometry = 500x300
+icon_name = terminal
+modify_other_keys = false
 cursor_shape = underline
 dynamic_title = true
-filter_unmatched_urls = on
+filter_unmatched_urls = true
 mouse_autohide = true
 fullscreen = off
 scrollback_lines = -1
@@ -23,10 +31,10 @@ visible_bell = true
 scroll_on_keystroke = true
 scroll_on_output = false
 search_wrap = true
-size_hints = on
+size_hints = true
 urgent_on_bell = true
 borderColor =     #000030
-highlight = #2f2f2f
+highlight = #30343e
 
 
 [colors]
