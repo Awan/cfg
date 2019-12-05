@@ -32,7 +32,8 @@ super + shift + i
   $HOME/.config/bspwm/scratchpad.sh toggle-flag
 
 super + Return
-  urxvtc || termite
+#  urxvtc || termite
+  termite
   
 
 alt + Return
@@ -77,12 +78,12 @@ XF86LaunchA
   mpc toggle
 
 # MPD next song
-alt + n
-  mpc next
+#alt + n
+#  mpc next
 
 # MPD previous song
-alt + p
-  mpc prev
+#alt + p
+#  mpc prev
 
 #
 # focus/swap

@@ -5,6 +5,13 @@ zmodload -i zsh/complist
 # http://www.zsh.org/mla/users/2011/msg00531.html
 zstyle ':completion:*' rehash true
 
+# vim keys in tab completion
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -v '^?' backward-delete-char
+
 # for all completions: menuselection
 zstyle ':completion:*' menu select=1
 

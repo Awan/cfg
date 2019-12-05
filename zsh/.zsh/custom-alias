@@ -1,4 +1,5 @@
 alias ls='ls --color=auto'
+alias zq='zathura $HOME/kit/pdf/Quran/Quran.pdf &'
 alias du='du -h'
 alias youtube='google-chrome-stable --app=https://youtube.com'
 alias colorize='toilet --gay -f term $@'

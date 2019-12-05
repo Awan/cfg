@@ -80,6 +80,8 @@ aactomkv ()
 function mp3tomp4 ()
 # Makes youtube compliant mp4 from a image( must be a .jpg and its size should be a multiple of 2. Use imagemagic's identify to measure it `identify image.jpg`
 # if not a multiple of 2, `convert image.jpg -resize 1024x512! imag2.jpg`
+# Usage:
+# mp3tomp4 image.jpg audio.mp3 output.mp4
 {
   ffmpeg -loop 1 -r 1 -i $1 -i $2 -vcodec libx264 -acodec copy -shortest $3
 }
