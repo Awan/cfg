@@ -11,7 +11,7 @@ let g:zenburn_old_Visual = 1
 let g:zenburn_high_contrast = 1
 let g:zenburn_force_dark_Background = 1
 set fo+=w
-colorscheme wombat256dave
+colorscheme default
 cmap w!! %!sudo tee > /dev/null %
 set nu
 set hlsearch

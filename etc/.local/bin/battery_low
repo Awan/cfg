@@ -1,0 +1,24 @@
+#!/bin/sh
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+
+# If battery is low, push a notification
+
+battery_status=$(cat /sys/class/power_supply/BAT0/capacity)
+is_charger_connected=$(cat /sys/class/power_supply/AC/online)
+
+is_battery_low () {
+  if [ "$battery_status" -le 30 ]; then
+    notify-send -u critical "Battery critically low"
+  fi
+  if [ "$is_charger_connected" -eq 1 ] && [ "$battery_status" -gt 95 ]; then
+    notify-send -u critical "Battery is fully charged"
+  fi
+}
+
+while true; do
+  is_battery_low
+  sleep 600
+done
