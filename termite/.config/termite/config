@@ -6,12 +6,8 @@
 
 [options]
 
-#font = Tamzen Bold Italic normal 17
-font = Hack Italic 13
-#font = Fira Code Light Italic 13
-#boldfont = TamzenForPowerline10x20b 17
-#font = Fira Code Light Italic 13
-#boldfont = Fira Code Bold Italic 13
+font = fantasque sans mono Italic 16
+boldfont = fantasque sans mono Bold Italic 16
 word_chars = -A-Za-z0-9,./?%&#:_=+@~
 allow_bold = true
 bold_is_bright = true
@@ -70,3 +66,11 @@ border = #3f3f3f
 border_width = 0.5
 roundness = 2.0
 quick_url=true
+
+#font = Fira Code Light Italic 13
+#boldfont = TamzenForPowerline10x20b 17
+#font = Fira Code Light Italic 13
+#boldfont = Fira Code Bold Italic 13
+#font = Tamzen Bold Italic normal 17
+#font = Hack Italic 13
+
