@@ -77,6 +77,23 @@ aactomkv ()
   done 
 }
 
+
+function hdimg () {
+# converts images into HD wallpapers 1920x1080
+# Accepts globbing as first argument e.g. jpg as first argument will convert all
+# jpgs into HD images and saves them into new dir resized in same directory
+
+  ext="$1"
+  mkdir resized 2>/dev/null
+  
+  for file in *."$ext"
+  do
+    convert $file -resize 1920x1080! resized/`basename $file .$ext`.$ext
+  done
+
+}
+
+
 function mp3tomp4 ()
 # Makes youtube compliant mp4 from a image( must be a .jpg and its size should be a multiple of 2. Use imagemagic's identify to measure it `identify image.jpg`
 # if not a multiple of 2, `convert image.jpg -resize 1024x512! imag2.jpg`
