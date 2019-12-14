@@ -73,4 +73,6 @@ quick_url=true
 #boldfont = Fira Code Bold Italic 13
 #font = Tamzen Bold Italic normal 17
 #font = Hack Italic 13
+#font = M+ 1mn italic 15
+#boldfont = M+ 1mn bold 15
 

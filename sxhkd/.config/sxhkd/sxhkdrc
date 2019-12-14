@@ -33,7 +33,7 @@ super + shift + i
 
 super + Return
 #  urxvtc || termite
-  termite
+  urxvtc
   
 
 alt + Return

@@ -46,22 +46,24 @@
 !                        xft:Inconsolata:bold:size=16:antialias=true,\
 !                        xft:DejaVu Sans:bold:size=16:antialias=true,\
 !                        xft:FontAwesome
-URxvt*font: xft:source code pro for powerline:italic:pixelsize=18,\
-            xft:DejaVu Sans Mono for Powerline-10,\
-            xft:'Terminus (TTF) for Powerline':MediumForPowerline:size=13:antialias=true,\
-            xft:Inconsolata\ For\ Powerline:size=13:antialias=true,\
-            xft:Consolas:size=13,\
-            xft:Inconsolata\ for\ Powerline,\
-            xft:Terminess\ Powerline:size=12,\
-            -misc-tamzenforpowerline-medium-r-normal--20-145-100-100-c-100-iso10646-1,\
-            xterm: -misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso10646-1,\
-            xft:PowerlineSymbols,\
-            xft:FontAwesome:size=28:minspace=False,\
-            xft:DejaVu Sans:pixelsize=18
-URxvt*imFont: xft:source code pro for powerline:italic:pixelsize=18
-URxvt*boldFont: xft:source code pro for powerline:semibold:pixelsize=18
-URxvt*italicFont: xft:source code pro for powerline:italic:pixelsize=18
-URxvt*boldItalicFont: xft:source code pro for powerline:semibold:italic:pixelsize=18
+!URxvt*font: xft:source code pro for powerline:italic:pixelsize=18,\
+!            xft:DejaVu Sans Mono for Powerline-10,\
+!            xft:'Terminus (TTF) for Powerline':MediumForPowerline:size=13:antialias=true,\
+!            xft:Inconsolata\ For\ Powerline:size=13:antialias=true,\
+!            xft:Consolas:size=13,\
+!            xft:Inconsolata\ for\ Powerline,\
+!            xft:Terminess\ Powerline:size=12,\
+!            -misc-tamzenforpowerline-medium-r-normal--20-145-100-100-c-100-iso10646-1,\
+!            xterm: -misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso10646-1,\
+!            xft:PowerlineSymbols,\
+!            xft:FontAwesome:size=28:minspace=False,\
+!            xft:DejaVu Sans:pixelsize=18
+!URxvt*imFont: xft:source code pro for powerline:italic:pixelsize=18
+!URxvt*boldFont: xft:source code pro for powerline:semibold:pixelsize=18
+!URxvt*italicFont: xft:source code pro for powerline:italic:pixelsize=18
+!URxvt*boldItalicFont: xft:source code pro for powerline:semibold:italic:pixelsize=18
+URxvt*font                  : xft:Fantasque\ Sans\ Mono:italic:size=15
+URxvt*boldFont              : xft:Fantasque\ Sans\ Mono:bold:italic:size=15
 URxvt*letterSpace: 0
 
 URxvt*termName             : rxvt-unicode-256color
@@ -338,3 +340,18 @@ xterm*cutchars              : \"()*,<>[]{}|''"\
 !xterm*
 !xterm*answerbackString     :
 !xterm*secondaryScreen      : 1
+
+! dmenu
+
+dmenu.selforeground:	    #474c57
+dmenu.background:	        #ffffff
+dmenu.selbackground:	    #4ec2e8
+dmenu.foreground:	        #474c57
+
+! rofi
+
+rofi.color-enabled: true
+rofi.color-window: #ffffff, #ffffff, #ffffff
+rofi.color-normal: #ffffff, #474c57, #ffffff, #ffffff, #4ec2e8
+rofi.color-active: #ffffff, #fec7cd, #ffffff, #ffffff, #95c1c0
+rofi.color-urgent: #ffffff, #f59335, #ffffff, #ffffff, #f59335  
