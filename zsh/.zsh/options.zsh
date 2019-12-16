@@ -4,12 +4,12 @@ bindkey -M vicmd 'j' history-substring-search-down
 
 # last command should be recalled and cursor would go in the beginning, ready to edit it.
 
-recall_last_command() {
-    BUFFER=" $_"
+last_command() {
+    zle insert-last-word -- -1 -1
     CURSOR=0
 }
-zle -N recall_last_command
-bindkey -M vicmd 'b' recall_last_command
+zle -N last_command
+bindkey -M vicmd 'b' last_command
 
 
 # History Settings (big history for use with many open shells and no dups)
