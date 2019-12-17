@@ -492,3 +492,17 @@ removeaudio ()
 {
   ffmpeg -i $1 -vcodec copy -an $2
 }
+
+
+apkname ()
+{
+  package="$1"
+  adb shell pm list packages | awk -F: -v pkg=$package 'index($0, pkg) {print $2}'
+}
+
+apkpath ()
+{
+  package="$1"
+  adb shell pm path $package | awk -F: -v pkg=$package 'index($0, pkg) {print $2}'
+}
+
