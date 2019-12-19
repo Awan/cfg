@@ -7,13 +7,8 @@
 # A simple bash script to set wallpaper.
 
 
-wall () {
-  echo "#!/bin/sh
-  feh --bg-scale $(shuf -n1 -e ~/pix/wall/collection/*)" > ~/.fehbg
-  ~/.fehbg
-}
 
 while true; do
-  wall
+  feh --bg-scale "$(shuf -n1 -e ~/pix/wall/collection/*)"
   sleep 300
 done

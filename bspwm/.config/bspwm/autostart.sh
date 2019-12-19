@@ -29,7 +29,7 @@ xss-lock -- $HOME/.local/bin/lock &
 dunst -c $HOME/.config/dunst/dunstrc &
 ~/.local/bin/wallp &
 ~/.local/bin/battery_low &
-xbacklight = 20 &
+xbacklight = 100 &
 pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 #redshift -c ~/.config/redshift/redshift.conf &
 [ -z $TMUX ] && tmux new-session -s $USER -d 

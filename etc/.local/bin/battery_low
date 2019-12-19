@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #  ▓▓▓▓▓▓▓▓▓▓ 
 # ░▓ Author ▓ Abdullah <https://abdullah.today/> 
 # ░▓▓▓▓▓▓▓▓▓▓ 
@@ -9,13 +9,10 @@
 battery_status=$(cat /sys/class/power_supply/BAT0/capacity)
 is_charger_connected=$(cat /sys/class/power_supply/AC/online)
 
-is_battery_low () {
-  if [ "$battery_status" -le 30 ]; then
-    notify-send -u critical "Battery critically low"
-  fi
-}
 
 while true; do
-  is_battery_low
+  if (( "$( < /sys/class/power_supply/BAT0/capacity )" < 30 )); then
+    notify-send -u critical "Battery critically low"
+  fi
   sleep 600
 done
