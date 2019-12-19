@@ -506,3 +506,25 @@ apkpath ()
   adb shell pm path $package | awk -F: -v pkg=$package 'index($0, pkg) {print $2}'
 }
 
+playandroid ()
+# play music files on android. first argument should be the path and second
+# should be the file format, like, audio/mp3, video/mp4
+{
+  music_file="$1"
+  format="$2"
+  adb shell am start -a android.intent.action.VIEW -d file://$music_file -t $format
+}
+
+apkrun ()
+# starts an apk which you give to it as first argument. You can get the name of
+# the package by using `adb shell pm list packages`
+{
+  package_name="$1"
+  adb shell monkey -p $package_name 1
+}
+
+apkstop ()
+{
+  package_name="$1"
+  adb shell am force-stop $package_name
+}
