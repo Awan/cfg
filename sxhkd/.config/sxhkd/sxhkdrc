@@ -51,11 +51,8 @@ super + w
 super + alt + {0-9}
 	mpc -q seek {0-9}0%
 
-super + {_,alt + }{h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
-
-XF86Audio{RaiseVolume,LowerVolume,Mute}
-	amixer {-q set Master 5%+,-q set Master 5%-,set Master toggle}
+super + alt + {h,j,k,l}
+	bspc node -s {west,south,north,east}
 
 # set the window state
 super + {t,shift + t,s,f}
@@ -65,17 +62,10 @@ super + {t,shift + t,s,f}
 alt + {h,j,k,l}
   bspwm_resize {west,south,north,east}
 
-# Resize windows
-#alt + shift + {h,j,k,l}
-#  bspwm_resize {west,south,north,east}
 
 # set the node flags
 super + ctrl + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
-
-# Music
-XF86LaunchA
-  mpc toggle
 
 # MPD next song
 #alt + n
@@ -85,13 +75,10 @@ XF86LaunchA
 #alt + p
 #  mpc prev
 
-#
-# focus/swap
-#
 
-# focus the node in the given direction
-super + {_,shift + }{h,j,k,l}
-	bspwm_smart_move {west,south,north,east}
+# move the floating windows 
+super + shift + {h,j,k,l}
+  $HOME/.config/bspwm/floating_motions {west,south,north,east}
 
 # focus the node for the given path jump
 super + {p,b,comma,period}
@@ -110,7 +97,7 @@ super + {Tab,semicolon}
 	bspc {node,desktop} -f next
 
 # focus the older or newer node in the focus history
-super + {o,i}
+super + {o,u}
 	bspc wm -h off; \
 	bspc node {older,newer} -f; \
 	bspc wm -h on
@@ -153,25 +140,13 @@ super + ctrl + shift + space
 #     ▐▌                                                      █▌           # 
 ############################################################################ 
 
+# Music
+XF86LaunchA
+  mpc toggle
+
 # Brightness keys
-XF86MonBrightnessDown
-  xbacklight -5
-
-XF86MonBrightnessUp
-  xbacklight +5
-
-# Raise Volume
-#XF86AudioRaiseVolume
-        amixer set Master 10%+
-
-
-# Lower Volume
-#XF86AudioLowerVolume
-        amixer set Master 10%-
-
-# Mute 
-#XF86AudioMute
-        amixer -D pulse set Master 1+ toggle
+XF86MonBrightness{Down,Up}
+  xbacklight {-5,+5}
 
 # Screenshot
 Print
@@ -203,5 +178,10 @@ alt + shift + bracket{left,right}
 # Lock the screen
 super + x
   "$HOME"/.local/bin/lock
+
+# Volume and Mute soft buttons
+XF86Audio{RaiseVolume,LowerVolume,Mute}
+	amixer {-q set Master 5%+,-q set Master 5%-,set Master toggle}
+
 
 # vim:ft=sxhkdrc
