@@ -561,3 +561,9 @@ bulkrename ()
   [[ "$old" != "$new" ]] && mv -iv "$dir/$old" "$dir/$new"
 done
 }
+
+tf ()
+{
+  string="$1"
+  toilet -f smmono12.tlf $string | lolcat
+}

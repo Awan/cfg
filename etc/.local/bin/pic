@@ -1,10 +1,20 @@
 #!/usr/bin/env bash
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
 
-while [[ -f $HOME/pix/cam/pic$n.png ]]
-do
-    n=$((n+1))
-done
-pic_name="$HOME/pix/cam/pic$n.png"
+# A simple script to take screenshots and copy it to clipboard
 
-import -window root -quality 100 $pic_name
+x=1920
+y=1080
+idx=1
+width=$(( $x ))
+height=$(( $y ))
+start_x=$(( $idx * $x ))
+start_y=$(( 0 ))
 
+sleep 1
+import -window root -quality 100 /tmp/scrot.png
+convert /tmp/scrot.png -crop ${width}x${height}+${start_x}+${start_y} /tmp/scrot-modified.png 2>/dev/null
+cat /tmp/scrot-modified.png | xclip -selection clipboard -t image/png
