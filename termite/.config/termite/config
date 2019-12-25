@@ -39,35 +39,34 @@ highlight = #30343e
 
 [colors]
 
-#background = #090a18
-#foreground = #b4abac
-
-#black
-color0                    = #1C1C1C
-color8                    = #4d4d4d
-#red
-color1                    = #D81860
-color9                    = #F00060
-#green
-color2                    = #B7CE42
-color10                   = #BDE077
-#yellow
-color3                    = #FEA63C
-color11                   = #FFE863
-#blue
-color4                    = #66AABB
-color12                   = #AACCBB
-#magenta
-color5                    = #B7416E
-color13                   = #BB4466
-#cyan
-color6                    = #5E7175
-color14                   = #A3BABF
-#white
-color7                    = #DDEEDD
-color15                   = #6C887A
-foreground  = #fffaf4
-background  = #0e1019
+foreground      = #C0C5CE
+foreground_bold = #C0C5CE
+cursor          = #C0C5CE
+background      = #1B2B34
+color0  = #1B2B34
+color1  = #EC5f67
+color2  = #99C794
+color3  = #FAC863
+color4  = #6699CC
+color5  = #C594C5
+color6  = #5FB3B3
+color7  = #C0C5CE
+color8  = #65737E
+color9  = #EC5f67
+color10 = #99C794
+color11 = #FAC863
+color12 = #6699CC
+color13 = #C594C5
+color14 = #5FB3B3
+color15 = #D8DEE9
+color16 = #F99157
+color17 = #AB7967
+color18 = #343D46
+color19 = #4F5B66
+color20 = #A7ADBA
+color21 = #CDD3DE
+#Transparency
+#background = rgba(63, 63, 63, 0.8)
 
 
 [hints]
@@ -122,3 +121,32 @@ quick_url=true
 #color13 = #FF6678
 #color14 = #FFEC62
 #color15 = #ffffff
+#background = #090a18
+#foreground = #b4abac
+
+##black
+#color0                    = #1C1C1C
+#color8                    = #4d4d4d
+##red
+#color1                    = #D81860
+#color9                    = #F00060
+##green
+#color2                    = #B7CE42
+#color10                   = #BDE077
+##yellow
+#color3                    = #FEA63C
+#color11                   = #FFE863
+##blue
+#color4                    = #66AABB
+#color12                   = #AACCBB
+##magenta
+#color5                    = #B7416E
+#color13                   = #BB4466
+##cyan
+#color6                    = #5E7175
+#color14                   = #A3BABF
+##white
+#color7                    = #DDEEDD
+#color15                   = #6C887A
+#foreground  = #fffaf4
+#background  = #0e1019
