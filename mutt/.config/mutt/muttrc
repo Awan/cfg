@@ -33,6 +33,7 @@ set attach_charset                                                              
 set attach_format                                                                                        = "%u%D%I %t%4n %T%.40d%> [%.7m/%.10M, %.6e%?C?, %C?, %s] "
 set attach_sep                                                                                           = "\n"
 set attach_split                                                                                         = "yes"
+set query_command                                                                                        = "goobook query %s"
 set attribution                                                                                          = "On %d, %n wrote:"
 set attribution_locale                                                                                   =
 set auto_tag                                                                                             = "no"
@@ -121,6 +122,7 @@ alternative_order text/plain text/html
 # Keybindings
 
 bind attach <return> view-mailcap
+bind editor <Tab> complete-query
 bind attach,index G last-entry
 bind attach,index g first-entry
 bind attach,index,pager \CD next-page
@@ -150,6 +152,7 @@ color sidebar_new yellow default
 
 # macros
 
+macro index,pager a "<pipe-message>goobook add<return>" "add the sender address to Google contacts"
 macro index C "<copy-message>?<toggle-mailboxes>" 
 # macro index q "<sync-mailbox><shell-escape>/usr/bin/offlineimap -o >/dev/null 2>&1<enter><quit>"
 macro index M "<save-message>?<toggle-mailboxes>"

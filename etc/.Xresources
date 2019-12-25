@@ -41,6 +41,7 @@ URxvt*boldFont             : xft:Fantasque\ Sans\ Mono:bold:italic:size=15
 URxvt*letterSpace          : 0
 URxvt*termName             : rxvt-unicode-256color
 URxvt*geometry             : 96x30
+URxvt*background           : #1B2B34
 URxvt*reverseVideo         : 0
 URxvt*loginShell           : 1
 URxvt*jumpScroll           : 1
