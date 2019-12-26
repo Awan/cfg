@@ -137,7 +137,40 @@ alias sk='autoscript'
 alias alis='$EDITOR ~/.zsh/custom-alias'
 alias yt='cd $HOME/mus/ && youtube-viewer && cd -'
 alias v3='vim $HOME/.config/i3/config'
-alias so='sudo pacman -S --noconfirm'
+# Install the package only if its not updated/alread installed
+alias si='sudo pacman -S --needed'
+# Remove the package
+alias sr='sudo pacman -R'
+# Remove the package with dependencies not required by other packages too.
+alias srs='sudo pacman -Rs'
+# Remove the package, dependencies and also those who depend on it
+alias srsc='sudo pacman -Rsc'
+# Remove the package with no .pacsave configurations being left.
+alias srn='sudo pacman -Rn'
+# Update the system
+alias update='sudo pacman -Syu'
+# Get info about a package
+alias ssi='pacman -Si'
+# Same thing with local packages
+alias sqi='pacman -Qi'
+# Query local packages
+alias sq='pacman -Qs'
+# Also display modified and backed up files
+alias sqii='pacman -Qii'
+# Files installed by package
+alias sqd='pacman -Ql'
+# Same thing for a remote package
+alias sqr='pacman -Fl'
+# Verify presence of files installed by a package
+alias sqk='pacman -Qk'
+# Query a file in the filesystem belongs to which package
+alias sqo='pacman -Qo'
+# Same thing for a remote package
+alias sqor='pacman -F'
+# Check orphan packages
+alias sor='pacman -Qdt'
+# List packages installed explicitly
+alias sde='pacman -Qet'
 alias awq='v $HOME/.config/qtile/config.py'
 alias awb='v $HOME/.config/bspwm/bspwmrc'
 alias rfb='bash $HOME/.config/bspwm/bspwmrc'
@@ -147,7 +180,6 @@ alias rfi='i3 restart'
 alias x='xdg-open'
 alias lf='leafpad'
 alias cfg-cava='vim $HOME/.config/cava/config'
-alias sr='sudo ranger'
 alias lilbak='cmus-remote -k -10'
 alias lilfor='cmus-remote -k +10'
 alias bigbak='cmus-remote -k -120'

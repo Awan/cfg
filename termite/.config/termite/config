@@ -6,8 +6,8 @@
 
 [options]
 
-font = fantasque sans mono Italic 16
-boldfont = fantasque sans mono Bold Italic 16
+font = Fantasque Sans Mono Italic 16
+boldfont = Fantasque Mans Mono Bold Italic 16
 word_chars = -A-Za-z0-9,./?%&#:_=+@~
 allow_bold = true
 bold_is_bright = true
