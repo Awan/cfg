@@ -578,3 +578,12 @@ aur ()
   cd $package_name
   makepkg -si
 }
+
+haq ()
+# Listen to Holy Quran's Ayah by numbers.
+{
+  surah="$1"
+  ayah="$2"
+  directory="$HOME/kit/verses"
+  mpv --really-quiet $directory/$surah$ayah.mp3
+}

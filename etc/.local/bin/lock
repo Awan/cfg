@@ -13,17 +13,8 @@ walls="$HOME"/pix/wall/collection
 random_wallpic="$(find "$walls" -type f -iname '*.png' -print0 | xargs -0 shuf -e -n 1 -z | xargs -0)" 
 
 
-"$HOME"/.local/bin/i3lock -i "$random_wallpic" \
-    --insidecolor=37344500 --ringcolor=ffffffff --line-uses-inside \
-    --keyhlcolor=d23c3dff --bshlcolor=d23c3dff --separatorcolor=00000000 \
-    --clock \
-    --insidevercolor=f0c674ff --insidewrongcolor=bf616aff \
-    --timestr="%H:%M:%S"  \
-    --datestr="%A, %m %Y" \
-    --datecolor="#ee00eeee" \
-    --timecolor="ee00eeee" \
-    --timepos 5:h-100 \
-    --ringvercolor=ffffffff --ringwrongcolor=ffffffff \
-    --radius=50 --veriftext="" --wrongtext="Try again" --indpos="x+1850:y+1010"
+#"$HOME"/.local/bin/i3lock -i "$random_wallpic" \
+
+/usr/bin/i3lock -i "$random_wallpic" 
 
 sleep 10 && pgrep i3lock && xset dpms force off

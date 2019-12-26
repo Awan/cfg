@@ -33,7 +33,7 @@ super + shift + i
 
 super + Return
 #  urxvtc || termite
-  urxvtc
+  termite
   
 
 alt + Return
@@ -64,7 +64,7 @@ super + {t,shift + t,s,f}
 
 # Resize nodes
 alt + {h,j,k,l}
-  bspwm_resize {west,south,north,east}
+  $HOME/.config/bspwm/bspwm_resize {west,south,north,east}
 
 
 # set the node flags
@@ -156,7 +156,7 @@ XF86LaunchA
 
 # Brightness keys
 XF86MonBrightness{Down,Up}
-  xbacklight {-5,+5}
+  light {-U 5,-A 5}
 
 # Screenshot
 Print
@@ -191,7 +191,7 @@ super + x
 
 # Volume and Mute soft buttons
 XF86Audio{RaiseVolume,LowerVolume,Mute}
-	amixer {-q set Master 5%+,-q set Master 5%-,set Master toggle}
+  pactl set-sink-{volume 0 +5%,volume 0 -5%,mute 0 toggle}
 
 
 
