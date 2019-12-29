@@ -576,14 +576,60 @@ aur ()
   aur_url="https://aur.archlinux.org/"
   git clone $aur_url/$package_name
   cd $package_name
-  makepkg -si
 }
 
-haq ()
-# Listen to Holy Quran's Ayah by numbers.
+#haq ()
+## Listen to Holy Quran's Ayah by numbers.
+#{
+#zero_pad(){
+#  # zero_pad <string> <length>
+#  [ ${#1} -lt $2 ] && printf "%0$(($2-${#1}))d" ''
+#  printf "%s\n" "$1"
+#}
+#which_surah="$1"
+#which_ayah="$2"
+#qari="$3"
+#shuraim_dir=$HOME/kit/verses/shuraim
+#sudais_dir=$HOME/kit/verses/sudais
+#surah=$(zero_pad $which_surah 3)
+#ayah=$(zero_pad $which_ayah 3)
+#
+#play_shuraim(){
+#   /usr/bin/mplayer $shuraim_dir/$surah$ayah.mp3
+#}
+#play_sudais(){
+#  /usr/bin/mplayer $sudais_dir/$surah$ayah.mp3
+#}
+#if [[ $qari == 'shuraim' ]]; then
+#  play_shuraim
+#fi
+#
+#if [[ $qari == 'sudais' ]]; then
+#  play_sudais
+#fi
+#}
+
+gfc ()
+# git initial commit
 {
-  surah="$1"
-  ayah="$2"
-  directory="$HOME/kit/verses"
-  mpv --really-quiet $directory/$surah$ayah.mp3
+  arabic="بِسْمِ ٱللّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيم"
+  english='In the name of Allah SWT, the most Gracious, the most Merciful.'
+  git commit -m "$arabic - $english"
+}
+
+ports ()
+{
+  sudo lsof -nPi | grep -i listen | awk '{print substr($1, 1, 7), substr($3, 1, 7), $5, $8, $9}' | sort | uniq | tr ' ' '\t'
+}
+
+listcon ()
+{
+  port=$1
+  host=$(uname)
+  netstat -atn | grep "$port" | sort -k5
+}
+
+r ()
+{
+  [[ $TERM != "*rxvt*" ]] && urxvt -e ranger &
 }

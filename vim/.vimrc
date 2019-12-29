@@ -166,5 +166,7 @@ command! -range=% CL  <line1>,<line2>w !curl -F 'clbin=<-' https://clbin.com | t
 command! -range=% VP  <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net | tr -d '\n' | xclip -i -selection clipboard
 
 map <F3> :! ( urxvt & ) &>/dev/null &<CR><CR>
+" Run python code in vim
+nmap <silent> <Leader>m :w<CR>:!python % > /tmp/vim-py.out && cat /tmp/vim-py.out && rm -f /tmp/vim-py.out<CR>
 
 " vim: set ft=vim :

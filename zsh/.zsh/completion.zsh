@@ -22,7 +22,7 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 # for all completions: selected item
-#zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} ma=0\;47
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} ma=0\;47
 
 # completion of .. directories
 #zstyle ':completion:*' special-dirs true

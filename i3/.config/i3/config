@@ -37,7 +37,7 @@ exec --no-start-id  $HOME/.config/polybar/launch.sh
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec urxvtc
+bindsym $mod+Return exec termite
 
 # kill focused window
 bindsym $mod+q kill

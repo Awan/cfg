@@ -36,8 +36,10 @@
 
 ! URxvt 
 
-URxvt*font                 : xft:Fantasque\ Sans\ Mono:italic:size=15
+URxvt*font                 : xft:Fantasque\ Sans\ Mono:italic:size=15, \
+                             xft:DejaVu\ Sans\ Mono\ for\ Powerline:10
 URxvt*boldFont             : xft:Fantasque\ Sans\ Mono:bold:italic:size=15
+URxvt.imlocale             : en_US.UTF-8
 URxvt*letterSpace          : 0
 URxvt*termName             : rxvt-unicode-256color
 URxvt*geometry             : 96x30
