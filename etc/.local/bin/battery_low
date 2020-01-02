@@ -13,6 +13,8 @@ is_charger_connected=$(cat /sys/class/power_supply/AC/online)
 while true; do
   if (( "$( < /sys/class/power_supply/BAT0/capacity )" < 30 )); then
     notify-send -u critical "Battery critically low"
+  elif (( "$( < /sys/class/power_supply/BAT0/capacity )" < 15 )); then
+    notify-send -u critical "Hibernating the system. Bye!" && systemctl hibernate
   fi
   sleep 600
 done

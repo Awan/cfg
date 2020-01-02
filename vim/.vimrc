@@ -4,18 +4,20 @@
 " ░░░░░░░░░░ 
 
 
-set nocompatible
 set ruler
-source ~/.vim/autoload/supertab.vim
 let g:zenburn_old_Visual = 1
 let g:zenburn_high_contrast = 1
 let g:zenburn_force_dark_Background = 1
 set fo+=w
-colorscheme default
+colorscheme PaperColor
 cmap w!! %!sudo tee > /dev/null %
-set nu
+
+" Set relative number but also show current line number (no zero for current
+" line)
+set number relativenumber
+
 set hlsearch
-autocmd! bufwritepost ~/.Xresources !xrdb -load ~/.Xresources
+autocmd! bufwritepost ~/.Xresources !xrdb -load ~/.Xresources && urxvtc 
 autocmd! bufwritepost ~/.zshrc	!source ~/.zshrc
 autocmd! bufwritepost ~/.config/sxhkd/sxhkdrc	!pkill -USR1 -x sxhkd
 autocmd! bufwritepost ~/cfg/sxhkd/.config/sxhkd/sxhkdrc	!pkill -USR1 -x sxhkd
@@ -26,12 +28,10 @@ set bg=dark
 au BufNewFile,BufRead *Pkgfile set filetype=sh
 set textwidth=80
 "au BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
-
 "au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/ " will make extra spaces red
 set fileencoding=utf-8
 filetype plugin indent on
 set showmode
-set nu
 set ai
 set sc
 set noincsearch
@@ -166,7 +166,11 @@ command! -range=% CL  <line1>,<line2>w !curl -F 'clbin=<-' https://clbin.com | t
 command! -range=% VP  <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net | tr -d '\n' | xclip -i -selection clipboard
 
 map <F3> :! ( urxvt & ) &>/dev/null &<CR><CR>
-" Run python code in vim
-nmap <silent> <Leader>m :w<CR>:!python % > /tmp/vim-py.out && cat /tmp/vim-py.out && rm -f /tmp/vim-py.out<CR>
+
+" Run python code without exiting vim
+nmap <silent> <Leader>m :w<CR>:!clear && python % > /tmp/vim-py.out && cat /tmp/vim-py.out && rm -f /tmp/vim-py.out<CR>
+
+" Run bash code without exiting vim
+nmap <silent> <Leader>b :w<CR>:!clear && bash % > /tmp/vim-bash.out && cat /tmp/vim-bash.out && rm -f /tmp/vim-bash.out<CR>
 
 " vim: set ft=vim :

@@ -36,9 +36,14 @@
 
 ! URxvt 
 
-URxvt*font                 : xft:Fantasque\ Sans\ Mono:italic:size=15, \
-                             xft:DejaVu\ Sans\ Mono\ for\ Powerline:10
-URxvt*boldFont             : xft:Fantasque\ Sans\ Mono:bold:italic:size=15
+! if remote host is having problems with rxvt-unicode, copy
+! /usr/share/terminfo/r/rxvt-unicode at hosts ~/.terminfo/r/rxvt-unicode
+
+URxvt*font                 : xft:FantasqueSansMono Nerd Font:italic:size=17, xft:DejaVu Sans Mono for Powerline:size=13, xft:SimHei:size=13
+URxvt*boldfont             : xft:Bitstream Vera Sans Mono:Bold:size=17:antialias=true
+URxvt*bolditalicfont       : xft:Bitstream Vera Sans Mono:Bold:italic:size=17:antialias=true
+URxvt*utf                  : 1
+URxvt*locale               : 1
 URxvt.imlocale             : en_US.UTF-8
 URxvt*letterSpace          : 0
 URxvt*termName             : rxvt-unicode-256color
@@ -76,13 +81,13 @@ URxvt*insecure             : 0
 URxvt*cursorUnderline      : 1
 URxvt*cursorBlink          : 0
 URxvt*pointerBlank         : 1
-URxvt*iconFile             : /usr/share/pixmaps/urxvt.xpm
+URxvt*iconFile             : /usr/share/icons/Adwaita/16x16/apps/utilities-terminal-symbolic.symbolic.png
 URxvt*pointerShape         : ul_angle
 URxvt*intensityStyles      : 1
 URxvt*saveLines            : 9999
 URxvt*buffered             : 1
 URxvt*depth                : 32
-URxvt*visual               : 0x20
+URxvt*visual               : 0x16f
 URxvt*override-redirect    : 0
 URxvt*externalBorder       : 15
 URxvt*internalBorder       : 15
@@ -94,7 +99,7 @@ URxvt*print-pipe           : cat >  /tmp/$(echo urxvt.dump.$(date +'%Y%M%d%H%m%S
 URxvt*modifier             :
 URxvt*cutchars             : BACKSLASH " " '"'&()*,;<=>?@[]^{|}\"()*,<>[]{}|''"\
 URxvt*secondaryScreen      : 1
-URxvt*secondaryScroll      : 1
+URxvt*secondaryScroll      : 0
 URxvt*perl-lib             : /home/ak/.urxvt/ext
 URxvt*iso14755             : 1
 URxvt*iso14755_52          : 1

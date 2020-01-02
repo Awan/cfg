@@ -33,7 +33,7 @@ super + shift + i
 
 super + Return
 #  urxvtc || termite
-  termite
+  urxvtc
   
 
 alt + Return
@@ -164,7 +164,7 @@ Print
 
 # File Manager
 XF86Explorer
-    urxvtc -e ranger
+    urxvtc -e ranger || urxvt -e ranger
 
 ## Mouse buttons
 #super + button{1-3}

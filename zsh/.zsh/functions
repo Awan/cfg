@@ -529,6 +529,11 @@ apkstop ()
   adb shell am force-stop $package_name
 }
 
+apkun ()
+{
+  adb shell pm uninstall "$1"
+}
+
 lightmin ()
 # Set brightness to minimum
 {
@@ -631,5 +636,9 @@ listcon ()
 
 r ()
 {
-  [[ $TERM != "*rxvt*" ]] && urxvt -e ranger &
+  if [[ "$TERM" == rxvt-unicode-256color ]]; then
+    ranger
+  else
+    urxvtc -e ranger 2>/dev/null || urxvt -e ranger &
+  fi
 }

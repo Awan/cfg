@@ -1,6 +1,6 @@
 typeset -U path
 path=(~/.cargo/bin ~/.local/bin ~/.local/lib ~/.pyenv/bin /usr/sbin /sbin $path[@])
-BROWSER=/usr/bin/google-chrome-stable
+BROWSER=$(which google-chrome-stable)
 EDITOR=/usr/bin/vim
 VISUAL=$EDITOR
 TERMINAL=urxvtc
