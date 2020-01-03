@@ -642,3 +642,5 @@ r ()
     urxvtc -e ranger 2>/dev/null || urxvt -e ranger &
   fi
 }
+
+replace_all() { ag "$1" -l | xargs sed -i -e "s/$1/$2/g" }

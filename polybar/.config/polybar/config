@@ -52,7 +52,7 @@ module-margin-right = 2
 font-0 =  FontAwesome
 font-1 = DejaVu Sans:pixelsize=11
 #modules-left = date wlan memory cpu xbacklight mic pavolume battery abdullah gmail
-modules-left = date wlan memory cpu pulseaudio backlight temperature battery 
+modules-left = date wlan memory cpu pulseaudio arch_backlight temperature battery 
 #modules-center = xworkspaces
 modules-center = bspwm
 modules-right = mpd-new
@@ -62,8 +62,8 @@ tray-padding = 6
 tray-background = #24292A00
 wm-restack = bspwm
 override-redirect = false
-scroll-up = bspwm-desknext
-scroll-down = bspwm-deskprev
+;scroll-up = bspwm-desknext
+;scroll-down = bspwm-deskprev
 
 
 [module/bspwm]
@@ -139,22 +139,23 @@ ramp-3 = 🌒
 ramp-4 = 🌑
 
 
-[module/backlight]
-type = internal/backlight
-card = intel_backlight
-format = <ramp><label>
-label = %percentage%%
-label-foreground = #3EC13F
-format-padding = 1
-ramp-0 = 🌕
-ramp-1 = 🌔
-ramp-2 = 🌓
-ramp-3 = 🌒
-ramp-4 = 🌑
-enable-scroll = true
-scroll-up = exec 'xbacklight + 5'
-scroll-down = exec 'xbacklight - 5'
-
+;[module/backlight]
+;type = internal/backlight
+;card = intel_backlight
+;;output = eDP-1
+;format = <ramp><label>
+;label = %percentage%%
+;label-foreground = #3EC13F
+;format-padding = 1
+;ramp-0 = 🌕
+;ramp-1 = 🌔
+;ramp-2 = 🌓
+;ramp-3 = 🌒
+;ramp-4 = 🌑
+;enable-scroll = true
+;scroll-up = exec light -A 5
+;scroll-down = exec light -U 6
+;
 
 [module/pavolume]
 type = custom/script
@@ -206,7 +207,7 @@ label-urgent-foreground = ${xrdb:polybar*color8}
 label-urgent-background = ${module/bspwm.label-urgent-background}
 label-urgent-padding = ${module/bspwm.label-urgent-padding}
 ; Create scroll handlers used to cycle desktops
-enable-scroll = true
+;enable-scroll = true
 label-monitor = %name%
 format = <label-state>
 label-active = %icon% %name%
@@ -477,6 +478,23 @@ format-prefix = " "
 label = %output%%
 label-foreground = #3EC13F
 format-padding = 1
+
+[module/backlight]
+type = internal/backlight
+card = intel_backlight
+exec = light | cut -d . -f1
+format = <label>
+;tail = true
+;interval = 0.2
+label = %percentage%%
+enable-scroll = true
+scroll-up = exec /usr/sbin/light -A 5
+scroll-down = exec /usr/sbin/light -U 5
+format-prefix = " "
+;label = %output%%
+label-foreground = #3EC13F
+format-padding = 1
+
 
 
 [module/mpd-new]
