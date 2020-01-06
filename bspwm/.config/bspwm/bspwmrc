@@ -20,7 +20,7 @@ bspc config external_rules_command "$HOME"/.config/bspwm/external_rules
 bspc config top_padding	       	    0
 
 # Bottom padding
-bspc config bottom_padding	        15
+bspc config bottom_padding	        0
 
 # Right padding
 
