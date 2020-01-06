@@ -578,9 +578,10 @@ aur ()
 {
   cd $HOME/git 
   package_name="$1"
-  aur_url="https://aur.archlinux.org/"
+  aur_url="https://aur.archlinux.org"
   git clone $aur_url/$package_name
   cd $package_name
+  vim PKGBUILD
 }
 
 #haq ()
@@ -644,3 +645,12 @@ r ()
 }
 
 replace_all() { ag "$1" -l | xargs sed -i -e "s/$1/$2/g" }
+
+aw ()
+# search arch wiki
+{
+  query="$1"
+  site="https://wiki.archlinux.org/index.php?search="
+  $BROWSER $site$query
+
+}

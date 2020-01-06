@@ -1,28 +1,102 @@
 #!/usr/bin/env bash
 
+# Start keybindings daemon
+
 sxhkd &
+
+# Start some useful programs
+
 "$HOME"/.config/bspwm/autostart.sh &
 
+# Configure monitors
 bspc monitor -d I II III IV V VI VII VIII IX X
 
+# Rules for windows
+
 bspc config external_rules_command "$HOME"/.config/bspwm/external_rules
-bspc config top_padding	       	 0
-bspc config bottom_padding	     15
-bspc config border_width         3
-bspc config ignore_ewmh_focus   true
-bspc config initial_polarity first_child
-bspc config window_gap           5
-bspc config split_ratio          0.50
-bspc config borderless_monocle   true
-bspc config gapless_monocle      false
-bspc config paddingless_monocle  false
-bspc config focus_follows_pointer true
+
+# Top padding
+
+bspc config top_padding	       	    0
+
+# Bottom padding
+bspc config bottom_padding	        15
+
+# Right padding
+
+bspc config right_padding	          0 
+
+# Left padding
+
+bspc config left_padding	          0
+
+# Border width for windows
+
+bspc config border_width            3
+
+# Ignore EWMH focus requests. If enabled, opening new window will have direct
+# focus too
+
+bspc config ignore_ewmh_focus       false
+
+# On which child should a new window be attached
+
+bspc config initial_polarity        first_child
+
+# Windows gaps
+
+bspc config window_gap              5
+
+# Split ration for new windows
+
+bspc config split_ratio             0.50
+
+# If monocle layout, no border to windows.
+
+bspc config borderless_monocle      true
+
+# No gaps as well
+
+bspc config gapless_monocle         true
+
+
+# Focus the window under the pointer
+
+bspc config focus_follows_pointer   true
+
+# When focusing a monitor/window, put the pointer to its center.
+
 bspc config pointer_follows_monitor true
-bspc config click_to_focus        true
-bspc config focus_by_distance     true
-bspc config history_aware_focus   true
-bspc config single_monocle        false
-bspc config presel_feedback_color "#5e81ac"
-bspc config focused_border_color "#00FFFF"
-bspc config active_border_color   "#FF00FF"
-bspc config normal_border_color "#800000"
+bspc config pointer_follows_focus   true
+
+# Button used to focusing a window/monitor
+
+bspc config click_to_focus          any
+
+# if there is only one window, set the layout monocle.
+
+bspc config single_monocle          true
+
+# Pointer actions when pressing mod + button
+
+bspc config pointer_action1         move
+bspc config pointer_action2         resize_side
+bspc config pointer_action3         resize_corner
+
+# Show where new window will be opened
+
+bspc config presel_feedback         false
+
+# Prefix prepended to status program
+
+bspc config status_prefix           'W'
+
+# Feedback color 
+
+bspc config presel_feedback_color   "#5e81ac"
+
+# Focused, active, normal window's border colors
+
+bspc config focused_border_color    "#00FFFF"
+bspc config active_border_color     "#FF00FF"
+bspc config normal_border_color     "#800000"

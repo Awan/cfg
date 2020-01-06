@@ -23,7 +23,7 @@ xsetroot -cursor_name left_ptr &
 xset +fp $HOME/.local/share/fonts/ &
 xset fp rehash &
 urxvtd -q -o -f &
-unclutter -root -reset -idle 1 -noevents &
+unclutter --ignore-scrolling --fork --timeout 1 &
 xset dpms 180 &
 xss-lock -- $HOME/.local/bin/lock &
 dunst -c $HOME/.config/dunst/dunstrc &
