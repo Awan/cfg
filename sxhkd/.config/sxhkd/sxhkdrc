@@ -185,7 +185,7 @@ alt + shift + bracket{left,right}
 # Lock the screen
 
 super + x
-  "$HOME"/.local/bin/lock
+  betterlockscreen -l dim
 
 # Soft volume up/down buttons
 
