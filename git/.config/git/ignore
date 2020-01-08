@@ -1,0 +1,153 @@
+# backup/temp files
+*.bak
+*.tmp
+
+.vscode
+
+# My bin files
+~/bin/*
+# vim files
+vim/.vim/undodir/*
+vim/.vim/view/*
+!vim/.vim/undodir/.heygitkeepme
+!vim/.vim/view/.heygitkeepme
+#
+
+# mpv
+mpv/.config/mpv/watch_later/*
+!mpv/.config/mpv/watch_later/.heygitkeepme
+# Swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Session
+Session.vim
+
+# Temporary
+.netrwhist
+*~
+# Auto-generated tag files
+tags
+# Persistent undo
+[._]*.un~
+
+# compiled files
+*.rbc
+
+# tags
+tags
+
+# personal files
+.env
+
+# database
+*.sql
+*.sqlite
+
+# logs
+*.log
+
+# pry history file
+.pry_history.rb
+
+#
+# Ruby
+#
+
+.yardoc/
+# ---> Linux
+*~
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# ---> Vim
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+# ---> Python
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+#  CRUX
+#Pkgfile
+#.footprint
+#.md5sum
+#.signature
+
+# Fonts
+fonts/.local/share/fonts/.uuid
+fonts/.local/share/fonts/fonts.dir
+
+# Systemd junk
+systemd/.config/systemd/user/default.target.wants/*
+systemd/.config/systemd/user/sockets.target.wants/*
+
+# iPython
+ipython/.ipython/profile_default/db/

@@ -1,0 +1,1 @@
+/usr/share/vim/addons/syntax_checkers/pod/proselint.vim

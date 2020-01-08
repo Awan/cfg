@@ -1,0 +1,84 @@
+###########################
+# xbindkeys configuration #
+###########################
+#
+# Version: 0.1.3
+#
+# If you edit this, do not forget to uncomment any lines that you change.
+# The pound(#) symbol may be used anywhere for comments.
+#
+# A list of keys is in /usr/include/X11/keysym.h and in
+# /usr/include/X11/keysymdef.h 
+# The XK_ is not needed. 
+#
+# List of modifier (on my keyboard): 
+#   Control, Shift, Mod1 (Alt), Mod2 (NumLock), 
+#   Mod3 (CapsLock), Mod4, Mod5 (Scroll). 
+#
+# Another way to specifie a key is to use 'xev' and set the 
+# keycode with c:nnn or the modifier with m:nnn where nnn is 
+# the keycode or the state returned by xev 
+#
+# This file is created by xbindkey_config 
+# The structure is : 
+# # Remark 
+# "command" 
+# m:xxx + c:xxx 
+# Shift+... 
+
+
+
+
+#keystate_numlock = enable
+#keystate_scrolllock = enable
+#keystate_capslock = enable
+
+
+
+#music
+#"$HOME/bin/music"
+#    m:0x40 + c:56
+#    Mod4 + b 
+
+#Volume UP extra
+"~/bin/pavolume.sh --up"
+    m:0x9 + c:21
+    Shift+Alt + equal 
+
+#Screeenshot
+"import -window root /tmp/foo.png; cat /tmp/foo.png | xclip -selection clipboard -t image/png"
+    m:0x0 + c:107
+    Print 
+
+#Seek Forward Song lil
+"mpc seek +10"
+    m:0x8 + c:35
+    Alt + bracketright 
+
+#Seek Forward Song
+"mpc seek +120"
+    m:0x9 + c:35
+    Shift+Alt + bracketright 
+
+#Seek Backward Song lil
+"mpc seek -10"
+    m:0x8 + c:34
+    Alt + bracketleft 
+
+#Seek Backward Song
+"mpc seek -120"
+    m:0x9 + c:34
+    Shift+Alt + bracketleft 
+
+#Webcam
+"$HOME/bin/mywebcam"
+    m:0x40 + c:54
+    Mod4 + c 
+
+#$BROWSER
+"google-chrome-stable"
+    m:0x40 + c:25
+    Mod4 + w 
+
+#
+# End of xbindkeys configuration

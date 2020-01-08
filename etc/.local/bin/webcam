@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#  ▓▓▓▓▓▓▓▓▓▓
+# ░▓ Author ▓ Abdullah <https://abdullah.today/>
+# ░▓▓▓▓▓▓▓▓▓▓
+# ░░░░░░░░░░
+
+# This script is an effort to use mpv for screencasts when you wanna include your video too.
+
+# lets start mpv, edit the video path how your camera is appearing in your file system.
+
+mpv /dev/video0 --geometry=640x480 --no-osc --title="webcam" --no-input-default-bindings --input-conf=/dev/null --no-resume-playback --really-quiet &
+
+# camera is started in full screen, now lets resize it.
+sleep 1;
+
+camWindow=`xdotool search webcam`
+xdotool windowsize "$camWindow" 489 367
+
+# lets move it to the bottom right.
+
+xdotool windowmove "$camWindow" 1109 511
+
+exit 0

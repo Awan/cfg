@@ -1,0 +1,1 @@
+/usr/share/vim/addons/syntax_checkers/slim/slim_lint.vim

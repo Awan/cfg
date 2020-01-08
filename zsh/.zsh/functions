@@ -1,0 +1,671 @@
+#!/bin/bash
+
+function mkd {
+  mkdir -p "$@" && cd "$_";
+}
+
+# for webm videos to mp4
+
+function webm2mp4 {
+  for file in *.webm
+  do 
+    ffmpeg -i "$file" "`basename "$file" .webm` .mp4"
+  done
+}
+
+# mp4 to mp3
+
+function mp42mp3 {
+  CURRENTMP4HERE=$(ls *.mp4 | wc -l)
+  notify-send "Found $CURRENTMP4HERE mp4s, gonna convert them now, be patient"
+
+
+
+  for file in *.mp4
+  do
+    ffmpeg -y -i "$file" "`basename "$file" .mp4`.mp3"
+  done
+
+
+
+  notify-send "All $CURRENTMP4HERE mp4s have been converted to mp3s and now we are moving them to your music dir"
+  CURRENTMP3INMPD=$(ls $HOME/mus/*.mp3 | wc -l)
+
+
+
+  notify-send "You have $CURRENTMP3INMPD mp3s in your database"
+  mv *.mp3 ~/mus/ -v
+
+
+
+  notify-send "All mp3s have been moved to music dir."
+  TOTAL=$(($CURRENTMP3INMPD + $CURRENTMP4HERE))
+
+
+  notify-send "You have got $CURRENTMP4HERE new mp3s. Now you have $TOTAL songs in database. Enjoy your music"
+}
+
+# mp3 to aac
+
+mp3toaac () {
+  for file in *.mp3
+  do
+    ffmpeg -y -i "$file" "`basename "$file" .mp3`.aac"
+  done
+}
+
+
+
+function speedup {
+  base=$(basename $1)
+  ext="${base##*.}"
+  base="${base%.*}"
+
+  ffmpeg -i $1 -filter:v "setpts=0.5*PTS"  $base'_speed.'$ext
+
+
+  notify-send "your video has got speed. Enjoy"
+}
+
+# aac + image = mp4
+
+aactomkv ()
+{
+  for files in *.aac
+  do
+    ffmpeg -y -loop 1 -framerate 1/25 -i image.jpg  -i "$file" -vf "scale='min(1280,iw)':-2, format=yuv420p" -c:v libx264 -preset veryslow -crf 0 -c:a copy  "`basename "$file" .aac`.mkv" 
+  done 
+}
+
+
+function hdimg () {
+# converts images into HD wallpapers 1920x1080
+# Accepts globbing as first argument e.g. jpg as first argument will convert all
+# jpgs into HD images and saves them into new dir resized in same directory
+
+  ext="$1"
+  mkdir resized 2>/dev/null
+  
+  for file in *."$ext"
+  do
+    convert $file -resize 1920x1080! resized/`basename $file .$ext`.$ext
+  done
+
+}
+
+
+function mp3tomp4 ()
+# Makes youtube compliant mp4 from a image( must be a .jpg and its size should be a multiple of 2. Use imagemagic's identify to measure it `identify image.jpg`
+# if not a multiple of 2, `convert image.jpg -resize 1024x512! imag2.jpg`
+# Usage:
+# mp3tomp4 image.jpg audio.mp3 output.mp4
+{
+  ffmpeg -loop 1 -r 1 -i $1 -i $2 -vcodec libx264 -acodec copy -shortest $3
+}
+
+
+function pl ()
+{
+  mpc searchplay $1
+}
+
+function mergeaudio ()
+# Create a .txt file in same directory and add files to be merged there as "file file1 and on new line, file file2"
+# Usage:
+# mergeaudio files.txt output.mp3
+{
+  ffmpeg -f concat -safe 0 -i $1 -c copy $2
+}
+
+function mergeaudiotovideo ()
+# maps audio with video, first arg should be video, second should be audio and
+# third should be the output
+{
+  ffmpeg -i $1 -i $2 -c copy -map 0:v:0 -map 1:a:0 $3
+}
+
+
+# Jobs mail
+
+function apply {
+
+  gpg -dq $HOME/bin/misc/job.gpg | mutt -s "Applying for Job"  $1
+}
+
+# Encrypt a file to myself
+
+function ei {
+  gpg -er C19D1580 $1
+}
+
+# Decrypt a file
+
+function di {
+  gpg -do $1 $2
+}
+
+# Bakchod
+
+function bakchod {
+  echo "$@" | tr a-zA-Z n-za-mN-ZA-M 
+}
+
+# mail 
+
+function alish {
+  mutt -s Important bar <<<"$@";
+}
+
+# mailto
+
+function mailto {
+  $TERMINAL -e mutt "$@"
+}
+
+function aa_256 () 
+{ 
+  local o= i= x=`tput op` cols=`tput cols` y= oo= yy=;
+  y=`printf %$(($cols-6))s`;
+  yy=${y// /=};
+  for i in {0..256};
+  do
+    o=00${i};
+    oo=`echo -en "setaf ${i}\nsetab ${i}\n"|tput -S`;
+    echo -e "${o:${#o}-3:3} ${oo}${yy}${x}";
+  done
+}
+
+function aa_c666 () 
+{ 
+  local r= g= b= c= CR="`tput sgr0;tput init`" C="`tput op`" n="\n\n\n" t="  " s="    ";
+  echo -e "${CR}${n}";
+  function c666 () 
+  { 
+    local b= g=$1 r=$2;
+    for ((b=0; b<6; b++))
+    do
+      c=$(( 16 + ($r*36) + ($g*6) + $b ));
+      echo -en "setaf ${c}\nsetab ${c}\n" | tput -S;
+      echo -en "${s}";
+    done
+  };
+function c666b () 
+{ 
+  local g=$1 r=;
+  for ((r=0; r<6; r++))
+  do
+    echo -en " `c666 $g $r`${C} ";
+  done
+};
+for ((g=0; g<6; g++))
+do
+  c666b=`c666b $g`;
+  echo -e " ${c666b}";
+  echo -e " ${c666b}";
+  echo -e " ${c666b}";
+  echo -e " ${c666b}";
+  echo -e " ${c666b}";
+done;
+echo -e "${CR}${n}${n}"
+}
+
+ht() { 
+  a=$(cat); curl -X POST -s -d "$a" https://hastebin.com/documents | awk -F '"' '{print "https://hastebin.com/"$4}' | xclip ; 
+}
+
+function fs() {
+  if du -b /dev/null > /dev/null 2>&1; then
+    local arg=-sbh;
+  else
+    local arg=-sh;
+  fi
+  if [[ -n "$@" ]]; then
+    du $arg -- "$@";
+  else
+    du $arg .[^.]* ./*;
+    fi;
+  }
+
+function dataurl() {
+  local mimeType=$(file -b --mime-type "$1");
+  if [[ $mimeType == text/* ]]; then
+    mimeType="${mimeType};charset=utf-8";
+  fi
+  echo "data:${mimeType};base64,$(openssl base64 -in "$1" | tr -d '\n')";
+}
+
+function escape() {
+  printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u);
+  # print a newline unless we’re piping the output to another program
+  if [ -t 1 ]; then
+    echo ""; # newline
+    fi;
+  }
+
+function v() {
+  if [ $# -eq 0 ]; then
+    vim .;
+  else
+    vim "$@";
+    fi;
+  }
+
+function o() {
+  if [ $# -eq 0 ]; then
+    ranger .;
+  else
+    ranger "$@";
+    fi;
+  }
+
+function tre() {
+  tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
+}
+
+ix() {
+  local opts
+  local OPTIND
+  [ -f "$HOME/.netrc" ] && opts='-n'
+  while getopts ":hd:i:n:" x; do
+    case $x in
+      h) echo "ix [-d ID] [-i ID] [-n N] [opts]"; return;;
+      d) $echo curl $opts -X DELETE ix.io/$OPTARG; return;;
+      i) opts="$opts -X PUT"; local id="$OPTARG";;
+      n) opts="$opts -F read:1=$OPTARG";;
+    esac
+  done
+  shift $(($OPTIND - 1))
+  [ -t 0 ] && {
+    local filename="$1"
+      shift
+      [ "$filename" ] && {
+        curl $opts -F f:1=@"$filename" $* ix.io/$id
+              return
+            }
+          echo "^C to cancel, ^D to send."
+        }
+      curl $opts -F f:1='<-' $* ix.io/$id
+    }
+shebang() {
+    if i=$(which $1);
+    then
+        printf '#!/usr/bin/env %s\n\n' $1 > $2 && chmod 755 $2 && vim + $2 && chmod 755 $2;
+    else
+        echo "'which' could not find $1, is it in your \$PATH?";
+    fi;
+    # in case the new script is in path, this throw out the command hash table and
+    # start over  (man zshbuiltins)
+    rehash
+}
+function webcam () {
+    mplayer -cache 128 -tv driver=v4l2:width=350:height=350 -vo xv tv:// -noborder -geometry "+1340+445" -ontop -quiet 2>/dev/null >/dev/null
+}
+
+function psg () {
+  pass generate "$1"  --clip
+  cd ~/.password-store
+  git push
+  cd -
+}
+
+function weather() {
+    curl wttr.in/"$1"
+}
+
+function cnsp () {
+  sudo /etc/rc.d/crond stop
+  sleep 1
+  sudo /etc/rc.d/crond status
+}
+
+function cnst () {
+  sudo /etc/rc.d/crond start
+  sleep 1
+  sudo /etc/rc.d/crond status
+}
+
+function ko () { 
+  a=$(cat)
+  curl -X POST -s -d "raw:$a" http://kopy.io/documents | awk -F '"' '{print "http://kopy.io/"$4}'
+}
+
+function pb()
+{
+    local url='https://paste.c-net.org/'
+    if (( $# )); then
+        local file
+        for file; do
+            curl -s \
+                --data-binary @"$file" \
+                --header "X-FileName: ${file##*/}" \
+                "$url"
+        done
+    else
+        curl -s --data-binary @- "$url"
+    fi
+}
+function pg()
+{
+    local url='https://paste.c-net.org/'
+    if (( $# )); then
+        local arg
+        for arg; do
+            curl -s "${url}${arg##*/}"
+        done
+    else
+        local arg
+        while read -r arg; do
+            curl -s "${url}${arg##*/}"
+        done
+    fi
+}
+
+function ap()
+{
+  sudo apt update && sudo apt full-upgrade -V
+}
+
+function gc()
+{
+  git commit $* -m $1
+}
+
+function gct()
+{
+  token=$(pass gist/github)
+  curl -u Awan:$token -X POST https://api.github.com/user/repos -d '{"name":"'$1'"}'
+  git init
+  git remote add origin git@github.com:Awan/$1.git
+}
+
+endot ()
+{
+  cd ~/cfg
+  tar czf encrypted.tar.gz etc/.local/share/misc misc
+  gpg -er 5CBC7BC7 encrypted.tar.gz
+  rm encrypted.tar.gz
+}
+
+dedot ()
+{
+  cd ~/cfg
+  gpg -do encrypted.tar.gz encrypted.tar.gz.gpg
+  tar xvf encrypted.tar.gz
+  rm encrypted.tar.gz
+}
+
+sne ()
+{
+  sudo systemctl --now enable $1
+}
+
+snd ()
+{
+  sudo systemctl stop $1
+}
+
+gadd ()
+{
+  sudo gpasswd -a "$USER" "$1"
+}
+
+ed ()
+{
+  "$EDITOR" "$@"
+}
+
+mpgo ()
+{
+  mkdir /tmp/mpv -p
+  if [[ -n $1 ]]; then
+    clipboard=$1
+  else
+    clipboard=$(xsel -b)
+  fi
+  if [[ $clipboard =~ ^http ]] || [[ -f $clipboard ]]; then
+		echo "$clipboard" > /tmp/mpv/last_link
+		# ytdl messes up direct links for some reason (slow)
+		mpv --no-ytdl --screenshot-template="./%tY.%tm.%td_%tH:%tM:%tS" "$clipboard"
+	elif [[ $clipboard =~ ^magnet ]]; then
+		echo "$clipboard" > /tmp/mpv/last_link
+		 peerflix  "$clipboard" --mpv -- --no-ytdl \
+			--screenshot-template="./%tY.%tm.%td_%tH:%tM:%tS"
+	fi
+}
+
+mplast ()
+{
+  mpgo "$(< /tmp/mpv/last_link)"
+}
+
+arec ()
+{
+  if [[ $# -ne 1 ]]; then
+    return 1
+  fi
+  arecord -vv -f wav "$1"
+}
+
+ram () 
+{
+	local sum
+	local items
+	local app="$1"
+	if [ -z "$app" ]; then
+		echo "First argument - pattern to grep from processes"
+	else
+		sum=0
+		for i in `ps aux | grep -i "$app" | grep -v "grep" | awk '{print $6}'`; do
+		sum=$(($i + $sum))
+	done
+		sum=$(echo "scale=2; $sum / 1024.0" | bc)
+	if [[ $sum != "0" ]]; then
+		echo "${fg[blue]}${app}${reset_color} uses ${fg[green]}${sum}${reset_color} MBs of RAM."
+	else
+		echo "There are no processes with pattern '${fg[blue]}${app}${reset_color}' are running."
+	fi
+	fi
+}
+
+pdfmerge () 
+{
+	local tomerge
+	tomerge=""
+	for file in "$@"; do
+		tomerge="$tomerge $file"
+	done
+	pdftk "$tomerge" cat output mergd.pdf
+}
+
+bkmeup ()
+{
+  cp -riv $1 ${1}-$(date +%d-%m-%Y-%H:%M).bak
+}
+
+
+sprunge ()
+{
+  tail -n +1 -- "$@" | curl -F 'sprunge=<-' http://sprunge.us
+}
+
+removeaudio ()
+{
+  ffmpeg -i $1 -vcodec copy -an $2
+}
+
+
+apkname ()
+{
+  package="$1"
+  adb shell pm list packages | awk -F: -v pkg=$package 'index($0, pkg) {print $2}'
+}
+
+apkpath ()
+{
+  package="$1"
+  adb shell pm path $package | awk -F: -v pkg=$package 'index($0, pkg) {print $2}'
+}
+
+playandroid ()
+# play music files on android. first argument should be the path and second
+# should be the file format, like, audio/mp3, video/mp4
+{
+  music_file="$1"
+  format="$2"
+  adb shell am start -a android.intent.action.VIEW -d file://$music_file -t $format
+}
+
+apkrun ()
+# starts an apk which you give to it as first argument. You can get the name of
+# the package by using `adb shell pm list packages`
+{
+  package_name="$1"
+  adb shell monkey -p $package_name 1
+}
+
+apkstop ()
+{
+  package_name="$1"
+  adb shell am force-stop $package_name
+}
+
+apkun ()
+{
+  adb shell pm uninstall "$1"
+}
+
+lightmin ()
+# Set brightness to minimum
+{
+  echo 100 | sudo tee /sys/class/backlight/intel_backlight/brightness
+}
+
+lightmax ()
+# Set brightness to maximum
+{
+  echo 852 | sudo tee /sys/class/backlight/intel_backlight/brightness
+}
+
+#light ()
+# Set brightness as first argument
+#{
+#  new_brightness="$1"
+#  echo $new_brightness | sudo tee
+#  /sys/class/backlight/intel_backlight/#brightness
+#}
+
+bulkrename ()
+# replace spaces with underscores, change upper to lower case, remove extra # underscores.
+{
+  find "$1" -depth | while read line; do
+  dir="$(dirname "$line")"
+  old="$(basename "$line")"
+  new="$(echo $old | tr ' ' '_' \
+    | tr -d '()[]{},?!' | tr -d "'" \
+    | tr '[[:upper:]]' '[[:lower:]]' \
+    | sed 's/__/_/g' | sed 's/_-_/-/g' )"
+  [[ "$old" != "$new" ]] && mv -iv "$dir/$old" "$dir/$new"
+done
+}
+
+tf ()
+{
+  string="$1"
+  toilet -f smmono12.tlf $string | lolcat
+}
+
+aur ()
+{
+  cd $HOME/git 
+  package_name="$1"
+  aur_url="https://aur.archlinux.org"
+  git clone $aur_url/$package_name
+  cd $package_name
+  vim PKGBUILD
+}
+
+#haq ()
+## Listen to Holy Quran's Ayah by numbers.
+#{
+#zero_pad(){
+#  # zero_pad <string> <length>
+#  [ ${#1} -lt $2 ] && printf "%0$(($2-${#1}))d" ''
+#  printf "%s\n" "$1"
+#}
+#which_surah="$1"
+#which_ayah="$2"
+#qari="$3"
+#shuraim_dir=$HOME/kit/verses/shuraim
+#sudais_dir=$HOME/kit/verses/sudais
+#surah=$(zero_pad $which_surah 3)
+#ayah=$(zero_pad $which_ayah 3)
+#
+#play_shuraim(){
+#   /usr/bin/mplayer $shuraim_dir/$surah$ayah.mp3
+#}
+#play_sudais(){
+#  /usr/bin/mplayer $sudais_dir/$surah$ayah.mp3
+#}
+#if [[ $qari == 'shuraim' ]]; then
+#  play_shuraim
+#fi
+#
+#if [[ $qari == 'sudais' ]]; then
+#  play_sudais
+#fi
+#}
+
+gfc ()
+# git initial commit
+{
+  arabic="بِسْمِ ٱللّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيم"
+  english='In the name of Allah SWT, the most Gracious, the most Merciful.'
+  git commit -m "$arabic - $english"
+}
+
+ports ()
+{
+  sudo lsof -nPi | grep -i listen | awk '{print substr($1, 1, 7), substr($3, 1, 7), $5, $8, $9}' | sort | uniq | tr ' ' '\t'
+}
+
+listcon ()
+{
+  port=$1
+  host=$(uname)
+  netstat -atn | grep "$port" | sort -k5
+}
+
+r ()
+{
+  if [[ "$TERM" == rxvt-unicode-256color ]]; then
+    ranger
+  else
+    urxvtc -e ranger 2>/dev/null || urxvt -e ranger &
+  fi
+}
+
+replace_all() { ag "$1" -l | xargs sed -i -e "s/$1/$2/g" }
+
+aw ()
+# search arch wiki
+{
+  query="$1"
+  site="https://wiki.archlinux.org/index.php?search="
+  $BROWSER $site$query
+
+}
+
+purgegit () {
+  # Create a temporary branch and checkout
+  git checkout --orphan purge
+  # Add all the files and commit
+  git add -A
+  git commit -am 'In the name of Allah, the most Gracious, the most Merciful'
+  # Delete the master branch
+  git branch -D master
+  # Rename the temporary branch to master
+  git branch -m master
+  # Push the changes forcefully
+  git push -f origin master
+
+}

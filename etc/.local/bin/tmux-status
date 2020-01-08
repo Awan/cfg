@@ -1,0 +1,107 @@
+#!/bin/sh
+
+battery()
+{
+  battery_path=/sys/class/power_supply/BAT0
+  status=$battery_path/status
+  battery_full=$battery_path/energy_full
+  battery_now=$battery_path/energy_now
+  bf=$(cat $battery_full)
+  bn=$(cat $battery_now)
+  bp=$(( 100 * $bn / $bf ))
+  state=$(cat $status)
+  case $state in
+    Full)
+      st="="
+      ;;
+    Discharging)
+      st="-"
+      ;;
+    Charging)
+      st="+"
+      ;;
+  esac
+  test "$bp" -lt 10 \
+  && bc="#B3291C" \
+  || bc="#222222"
+  echo $st#[fg=$bc]$bp"%"
+}
+
+wifi()
+{
+  iw dev wlp3s0 link | awk -F: '/SSID/ {print $NF}'
+}
+
+mails()
+{
+  mails_count=$(find $HOME/.mail/Inbox/new -type f -printf . | wc -c)
+  if [ $mails_count -eq 0 ]
+  then
+    echo 'No new mails'
+  elif
+    [ $mails_count -eq 1 ]
+  then
+    echo ${mails_count} new mail
+  elif
+    [ $mails_count -gt 1 ]
+  then
+    echo ${mails_count} new mails
+  fi
+    
+}
+
+
+ram()
+{
+  ram=$(free | awk '/Mem:/ {print int($3/$2 * 100.0)}')
+  echo 'RAM: '$ram%
+}
+
+
+just_ram()
+{
+  echo $(free | awk '/Mem:/ {print int($3/$2 * 100.0)}')%
+  
+}
+
+
+date_time()
+{
+  date +'%a %d-%m %H:%M'
+}
+
+
+music()
+{
+  is_playing=$(mpc | grep "^\[playing\]" | awk '{print $1}')
+  how_long_the_tags_are=$(mpc | head -1 | wc -c)
+  shorter_tags=$(mpc --format='[%title% - %artist%]' current | head -1 | head -c 30)
+
+  if [ "$is_playing" = "[playing]" ]; then
+    if [ "$how_long_the_tags_are" -lt 30 ]; then
+      echo "$(mpc --format='[%title% - %artist%]' current)"
+    else
+      echo "$shorter_tags..."
+    fi
+  fi
+    
+
+}
+
+
+cpu()
+{
+  cpu_usage=$(grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage}')
+  printf "%.0f" $cpu_usage
+}
+
+
+temperature()
+{
+  temp=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))°c
+  echo $temp
+}
+
+
+
+echo `music` -  `temperature`  - `mails` - `wifi` - `just_ram` - `battery` - `date_time`

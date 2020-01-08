@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+scripts_dir="$HOME/.local/bin"
+script_file="$scripts_dir/$1"
+
+
+if [[ -f $script_file ]]; then
+	vim $script_file
+else
+	echo '#!/usr/bin/env bash
+	
+
+
+
+		' > $script_file
+	chmod +x $script_file
+	vim $script_file
+fi

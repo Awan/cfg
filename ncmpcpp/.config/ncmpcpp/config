@@ -1,0 +1,124 @@
+# In the name of Allah, the most Gracious, the most Merciful.
+#
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+
+# ncmpcpp configuration file
+
+
+# User interface
+
+user_interface = "alternative" (you must comment it for album art)
+
+# Host
+
+mpd_host = "localhost"
+
+# Port
+
+mpd_port = "6600"
+
+# Configuration directory
+
+ncmpcpp_directory = "~/.config/ncmpcpp"
+
+# Collection directory for Host
+
+mpd_music_dir = "~/kit/mp3"
+
+# Lyrics directory. Must be created or you'll get one in $HOME
+
+lyrics_directory = "~/kit/mp3/lyrics"
+
+# Progress of running song look
+
+progressbar_look = "─╼"
+
+# Collection format
+
+song_library_format = "{%n - }{%t}|{%f}"
+
+# Playing song's status
+
+song_status_format = "{(%l) }{%a - }{%t}|{%f}"
+
+# Columns format
+
+song_columns_list_format = "(7)[green]{l} (28)[cyan]{a} (28)[]{b} (50)[red]{t}"
+
+# Visualizer path
+
+visualizer_fifo_path = "/tmp/mpd.fifo"
+
+# Visualizer name
+
+visualizer_output_name = "my_fifo"
+
+# Visualizer interval
+
+visualizer_sync_interval = "15"
+
+# If stereo visualizer enabled
+
+visualizer_in_stereo = "yes"
+
+# Visualizer color
+
+visualizer_color = 41, 83, 119, 155, 185, 215, 209, 203, 197, 161
+
+# Visualizer look
+
+visualizer_look =  "●┃"
+
+# Visualizer type
+
+visualizer_type = "spectrum" (spectrum/wave)
+
+# On start what's shown
+
+startup_screen=playlist
+
+# Split screen into half. Half playlist and other visualizer
+
+startup_slave_screen=visualizer
+
+# Focus slave screen
+
+startup_slave_screen_focus=no
+
+# Auto blod the current song
+
+jump_to_now_playing_song_at_start=yes
+
+# Execute shell command once song is changed
+
+execute_on_song_change = "~/.config/ncmpcpp/cover" (uncomment it for album art)
+
+#user_interface = "classic" (uncomment it for album art)
+
+# Window title
+
+enable_window_title = "no" (uncomment it for album art)
+
+# Header visible or not
+
+header_visibility = "no" (uncomment it for album art)
+
+# Show titles
+
+titles_visibility = "no" (uncomment it for album art)
+
+# Messages delay interval
+
+message_delay_time = "1" (uncomment it for album art)
+
+# Status bar visibility
+
+statusbar_visibility = "no" (uncomment it for album art)
+
+# Make it colorful
+
+colors_enabled = "yes"
+

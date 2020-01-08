@@ -1,0 +1,206 @@
+#!/bin/sh
+
+# Reload sxhkd
+
+super + Escape
+  pkill -USR1 -x sxhkd
+
+# Exit bspwm
+
+alt + shift + q
+  bspc quit
+
+# swap windows between the tiled and monocle layout
+
+super + m
+	bspc desktop -l next
+
+# Swap the current node and the biggest node
+
+super + g
+	bspc node -s biggest.local
+
+# Close/kill a window
+
+super + {_,shift } + q
+  bspc node -{c,k}
+
+# Toggle music
+
+alt + b
+  mpc toggle
+
+# Push focused window to scratchpad (background)
+
+super + shift + i
+  $HOME/.config/bspwm/scratchpad.sh toggle-flag
+
+# Hide/Un-Hide a window pushed to scratchpad previously
+
+super + i
+  $HOME/.config/bspwm/scratchpad.sh switch-app
+
+
+# Launch Terminal (urxvtc)
+
+super + Return
+  urxvtc
+
+# Launch termite
+
+alt + Return
+  termite 
+
+# Launch dmenu
+
+super + d
+  dmenu_run
+
+# Move focus in given direction, and swap windows in given direction 
+
+super + {_, shift + } {h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
+
+# Resize nodes, open new window in created receptacle in given direction
+
+alt + {_, shift + } {h,j,k,l}
+  $HOME/.config/bspwm/{resize,move} {west,south,north,east}
+
+# Launch Browser. ($BROWSER must be set)
+
+super + w
+  $BROWSER
+
+# Toggle full screen of focused window
+
+super + f
+  bspc node --state \~fullscreen
+
+# Set the window state
+
+super + {t,shift + t,s,f}
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+# Set the node flags
+
+super + ctrl + {m,x,y,z}
+	bspc node -g {marked,locked,sticky,private}
+
+# Move the floating windows 
+
+super + alt + {h,j,k,l}
+  $HOME/.config/bspwm/floating_motions {west,south,north,east}
+
+# Focus the node for the given path jump
+
+super + {p,b,comma,period}
+	bspc node -f @{parent,brother,first,second}
+
+# Focus the next/previous node in the current desktop
+
+super + {_,shift + }c
+	bspc node -f {next,prev}.local
+
+# Focus the next/previous desktop in the current monitor
+
+super + bracket{left,right}
+	bspc desktop -f {prev,next}.local
+
+# Focus the last node/desktop
+
+super + {Tab,semicolon}
+	bspc {node,desktop} -f next
+
+# Focus the older or newer node in the focus history
+
+super + {o,u}
+	bspc wm -h off; \
+	bspc node {older,newer} -f; \
+	bspc wm -h on
+
+# Focus or send to the given desktop
+
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+
+# Preselect the direction
+
+super + ctrl + {h,j,k,l}
+	bspc node -p {west,south,north,east}
+
+# Preselect the ratio
+
+super + ctrl + {1-9}
+	bspc node -o 0.{1-9}
+
+# Cancel the preselection for the focused node
+
+super + ctrl + space
+	bspc node -p cancel
+
+# Cancel the preselection for the focused desktop
+
+super + ctrl + shift + space
+	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+# Rotate desktop
+
+alt + space
+  bspc node @/ --rotate {90,-90}
+
+
+# Soft Launch button
+
+XF86LaunchA
+  mpc toggle
+
+# Soft Brightness keys
+
+XF86MonBrightness{Down,Up}
+  light {-U 5,-A 5} && notify-send -u low -t 1500 -a light "Brightness"  "$(light -G | cut -d . -f 1)"
+
+# Soft print combo for Screenshot
+
+Print
+    import -window root /tmp/foo.png; cat /tmp/foo.png | xclip -selection clipboard -t image/png
+
+# Soft Explorer button for File Manager
+
+XF86Explorer
+    urxvtc -e ranger || urxvt -e ranger
+
+# Music little backward/forward
+
+alt + bracket{left,right}
+  mpc seek {-10,+10}
+
+# Music backward/forward
+
+alt + shift + bracket{left,right}
+  mpc seek {-120,+120}
+ 
+# Lock the screen
+
+super + x
+  betterlockscreen -l dim
+
+# Soft volume up/down buttons
+
+XF86Audio{Lower,Raise}Volume
+  notify-send -u low -t 1500 -a ponymix "volume" "$(ponymix --max-volume 153 {decrease,increase} 5)"
+
+# Soft mute button
+
+XF86AudioMute
+  ponymix --output toggle && notify-send -u low -t 1500 -a ponymix "volume" \
+  "output $(ponymix --output is-muted || echo 'un')muted"
+ 
+# Mute/Unmute mic
+
+ctrl + XF86AudioMute
+  ponymix --input toggle && notify-send -u low -t 1500 -a ponymix "volume" \
+  "input $(ponymix --input is-muted || echo 'un')muted"
+
+
+# vim:ft=sxhkdrc
