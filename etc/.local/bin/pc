@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+
+# Give me a directory and I'll show you pics. Hit M key if you wanna get name
+# with full path to a pic. HJKL (vim like keys) for scrolling.
+
+pics_directory="$1"
+if [[ -z "$pics_directory" ]]; then
+  echo 'Please enter a directory name'
+  exit 1
+fi
+
+check_images ()
+{
+  find "$pics_directory" -type f \( -iname '*.jpg' \) -o \( -iname '*.jpeg' \) -o \( -iname '*.png' \) -o \( -iname '*.gif' \)
+}
+
+
+view_images ()
+{
+  sxiv -iota -N 'scratchpad_pics' 2>/dev/null
+}
+
+
+check_images | view_images

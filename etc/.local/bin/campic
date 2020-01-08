@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+while [[ -f $HOME/pix/cam/pic$n.png ]]
+do
+    n=$((n+1))
+done
+pic_name="$HOME/pix/cam/pic$n.png"
+
+import -window root -quality 100 $pic_name
+

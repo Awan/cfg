@@ -1,0 +1,21 @@
+
+[Default Applications]
+text/html=google-chrome.desktop
+x-scheme-handler/http=google-chrome.desktop
+x-scheme-handler/https=google-chrome.desktop
+x-scheme-handler/about=google-chrome.desktop
+x-scheme-handler/unknown=google-chrome.desktop
+x-scheme-handler/mailto=mutt.desktop
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=catdoc.desktop
+image/gif=sxiv.desktop
+video/mp4=mpv.desktop
+x-scheme-handler/webcal=google-chrome.desktop
+
+[Added Associations]
+inode/directory=ranger.desktop
+font/ttf=termite.desktop;
+image/jpeg=feh.desktop;
+image/png=feh.desktop;
+image/jpg=feh.desktop;
+text/html=google-chrome.desktop;vim.desktop;
+text/plain=vim.desktop;

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+#Download youtube video/audio with desired quality
+
+#accept both full URLs or just the id such as AQcQgfvfF1M
+
+read -p 'what do you wanna download, audio or video?' DEST
+
+if [ $DEST='audio' ]; then
+  cd ~/mus
+else
+  cd ~/mus/vid
+fi
+
+youtube-dl -F $1
+
+read -p 'which format?' FORMAT
+youtube-dl -f $FORMAT $1 --embed-subs --add-metadata -k
+

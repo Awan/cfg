@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+
+import subprocess as sp
+import imaplib
+import time
+import socket
+from pathlib import Path
+
+
+
+
+
+msgs_were = 0
+password_store = sp.check_output(['which', 'pass'])
+
+""" For DWM bar, you can create a directory and then if you get a mail,
+you will get a file created by python. You can use slstatus's module 'run_command' to show if a new mail has arrived.
+Example for slstatus:
+    { run_command, "%s   ", "cat /tmp/newmails/newmails" },
+"""
+# sp.os.makedirs('/tmp/newmails', exist_ok=True)
+
+def update(msgs_were):
+    user = 'abdullah@abdullah.today'
+    completed_process = sp.run(['gpg', '-dq', '/home/ak/.local/share/misc/abdullah.gpg'], check=True, stdout=sp.PIPE, stderr=sp.PIPE, encoding='utf-8')
+    password = completed_process.stdout[:-1]
+    local_new_messages = len(sp.os.listdir(Path.home()/'.mail/INBOX/new'))
+    box = imaplib.IMAP4_SSL('imap.yandex.com', 993)
+    box.login(user, password)
+    box.select()
+    msgs = len(box.search(None, 'UnSeen')[1][0].split())
+    unread_mails_remote = len(box.search(None, 'UnSeen')[1][0].split())
+    box.select('Sent')
+    sent_mails_remote = len(box.search(None, 'All')[1][0].split())
+    box.select('Outbox')
+    postponed_mails_remote = len(box.search(None, 'All')[1][0].split())
+    box.select('Trash')
+    deleted_mails_remote = len(box.search(None, 'All')[1][0].split())
+    box.select('Spam')
+    spam_mails_remote = len(box.search(None, 'All')[1][0].split())
+    box.select('Drafts')
+    drafts_mails_remote = len(box.search(None, 'All')[1][0].split())
+    
+    
+    unread_mails_local = len(sp.os.listdir(Path.home()/'.mail/INBOX/new'))
+    sent_mails_local = len(sp.os.listdir(Path.home()/'.mail/Sent/cur'))
+    postponed_mails_local = len(sp.os.listdir(Path.home()/'.mail/Outbox/cur'))
+    deleted_mails_local = len(sp.os.listdir(Path.home()/'.mail/Trash/cur'))
+    spam_mails_local = len(sp.os.listdir(Path.home()/'.mail/Spam/cur'))
+    drafts_mails_local = len(sp.os.listdir(Path.home()/'.mail/Drafts/cur'))
+
+    if msgs > 0:
+        print(msgs)
+    else:
+        print(0)
+
+    if msgs_were < msgs and msgs > 0:
+        sp.run(['/usr/bin/offlineimap', '-o'])
+        sp.run(['mpv', '--no-video', '/home/ak/.local/share/misc/phansi.aac'])
+
+# if remote server mails (unread) aren't equal to local mails, (they have been
+# read since last sync, resync mailboxes.
+    
+    if unread_mails_remote != unread_mails_local or sent_mails_remote != sent_mails_local or postponed_mails_remote != postponed_mails_local or deleted_mails_remote != deleted_mails_local or spam_mails_remote != spam_mails_local or drafts_mails_remote != drafts_mails_local: 
+        sp.run(['/usr/bin/offlineimap', '-o'])
+    
+# Uncomment these lines if you don't use offlineimap to see  new mails
+
+#    if msgs > 0:
+#        with open('/tmp/newmails/newmails', 'w+') as f:
+#           f.write(str(msgs) + ' new mails arrived!') 
+#    elif msgs == 0:
+#        with open('/tmp/newmails/newmails', 'w+') as f:
+#            f.write('no mails!')
+
+
+    return msgs
+
+while True:
+    try:
+        if b'/usr/bin/pass\n' in password_store:
+            msgs_were = update(msgs_were)
+            time.sleep(10)
+        else:
+            print('error')
+            time.sleep(2)
+    except (socket.gaierror, ConnectionAbortedError, ConnectionError, ConnectionRefusedError, ConnectionResetError) as error:
+        print('No Network')
+#   with open('/tmp/newmails/newmails', 'w+') as f:
+#            f.write('no network!')
+        time.sleep(5)

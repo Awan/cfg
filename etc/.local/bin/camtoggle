@@ -1,0 +1,10 @@
+#!/bin/bash
+# Use mpv as camera
+
+pkill -f /dev/video0 || mpv --no-osc --no-input-default-bindings --input-conf=/dev/null --geometry=-0-0 --autofit=30%  --title="webcam" /dev/video0
+
+
+#pkill -f /dev/video0 || mpv --no-osc --geometry=-0-0 --autofit=30%  --title="webcam" /dev/video0
+
+
+		

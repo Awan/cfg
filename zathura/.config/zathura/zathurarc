@@ -1,0 +1,13 @@
+# show statusbar and scrollbar
+
+set guioptions shv
+
+# collapse $HOME to ~
+
+set statusbar-home-tilde true
+set window-title-home-tilde true
+
+# send selection to clipboard
+
+set selection-clipboard clipboard
+

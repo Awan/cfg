@@ -1,0 +1,61 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Abdullah
+	email = abdullah@abdullah.today
+	signingkey = 0xFC5978915CBC7BC7
+	username = Abdullah
+[push]
+  default = current
+[commit]
+	gpgSign = true
+[tag]
+	forceSignAnnotated = true
+[protocol "keybase"]
+	allow = always
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[color]
+	ui = always
+[diff]
+	colorMoved = dimmed_zebra
+    tool = vimdiff
+	submodule = log
+[difftool]
+    prompt = false
+[gpg]
+	program = gpg
+[core]
+	autocrlf = false
+	safecrlf = true
+	editor = vim
+    #pager = vimpager
+	symlinks = true
+	excludesfile = ~/.config/git/ignore
+[alias]
+	last = log -1 HEAD
+  bD = branch -D  # delete branch
+  bm = branch -m # rename current branch to $name
+	co = checkout
+  cob = checkout -b
+  cp = cherry-pick
+	cm = checkout master
+	b = branch
+	lg = log --pretty=oneline --abbrev-commit
+[credential]
+	helper = cache
+[help]
+	autocorrect = 1
+[sendemail]
+  smtpEncryption = tls
+  smtpServer = mail.abdullah.today
+  smtpUser = abdullah
+ 
+[github]
+	user = Awan
+[notabug]
+    user = Abdullah
+[gitlab]
+    user = Abdullah

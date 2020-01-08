@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+
+# This script picks a random image from wallpapers directory and locks the
+# screen.
+
+
+walls="$HOME"/pix/wall/collection
+
+random_wallpic="$(find "$walls" -type f -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -print0 | xargs -0 shuf -e -n 1 -z | xargs -0)" 
+
+
+#"$HOME"/.local/bin/i3lock -i "$random_wallpic" \
+
+convert "$random_wallpic" /tmp/lock.png && /usr/bin/i3lock --script --image /tmp/lock.png
+
+sleep 10 && pgrep i3lock && xset dpms force off

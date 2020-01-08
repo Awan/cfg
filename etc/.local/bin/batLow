@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+	
+#[ "$(cat /sys/class/power_supply/BAT0/status)" = "Charging" ] && exit
+#[ "$(cat /sys/class/power_supply/BAT0/capacity)" -lt 70 ] && 
+#  export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus && 
+#  notify-send -u critical "Battery critically low"
+
+
+battery_now=$(cat /sys/class/power_supply/BAT0/capacity)
+
+if [ "$battery_now" -le 70 ]; then
+  notify-send -u critical "Battery ctrically low"
+fi
+		
+

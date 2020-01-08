@@ -1,0 +1,1 @@
+/usr/share/vim/addons/syntax_checkers/html/w3.vim

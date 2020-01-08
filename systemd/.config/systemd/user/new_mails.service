@@ -1,0 +1,9 @@
+[Unit]
+Description=Mail Check Daemon 
+
+[Service]
+ExecStart=/home/ak/bin/new_mails
+Restart=always
+
+[Install]
+WantedBy=default.target
