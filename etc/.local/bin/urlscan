@@ -1,0 +1,191 @@
+#!/usr/bin/python3
+""" A simple urlview replacement that handles things like quoted-printable
+properly.  aka "urlview minus teh suck"
+
+"""
+#
+#   Copyright (C) 2006-2007 Daniel Burrows
+#   Copyright (C) 2019 Scott Hansen
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+
+from __future__ import unicode_literals
+import argparse
+import io
+import locale
+import os
+import sys
+from urlscan import urlchoose, urlscan
+try:
+    from email.Parser import Parser as parser
+except ImportError:
+    from email.parser import Parser as parser
+
+
+def parse_arguments():
+    """Parse command line options.
+
+    Returns: args
+
+    """
+    arg_parse = argparse.ArgumentParser(description="Parse and display URLs")
+    arg_parse.add_argument('--compact', '-c',
+                           action='store_true', default=False,
+                           help="Don't display the context of each URL.")
+    arg_parse.add_argument('--no-browser', '-n', dest="nobrowser",
+                           action='store_true', default=False,
+                           help="Pipe URLs to stdout")
+    arg_parse.add_argument('--dedupe', '-d', dest="dedupe",
+                           action='store_true', default=False,
+                           help="Remove duplicate URLs from list")
+    arg_parse.add_argument('--run', '-r',
+                           help="Alternate command to run on selected URL "
+                           "instead of opening URL in browser. Use {} to "
+                           "represent the URL value in the expression. "
+                           "For example: --run 'echo {} | xclip -i'")
+    arg_parse.add_argument('--pipe', '-p', dest='pipe',
+                           action='store_true', default=False,
+                           help='Pipe URL into the command specified by --run')
+    arg_parse.add_argument('message', nargs='?', default=sys.stdin,
+                           help="Filename of the message to parse")
+    return arg_parse.parse_args()
+
+
+def close_stdin():
+    """This section closes out sys.stdin if necessary so as not to block curses
+    keyboard inputs
+
+    """
+    if not os.isatty(0):
+        fdesc = os.open('/dev/tty', os.O_RDONLY)
+        if fdesc < 0:
+            sys.stderr.write('Unable to open an input tty.\n')
+            sys.exit(-1)
+        else:
+            os.dup2(fdesc, 0)
+            os.close(fdesc)
+
+
+def process_input(fname):
+    """Return the parsed text of stdin or the message. Accounts for possible
+    file encoding differences.
+
+        Args: fname - filename or sys.stdin
+        Returns: mesg - parsed (email parser) text of the message with the
+            correct encoding set
+
+    """
+    enc_list = ['UTF-8', 'LATIN-1', 'iso8859-1', 'iso8859-2',
+                'UTF-16', 'CP720', 'CP437']
+    locale.setlocale(locale.LC_ALL, '')
+    code = locale.getpreferredencoding()
+    if code not in enc_list:
+        enc_list.insert(0, code)
+    if fname is sys.stdin:
+        try:
+            stdin_file = fname.buffer.read()
+        except AttributeError:
+            stdin_file = fname.read()
+    else:
+        stdin_file = None
+    for enc in enc_list:
+        try:
+            if stdin_file is not None:
+                fobj = io.StringIO(stdin_file.decode(enc))
+            else:
+                fobj = io.open(fname, mode='r', encoding=(enc))
+            f_keep = fobj
+            mesg = parser().parse(fobj)
+            if 'From' not in mesg.keys() and 'Date' not in mesg.keys():
+                # If it's not an email message, don't let the email parser
+                # delete the first line. If it is, let the parser do its job so
+                # we don't get mailto: links for all the To and From addresses
+                fobj = _fix_first_line(f_keep)
+                mesg = parser().parse(fobj)
+
+        except (UnicodeDecodeError, UnicodeError):
+            continue
+        else:
+            break
+        finally:
+            try:
+                fobj.close()
+            except NameError:
+                pass
+        raise Exception("Encoding not detected. Please pass encoding value manually")
+    close_stdin()
+    # Handle multiple nested message parts
+    _msg_set_charset(mesg, enc)
+    return mesg
+
+
+def _fix_first_line(fline):
+    """If the first line starts with http* or [ or other non-text characters,
+    the URLs on that line will not be parsed by email.Parser. Add a blank line
+    at the top of the file to ensure everything is read in a non-email file.
+
+      1. Take the file object 'f'.
+      2. Create a new StringIO object that starts with a blank line and read the
+      file into that. Return as open StringIO object 'f'
+      3. Return 'f'
+
+    """
+    fline.seek(0)
+    new = io.StringIO()
+    new.write("\n{}".format(fline.read()))
+    fline.close()
+    new.seek(0)
+    return new
+
+
+def _msg_set_charset(mesg, encoding):
+    """Recursive function to set the charset of nested message parts.
+
+    """
+    encoding = mesg.get_content_charset() or encoding
+    try:
+        mesg.set_charset(encoding)
+    except (AttributeError, TypeError):
+        for part in mesg.get_payload():
+            try:
+                # Try once to set correct encoding on the message part, then
+                # continue without crashing if it fails
+                _msg_set_charset(part, encoding)
+            except UnicodeEncodeError:
+                continue
+
+
+def main():
+    """Entrypoint function for urlscan
+
+    """
+    args = parse_arguments()
+    msg = process_input(args.message)
+    if args.nobrowser is False:
+        tui = urlchoose.URLChooser(urlscan.msgurls(msg),
+                                   compact=args.compact,
+                                   dedupe=args.dedupe,
+                                   run=args.run,
+                                   pipe=args.pipe)
+        tui.main()
+    else:
+        out = urlchoose.URLChooser(urlscan.msgurls(msg),
+                                   dedupe=args.dedupe,
+                                   shorten=False)
+        print("\n".join(out.urls))
+
+
+if __name__ == "__main__":
+    main()

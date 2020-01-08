@@ -1,0 +1,46 @@
+polybar*background             : #24292A
+polybar*foreground             : #ccd2be
+polybar*fading                 : 15
+polybar*fadeColor              : black
+polybar*cursorColor            : #16A085
+polybar*pointerColorBackground : #2B2C2B
+polybar*pointerColorForeground : #16A085
+polybar*urgent                 : #B34747
+
+!! black dark/light
+polybar*color0                 : #24292A
+polybar*color8                 : #3c4140
+
+!! red dark/light
+polybar*color1                 : #ff8843
+polybar*color9                 : #c48851
+
+!! green dark/light
+polybar*color2                 : #7a8d5c
+polybar*color10                : #aec199
+
+!! yellow dark/light
+polybar*color3                 : #a69658
+polybar*color11                : #c4b268
+
+!! blue dark/light
+polybar*color4                 : #7b90a9
+polybar*color12                : #91aac7
+
+!! magenta dark/light
+polybar*color5                 : #aa6161
+polybar*color13                : #e78484
+
+!! cyan dark/light
+polybar*color6                 : #698885
+polybar*color14                : #83a5a1
+
+!! white dark/light
+polybar*color7                 : #a8b298
+polybar*color15                : #ccd2be
+
+!! pink
+polybar*color16                : #9181E7
+
+!! purple
+polybar*color17                : #D7AFF9

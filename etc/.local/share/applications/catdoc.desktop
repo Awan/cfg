@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Catdoc
+GenericName=Word Doc Reader
+Comment=Read Doc files
+TryExec=catdoc
+Exec=catdoc %F
+Terminal=False
+Type=Application
+Keywords=docx;reader
+Categories=Utility
+StartupNotify=false
+MimeType=application/msword; application/vnd.openxmlformats-officedocument.wordprocessingml.document

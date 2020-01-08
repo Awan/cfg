@@ -1,0 +1,37 @@
+[Unit]
+Description=Music Player Daemon
+Documentation=man:mpd(1) man:mpd.conf(5)
+Documentation=file:///usr/share/doc/mpd/html/user.html
+After=network.target sound.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/mpd --no-daemon
+
+# Enable this setting to ask systemd to watch over MPD, see
+# systemd.service(5).  This is disabled by default because it causes
+# periodic wakeups which are unnecessary if MPD is not playing.
+#WatchdogSec=120
+
+# allow MPD to use real-time priority 50
+LimitRTPRIO=50
+LimitRTTIME=infinity
+
+# disallow writing to /usr, /bin, /sbin, ...
+ProtectSystem=yes
+
+# more paranoid security settings
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+# AF_NETLINK is required by libsmbclient, or it will exit() .. *sigh*
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+RestrictNamespaces=yes
+
+# Note that "ProtectKernelModules=yes" is missing in the user unit
+# because systemd 232 is unable to reduce its own capabilities
+# ("Failed at step CAPABILITIES spawning /usr/bin/mpd: Operation not
+# permitted")
+
+[Install]
+WantedBy=default.target

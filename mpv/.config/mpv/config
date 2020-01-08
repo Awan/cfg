@@ -1,0 +1,2 @@
+[default]
+msg-level=demux=no:ad=no:ffmpeg=no:ao=no

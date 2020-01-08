@@ -1,0 +1,11 @@
+fixed-vo="1"
+#fs="1"
+noborder="1"
+nojoystick="1"
+zoom="1"
+ao=pulse
+nolirc="1"
+vo="gl"
+lavdopts="threads=4"
+ass=true
+subfont-osd-scale="2"
