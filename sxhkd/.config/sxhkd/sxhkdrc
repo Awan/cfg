@@ -5,12 +5,12 @@
 super + Escape
   pkill -USR1 -x sxhkd
 
-# Exit bspwm
+# Exit/restart bspwm
 
-alt + shift + q
-  bspc quit
+alt + shift + {q,r}
+  bspc {quit,wm -r}
 
-# swap windows between the tiled and monocle layout
+# alternate between the tiled and monocle layout
 
 super + m
 	bspc desktop -l next
@@ -89,7 +89,7 @@ super + ctrl + {m,x,y,z}
 # Move the floating windows 
 
 super + alt + {h,j,k,l}
-  $HOME/.config/bspwm/floating_motions {west,south,north,east}
+  bspc node -v {-20 0,0 20,0 -20,20 0}
 
 # Focus the node for the given path jump
 
