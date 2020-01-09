@@ -41,5 +41,5 @@ pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 
 #xrandr --output HDMI2 --auto --output HDMI2 --auto --left-of eDP1 &
 #xrandr --output eDP-1 --mode 1600x900 --panning 1920x1080 --scale 1.2x1.2
-sleep 2
-urxvtc -T 'scratchpad' -geometry 65x20 &
+sleep 1
+urxvtc -T 'scratchpad' -geometry 65x20 & 
