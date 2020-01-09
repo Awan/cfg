@@ -20,3 +20,4 @@ etc/.local/share/xfce4/
 etc/.android/adb.5037
 mpd/.config/mpd/state
 mpd/.config/mpd/database
+__init__.py
