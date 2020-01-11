@@ -669,3 +669,11 @@ purgegit () {
   git push -f origin master
 
 }
+
+wallpaper ()
+{
+  # Convert an image into wallpaper using imagemagick
+  # and then sets it as wallpapers using feh
+  convert "${1}" -gravity Center -resize 1920 -crop 1920x1080+0+0 png:- \
+    | feh --bg-scale -
+  }
