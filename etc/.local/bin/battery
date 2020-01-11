@@ -1,0 +1,26 @@
+#!/usr/bin/bash
+
+SYSFS=/sys/class/power_supply
+BATTERY=BAT0
+MAINS=AC
+POWER_NOW=$(<"$SYSFS/$BATTERY/power_now")
+ENERGY_NOW=$(<"$SYSFS/$BATTERY/energy_now")
+ENERGY_FULL=$(<"$SYSFS/$BATTERY/energy_full")
+ENERGY_FULL_DESIGN=$(<"$SYSFS/$BATTERY/energy_full_design")
+AC_ON=$(<"$SYSFS/$MAINS/online")
+
+printf "%s%%" "$(( ENERGY_NOW * 100 / ENERGY_FULL ))"
+if (( AC_ON )) ; then
+  if (( POWER_NOW )) ; then
+    printf " charging in %smin" "$(( (ENERGY_FULL - ENERGY_NOW) * 60 / POWER_NOW ))"
+  else
+    printf " not charging"
+  fi
+else
+  if (( POWER_NOW )) ; then
+    printf " discharging in %smin" "$(( ENERGY_NOW * 60 / POWER_NOW ))"
+  else
+    printf " not discharging"
+  fi
+fi
+printf " (%s%% of design)\n" "$(( ENERGY_FULL * 100 / ENERGY_FULL_DESIGN ))"
