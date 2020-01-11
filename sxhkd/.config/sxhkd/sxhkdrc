@@ -109,7 +109,7 @@ super + bracket{left,right}
 # Focus the last node/desktop
 
 super + {Tab,semicolon}
-	bspc {node,desktop} -f next
+	bspc {desktop,node} -f next
 
 # Focus the older or newer node in the focus history
 
