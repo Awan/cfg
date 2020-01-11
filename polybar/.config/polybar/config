@@ -223,7 +223,7 @@ label-urgent = %icon%
 
 [module/wlan]
 type = internal/network
-interface = wlan0
+interface = wlp3s0
 #interval = 3.0
 tail = true
 format-connected = <ramp-signal> <label-connected>

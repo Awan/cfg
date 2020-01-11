@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+query="$1"
+
+echo "https://lmgtfy.com/?q="$query | xclip

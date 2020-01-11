@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if [[ "${2}" == 'DISCONNECTED' ]] ; then
+  printf -v msg '%s disconnected' "$1"
+else
+  ssid="$(wpa_cli -p "${WPA_CTRL_DIR}" -i "${1}" list_networks | awk "\$1 == ${WPA_ID} { print \$2 }")"
+  printf -v msg '%s connected to %s (%s)' "${1}" "${ssid:-unknown SSID}" "${WPA_ID}"
+fi
+
+notify-send -t 3000 'wpa_supplicant' "${msg}"
