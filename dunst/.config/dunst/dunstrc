@@ -1,289 +1,72 @@
 [global]
-    ### Display ###
-
-    # Which monitor should the notifications be displayed on.
     monitor = 0
-
-    # Display notification on focused monitor.  Possible modes are:
-    #   mouse: follow mouse pointer
-    #   keyboard: follow window with keyboard focus
-    #   none: don't follow anything
-    #
-    # "keyboard" needs a window manager that exports the
-   # _NET_ACTIVE_WINDOW property.
-    # This should be the case for almost all modern window managers.
-    #
-    # If this option is set to mouse or keyboard, the monitor option
-    # will be ignored.
-    follow = mouse
-
-    # The geometry of the window:
-    #   [{width}]x{height}[+/-{x}+/-{y}]
-    # The geometry of the message window.
-    # The height is measured in number of notifications everything else
-    # in pixels.  If the width is omitted but the height is given
-    # ("-geometry x2"), the message window expands over the whole screen
-    # (dmenu-like).  If width is 0, the window expands to the longest
-    # message displayed.  A positive x is measured from the left, a
-    # negative from the right side of the screen.  Y is measured from
-    # the top and down respectively.
-    # The width can be negative.  In this case the actual width is the
-    # screen width minus the width defined in within the geometry option.
-    geometry = "350x5-0+24"
-
-    # Show how many messages are currently hidden (because of geometry).
+    geometry = "300x10-20+20"
+    follow = keyboard
     indicate_hidden = yes
-
-    # Shrink window if it's smaller than the width.  Will be ignored if
-    # width is 0.
     shrink = no
-
-    # The transparency of the window.  Range: [0; 100].
-    # This option will only work if a compositing window manager is
-    # present (e.g. xcompmgr, compiz, etc.).
-    transparency = 20
-
-    # The height of the entire notification.  If the height is smaller
-    # than the font height and padding combined, it will be raised
-    # to the font height and padding.
+    transparency = 1.5
     notification_height = 0
-
-    # Draw a line of "separator_height" pixel height between two
-    # notifications.
-    # Set to 0 to disable.
-    separator_height = 2
-
-    # Padding between text and separator.
-    padding = 0
-
-    # Horizontal padding.
-    horizontal_padding = 8
-
-    # Defines width in pixels of frame around the notification window.
-    # Set to 0 to disable.
-    frame_width = 3
-
-    # Defines color of the frame around the notification window.
-    frame_color = "#aaaaaa"
-
-    # Define a color for the separator.
-    # possible values are:
-    #  * auto: dunst tries to find a color fitting to the background;
-    #  * foreground: use the same color as the foreground;
-    #  * frame: use the same color as the frame;
-    #  * anything else will be interpreted as a X color.
+    separator_height = 1
+    padding = 10
+    horizontal_padding = 10
+    frame_width = 0
+    frame_color = "#D5C4A1"
     separator_color = frame
-
-    # Sort messages by urgency.
     sort = yes
-
-    # Don't remove messages, if the user is idle (no mouse or keyboard input)
-    # for longer than idle_threshold seconds.
-    # Set to 0 to disable.
-    # Transient notifications ignore this setting.
-    idle_threshold = 120
-
-    ### Text ###
-
-    font = Monospace 14
-
-    # The spacing between lines.  If the height is smaller than the
-    # font height, it will get raised to the font height.
+    idle_threshold = 30
+    font = Fantasque Sans Mono 13
     line_height = 0
-
-    # Possible values are:
-    # full: Allow a small subset of html markup in notifications:
-    #        <b>bold</b>
-    #        <i>italic</i>
-    #        <s>strikethrough</s>
-    #        <u>underline</u>
-    #
-    #        For a complete reference see
-    #        <http://developer.gnome.org/pango/stable/PangoMarkupFormat.html>.
-    #
-    # strip: This setting is provided for compatibility with some broken
-    #        clients that send markup even though it's not enabled on the
-    #        server. Dunst will try to strip the markup but the parsing is
-    #        simplistic so using this option outside of matching rules for
-    #        specific applications *IS GREATLY DISCOURAGED*.
-    #
-    # no:    Disable markup parsing, incoming notifications will be treated as
-    #        plain text. Dunst will not advertise that it has the body-markup
-    #        capability if this is set as a global setting.
-    #
-    # It's important to note that markup inside the format option will be parsed
-    # regardless of what this is set to.
     markup = full
-
-    # The format of the message.  Possible variables are:
-    #   %a  appname
-    #   %s  summary
-    #   %b  body
-    #   %i  iconname (including its path)
-    #   %I  iconname (without its path)
-    #   %p  progress value if set ([  0%] to [100%]) or nothing
-    #   %n  progress value if set without any extra characters
-    #   %%  Literal %
-    # Markup is allowed
-    format = "%s\n%b"
-
-    # Alignment of message text.
-    # Possible values are "left", "center" and "right".
-    alignment = center
-
-    # Show age of message if message is older than show_age_threshold
-    # seconds.
-    # Set to -1 to disable.
-    show_age_threshold = 60
-
-    # Split notifications into multiple lines if they don't fit into
-    # geometry.
+    format = "<b>%s</b>\n%b"
+    alignment = left
+    show_age_threshold = 0
     word_wrap = yes
-
-    # When word_wrap is set to no, specify where to ellipsize long lines.
-    # Possible values are "start", "middle" and "end".
-    ellipsize = middle
-
-    # Ignore newlines '\n' in notifications.
     ignore_newline = no
-
-    # Merge multiple notifications with the same content
     stack_duplicates = true
-
-    # Hide the count of merged notifications with the same content
     hide_duplicate_count = false
-
-    # Display indicators for URLs (U) and actions (A).
     show_indicators = yes
-
-    ### Icons ###
-
-    # Align icons left/right/off
-    icon_position = left
-
-    # Scale larger icons down to this size, set to 0 to disable
-    max_icon_size = 40
-
-    # Paths to default icons.
-    icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
-
-    ### History ###
-
-    # Should a notification popped up from history be sticky or timeout
-    # as if it would normally do.
+    icon_position = right
+    max_icon_size = 128
+    corner_radius = 10
+# Get path for directories using `find /usr/share/icons/ -type d | awk 1
+    # ORS='/:' | xclip` and middle click or hit insert key ;-)
+    icon_folders = ~/.local/share/icons/hicolor/48x48/apps/:~/.local/share/icons/drops/:~/.local/share/icons/linebit/:~/.local/share/icons/places-0/:~/.local/share/icons/places-1/:/usr/share/icons/:/usr/share/icons/hicolor/:/usr/share/icons/hicolor/96x96/:/usr/share/icons/hicolor/96x96/apps/:/usr/share/icons/hicolor/96x96/mimetypes/:/usr/share/icons/hicolor/96x96/filesystems/:/usr/share/icons/hicolor/96x96/stock/:/usr/share/icons/hicolor/96x96/stock/text/:/usr/share/icons/hicolor/96x96/stock/chart/:/usr/share/icons/hicolor/96x96/stock/object/:/usr/share/icons/hicolor/96x96/stock/data/:/usr/share/icons/hicolor/96x96/stock/table/:/usr/share/icons/hicolor/96x96/stock/form/:/usr/share/icons/hicolor/96x96/stock/image/:/usr/share/icons/hicolor/96x96/stock/net/:/usr/share/icons/hicolor/96x96/stock/navigation/:/usr/share/icons/hicolor/96x96/stock/media/:/usr/share/icons/hicolor/96x96/stock/io/:/usr/share/icons/hicolor/96x96/stock/code/:/usr/share/icons/hicolor/96x96/animations/:/usr/share/icons/hicolor/96x96/places/:/usr/share/icons/hicolor/96x96/categories/:/usr/share/icons/hicolor/96x96/emotes/:/usr/share/icons/hicolor/96x96/actions/:/usr/share/icons/hicolor/96x96/emblems/:/usr/share/icons/hicolor/96x96/status/:/usr/share/icons/hicolor/96x96/devices/:/usr/share/icons/hicolor/96x96/intl/:/usr/share/icons/hicolor/64x64/:/usr/share/icons/hicolor/64x64/apps/:/usr/share/icons/hicolor/64x64/mimetypes/:/usr/share/icons/hicolor/64x64/filesystems/:/usr/share/icons/hicolor/64x64/stock/:/usr/share/icons/hicolor/64x64/stock/text/:/usr/share/icons/hicolor/64x64/stock/chart/:/usr/share/icons/hicolor/64x64/stock/object/:/usr/share/icons/hicolor/64x64/stock/data/:/usr/share/icons/hicolor/64x64/stock/table/:/usr/share/icons/hicolor/64x64/stock/form/:/usr/share/icons/hicolor/64x64/stock/image/:/usr/share/icons/hicolor/64x64/stock/net/:/usr/share/icons/hicolor/64x64/stock/navigation/:/usr/share/icons/hicolor/64x64/stock/media/:/usr/share/icons/hicolor/64x64/stock/io/:/usr/share/icons/hicolor/64x64/stock/code/:/usr/share/icons/hicolor/64x64/animations/:/usr/share/icons/hicolor/64x64/places/:/usr/share/icons/hicolor/64x64/categories/:/usr/share/icons/hicolor/64x64/emotes/:/usr/share/icons/hicolor/64x64/actions/:/usr/share/icons/hicolor/64x64/emblems/:/usr/share/icons/hicolor/64x64/status/:/usr/share/icons/hicolor/64x64/devices/:/usr/share/icons/hicolor/64x64/intl/:/usr/share/icons/hicolor/symbolic/:/usr/share/icons/hicolor/symbolic/apps/:/usr/share/icons/hicolor/32x32/:/usr/share/icons/hicolor/32x32/apps/:/usr/share/icons/hicolor/32x32/mimetypes/:/usr/share/icons/hicolor/32x32/filesystems/:/usr/share/icons/hicolor/32x32/stock/:/usr/share/icons/hicolor/32x32/stock/text/:/usr/share/icons/hicolor/32x32/stock/chart/:/usr/share/icons/hicolor/32x32/stock/object/:/usr/share/icons/hicolor/32x32/stock/data/:/usr/share/icons/hicolor/32x32/stock/table/:/usr/share/icons/hicolor/32x32/stock/form/:/usr/share/icons/hicolor/32x32/stock/image/:/usr/share/icons/hicolor/32x32/stock/net/:/usr/share/icons/hicolor/32x32/stock/navigation/:/usr/share/icons/hicolor/32x32/stock/media/:/usr/share/icons/hicolor/32x32/stock/io/:/usr/share/icons/hicolor/32x32/stock/code/:/usr/share/icons/hicolor/32x32/animations/:/usr/share/icons/hicolor/32x32/places/:/usr/share/icons/hicolor/32x32/categories/:/usr/share/icons/hicolor/32x32/emotes/:/usr/share/icons/hicolor/32x32/actions/:/usr/share/icons/hicolor/32x32/emblems/:/usr/share/icons/hicolor/32x32/status/:/usr/share/icons/hicolor/32x32/devices/:/usr/share/icons/hicolor/32x32/intl/:/usr/share/icons/hicolor/24x24/:/usr/share/icons/hicolor/24x24/apps/:/usr/share/icons/hicolor/24x24/mimetypes/:/usr/share/icons/hicolor/24x24/filesystems/:/usr/share/icons/hicolor/24x24/stock/:/usr/share/icons/hicolor/24x24/stock/text/:/usr/share/icons/hicolor/24x24/stock/chart/:/usr/share/icons/hicolor/24x24/stock/object/:/usr/share/icons/hicolor/24x24/stock/data/:/usr/share/icons/hicolor/24x24/stock/table/:/usr/share/icons/hicolor/24x24/stock/form/:/usr/share/icons/hicolor/24x24/stock/image/:/usr/share/icons/hicolor/24x24/stock/net/:/usr/share/icons/hicolor/24x24/stock/navigation/:/usr/share/icons/hicolor/24x24/stock/media/:/usr/share/icons/hicolor/24x24/stock/io/:/usr/share/icons/hicolor/24x24/stock/code/:/usr/share/icons/hicolor/24x24/animations/:/usr/share/icons/hicolor/24x24/places/:/usr/share/icons/hicolor/24x24/categories/:/usr/share/icons/hicolor/24x24/emotes/:/usr/share/icons/hicolor/24x24/actions/:/usr/share/icons/hicolor/24x24/emblems/:/usr/share/icons/hicolor/24x24/status/:/usr/share/icons/hicolor/24x24/devices/:/usr/share/icons/hicolor/24x24/intl/:/usr/share/icons/hicolor/192x192/:/usr/share/icons/hicolor/192x192/apps/:/usr/share/icons/hicolor/192x192/mimetypes/:/usr/share/icons/hicolor/192x192/filesystems/:/usr/share/icons/hicolor/192x192/stock/:/usr/share/icons/hicolor/192x192/stock/text/:/usr/share/icons/hicolor/192x192/stock/chart/:/usr/share/icons/hicolor/192x192/stock/object/:/usr/share/icons/hicolor/192x192/stock/data/:/usr/share/icons/hicolor/192x192/stock/table/:/usr/share/icons/hicolor/192x192/stock/form/:/usr/share/icons/hicolor/192x192/stock/image/:/usr/share/icons/hicolor/192x192/stock/net/:/usr/share/icons/hicolor/192x192/stock/navigation/:/usr/share/icons/hicolor/192x192/stock/media/:/usr/share/icons/hicolor/192x192/stock/io/:/usr/share/icons/hicolor/192x192/stock/code/:/usr/share/icons/hicolor/192x192/animations/:/usr/share/icons/hicolor/192x192/places/:/usr/share/icons/hicolor/192x192/categories/:/usr/share/icons/hicolor/192x192/emotes/:/usr/share/icons/hicolor/192x192/actions/:/usr/share/icons/hicolor/192x192/emblems/:/usr/share/icons/hicolor/192x192/status/:/usr/share/icons/hicolor/192x192/devices/:/usr/share/icons/hicolor/192x192/intl/:/usr/share/icons/hicolor/256x256/:/usr/share/icons/hicolor/256x256/apps/:/usr/share/icons/hicolor/256x256/mimetypes/:/usr/share/icons/hicolor/256x256/filesystems/:/usr/share/icons/hicolor/256x256/stock/:/usr/share/icons/hicolor/256x256/stock/text/:/usr/share/icons/hicolor/256x256/stock/chart/:/usr/share/icons/hicolor/256x256/stock/object/:/usr/share/icons/hicolor/256x256/stock/data/:/usr/share/icons/hicolor/256x256/stock/table/:/usr/share/icons/hicolor/256x256/stock/form/:/usr/share/icons/hicolor/256x256/stock/image/:/usr/share/icons/hicolor/256x256/stock/net/:/usr/share/icons/hicolor/256x256/stock/navigation/:/usr/share/icons/hicolor/256x256/stock/media/:/usr/share/icons/hicolor/256x256/stock/io/:/usr/share/icons/hicolor/256x256/stock/code/:/usr/share/icons/hicolor/256x256/animations/:/usr/share/icons/hicolor/256x256/places/:/usr/share/icons/hicolor/256x256/categories/:/usr/share/icons/hicolor/256x256/emotes/:/usr/share/icons/hicolor/256x256/actions/:/usr/share/icons/hicolor/256x256/emblems/:/usr/share/icons/hicolor/256x256/status/:/usr/share/icons/hicolor/256x256/devices/:/usr/share/icons/hicolor/256x256/intl/:/usr/share/icons/hicolor/22x22/:/usr/share/icons/hicolor/22x22/apps/:/usr/share/icons/hicolor/22x22/mimetypes/:/usr/share/icons/hicolor/22x22/filesystems/:/usr/share/icons/hicolor/22x22/stock/:/usr/share/icons/hicolor/22x22/stock/text/:/usr/share/icons/hicolor/22x22/stock/chart/:/usr/share/icons/hicolor/22x22/stock/object/:/usr/share/icons/hicolor/22x22/stock/data/:/usr/share/icons/hicolor/22x22/stock/table/:/usr/share/icons/hicolor/22x22/stock/form/:/usr/share/icons/hicolor/22x22/stock/image/:/usr/share/icons/hicolor/22x22/stock/net/:/usr/share/icons/hicolor/22x22/stock/navigation/:/usr/share/icons/hicolor/22x22/stock/media/:/usr/share/icons/hicolor/22x22/stock/io/:/usr/share/icons/hicolor/22x22/stock/code/:/usr/share/icons/hicolor/22x22/animations/:/usr/share/icons/hicolor/22x22/places/:/usr/share/icons/hicolor/22x22/categories/:/usr/share/icons/hicolor/22x22/emotes/:/usr/share/icons/hicolor/22x22/actions/:/usr/share/icons/hicolor/22x22/emblems/:/usr/share/icons/hicolor/22x22/status/:/usr/share/icons/hicolor/22x22/devices/:/usr/share/icons/hicolor/22x22/intl/:/usr/share/icons/hicolor/36x36/:/usr/share/icons/hicolor/36x36/apps/:/usr/share/icons/hicolor/36x36/mimetypes/:/usr/share/icons/hicolor/36x36/filesystems/:/usr/share/icons/hicolor/36x36/stock/:/usr/share/icons/hicolor/36x36/stock/text/:/usr/share/icons/hicolor/36x36/stock/chart/:/usr/share/icons/hicolor/36x36/stock/object/:/usr/share/icons/hicolor/36x36/stock/data/:/usr/share/icons/hicolor/36x36/stock/table/:/usr/share/icons/hicolor/36x36/stock/form/:/usr/share/icons/hicolor/36x36/stock/image/:/usr/share/icons/hicolor/36x36/stock/net/:/usr/share/icons/hicolor/36x36/stock/navigation/:/usr/share/icons/hicolor/36x36/stock/media/:/usr/share/icons/hicolor/36x36/stock/io/:/usr/share/icons/hicolor/36x36/stock/code/:/usr/share/icons/hicolor/36x36/animations/:/usr/share/icons/hicolor/36x36/places/:/usr/share/icons/hicolor/36x36/categories/:/usr/share/icons/hicolor/36x36/emotes/:/usr/share/icons/hicolor/36x36/actions/:/usr/share/icons/hicolor/36x36/emblems/:/usr/share/icons/hicolor/36x36/status/:/usr/share/icons/hicolor/36x36/devices/:/usr/share/icons/hicolor/36x36/intl/:/usr/share/icons/hicolor/128x128/:/usr/share/icons/hicolor/128x128/apps/:/usr/share/icons/hicolor/128x128/mimetypes/:/usr/share/icons/hicolor/128x128/filesystems/:/usr/share/icons/hicolor/128x128/stock/:/usr/share/icons/hicolor/128x128/stock/text/:/usr/share/icons/hicolor/128x128/stock/chart/:/usr/share/icons/hicolor/128x128/stock/object/:/usr/share/icons/hicolor/128x128/stock/data/:/usr/share/icons/hicolor/128x128/stock/table/:/usr/share/icons/hicolor/128x128/stock/form/:/usr/share/icons/hicolor/128x128/stock/image/:/usr/share/icons/hicolor/128x128/stock/net/:/usr/share/icons/hicolor/128x128/stock/navigation/:/usr/share/icons/hicolor/128x128/stock/media/:/usr/share/icons/hicolor/128x128/stock/io/:/usr/share/icons/hicolor/128x128/stock/code/:/usr/share/icons/hicolor/128x128/animations/:/usr/share/icons/hicolor/128x128/places/:/usr/share/icons/hicolor/128x128/categories/:/usr/share/icons/hicolor/128x128/emotes/:/usr/share/icons/hicolor/128x128/actions/:/usr/share/icons/hicolor/128x128/emblems/:/usr/share/icons/hicolor/128x128/status/:/usr/share/icons/hicolor/128x128/devices/:/usr/share/icons/hicolor/128x128/intl/:/usr/share/icons/hicolor/48x48/:/usr/share/icons/hicolor/48x48/apps/:/usr/share/icons/hicolor/48x48/mimetypes/:/usr/share/icons/hicolor/48x48/filesystems/:/usr/share/icons/hicolor/48x48/stock/:/usr/share/icons/hicolor/48x48/stock/text/:/usr/share/icons/hicolor/48x48/stock/chart/:/usr/share/icons/hicolor/48x48/stock/object/:/usr/share/icons/hicolor/48x48/stock/data/:/usr/share/icons/hicolor/48x48/stock/table/:/usr/share/icons/hicolor/48x48/stock/form/:/usr/share/icons/hicolor/48x48/stock/image/:/usr/share/icons/hicolor/48x48/stock/net/:/usr/share/icons/hicolor/48x48/stock/navigation/:/usr/share/icons/hicolor/48x48/stock/media/:/usr/share/icons/hicolor/48x48/stock/io/:/usr/share/icons/hicolor/48x48/stock/code/:/usr/share/icons/hicolor/48x48/animations/:/usr/share/icons/hicolor/48x48/places/:/usr/share/icons/hicolor/48x48/categories/:/usr/share/icons/hicolor/48x48/emotes/:/usr/share/icons/hicolor/48x48/actions/:/usr/share/icons/hicolor/48x48/emblems/:/usr/share/icons/hicolor/48x48/status/:/usr/share/icons/hicolor/48x48/devices/:/usr/share/icons/hicolor/48x48/intl/:/usr/share/icons/hicolor/512x512/:/usr/share/icons/hicolor/512x512/apps/:/usr/share/icons/hicolor/512x512/mimetypes/:/usr/share/icons/hicolor/512x512/filesystems/:/usr/share/icons/hicolor/512x512/stock/:/usr/share/icons/hicolor/512x512/stock/text/:/usr/share/icons/hicolor/512x512/stock/chart/:/usr/share/icons/hicolor/512x512/stock/object/:/usr/share/icons/hicolor/512x512/stock/data/:/usr/share/icons/hicolor/512x512/stock/table/:/usr/share/icons/hicolor/512x512/stock/form/:/usr/share/icons/hicolor/512x512/stock/image/:/usr/share/icons/hicolor/512x512/stock/net/:/usr/share/icons/hicolor/512x512/stock/navigation/:/usr/share/icons/hicolor/512x512/stock/media/:/usr/share/icons/hicolor/512x512/stock/io/:/usr/share/icons/hicolor/512x512/stock/code/:/usr/share/icons/hicolor/512x512/animations/:/usr/share/icons/hicolor/512x512/places/:/usr/share/icons/hicolor/512x512/categories/:/usr/share/icons/hicolor/512x512/emotes/:/usr/share/icons/hicolor/512x512/actions/:/usr/share/icons/hicolor/512x512/emblems/:/usr/share/icons/hicolor/512x512/status/:/usr/share/icons/hicolor/512x512/devices/:/usr/share/icons/hicolor/512x512/intl/:/usr/share/icons/hicolor/72x72/:/usr/share/icons/hicolor/72x72/apps/:/usr/share/icons/hicolor/72x72/mimetypes/:/usr/share/icons/hicolor/72x72/filesystems/:/usr/share/icons/hicolor/72x72/stock/:/usr/share/icons/hicolor/72x72/stock/text/:/usr/share/icons/hicolor/72x72/stock/chart/:/usr/share/icons/hicolor/72x72/stock/object/:/usr/share/icons/hicolor/72x72/stock/data/:/usr/share/icons/hicolor/72x72/stock/table/:/usr/share/icons/hicolor/72x72/stock/form/:/usr/share/icons/hicolor/72x72/stock/image/:/usr/share/icons/hicolor/72x72/stock/net/:/usr/share/icons/hicolor/72x72/stock/navigation/:/usr/share/icons/hicolor/72x72/stock/media/:/usr/share/icons/hicolor/72x72/stock/io/:/usr/share/icons/hicolor/72x72/stock/code/:/usr/share/icons/hicolor/72x72/animations/:/usr/share/icons/hicolor/72x72/places/:/usr/share/icons/hicolor/72x72/categories/:/usr/share/icons/hicolor/72x72/emotes/:/usr/share/icons/hicolor/72x72/actions/:/usr/share/icons/hicolor/72x72/emblems/:/usr/share/icons/hicolor/72x72/status/:/usr/share/icons/hicolor/72x72/devices/:/usr/share/icons/hicolor/72x72/intl/:/usr/share/icons/hicolor/scalable/:/usr/share/icons/hicolor/scalable/apps/:/usr/share/icons/hicolor/scalable/mimetypes/:/usr/share/icons/hicolor/scalable/filesystems/:/usr/share/icons/hicolor/scalable/stock/:/usr/share/icons/hicolor/scalable/stock/text/:/usr/share/icons/hicolor/scalable/stock/chart/:/usr/share/icons/hicolor/scalable/stock/object/:/usr/share/icons/hicolor/scalable/stock/data/:/usr/share/icons/hicolor/scalable/stock/table/:/usr/share/icons/hicolor/scalable/stock/form/:/usr/share/icons/hicolor/scalable/stock/image/:/usr/share/icons/hicolor/scalable/stock/net/:/usr/share/icons/hicolor/scalable/stock/navigation/:/usr/share/icons/hicolor/scalable/stock/media/:/usr/share/icons/hicolor/scalable/stock/io/:/usr/share/icons/hicolor/scalable/stock/code/:/usr/share/icons/hicolor/scalable/animations/:/usr/share/icons/hicolor/scalable/places/:/usr/share/icons/hicolor/scalable/categories/:/usr/share/icons/hicolor/scalable/emotes/:/usr/share/icons/hicolor/scalable/actions/:/usr/share/icons/hicolor/scalable/emblems/:/usr/share/icons/hicolor/scalable/status/:/usr/share/icons/hicolor/scalable/devices/:/usr/share/icons/hicolor/scalable/intl/:/usr/share/icons/hicolor/16x16/:/usr/share/icons/hicolor/16x16/apps/:/usr/share/icons/hicolor/16x16/mimetypes/:/usr/share/icons/hicolor/16x16/filesystems/:/usr/share/icons/hicolor/16x16/stock/:/usr/share/icons/hicolor/16x16/stock/text/:/usr/share/icons/hicolor/16x16/stock/chart/:/usr/share/icons/hicolor/16x16/stock/object/:/usr/share/icons/hicolor/16x16/stock/data/:/usr/share/icons/hicolor/16x16/stock/table/:/usr/share/icons/hicolor/16x16/stock/form/:/usr/share/icons/hicolor/16x16/stock/image/:/usr/share/icons/hicolor/16x16/stock/net/:/usr/share/icons/hicolor/16x16/stock/navigation/:/usr/share/icons/hicolor/16x16/stock/media/:/usr/share/icons/hicolor/16x16/stock/io/:/usr/share/icons/hicolor/16x16/stock/code/:/usr/share/icons/hicolor/16x16/animations/:/usr/share/icons/hicolor/16x16/places/:/usr/share/icons/hicolor/16x16/categories/:/usr/share/icons/hicolor/16x16/emotes/:/usr/share/icons/hicolor/16x16/actions/:/usr/share/icons/hicolor/16x16/emblems/:/usr/share/icons/hicolor/16x16/status/:/usr/share/icons/hicolor/16x16/devices/:/usr/share/icons/hicolor/16x16/intl/:/usr/share/icons/default/:/usr/share/icons/Adwaita/:/usr/share/icons/Adwaita/96x96/:/usr/share/icons/Adwaita/96x96/apps/:/usr/share/icons/Adwaita/96x96/mimetypes/:/usr/share/icons/Adwaita/96x96/places/:/usr/share/icons/Adwaita/96x96/categories/:/usr/share/icons/Adwaita/96x96/emotes/:/usr/share/icons/Adwaita/96x96/actions/:/usr/share/icons/Adwaita/96x96/emblems/:/usr/share/icons/Adwaita/96x96/status/:/usr/share/icons/Adwaita/96x96/devices/:/usr/share/icons/Adwaita/96x96/ui/:/usr/share/icons/Adwaita/96x96/legacy/:/usr/share/icons/Adwaita/64x64/:/usr/share/icons/Adwaita/64x64/apps/:/usr/share/icons/Adwaita/64x64/mimetypes/:/usr/share/icons/Adwaita/64x64/places/:/usr/share/icons/Adwaita/64x64/categories/:/usr/share/icons/Adwaita/64x64/emotes/:/usr/share/icons/Adwaita/64x64/actions/:/usr/share/icons/Adwaita/64x64/emblems/:/usr/share/icons/Adwaita/64x64/status/:/usr/share/icons/Adwaita/64x64/devices/:/usr/share/icons/Adwaita/64x64/ui/:/usr/share/icons/Adwaita/64x64/legacy/:/usr/share/icons/Adwaita/32x32/:/usr/share/icons/Adwaita/32x32/apps/:/usr/share/icons/Adwaita/32x32/mimetypes/:/usr/share/icons/Adwaita/32x32/places/:/usr/share/icons/Adwaita/32x32/categories/:/usr/share/icons/Adwaita/32x32/emotes/:/usr/share/icons/Adwaita/32x32/actions/:/usr/share/icons/Adwaita/32x32/emblems/:/usr/share/icons/Adwaita/32x32/status/:/usr/share/icons/Adwaita/32x32/devices/:/usr/share/icons/Adwaita/32x32/ui/:/usr/share/icons/Adwaita/32x32/legacy/:/usr/share/icons/Adwaita/24x24/:/usr/share/icons/Adwaita/24x24/apps/:/usr/share/icons/Adwaita/24x24/mimetypes/:/usr/share/icons/Adwaita/24x24/places/:/usr/share/icons/Adwaita/24x24/categories/:/usr/share/icons/Adwaita/24x24/emotes/:/usr/share/icons/Adwaita/24x24/actions/:/usr/share/icons/Adwaita/24x24/emblems/:/usr/share/icons/Adwaita/24x24/status/:/usr/share/icons/Adwaita/24x24/devices/:/usr/share/icons/Adwaita/24x24/ui/:/usr/share/icons/Adwaita/24x24/legacy/:/usr/share/icons/Adwaita/256x256/:/usr/share/icons/Adwaita/256x256/mimetypes/:/usr/share/icons/Adwaita/256x256/places/:/usr/share/icons/Adwaita/256x256/status/:/usr/share/icons/Adwaita/256x256/legacy/:/usr/share/icons/Adwaita/scalable-up-to-32/:/usr/share/icons/Adwaita/scalable-up-to-32/status/:/usr/share/icons/Adwaita/22x22/:/usr/share/icons/Adwaita/22x22/mimetypes/:/usr/share/icons/Adwaita/22x22/places/:/usr/share/icons/Adwaita/22x22/emblems/:/usr/share/icons/Adwaita/22x22/status/:/usr/share/icons/Adwaita/22x22/devices/:/usr/share/icons/Adwaita/22x22/legacy/:/usr/share/icons/Adwaita/cursors/:/usr/share/icons/Adwaita/48x48/:/usr/share/icons/Adwaita/48x48/apps/:/usr/share/icons/Adwaita/48x48/mimetypes/:/usr/share/icons/Adwaita/48x48/places/:/usr/share/icons/Adwaita/48x48/categories/:/usr/share/icons/Adwaita/48x48/emotes/:/usr/share/icons/Adwaita/48x48/actions/:/usr/share/icons/Adwaita/48x48/emblems/:/usr/share/icons/Adwaita/48x48/status/:/usr/share/icons/Adwaita/48x48/devices/:/usr/share/icons/Adwaita/48x48/ui/:/usr/share/icons/Adwaita/48x48/legacy/:/usr/share/icons/Adwaita/512x512/:/usr/share/icons/Adwaita/512x512/mimetypes/:/usr/share/icons/Adwaita/512x512/places/:/usr/share/icons/Adwaita/512x512/emblems/:/usr/share/icons/Adwaita/512x512/status/:/usr/share/icons/Adwaita/512x512/devices/:/usr/share/icons/Adwaita/512x512/legacy/:/usr/share/icons/Adwaita/8x8/:/usr/share/icons/Adwaita/8x8/emblems/:/usr/share/icons/Adwaita/8x8/legacy/:/usr/share/icons/Adwaita/scalable/:/usr/share/icons/Adwaita/scalable/apps/:/usr/share/icons/Adwaita/scalable/mimetypes/:/usr/share/icons/Adwaita/scalable/places/:/usr/share/icons/Adwaita/scalable/categories/:/usr/share/icons/Adwaita/scalable/emotes/:/usr/share/icons/Adwaita/scalable/actions/:/usr/share/icons/Adwaita/scalable/emblems/:/usr/share/icons/Adwaita/scalable/status/:/usr/share/icons/Adwaita/scalable/devices/:/usr/share/icons/Adwaita/scalable/ui/:/usr/share/icons/Adwaita/scalable/legacy/:/usr/share/icons/Adwaita/16x16/:/usr/share/icons/Adwaita/16x16/apps/:/usr/share/icons/Adwaita/16x16/mimetypes/:/usr/share/icons/Adwaita/16x16/places/:/usr/share/icons/Adwaita/16x16/categories/:/usr/share/icons/Adwaita/16x16/emotes/:/usr/share/icons/Adwaita/16x16/actions/:/usr/share/icons/Adwaita/16x16/emblems/:/usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/ui/:/usr/share/icons/Adwaita/16x16/legacy/:/usr/share/icons/locolor/:/usr/share/icons/locolor/32x32/:/usr/share/icons/locolor/32x32/apps/:/usr/share/icons/locolor/16x16/:/usr/share/icons/locolor/16x16/apps/:/usr/share/icons/scalable/:/usr/share/icons/scalable/apps/:/usr/share/icons/gnome/:/usr/share/icons/gnome/48x48/:/usr/share/icons/gnome/48x48/mimetypes/
     sticky_history = yes
-
-    # Maximum amount of notifications kept in history
-    history_length = 20
-
-    ### Misc/Advanced ###
-
-    # dmenu path.
-    dmenu = /usr/bin/dmenu -p dunst:
-
-    # Browser for opening urls in context menu.
-    browser = /usr/bin/qutebrowser
-
-    # Always run rule-defined scripts, even if the notification is suppressed
+    history_length = 100
+    dmenu = /usr/local/bin/dmenu -p dunst:
+    browser = google-chrome-stable
     always_run_script = true
-
-    # Define the title of the windows spawned by dunst
     title = Dunst
-
-    # Define the class of the windows spawned by dunst
     class = Dunst
-
-    # Print a notification on startup.
-    # This is mainly for error detection, since dbus (re-)starts dunst
-    # automatically after a crash.
-    #startup_notification = true
-
-    ### Legacy
-
-    # Use the Xinerama extension instead of RandR for multi-monitor support.
-    # This setting is provided for compatibility with older nVidia drivers that
-    # do not support RandR and using it on systems that support RandR is highly
-    # discouraged.
-    #
-    # By enabling this setting dunst will not be able to detect when a monitor
-    # is connected or disconnected which might break follow mode if the screen
-    # layout changes.
+    startup_notification = false
     force_xinerama = false
 
-# Experimental features that may or may not work correctly. Do not expect them
-# to have a consistent behaviour across releases.
 [experimental]
-    # Calculate the dpi to use on a per-monitor basis.
-    # If this setting is enabled the Xft.dpi value will be ignored and instead
-    # dunst will attempt to calculate an appropriate dpi value for each monitor
-    # using the resolution and physical size. This might be useful in setups
-    # where there are multiple screens with very different dpi values.
-    per_monitor_dpi = false
+    per_monitor_dpi = true
 
 [shortcuts]
-
-    # Shortcuts are specified as [modifier+][modifier+]...key
-    # Available modifiers are "ctrl", "mod1" (the alt-key), "mod2",
-    # "mod3" and "mod4" (windows-key).
-    # Xev might be helpful to find names for keys.
-
-    # Close notification.
     close = ctrl+space
-
-    # Close all notifications.
     close_all = ctrl+shift+space
-
-    # Redisplay last message(s).
-    # On the US keyboard layout "grave" is normally above TAB and left
-    # of "1". Make sure this key actually exists on your keyboard layout,
-    # e.g. check output of 'xmodmap -pke'
     history = ctrl+grave
-
-    # Context menu.
     context = ctrl+shift+period
 
 [urgency_low]
-    # IMPORTANT: colors have to be defined in quotation marks.
-    # Otherwise the "#" and following would be interpreted as a comment.
-    background = "#222222"
-    foreground = "#888888"
-    timeout = 5
-    # Icon for notifications with low urgency, uncomment to enable
-    #icon = /path/to/icon
+    background = "#E9D9B0"
+    foreground = "#262626"
+    frame_color = "#262626"
+    timeout = 20
 
 [urgency_normal]
-    background = "#285577"
-    foreground = "#ffffff"
-    timeout = 5
-    # Icon for notifications with normal urgency, uncomment to enable
-    #icon = /path/to/icon
+    background = "#2f343f"
+    foreground = "#EBEBDD"
+    frame_color = "#262626"
+    timeout = 30
 
 [urgency_critical]
-    background = "#900000"
-    foreground = "#ffffff"
-    frame_color = "#ff0000"
-    timeout = 0
-    # Icon for notifications with critical urgency, uncomment to enable
-    #icon = /path/to/icon
-
-# Every section that isn't one of the above is interpreted as a rules to
-# override settings for certain messages.
-# Messages can be matched by "appname", "summary", "body", "icon", "category",
-# "msg_urgency" and you can override the "timeout", "urgency", "foreground",
-# "background", "new_icon" and "format".
-# Shell-like globbing will get expanded.
-#
-# SCRIPTING
-# You can specify a script that gets run when the rule matches by
-# setting the "script" option.
-# The script will be called as follows:
-#   script appname summary body icon urgency
-# where urgency can be "LOW", "NORMAL" or "CRITICAL".
-#
-# NOTE: if you don't want a notification to be displayed, set the format
-# to "".
-# NOTE: It might be helpful to run dunst -print in a terminal in order
-# to find fitting options for rules.
+    background = "#E9D9B0"
+    foreground = "#262626"
+    frame_color = "#262626"
+    timeout = 120
 
 #[espeak]
 #    summary = "*"
