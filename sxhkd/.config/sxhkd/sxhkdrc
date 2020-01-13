@@ -1,4 +1,16 @@
 #!/bin/sh
+# In the name of Allah, the most Gracious, the most Merciful.
+#
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+#
+#
+# ░█▀▀░█░█░█░█░█░█░█▀▄
+# ░▀▀█░▄▀▄░█▀█░█▀▄░█░█
+# ░▀▀▀░▀░▀░▀░▀░▀░▀░▀▀░
+#
 
 # Reload sxhkd
 
@@ -83,7 +95,7 @@ super + {t,shift + t,s,f}
 
 # Set the node flags
 
-super + ctrl + {m,x,y,z}
+super + alt + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
 
 # Move the floating windows 
@@ -163,7 +175,12 @@ XF86MonBrightness{Down,Up}
 # Soft print combo for Screenshot
 
 Print
-    import -window root /tmp/foo.png; cat /tmp/foo.png | xclip -selection clipboard -t image/png
+    import -quality 100 -window root /tmp/foo.png; cat /tmp/foo.png | xclip -selection clipboard -t image/png
+
+# Print and push to imgur, get URL in clipboard
+
+alt + Print
+  imgur-screenshot -f
 
 # Soft Explorer button for File Manager
 
