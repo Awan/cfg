@@ -21,3 +21,4 @@ etc/.android/adb.5037
 mpd/.config/mpd/state
 mpd/.config/mpd/database
 __init__.py
+imgur/.config/imgur-screenshot/credentials.conf
