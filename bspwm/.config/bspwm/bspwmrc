@@ -1,15 +1,35 @@
 #!/usr/bin/env bash
-
-# Start keybindings daemon
-
-sxhkd &
+# In the name of Allah, the most Gracious, the most Merciful.
+#
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+#
+# ░█▀▄░█▀▀░█▀█░█░█░█▄█
+# ░█▀▄░▀▀█░█▀▀░█▄█░█░█
+# ░▀▀░░▀▀▀░▀░░░▀░▀░▀░▀
 
 # Start some useful programs
 
 "$HOME"/.config/bspwm/autostart.sh &
 
-# Configure monitors
-bspc monitor -d I II III IV V VI VII VIII IX X
+# Define some functions
+
+function multimonitors()
+{
+  start_from=1
+  monitors_connected=$(bspc query -M | wc -l)
+  per_monitor=$(( 10 / monitors_connected ))
+  for monitor in $(bspc query -M); do
+    bspc monitor $monitor -d $(seq $start_from $(( start_from + per_monitor - 1)))
+    start_from=$(( start_from + per_monitor ))
+ done
+}
+
+# Divide workspaces/desktops to all connected monitors
+
+multimonitors
 
 # Rules for windows
 
@@ -61,7 +81,7 @@ bspc config focus_follows_pointer   true
 # When focusing a monitor/window, put the pointer to its center.
 
 bspc config pointer_follows_monitor true
-bspc config pointer_follows_focus   true
+bspc config pointer_follows_focus   false
 
 # Button used to focusing a window/monitor
 
