@@ -21,7 +21,7 @@
 	ui = always
 [diff]
 	colorMoved = dimmed_zebra
-    tool = vimdiff
+	tool = vimdiff
 	submodule = log
 [difftool]
     prompt = false
