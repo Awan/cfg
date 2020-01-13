@@ -1,4 +1,15 @@
 #!/usr/bin/env bash
+# In the name of Allah, the most Gracious, the most Merciful.
+#
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+
+
+user_resources=$HOME/.Xresources
+user_keymaps=$HOME/.Xmodmap
+user_fonts_dir=$HOME/.local/share/fonts
 
 function run {
   if ! pgrep $1 ;
@@ -14,9 +25,41 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
     unset f
 fi
 
-xrdb -load $HOME/.Xresources &
-run polybar -r default &
-xmodmap $HOME/.Xmodmap &
+function multibar {
+  # check how many monitors are connected and start polybar on all of them.
+  pkill polybar
+  while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+  xrandr -q | awk '/ connected / {print $1}' | while read -r monitor _; do
+  polybar -r "$monitor" & 
+done
+}
+
+function tab {
+  # Configure only laptop's screen if no external monitor is connected.
+  xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --brightness 1.0 \
+    --gamma 0.76:0.75:0.68 "$@"
+  }
+
+function tabular {
+  # Configure external monitor if exists
+  tab
+  xrandr --output HDMI-2 --mode 1280x1024 --pos 1920x0 "$@"
+}
+
+# Start sxhkd 
+
+sxhkd &
+
+# Load Xresources 
+
+[[ -f $user_resources ]] && xrdb -merge "$user_resources"
+
+# Load keymaps
+
+[[ -f $user_keymaps ]] && xmodmap "$user_keymaps"
+
+# Run compositor
+
 run picom -b --config $HOME/.config/picom/picom.conf &
 
 # Restore the last wallpaper
@@ -31,8 +74,7 @@ xsetroot -cursor_name ul_angle &
 
 # Add fonts directories
 
-xset +fp $HOME/.local/share/fonts/ &
-xset fp rehash &
+xset +fp "$user_fonts_dir" && xset fp rehash 
 
 # Start urxvt in daemon mode
 
@@ -74,13 +116,21 @@ pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 
 # if multihead available, enable it or disable if not.
 
-#multihead="$(xrandr -q)"
+# Set brightness to 30 at boot
 
-#echo "$multihead" | grep "HDMI2 connected" >/dev/null 2>&1 && xrandr --output HDMI2 --auto --output HDMI2 --auto --above eDP1 &
-#echo "$multihead" | grep "HDMI2 disconnected" >/dev/null 2>&1 && xrandr --output HDMI2 --off &
+light -S 30
 
-#xrandr --output HDMI2 --auto --output HDMI2 --auto --left-of eDP1 &
-#xrandr --output eDP-1 --mode 1600x900 --panning 1920x1080 --scale 1.2x1.2
+# Configure multihead.
+
+if [ "$(xrandr -q | awk '/ connected / {print $1}' | wc -l)" -eq 1 ]; then
+  tab --primary
+else
+  tabular
+fi
+
+# Start polybar on all monitors connected
+
+multibar 
 
 # Start a scratchpad
 
