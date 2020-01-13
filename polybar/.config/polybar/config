@@ -25,25 +25,26 @@ pseudo-transparency = true
 
 [global/wm]
 margin-top = 0
-#margin-bottom = 0
+margin-bottom = 0
 
 
-[bar/default]
-#monitor = ${env:MONITOR:eDP-1}
-monitor-fallback = eDP-1
+[bar/eDP-1]
+monitor = ${env:MONITOR:eDP-1}
+;monitor-fallback = eDP-1
 bottom = true
 width = 100%
 height = 25
-;offset-x = 1%
-offset-y = -1
-radius = 0
+offset-x = 0
+offset-y = 0
+radius = 10
 fixed-center = true
 background = ${colors.background}
 foreground = ${colors.foreground}
 line-size = 0
 line-color = #f00
 border-size = 0
-border-color = #00000000
+border-top-size = 0
+border-color = ${xrdb:background}
 padding-left = 0
 padding-right = 1
 module-margin-left = 2
@@ -53,13 +54,14 @@ font-0 =  FontAwesome
 font-1 = DejaVu Sans:pixelsize=11
 #modules-left = date wlan memory cpu xbacklight mic pavolume battery abdullah gmail
 modules-left = date wlan memory cpu pulseaudio arch_backlight temperature battery 
-#modules-center = xworkspaces
+;modules-center = xworkspaces
 modules-center = bspwm
 modules-right = mpd-new
 #modules-right =  mpd mic pavolume backlight memory cpu battery date menu
 tray-position = right
 tray-padding = 6
-tray-background = #24292A00
+;tray-background = #24292A00
+tray-background = ${root.background}
 wm-restack = bspwm
 override-redirect = false
 ;scroll-up = bspwm-desknext
@@ -87,7 +89,7 @@ ws-icon-9 = "X"
 format = <label-state> <label-mode>
 label-monitor = %name%
 label-dimmed-foreground = #555
-label-dimmed-focused-background = #f00
+;label-dimmed-focused-background = #f00
 label-focused = %icon% %name%
 label-focused-underline= ${colors.primary}
 label-focused-foreground = #f00000
@@ -207,7 +209,7 @@ label-urgent-foreground = ${xrdb:polybar*color8}
 label-urgent-background = ${module/bspwm.label-urgent-background}
 label-urgent-padding = ${module/bspwm.label-urgent-padding}
 ; Create scroll handlers used to cycle desktops
-;enable-scroll = true
+enable-scroll = true
 label-monitor = %name%
 format = <label-state>
 label-active = %icon% %name%
@@ -219,6 +221,7 @@ label-occupied-underline = #555555
 label-urgent = %icon%
 #label-empty = %icon%
 #label-empty-foreground = #55
+
 
 
 [module/wlan]
@@ -310,6 +313,45 @@ animation-charging-2 = " "
 animation-charging-3 = " "
 animation-charging-4 = " "
 animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-framerate = 750
+
+[module/battery2]
+type = internal/battery
+battery = BAT0
+adapter = AC
+full-at = 95
+
+format-charging = "<animation-charging><label-charging>"
+;format-charging-underline = ${colors.foreground}
+label-charging = %percentage%% - time left %time%
+label-charging-foreground = ${colors.foreground}
+label-charging-background = ${colors.background}
+
+format-discharging = "<ramp-capacity><label-discharging>"
+;format-discharging-underline = ${self.format-charging-underline}
+label-discharging = %percentage%% - time left %time%
+label-discharging-foreground = ${colors.foreground}
+label-discharging-background = ${colors.background}
+
+format-full-prefix = "  "
+format-full-prefix-foreground = ${colors.foreground}
+format-full-prefix-background = ${colors.background}
+;format-full-underline = ${self.format-charging-underline}
+
+ramp-capacity-0 = "  "
+ramp-capacity-0-foreground = ${colors.alert}
+ramp-capacity-1 = "  "
+ramp-capacity-2 = "  "
+ramp-capacity-3 = "  "
+ramp-capacity-foreground = ${colors.foreground}
+ramp-capacity-background = ${colors.background}
+
+animation-charging-0 = "  "
+animation-charging-1 = "  "
+animation-charging-2 = "  "
+animation-charging-3 = "  "
+animation-charging-foreground = ${colors.foreground}
+animation-charging-background = ${colors.background}
 animation-charging-framerate = 750
 
 
@@ -648,9 +690,9 @@ module-margin-left = 2
 module-margin-right = 2
 
 
-[bar/hdmi]
-inherit = bar/default
-monitor = HDMI2
+[bar/HDMI-2]
+inherit = bar/eDP-1
+monitor = HDMI-2
 
 
 ; vim:ft=dosini
