@@ -8,7 +8,7 @@
 
 font = Fantasque Sans Mono Italic 16
 boldfont = Fantasque Mans Mono Bold Italic 16
-word_chars = -A-Za-z0-9,./?%&#:_=+@~
+word_chars = "-A-Za-z0-9,./?%&#_=+@~"
 allow_bold = true
 bold_is_bright = true
 browser = /usr/bin/google-chrome-stable
