@@ -56,7 +56,5 @@ case "$window_title" in
 		;;
 	scratchpad)
 		echo "state=floating"
-    echo "sticky=on"
-    echo "center=on"
 		;;
 esac
