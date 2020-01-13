@@ -50,7 +50,7 @@ URxvt*termName             : rxvt-unicode-256color
 URxvt*geometry             : 96x30
 URxvt*background           : #1B2B34
 URxvt*reverseVideo         : 0
-URxvt*loginShell           : 1
+URxvt*loginShell           : 0
 URxvt*jumpScroll           : 1
 URxvt*skipScroll           : 1
 URxvt*pastableTabs         : 1
