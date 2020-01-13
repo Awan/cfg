@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+# Get notified about connecting/disconnecting network with dunst, notify-send
+# and wpa_supplicant. Keep this script somewhere in your $PATH and add this to
+# your autostart (.xinitrc) file.
+
+#
+#for IF in /var/run/wpa_supplicant/* ; do
+#  IF="${IF##*/}"
+#    if [[ -d "/sys/class/net/${IF}/phy80211" ]] ; then
+#      wpa_cli -p /var/run/wpa_supplicant -i "${IF}" -a #"${HOME}/.local/bin/wpa_notify" &
+#    fi
+#done
+
+
 if [[ "${2}" == 'DISCONNECTED' ]] ; then
   printf -v msg '%s disconnected' "$1"
 else
