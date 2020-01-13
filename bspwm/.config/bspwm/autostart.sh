@@ -93,15 +93,6 @@ run xss-lock -- betterlockscreen -l dim &
 
 run dunst -c $HOME/.config/dunst/dunstrc &
 
-# Start wireless connection notifications upon (connected/disconnected)
-
-for IF in /var/run/wpa_supplicant/* ; do
-  IF="${IF##*/}"
-    if [[ -d "/sys/class/net/${IF}/phy80211" ]] ; then
-      wpa_cli -p /var/run/wpa_supplicant -i "${IF}" -a "${HOME}/.local/bin/wpa_notify" &
-    fi
-done
-
 # Mute the mic
 
 pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
