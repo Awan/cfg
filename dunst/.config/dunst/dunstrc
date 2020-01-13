@@ -14,7 +14,8 @@
     separator_color = frame
     sort = yes
     idle_threshold = 30
-    font = Fantasque Sans Mono 13
+    #font = FantasqueSansMono Nerd Font 13
+    font = DejaVuSansMono Nerd Font 14
     line_height = 0
     markup = full
     format = "<b>%s</b>\n%b"
