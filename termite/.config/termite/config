@@ -1,21 +1,29 @@
+# In the name of Allah, the most Gracious, the most Merciful.
+#
 #  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓ Author ▓ Abdullah <https://abdullah.today> 
 # ░▓▓▓▓▓▓▓▓▓▓ 
 # ░░░░░░░░░░ 
-
+#
+# 
+# ░▀█▀░█▀▀░█▀▄░█▄█░▀█▀░▀█▀░█▀▀
+# ░░█░░█▀▀░█▀▄░█░█░░█░░░█░░█▀▀
+# ░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░▀░░▀▀▀
+# 
 
 [options]
 
 font = Fantasque Sans Mono Italic 16
 boldfont = Fantasque Mans Mono Bold Italic 16
-word_chars = "-A-Za-z0-9,./?%&#_=+@~"
+word_chars = -A-Za-z0-9,./?%&#_=+@~
 allow_bold = true
 bold_is_bright = true
 browser = /usr/bin/google-chrome-stable
 clickable_url = true
 hyperlinks = true
 cursor_blink = system
-geometry = 500x300
+#geometry = 500x300
+geometry = 838x477
 icon_name = terminal
 modify_other_keys = false
 cursor_shape = underline

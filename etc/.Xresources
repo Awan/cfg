@@ -1,8 +1,14 @@
+! In the name of Allah, the most Gracious, the most Merciful.
+!
 !  ▓▓▓▓▓▓▓▓▓▓ 
-! ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+! ░▓ Author ▓ Abdullah <https://abdullah.today> 
 ! ░▓▓▓▓▓▓▓▓▓▓ 
 ! ░░░░░░░░░░ 
 
+ 
+! ░█░█░█▀▄░█▀▀░█▀▀░█▀█░█░█░█▀▄░█▀▀░█▀▀░█▀▀
+! ░▄▀▄░█▀▄░█▀▀░▀▀█░█░█░█░█░█▀▄░█░░░█▀▀░▀▀█
+! ░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀
 
 ! Colors
 
@@ -39,7 +45,8 @@
 ! if remote host is having problems with rxvt-unicode, copy
 ! /usr/share/terminfo/r/rxvt-unicode at hosts ~/.terminfo/r/rxvt-unicode
 
-URxvt*font                 : xft:FantasqueSansMono Nerd Font:italic:size=17, xft:DejaVu Sans Mono for Powerline:size=13, xft:SimHei:size=13
+!URxvt*font                 : xft:FantasqueSansMono Nerd Font:italic:size=17, xft:DejaVu Sans Mono for Powerline:size=13, xft:SimHei:size=13
+URxvt*font                 : xft:DejaVuSansMono Nerd Font:Italic:size=15, xft:DejaVu Sans Mono for Powerline:size=14
 URxvt*boldfont             : xft:Bitstream Vera Sans Mono:Bold:size=17:antialias=true
 URxvt*bolditalicfont       : xft:Bitstream Vera Sans Mono:Bold:italic:size=17:antialias=true
 URxvt*utf                  : 1
