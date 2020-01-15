@@ -659,14 +659,13 @@ purgegit () {
   # Create a temporary branch and checkout
   git checkout --orphan purge
   # Add all the files and commit
-  git add -A
   git commit -am 'In the name of Allah, the most Gracious, the most Merciful'
   # Delete the master branch
   git branch -D master
   # Rename the temporary branch to master
   git branch -m master
   # Push the changes forcefully
-  git push -f origin master
+  git push -uf origin master
 
 }
 
