@@ -671,7 +671,7 @@ override-redirect = true
 modules-left = date wlan memory cpu pulseaudio backlight-acpi battery 
 modules-right = mpd-new
 modules-center = window_switch
-font-0 =  FontAwesome
+font-0 =  Segoe UI Emoji
 font-1 = DejaVu Sans:pixelsize=11
 bottom = true
 width = 100%

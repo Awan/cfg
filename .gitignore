@@ -22,3 +22,4 @@ mpd/.config/mpd/state
 mpd/.config/mpd/database
 __init__.py
 imgur/.config/imgur-screenshot/credentials.conf
+etc/.config/gtk-3.0/bookmarks
