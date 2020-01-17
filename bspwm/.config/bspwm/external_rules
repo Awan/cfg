@@ -4,7 +4,7 @@ focused_window_id=$(bspc query -N -n focused)
 
 eval "$(xdotool getwindowgeometry --shell "$focused_window_id" 2>/dev/null)"
 
-if [ "$WIDTH" -gt "$HEIGHT" ] ; then
+if [ $WIDTH -gt $HEIGHT ] ; then
 	bspc node -p \~east
 else
 	bspc node -p \~south

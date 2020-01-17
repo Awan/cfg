@@ -12,8 +12,9 @@ user_keymaps=$HOME/.Xmodmap
 user_fonts_dir=$HOME/.local/share/fonts
 locker="$(which physlock)"
 lock_message="'Aur tum apny Rab ki kon kon c nematon ko jhutlawo gy?'"
-inactivity_time=1
+inactivity_time=3
 notify_delay=10
+icon_path=$HOME/.local/share/icons/drops/xautolock.png
 notify_message="'locking the screen in ${notify_delay} seconds...'"
 
 function run {
@@ -93,9 +94,9 @@ run unclutter --ignore-scrolling --fork --timeout 1 &
 # DPMS and lock screen
 
 xset dpms 180 &
-xautolock -detectsleep -time "$inactivity_time" -locker "'${locker} -mp \
-  $lock_message'" -notify "$notify_delay" -notifier "notify-send -u critical \
-  -t 1000 -a xautolock xautolock '${notify_message}'" &
+xautolock -detectsleep -time "$inactivity_time" -locker "$locker -mp \
+  $lock_message" -notify "$notify_delay" -notifier "notify-send -u critical \
+  -t 1000 -a xautolock -i ${icon_path} ${notify_message}" &
 
 # Start Notification daemon
 
