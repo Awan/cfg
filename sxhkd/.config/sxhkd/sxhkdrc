@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # In the name of Allah, the most Gracious, the most Merciful.
 #
 #  ▓▓▓▓▓▓▓▓▓▓ 
@@ -11,6 +11,10 @@
 # ░▀▀█░▄▀▄░█▀█░█▀▄░█░█
 # ░▀▀▀░▀░▀░▀░▀░▀░▀░▀▀░
 #
+
+# Launch The Quran
+super + z
+  zathura "$HOME"/kit/pdf/Quran/Quran.pdf
 
 # Reload sxhkd
 
@@ -45,12 +49,12 @@ alt + b
 # Push focused window to scratchpad (background)
 
 super + shift + i
-  $HOME/.config/bspwm/scratchpad.sh toggle-flag
+  "$HOME"/.config/bspwm/scratchpad.sh toggle-flag
 
 # Hide/Un-Hide a window pushed to scratchpad previously
 
 super + i
-  $HOME/.config/bspwm/scratchpad.sh switch-app
+  "$HOME"/.config/bspwm/scratchpad.sh switch-app
 
 
 # Launch Terminal (urxvtc)
@@ -76,7 +80,7 @@ super + {_, shift + } {h,j,k,l}
 # Resize nodes, open new window in created receptacle in given direction
 
 alt + {_, shift + } {h,j,k,l}
-  $HOME/.config/bspwm/{resize,move} {west,south,north,east}
+  "$HOME"/.config/bspwm/{resize,move} {west,south,north,east}
 
 # Launch Browser. ($BROWSER must be set)
 
@@ -170,12 +174,12 @@ XF86LaunchA
 # Soft Brightness keys
 
 XF86MonBrightness{Down,Up}
-  light {-U 5,-A 5} && notify-send -u low -t 1500 -a light "Brightness"  "$(light -G | cut -d . -f 1)"
+  light {-U 4,-A 4} && notify-send -u low -t 1500 -a light "Brightness"  "$(light -G | cut -d . -f 1)"
 
 # Soft print combo for Screenshot
 
 Print
-    import -quality 100 -window root /tmp/foo.png; cat /tmp/foo.png | xclip -selection clipboard -t image/png
+    import -quality 100 -window root /tmp/foo.png; < /tmp/foo.png xclip -selection clipboard -t image/png
 
 # Print and push to imgur, get URL in clipboard
 
@@ -205,7 +209,7 @@ super + x
 # Soft volume up/down buttons
 
 XF86Audio{Lower,Raise}Volume
-  notify-send -u low -t 1500 -a ponymix "volume" "$(ponymix --max-volume 153 {decrease,increase} 5)"
+  notify-send -u low -t 1500 -a ponymix "volume" "$(ponymix --max-volume 153 {decrease,increase} 3)"
 
 # Soft mute button
 
