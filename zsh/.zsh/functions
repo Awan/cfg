@@ -683,4 +683,9 @@ function gr()
   grep --color=auto -R "$*"
 }
 
+function calc()
+# Start a calculator
+{
+  python -q
+}
 

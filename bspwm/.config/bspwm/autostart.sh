@@ -10,13 +10,19 @@
 user_resources=$HOME/.Xresources
 user_keymaps=$HOME/.Xmodmap
 user_fonts_dir=$HOME/.local/share/fonts
+locker="$(which physlock)"
+lock_message="'Aur tum apny Rab ki kon kon c nematon ko jhutlawo gy?'"
+inactivity_time=1
+notify_delay=10
+notify_message="'locking the screen in ${notify_delay} seconds...'"
 
 function run {
-  if ! pgrep $1 ;
+  if ! pgrep "$1" ;
   then
-    $@&
+    "$@"&
   fi
 }
+
 
 if [ -d /etc/X11/xinit/xinitrc.d ]; then
   for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
@@ -60,11 +66,11 @@ sxhkd &
 
 # Run compositor
 
-run picom -b --config $HOME/.config/picom/picom.conf &
+run picom -b --config "$HOME"/.config/picom/picom.conf &
 
 # Restore the last wallpaper
 
-$HOME/.fehbg &
+"$HOME"/.fehbg &
 
 # Set cursor shape
 
@@ -87,11 +93,13 @@ run unclutter --ignore-scrolling --fork --timeout 1 &
 # DPMS and lock screen
 
 xset dpms 180 &
-run xss-lock -- betterlockscreen -l dim &
+xautolock -detectsleep -time "$inactivity_time" -locker "'${locker} -mp \
+  $lock_message'" -notify "$notify_delay" -notifier "notify-send -u critical \
+  -t 1000 -a xautolock xautolock '${notify_message}'" &
 
 # Start Notification daemon
 
-run dunst -c $HOME/.config/dunst/dunstrc &
+run dunst -c "$HOME"/.config/dunst/dunstrc &
 
 # Mute the mic
 
@@ -103,7 +111,7 @@ pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 
 # Start tmux if not already running
 
-[ -z $TMUX ] && tmux new-session -s $USER -d 
+[ -z "$TMUX" ] && tmux new-session -s "$USER" -d 
 
 # Set brightness to 30 at boot
 

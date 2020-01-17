@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# In the name of Allah, the most Gracious, the most Merciful.
+#
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah <https://abdullah.today> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+
+# shows you the keysyms you press
+
+	
+xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'
+
+
+		
