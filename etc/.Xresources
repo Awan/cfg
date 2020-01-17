@@ -45,9 +45,7 @@
 ! if remote host is having problems with rxvt-unicode, copy
 ! /usr/share/terminfo/r/rxvt-unicode at hosts ~/.terminfo/r/rxvt-unicode
 
-URxvt*font                 : xft:FantasqueSansMono Nerd Font:italic:size=15, xft:DejaVu Sans Mono for Powerline:size=15, xft:Segoe UI Emoji:size=15, xft:SimHei:size=15
-!URxvt*font                 : xft:Fantasque Sans Mono:size=16, xft:DejaVu Sans Mono for Powerline:size=17, xft:Segoe UI Emoji:size=17, xft:SimHei:size=17
-!URxvt*font                 : xft:DejaVuSansMono Nerd Font:Italic:size=15, xft:DejaVu Sans Mono for Powerline:size=14
+URxvt*font                 : xft:FantasqueSansMono Nerd Font:Italic:size=21, xft:Fantasque Sans Mono:Italic:size=21, xft:DejaVu Sans Mono for Powerline:size=21, xft:Segoe UI Emoji:size=21, xft:SimHei:size=21
 URxvt*boldfont             : xft:Bitstream Vera Sans Mono:Bold:size=17:antialias=true
 URxvt*bolditalicfont       : xft:Bitstream Vera Sans Mono:Bold:italic:size=17:antialias=true
 URxvt*utf                  : 1
@@ -117,10 +115,15 @@ URxvt*url-select.underline : 1
 URxvt*matcher.rend.0       : Uline Bold fg5
 URxvt*selection.pattern-0  : ([[                           : word                : ]]+)
 URxvt*keysym.M-C-c         : selection                     : rot13
-URxvt*perl-ext-common      : vim,default,matcher
+URxvt*perl-ext-common      : vim,default,matcher,font-size
 URxvt*vim-scrollback       : M-s
 URxvt*vim-scrollback-paste : M-p
 URxvt*clipboard.copycmd    : xsel -ib
+URxvt.keysym.C-Up:     font-size:increase
+URxvt.keysym.C-Down:   font-size:decrease
+URxvt.keysym.C-S-Up:   font-size:incglobal
+URxvt.keysym.C-S-Down: font-size:decglobal
+
 
 ! Polybar
 
@@ -200,3 +203,7 @@ rofi.color-urgent: #ffffff, #f59335, #ffffff, #ffffff, #f59335
 ! Cursor
 
 Xcursor.size                : 32          
+
+! Xautolock
+
+Xautolock.locker            : "/usr/bin/physlock -mp 'Aur tum apny Rab ki kon kon c nematon ko jhutlawo gy?'"
