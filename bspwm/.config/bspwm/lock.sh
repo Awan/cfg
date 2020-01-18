@@ -23,5 +23,6 @@ notify_me() {
 trap 'exit 0' TERM INT
 trap "kill %%; wait" EXIT
 notify_me
+pkill -USR1 -x dunst
 sleep 2147483647 &
 wait
