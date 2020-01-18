@@ -7,15 +7,16 @@
 # ░░░░░░░░░░ 
 
 
+# Xresources file
 user_resources=$HOME/.Xresources
+# custom keymaps
 user_keymaps=$HOME/.Xmodmap
+# custom fonts
 user_fonts_dir=$HOME/.local/share/fonts
-locker="$(which physlock)"
-lock_message="'Aur tum apny Rab ki kon kon c nematon ko jhutlawo gy?'"
-inactivity_time=3
-notify_delay=10
-icon_path=$HOME/.local/share/icons/drops/xautolock.png
-notify_message="'locking the screen in ${notify_delay} seconds...'"
+# Inactivity timeout
+inactivity_timeout=180
+# Time before exectuing lock 
+notify_time=10
 
 function run {
   if ! pgrep "$1" ;
@@ -93,10 +94,9 @@ run unclutter --ignore-scrolling --fork --timeout 1 &
 
 # DPMS and lock screen
 
-xset dpms 180 &
-xautolock -detectsleep -time "$inactivity_time" -locker "$locker -mp \
-  $lock_message" -notify "$notify_delay" -notifier "notify-send -u critical \
-  -t 1000 -a xautolock -i ${icon_path} ${notify_message}" &
+xset s "$(($inactivity_timeout - $notify_time))" "$notify_time" &
+xset dpms "$(($inactivity_timeout * 3))" "$(($inactivity_timeout * 4))" "$(($inactivity_timeout * 5))" &
+xss-lock -n "$HOME"/.config/bspwm/lock.sh -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' &
 
 # Start Notification daemon
 
