@@ -204,7 +204,7 @@ alt + shift + bracket{left,right}
 # Lock the screen
 
 super + x
-  betterlockscreen -l dim
+  physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' 
 
 # Soft volume up/down buttons
 
