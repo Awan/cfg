@@ -59,4 +59,11 @@ case "$window_title" in
 		;;
 esac
 
+case "$window_title" in
+  stalonetray)
+    echo "state=floating"
+    echo "manage=off"
+    ;;
+esac
+
 # vim:ft=sh
