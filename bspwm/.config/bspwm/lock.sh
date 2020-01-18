@@ -15,7 +15,7 @@ notify_message="locking the screen in ${notify_delay} seconds..."
 
 notify_me() {
   notify-send -u critical \
-    -t 900 -i "$icon_path" \
+    -t "$(($notify_delay * 1000))" -i "$icon_path" \
     "$notify_message"
   }
 
@@ -23,6 +23,5 @@ notify_me() {
 trap 'exit 0' TERM INT
 trap "kill %%; wait" EXIT
 notify_me
-pkill -USR1 -x dunst
 sleep 2147483647 &
 wait
