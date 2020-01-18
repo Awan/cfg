@@ -11,3 +11,6 @@ set window-title-home-tilde true
 
 set selection-clipboard clipboard
 
+# colors
+set statusbar-bg "#f0b050"
+set statusbar-fg "#000000"
