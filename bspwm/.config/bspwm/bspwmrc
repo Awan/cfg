@@ -10,7 +10,9 @@
 # ░█▀▄░▀▀█░█▀▀░█▄█░█░█
 # ░▀▀░░▀▀▀░▀░░░▀░▀░▀░▀
 
-# Start some useful programs
+# Start some useful programs. Only useful if you don't use some display manager.
+# If you use one, that will source ~/.xprofile so execute these programs from
+# there instead.
 
 "$HOME"/.config/bspwm/autostart.sh &
 
