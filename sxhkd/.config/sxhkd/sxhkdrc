@@ -1,16 +1,18 @@
-#!/usr/bin/env bash
-# In the name of Allah, the most Gracious, the most Merciful.
-#
-#  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah <https://abdullah.today> 
-# ░▓▓▓▓▓▓▓▓▓▓ 
-# ░░░░░░░░░░ 
-#
-#
-# ░█▀▀░█░█░█░█░█░█░█▀▄
-# ░▀▀█░▄▀▄░█▀█░█▀▄░█░█
-# ░▀▀▀░▀░▀░▀░▀░▀░▀░▀▀░
-#
+#!/bin/sh
+
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓
+░░░░░░░░░░
+
+░█▀▀░█░█░█░█░█░█░█▀▄
+░▀▀█░▄▀▄░█▀█░█▀▄░█░█
+░▀▀▀░▀░▀░▀░▀░▀░▀░▀▀░
+'
 
 # Launch The Quran
 super + z
@@ -184,7 +186,9 @@ Print
 # Print and push to imgur, get URL in clipboard
 
 alt + Print
-  imgur-screenshot -f
+  import -quality 100 -window root /tmp/foo.png && curl -F'file=@/tmp/foo.png' \
+  http://0x0.st | tee /tmp/foo.txt | xclip && notify-send -t 1500 -i \
+  "$HOME"/.local/share/icons/drops/imgur.png "Screenshot posted: $(cat /tmp/foo.txt)"
 
 # Soft Explorer button for File Manager
 
@@ -219,9 +223,9 @@ XF86AudioMute
  
 # Mute/Unmute mic
 
-ctrl + XF86AudioMute
+#ctrl + XF86AudioMute
   ponymix --input toggle && notify-send -u low -t 1500 -a ponymix "volume" \
   "input $(ponymix --input is-muted || echo 'un')muted"
 
 
-# vim:ft=sxhkdrc
+# vim:ft=sh

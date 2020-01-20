@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 # In the name of Allah, the most Gracious, the most Merciful.
 #
 #  ▓▓▓▓▓▓▓▓▓▓ 
@@ -18,37 +18,47 @@ inactivity_timeout=180
 # Time before exectuing lock 
 notify_time=10
 
-function run {
-  if ! pgrep "$1" ;
+# For some java apps
+
+wmname LG3D &
+
+run() {
+  if ! pgrep $1 ;
   then
-    "$@"&
+    $@&
   fi
 }
 
 
 if [ -d /etc/X11/xinit/xinitrc.d ]; then
   for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
-    [ -x "$f" ] && . "$f"
+    [ -x $f ] && . $f
     done
     unset f
 fi
 
-function multibar {
+# Session name
+export DESKTOP_SESSION=bspwm
+# No tty
+export XDG_SESSION_TYPE=x11
+
+
+multibar() {
   # check how many monitors are connected and start polybar on all of them.
   pkill polybar
-  while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+  while pgrep -x polybar >/dev/null; do sleep 1; done
   xrandr -q | awk '/ connected / {print $1}' | while read -r monitor _; do
   polybar -r "$monitor" & 
 done
 }
 
-function tab {
+tab() {
   # Configure only laptop's screen if no external monitor is connected.
   xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --brightness 1.0 \
     --gamma 0.76:0.75:0.68 "$@"
-  }
+}
 
-function tabular {
+tabular() {
   # Configure external monitor if exists
   tab
   xrandr --output HDMI-2 --mode 1280x1024 --pos 1920x0 "$@"
@@ -60,11 +70,11 @@ sxhkd &
 
 # Load Xresources 
 
-[[ -f $user_resources ]] && xrdb -merge "$user_resources"
+[ -f $user_resources ] && xrdb -merge "$user_resources"
 
 # Load keymaps
 
-[[ -f $user_keymaps ]] && xmodmap "$user_keymaps"
+[ -f $user_keymaps ] && xmodmap "$user_keymaps"
 
 # Run compositor
 
@@ -112,7 +122,7 @@ pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 
 # Start tmux if not already running
 
-[ -z "$TMUX" ] && tmux new-session -s "$USER" -d 
+[ -z $TMUX ] && tmux new-session -s $USER -d 
 
 # Set brightness to 30 at boot
 

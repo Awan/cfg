@@ -1,5 +1,6 @@
 alias ls='ls --color=auto'
 alias zq='zathura $HOME/kit/pdf/Quran/Quran.pdf &'
+alias getip="curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//'"
 alias du='du -h'
 alias youtube='google-chrome-stable --app=https://youtube.com'
 alias colorize='toilet --gay -f term $@'
@@ -79,6 +80,7 @@ alias xf='xfce4-terminal'
 alias lf='leafpad'
 alias gd='git diff'
 alias cD='cd ~/sys/downloads'
+alias ds="dirs -v | head -n 10"
 alias lla='ls -la'
 alias lc='ls | wc -l'
 #alias less=/usr/share/vim/vim81/macros/less.sh
