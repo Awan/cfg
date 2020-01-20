@@ -1,14 +1,14 @@
 ! In the name of Allah, the most Gracious, the most Merciful.
-!
-!  ▓▓▓▓▓▓▓▓▓▓ 
-! ░▓ Author ▓ Abdullah <https://abdullah.today> 
-! ░▓▓▓▓▓▓▓▓▓▓ 
-! ░░░░░░░░░░ 
-
- 
+! 
+!  ▓▓▓▓▓▓▓▓▓▓
+! ░▓ Author ▓ Abdullah <https://abdullah.today>
+! ░▓▓▓▓▓▓▓▓▓▓
+! ░░░░░░░░░░
+! 
 ! ░█░█░█▀▄░█▀▀░█▀▀░█▀█░█░█░█▀▄░█▀▀░█▀▀░█▀▀
 ! ░▄▀▄░█▀▄░█▀▀░▀▀█░█░█░█░█░█▀▄░█░░░█▀▀░▀▀█
 ! ░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀
+
 
 ! Colors
 
@@ -202,7 +202,7 @@ rofi.color-urgent: #ffffff, #f59335, #ffffff, #ffffff, #f59335
 
 ! Cursor
 
-Xcursor.size                : 32          
+Xcursor.size                : 16
 
 ! Xautolock
 

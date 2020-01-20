@@ -1,5 +1,19 @@
 #!/bin/sh
 
+coded_by='
+In the name of Allah, the most Gracious, the most Merciful.
+
+  ▓▓▓▓▓▓▓▓▓▓ 
+ ░▓ Author ▓ Abdullah <https://abdullah.today> 
+ ░▓▓▓▓▓▓▓▓▓▓ 
+ ░░░░░░░░░░ 
+
+░█▀▀░█▀▀░█▀▄░█▀█░▀█▀░█▀▀░█░█░█▀█░█▀█░█▀▄
+░▀▀█░█░░░█▀▄░█▀█░░█░░█░░░█▀█░█▀▀░█▀█░█░█
+░▀▀▀░▀▀▀░▀░▀░▀░▀░░▀░░▀▀▀░▀░▀░▀░░░▀░▀░▀▀░
+'
+
+
 toggle_flag() {
     id=$(bspc query -N -n "focused")
     if [ -n "$id" ]; then

@@ -1,9 +1,31 @@
 typeset -U path
 path=(~/.cargo/bin ~/.local/bin ~/.local/lib ~/.pyenv/bin /usr/sbin /sbin $path[@])
+
 BROWSER=$(which google-chrome-stable)
-EDITOR=/usr/bin/vim
-VISUAL=$EDITOR
-TERMINAL=urxvtc
+
+# Set Terminal
+
+if [ -z "$TERMINAL" ]; then
+  if (( $+commands[urxvt] )); then
+    TERMINAL=urxvt
+  elif (( $+commands[termite] )); then
+    TERMINAL=termite
+  fi
+fi
+
+TERMCMD=$TERMINAL
+
+# Set editor
+
+set_editor() {
+  export EDITOR="$@"
+  export GIT_EDITOR="$@"
+  export VISUAL="$@"
+}
+
+set_editor $(which vim)
+
+
 XDG_DATA_HOME=$HOME/.local/share
 XDG_CONFIG_HOME=$HOME/.config
 XDG_CACHE_HOME=$HOME/.cache

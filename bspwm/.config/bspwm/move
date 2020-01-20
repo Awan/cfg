@@ -1,4 +1,20 @@
-#!/bin/bash
+#!/bin/sh
+
+
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓
+░░░░░░░░░░
+
+░█░█░▀█▀░█▀█░█▀▄░█▀█░█░█░█▀▀░░░█▄█░█▀█░█░█░█▀▀░█▄█░█▀▀░█▀█░▀█▀
+░█▄█░░█░░█░█░█░█░█░█░█▄█░▀▀█░░░█░█░█░█░▀▄▀░█▀▀░█░█░█▀▀░█░█░░█░
+░▀░▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀░▀░▀▀▀░░░▀░▀░▀▀▀░░▀░░▀▀▀░▀░▀░▀▀▀░▀░▀░░▀░
+'
+
 
 [ "$#" -eq 1 ] || { echo "Pass only one argument: north,east,south,west"; exit 1; }
 
