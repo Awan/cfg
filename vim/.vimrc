@@ -1,15 +1,20 @@
-"  ▓▓▓▓▓▓▓▓▓▓ 
-" ░▓ Author ▓ Abdullah <https://abdullah.today/> 
-" ░▓▓▓▓▓▓▓▓▓▓ 
-" ░░░░░░░░░░ 
-
+" In the name of Allah, the most Gracious, the most Merciful.
+" 
+"  ▓▓▓▓▓▓▓▓▓▓
+" ░▓ Author ▓ Abdullah <https://abdullah.today>
+" ░▓▓▓▓▓▓▓▓▓▓
+" ░░░░░░░░░░
+" 
+" ░█░█░▀█▀░█▄█
+" ░▀▄▀░░█░░█░█
+" ░░▀░░▀▀▀░▀░▀
 
 set ruler
 let g:zenburn_old_Visual = 1
 let g:zenburn_high_contrast = 1
 let g:zenburn_force_dark_Background = 1
 set fo+=w
-colorscheme PaperColor
+colorscheme elflord
 cmap w!! %!sudo tee > /dev/null %
 
 " Set relative number but also show current line number (no zero for current
@@ -160,7 +165,7 @@ command! -range=% HighlightRepeats <line1>,<line2>call HighlightRepeats()
 autocmd FileType python set breakindentopt=shift:4
 command! -range=% PB  <line1>,<line2>w !curl -F 'c=@-' https://ptpb.pw/ | sed -n 's/^url: //p' | xclip
 command! -range=% TB  <line1>,<line2>w !fb
-command! -range=% GT <line1>,<line2>w !gist-paste -c -p 
+command! -range=% GT <line1>,<line2>w !gist -c -p -f %
 
 " comfortable navigation
 noremap <buffer> j gj

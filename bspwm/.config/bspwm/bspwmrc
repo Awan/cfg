@@ -1,14 +1,19 @@
-#!/usr/bin/env bash
-# In the name of Allah, the most Gracious, the most Merciful.
-#
-#  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah <https://abdullah.today> 
-# ░▓▓▓▓▓▓▓▓▓▓ 
-# ░░░░░░░░░░ 
-#
-# ░█▀▄░█▀▀░█▀█░█░█░█▄█
-# ░█▀▄░▀▀█░█▀▀░█▄█░█░█
-# ░▀▀░░▀▀▀░▀░░░▀░▀░▀░▀
+#!/bin/sh
+
+
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓
+░░░░░░░░░░
+
+░█▀▄░█▀▀░█▀█░█░█░█▄█
+░█▀▄░▀▀█░█▀▀░█▄█░█░█
+░▀▀░░▀▀▀░▀░░░▀░▀░▀░▀
+'
 
 # Start some useful programs. Only useful if you don't use some display manager.
 # If you use one, that will source ~/.xprofile so execute these programs from
@@ -18,7 +23,7 @@
 
 # Define some functions
 
-function multimonitors()
+multimonitors()
 {
   start_from=1
   monitors_connected=$(bspc query -M | wc -l)

@@ -1,12 +1,18 @@
-#!/usr/bin/env bash
-# In the name of Allah, the most Gracious, the most Merciful.
-#
-#  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah <https://abdullah.today> 
-# ░▓▓▓▓▓▓▓▓▓▓ 
-# ░░░░░░░░░░ 
+#!/bin/sh
 
-# A part of my xss-lock setup
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓
+░░░░░░░░░░
+
+░█▀▀░█▀▀░█▀▄░█▀▀░█▀▀░█▀█░░░█░░░█▀█░█▀▀░█░█░█▀▀░█▀▄
+░▀▀█░█░░░█▀▄░█▀▀░█▀▀░█░█░░░█░░░█░█░█░░░█▀▄░█▀▀░█▀▄
+░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀░▀
+'
 
 notify_delay=10
 icon_path=$HOME/.local/share/icons/drops/xautolock.png

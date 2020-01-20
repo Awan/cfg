@@ -1,51 +1,38 @@
 #!/bin/sh
 
-battery()
-{
-  battery_path=/sys/class/power_supply/BAT0
-  status=$battery_path/status
-  battery_full=$battery_path/energy_full
-  battery_now=$battery_path/energy_now
-  bf=$(cat $battery_full)
-  bn=$(cat $battery_now)
-  bp=$(( 100 * $bn / $bf ))
-  state=$(cat $status)
-  case $state in
-    Full)
-      st="="
-      ;;
-    Discharging)
-      st="-"
-      ;;
-    Charging)
-      st="+"
-      ;;
-  esac
-  test "$bp" -lt 10 \
-  && bc="#B3291C" \
-  || bc="#222222"
-  echo $st#[fg=$bc]$bp"%"
-}
+coded_by='
 
-new_battery(){
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓
+░░░░░░░░░░
+
+░▀█▀░█▄█░█░█░█░█░░░█▀▀░▀█▀░█▀█░▀█▀░█░█░█▀▀
+░░█░░█░█░█░█░▄▀▄░░░▀▀█░░█░░█▀█░░█░░█░█░▀▀█
+░░▀░░▀░▀░▀▀▀░▀░▀░░░▀▀▀░░▀░░▀░▀░░▀░░▀▀▀░▀▀▀
+'
+
+battery(){
   SYSFS=/sys/class/power_supply
   BATTERY=BAT0
   MAINS=AC
-  POWER_NOW=$(<"$SYSFS/$BATTERY/power_now")
-  ENERGY_NOW=$(<"$SYSFS/$BATTERY/energy_now")
-  ENERGY_FULL=$(<"$SYSFS/$BATTERY/energy_full")
-  ENERGY_FULL_DESIGN=$(<"$SYSFS/$BATTERY/energy_full_design")
-  AC_ON=$(<"$SYSFS/$MAINS/online")
+  POWER_NOW=$(cat $SYSFS/$BATTERY/power_now)
+  ENERGY_NOW=$(cat $SYSFS/$BATTERY/energy_now)
+  ENERGY_FULL=$(cat $SYSFS/$BATTERY/energy_full)
+  ENERGY_FULL_DESIGN=$(cat $SYSFS/$BATTERY/energy_full_design)
+  AC_ON=$(cat $SYSFS/$MAINS/online)
 
   printf "%s%%" "$(( ENERGY_NOW * 100 / ENERGY_FULL ))"
-  if (( AC_ON )) ; then
-    if (( POWER_NOW )) ; then
+  if [ $AC_ON -ne 0 ] ; then
+    if [ $POWER_NOW -ne 0 ] ; then
       printf " charging in %smin" "$(( (ENERGY_FULL - ENERGY_NOW) * 60 / POWER_NOW ))"
     else
       printf " not charging"
     fi
   else
-    if (( POWER_NOW )) ; then
+    if [ $POWER_NOW -ne 0 ] ; then
       printf " discharging in %smin" "$(( ENERGY_NOW * 60 / POWER_NOW ))"
     else
       printf " not discharging"
@@ -131,4 +118,4 @@ temperature()
 
 
 
-echo `music` -  `temperature`  - `mails` - `wifi` - `just_ram` - `new_battery` - `date_time`
+echo `music` -  `temperature`  - `mails` - `wifi` - `just_ram` - `battery` - `date_time`
