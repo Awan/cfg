@@ -223,7 +223,7 @@ XF86AudioMute
  
 # Mute/Unmute mic
 
-#ctrl + XF86AudioMute
+ctrl + XF86AudioMute
   ponymix --input toggle && notify-send -u low -t 1500 -a ponymix "volume" \
   "input $(ponymix --input is-muted || echo 'un')muted"
 
