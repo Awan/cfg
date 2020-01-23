@@ -14,7 +14,7 @@ let g:zenburn_old_Visual = 1
 let g:zenburn_high_contrast = 1
 let g:zenburn_force_dark_Background = 1
 set fo+=w
-colorscheme elflord
+colorscheme molokai
 cmap w!! %!sudo tee > /dev/null %
 
 " Set relative number but also show current line number (no zero for current
@@ -43,8 +43,12 @@ filetype on
 set bg=dark
 au BufNewFile,BufRead *Pkgfile set filetype=sh
 set textwidth=80
-"au BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
-"au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/ " will make extra spaces red
+if !&scrolloff
+  set scrolloff=1
+endif
+if !&sidescrolloff
+  set sidescrolloff=5
+endif
 set fileencoding=utf-8
 filetype plugin indent on
 set showmode
@@ -55,7 +59,7 @@ set completeopt=menuone
 set ignorecase
 set smartcase
 set cursorline
-set scrolloff=8
+set cursorcolumn
 set noexpandtab
 set backspace=indent,eol,start
 syntax on
@@ -73,10 +77,11 @@ set expandtab
 set clipboard=unnamed,unnamedplus
 set ttyfast
 set smartindent
+set wildmenu
 set autoindent
 set nohlsearch
+set lazyredraw
 set showmatch
-set laststatus=2
 set noshowmode 
 set undofile
 set undodir=~/.vim/undodir
@@ -133,10 +138,48 @@ function! ResCur()
   endif
 endfunction
 
+function! DeleteFunctionUnderCursor()
+  let line = getline('.')
+  normal diwxml
+  let i = 1
+  let c = 1
+  while i <= strlen(line)
+      let char = getline('.')[col('.') - 1]
+      if (char == '(')
+          let c += 1
+      elseif (char == ')')
+          let c -= 1
+      endif
+      if (c == 0)
+          normal x`l
+          break
+      endif
+      normal l
+      let i += 1
+  endwhile
+endfunc
+
+command! -range=% DeleteFunctionUnderCursor <line1>,<line2>call DeleteFunctionUnderCursor()
+
+function! ToggleNumber()
+    if(&relativenumber == 1)
+        set norelativenumber
+        set number
+    else
+       set relativenumber
+    endif
+endfunc
+command! ToggleNumber call ToggleNumber()
+
 if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r ++edit | 0d_ | diffthis 
         \ wincmd p | diffthis
 endif
+
+if &t_Co == 8 && $TERM !~# '^linux\|^Eterm|^screen-*'
+  set t_Co=16
+endif
+
 
 " duplicate lines
 function! HighlightRepeats() range
@@ -157,11 +200,6 @@ function! HighlightRepeats() range
     endfor
 endfunction
 command! -range=% HighlightRepeats <line1>,<line2>call HighlightRepeats()
-
-"augroup resCur
-"  autocmd!
-"  autocmd BufWinEnter * call ResCur()
-"augroup END
 autocmd FileType python set breakindentopt=shift:4
 command! -range=% PB  <line1>,<line2>w !curl -F 'c=@-' https://ptpb.pw/ | sed -n 's/^url: //p' | xclip
 command! -range=% TB  <line1>,<line2>w !fb
