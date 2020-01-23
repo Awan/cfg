@@ -79,10 +79,10 @@ super + d
 super + {_, shift + } {h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
 
-# Resize nodes, open new window in created receptacle in given direction
+# Resize nodes and preselections
 
 alt + {_, shift + } {h,j,k,l}
-  "$HOME"/.config/bspwm/{resize,move} {west,south,north,east}
+  "$HOME"/.config/bspwm/{resize,presel} {west,south,north,east}
 
 # Launch Browser. ($BROWSER must be set)
 
