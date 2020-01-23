@@ -1,14 +1,13 @@
 #!/bin/sh
 
-
 coded_by='
 
 In the name of Allah, the most Gracious, the most Merciful.
 
- ▓▓▓▓▓▓▓▓▓▓ 
-░▓ Author ▓ Abdullah <https://abdullah.today> 
-░▓▓▓▓▓▓▓▓▓▓ 
-░░░░░░░░░░ 
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓
+░░░░░░░░░░
 
 ░█▀▄░█▀▀░█▀█░█░█░█▄█░░░█▀▄░█░█░█░░░█▀▀░█▀▀
 ░█▀▄░▀▀█░█▀▀░█▄█░█░█░░░█▀▄░█░█░█░░░█▀▀░▀▀█
@@ -16,69 +15,27 @@ In the name of Allah, the most Gracious, the most Merciful.
 '
 
 
-focused_window_id=$(bspc query -N -n focused)
+wid=$1
+class=$2
+instance=$3
+title=$(xdotool getwindowname $wid)
 
-eval "$(xdotool getwindowgeometry --shell "$focused_window_id" 2>/dev/null)"
-
-if [ $WIDTH -gt $HEIGHT ] ; then
-	bspc node -p \~east
-else
-	bspc node -p \~south
-fi
-
-_bspc_query() {
-	bspc query -N -n "$@"
-}
-
-recept="$(_bspc_query 'any.leaf.!window')"
-presel="$(_bspc_query 'newest.!automatic')"
-
-if [ -n "$recept" ]; then
-	target="$recept"
-	attention="off"
-elif [ -n "$presel" ]; then
-	target="$presel"
-fi
-
-echo "node=${target:-focused}"
-echo "follow=${attention:-on}"
-
-window_id="$1"
-window_class="$2"
-window_instance="$3"
-window_title="$(xwininfo -id "$window_id" | sed ' /^xwininfo/!d ; s,.*"\(.*\)".*,\1,')"
-
-case "$window_class" in
-	[Rr]edshift-*|[Tt]int2|[Pp]inentry-*|[Mm]pv|[Mm]u[Pp][Dd][Ff]|[Mm]Player|[Tt]hunar|[Ff]im|[Gg]picview|[Nn]itrogen|[Aa]randr|[Gg]alculator|[Ff]ont-manager|[Oo]blogout|[Pp]eek|[Ss]kype|[Xx]fce4-appfinder|[Gg]pick|[Gg]mrun|[Xx][Cc]alc|[Pp]avucontrol|[Vv]lc|[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|[Pp]qiv|[Aa]tril|[Ee]vince|[Zz]athura|scratchpad)
-		echo "state=floating"
-		echo "center=on"
-		;;
-	* )
-		case "$(xprop -id "$window_id" _NET_WM_WINDOW_TYPE)" in
-			*_NET_WM_WINDOW_TYPE_DIALOG*)
-				echo "state=floating"
-				;;
-			*)
-				echo "state=tiled"
-				;;
-		esac
-		;;
+case $class in
+  [Rr]edshift-*|[Tt]int2|[Pp]inentry-*|[Mm]pv|[Mm]u[Pp][Dd][Ff]|[Mm]Player|[Tt]hunar|[Ff]im|[Gg]picview|[Nn]itrogen|[Aa]randr|[Gg]alculator|[Ff]ont-manager|[Oo]blogout|[Pp]eek|[Ss]kype|[Xx]fce4-appfinder|[Gg]pick|[Gg]mrun|[Xx][Cc]alc|[Pp]avucontrol|[Vv]lc|[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|[Pp]qiv|[Aa]tril|[Ee]vince|[Zz]athura|scratchpad)
+  echo "state = floating"
+  echo "center = on"
+  ;;
+  Google-chrome)
+    echo "desktop = ^2"
+    ;;
+  Opera)
+    echo "desktop = ^3"
+    ;;
 esac
 
-case "$window_title" in
-	'File Operations'*)
-		echo "state=floating"
-		echo "center=on"
-		;;
-	scratchpad)
-		echo "state=floating"
-		;;
-esac
-
-case "$window_title" in
-  stalonetray)
-    echo "state=floating"
-    echo "manage=off"
+case $title in
+  scratchpad)
+    echo "state = floating"
     ;;
 esac
 
