@@ -21,7 +21,7 @@ notify_message="locking the screen in ${notify_delay} seconds..."
 
 notify_me() {
   notify-send -u critical \
-    -t "$(($notify_delay * 1000))" -i "$icon_path" \
+    -t "$(($notify_delay * 900))" -i "$icon_path" \
     "$notify_message"
   }
 
