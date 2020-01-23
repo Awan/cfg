@@ -38,10 +38,17 @@ multimonitors()
 
 multimonitors
 
+for monitor in unplugged disabled ; do
+  bspc config \
+    remove_${monitor}_monitors      true
+done
+
+bspc config \
+  merge_overlapping_monitors        true
+
 # Rules for windows
 
 bspc config external_rules_command "$HOME"/.config/bspwm/external_rules
-
 
 # Border width and gaps between windows
 
@@ -53,7 +60,7 @@ bspc config window_gap              $border_width
 
 padding="0"
 for side in top right bottom left ; do
-  bspc config ${side}_padding $padding
+  bspc config ${side}_padding       $padding
 done
 
 # Ignore EWMH focus requests. If enabled, opening new program in already
@@ -106,7 +113,7 @@ bspc config pointer_action3         resize_corner
 
 # Show where new window will be opened
 
-bspc config presel_feedback         false
+bspc config presel_feedback         true
 
 # Prefix prepended to status program
 
@@ -119,16 +126,18 @@ dark_moderate_blue="#5e81ac"
 pure_cyan="#00FFFF"
 pure_magenta="#FF00FF"
 vivid_red="#ff3232"
+hot_pink="#ff69b4"
+up_maroon="#7b1113"
 
 
 
 # Feedback color of preselection
 
-bspc config presel_feedback_color   $dark_moderate_blue
+bspc config presel_feedback_color   $up_maroon
 
 # Focused Border color
 
-bspc config focused_border_color    $vivid_red
+bspc config focused_border_color    $hot_pink
 
 # Active border color 
 
@@ -137,4 +146,3 @@ bspc config active_border_color     $pure_magenta
 # Normal border color
 
 bspc config normal_border_color     $pure_cyan
-
