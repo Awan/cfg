@@ -1,5 +1,33 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python
 
-query="$1"
 
-echo "https://lmgtfy.com/?q="$query | xclip
+'''
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓
+░░░░░░░░░░
+
+░█░░░█▄█░█▀▀░▀█▀░█▀▀░█░█
+░█░░░█░█░█░█░░█░░█▀▀░░█░
+░▀▀▀░▀░▀░▀▀▀░░▀░░▀░░░░▀░
+'''
+
+
+import argparse
+import os
+import re
+
+pars = argparse.ArgumentParser()
+pars.add_argument('query', type=str, help='your query to search')
+args = pars.parse_args()
+site = "https://lmgtfy.com/q=?"
+
+def urlify(s):
+    s = re.sub(r"[^\w\s]", '', s)
+    s = re.sub(r"\s+", '+', s)
+    return s
+
+response = f"https://lmgtfy.com/?q={urlify(args.query)}"
+os.system(f"echo {response} | xclip")
