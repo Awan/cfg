@@ -15,18 +15,4 @@ In the name of Allah, the most Gracious, the most Merciful.
 
 bspc node -p \~$*
 exit
-
-direction=$*
-
-case $direction in
-  north) direction=1
-    ;;
-  south) direction=3
-    ;;
-  east) direction=4
-    ;;
-  west) direction=2
-    ;;
-esac
-
 bspc node -p $*
