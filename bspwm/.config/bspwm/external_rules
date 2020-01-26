@@ -31,6 +31,9 @@ case $class in
   Opera)
     echo "desktop = ^3"
     ;;
+  Gimp)
+   echo "desktop = ^5"
+   ;;
 esac
 
 case $title in
