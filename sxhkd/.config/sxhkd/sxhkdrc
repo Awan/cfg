@@ -14,15 +14,11 @@ In the name of Allah, the most Gracious, the most Merciful.
 ░▀▀▀░▀░▀░▀░▀░▀░▀░▀▀░
 '
 
-# Launch The Quran
-super + z
-  zathura "$HOME"/kit/pdf/Quran/Quran.pdf
-
-# Reload sxhkd
-
-super + Escape
-  pkill -USR1 -x sxhkd
-
+for_bspwm='
+░█▀▄░█▀▀░█▀█░█░█░█▄█
+░█▀▄░▀▀█░█▀▀░█▄█░█░█
+░▀▀░░▀▀▀░▀░░░▀░▀░▀░▀
+'
 # Exit/restart bspwm
 
 alt + shift + {q,r}
@@ -43,11 +39,6 @@ super + g
 super + {_,shift } + q
   bspc node -{c,k}
 
-# Toggle music
-
-alt + b
-  mpc toggle
-
 # Push focused window to scratchpad (background)
 
 super + shift + i
@@ -57,22 +48,6 @@ super + shift + i
 
 super + i
   "$HOME"/.config/bspwm/scratchpad.sh switch-app
-
-
-# Launch Terminal (urxvtc)
-
-super + Return
-  urxvtc
-
-# Launch termite
-
-alt + Return
-  termite 
-
-# Launch dmenu
-
-super + d
-  dmenu_run
 
 # Move focus in given direction, and swap windows in given direction 
 
@@ -141,33 +116,54 @@ super + {o,u}
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}'
 
-
-# Preselect the direction
-
-super + ctrl + {h,j,k,l}
-	bspc node -p {west,south,north,east}
-
-# Preselect the ratio
-
-super + ctrl + {1-9}
-	bspc node -o 0.{1-9}
-
-# Cancel the preselection for the focused node
-
-super + ctrl + space
-	bspc node -p cancel
-
-# Cancel the preselection for the focused desktop
-
-super + ctrl + shift + space
-	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
-
 # Rotate desktop
 
 alt + space
   bspc node @/ --rotate {90,-90}
 
+useful_programs_which_can_be_used_in_any_window_manager='
 
+░█▀█░█▀▄░█▀█░█▀▀░█▀▄░█▀█░█▄█░█▀▀
+░█▀▀░█▀▄░█░█░█░█░█▀▄░█▀█░█░█░▀▀█
+░▀░░░▀░▀░▀▀▀░▀▀▀░▀░▀░▀░▀░▀░▀░▀▀▀
+'
+
+# Launch Terminal (urxvtc)
+
+super + Return
+  urxvtc
+
+# Launch termite
+
+alt + Return
+  termite 
+
+# Launch dmenu
+
+super + d
+  dmenu_run
+
+# Toggle mpd
+
+alt + b
+  mpc toggle
+
+# Read The Quran
+
+super + z
+  zathura "$HOME"/kit/pdf/Quran/Quran.pdf
+
+# Reload sxhkd
+
+super + Escape
+  pkill -USR1 -x sxhkd
+
+soft_buttons='
+
+░█▀▀░█▀█░█▀▀░▀█▀░░░█▀▄░█░█░▀█▀░▀█▀░█▀█░█▀█░█▀▀
+░▀▀█░█░█░█▀▀░░█░░░░█▀▄░█░█░░█░░░█░░█░█░█░█░▀▀█
+░▀▀▀░▀▀▀░▀░░░░▀░░░░▀▀░░▀▀▀░░▀░░░▀░░▀▀▀░▀░▀░▀▀▀
+'
 # Soft Launch button
 
 XF86LaunchA
@@ -213,7 +209,7 @@ super + x
 # Soft volume up/down buttons
 
 XF86Audio{Lower,Raise}Volume
-  notify-send -u low -t 1500 -a ponymix "volume" "$(ponymix --max-volume 153 {decrease,increase} 3)"
+  notify-send -u low -t 1500 -a ponymix "volume" "$(ponymix --max-volume 300 {decrease,increase} 3)"
 
 # Soft mute button
 
@@ -226,6 +222,5 @@ XF86AudioMute
 ctrl + XF86AudioMute
   ponymix --input toggle && notify-send -u low -t 1500 -a ponymix "volume" \
   "input $(ponymix --input is-muted || echo 'un')muted"
-
 
 # vim:ft=sh
