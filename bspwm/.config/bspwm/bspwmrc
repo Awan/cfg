@@ -119,6 +119,9 @@ bspc config presel_feedback         true
 
 bspc config status_prefix           'W'
 
+# Insertion scheme
+
+bspc config automatic_scheme        longest_side
 
 # Colors
 
