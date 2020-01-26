@@ -38,7 +38,7 @@ progressbar_look = "─╼"
 
 # Collection format
 
-song_library_format = "{%n - }{%t}|{%f}"
+song_library_format = "{%t - }{%a}|{%f}"
 
 # Playing song's status
 
@@ -46,7 +46,7 @@ song_status_format = "{(%l) }{%a - }{%t}|{%f}"
 
 # Columns format
 
-song_columns_list_format = "(7)[green]{l} (28)[cyan]{a} (28)[]{b} (50)[red]{t}"
+song_columns_list_format = "(35)[red]{t} (15)[magenta]{b} (50)[cyan]{a}"
 
 # Visualizer path
 
@@ -80,17 +80,21 @@ visualizer_type = "spectrum" (spectrum/wave)
 
 startup_screen=playlist
 
+# Show playlist remaining time
+
+playlist_show_remaining_time = "yes"
+
 # Split screen into half. Half playlist and other visualizer
 
-startup_slave_screen=visualizer
+startup_slave_screen = "visualizer"
 
 # Focus slave screen
 
-startup_slave_screen_focus=no
+startup_slave_screen_focus = "no"
 
-# Auto blod the current song
+# Jump to current song on startup
 
-jump_to_now_playing_song_at_start=yes
+jump_to_now_playing_song_at_start = "yes"
 
 # Execute shell command once song is changed
 
@@ -100,25 +104,52 @@ execute_on_song_change = "~/.config/ncmpcpp/cover" (uncomment it for album art)
 
 # Window title
 
-enable_window_title = "no" (uncomment it for album art)
+enable_window_title = "yes"
 
 # Header visible or not
 
-header_visibility = "no" (uncomment it for album art)
+header_visibility = "yes" 
 
-# Show titles
+# Show titles above time, song, album, artist, (no need, I already know whats in
+# which column)
 
-titles_visibility = "no" (uncomment it for album art)
+titles_visibility = "no" 
 
 # Messages delay interval
 
-message_delay_time = "1" (uncomment it for album art)
+message_delay_time = "1" 
 
 # Status bar visibility
 
-statusbar_visibility = "no" (uncomment it for album art)
+statusbar_visibility = "yes"
 
 # Make it colorful
 
 colors_enabled = "yes"
 
+# No cyclic scrolling, I use `gg` & `G` instead 
+
+cyclic_scrolling = "no"
+
+# No duplicate files in playlist if you add multiple times
+
+space_add_mode = "add_remove"
+
+# Clock format. If you enable seconds, it will need more screen else clock won't
+# be displayed
+
+clock_display_seconds = "no"
+
+# Remaining time of currently playing song
+
+display_remaining_time = "no"
+
+# Editor path
+
+external_editor = $(which vim)
+
+# My editor is console application
+
+use_console_editor = "yes"
+
+# 
