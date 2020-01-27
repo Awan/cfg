@@ -1,160 +1,88 @@
-# In the name of Allah, the most Gracious, the most Merciful.
-#
-#  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah <https://abdullah.today> 
-# ░▓▓▓▓▓▓▓▓▓▓ 
-# ░░░░░░░░░░ 
-#
-# 
-# ░▀█▀░█▀▀░█▀▄░█▄█░▀█▀░▀█▀░█▀▀
-# ░░█░░█▀▀░█▀▄░█░█░░█░░░█░░█▀▀
-# ░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░▀░░▀▀▀
-# 
+###############################################################
+# In the name of Allah, the most Gracious, the most Merciful. #
+#                                                             #
+#  ▓▓▓▓▓▓▓▓▓▓                                                 #
+# ░▓ Author ▓ Abdullah <https://abdullah.today>               #
+# ░▓▓▓▓▓▓▓▓▓▓                                                 #
+# ░░░░░░░░░░                                                  #
+#                                                             #
+# ░▀█▀░█▀▀░█▀▄░█▄█░▀█▀░▀█▀░█▀▀                                #
+# ░░█░░█▀▀░█▀▄░█░█░░█░░░█░░█▀▀                                #
+# ░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░▀░░▀▀▀                                #
+###############################################################
+
 
 [options]
 
-font = Fantasque Sans Mono Italic 16
-boldfont = Fantasque Mans Mono Bold Italic 16
-word_chars = -A-Za-z0-9,./?%&#_=+@~
-allow_bold = true
-bold_is_bright = true
-browser = /usr/bin/google-chrome-stable
-clickable_url = true
-hyperlinks = true
-cursor_blink = system
-#geometry = 500x300
-geometry = 838x477
-icon_name = terminal
-modify_other_keys = false
-cursor_shape = underline
-dynamic_title = true
-filter_unmatched_urls = true
-mouse_autohide = true
-fullscreen = off
-scrollback_lines = -1
-scrollbar = true
-resize_grip = true
-audible_bell = true
-visible_bell = true
-scroll_on_keystroke = true
-scroll_on_output = false
-search_wrap = true
-size_hints = true
-urgent_on_bell = true
-borderColor =     #000030
-highlight = #30343e
-
+font                  =         Fantasque Sans Mono Italic 16
+boldfont              =         Fantasque Mans Mono Bold Italic 16
+word_chars            =         -A-Za-z0-9,./?%&#_=+@~
+allow_bold            =         true
+bold_is_bright        =         true
+browser               =         /usr/bin/google-chrome-stable
+clickable_url         =         true
+cell_height_scale     =         1.0
+cell_width_scale      =         1.0
+hyperlinks            =         true
+cursor_blink          =         system
+geometry              =         838x477
+icon_name             =         terminal
+modify_other_keys     =         false
+cursor_shape          =         underline
+dynamic_title         =         true
+filter_unmatched_urls =         true
+mouse_autohide        =         true
+fullscreen            =         true
+scrollback_lines      =         -1
+scrollbar             =         off
+resize_grip           =         true
+audible_bell          =         true
+visible_bell          =         true
+scroll_on_keystroke   =         true
+scroll_on_output      =         false
+search_wrap           =         true
+size_hints            =         true
+urgent_on_bell        =         true
 
 [colors]
 
-foreground      = #C0C5CE
-foreground_bold = #C0C5CE
-cursor          = #C0C5CE
-background      = #1B2B34
-color0  = #1B2B34
-color1  = #EC5f67
-color2  = #99C794
-color3  = #FAC863
-color4  = #6699CC
-color5  = #C594C5
-color6  = #5FB3B3
-color7  = #C0C5CE
-color8  = #65737E
-color9  = #EC5f67
-color10 = #99C794
-color11 = #FAC863
-color12 = #6699CC
-color13 = #C594C5
-color14 = #5FB3B3
-color15 = #D8DEE9
-color16 = #F99157
-color17 = #AB7967
-color18 = #343D46
-color19 = #4F5B66
-color20 = #A7ADBA
-color21 = #CDD3DE
-#Transparency
-#background = rgba(63, 63, 63, 0.8)
-
+foreground            =         #C0C5CE
+foreground_bold       =         #C0C5CE
+cursor                =         #C0C5CE
+background            =         #1B2B34
+color0                =         #1B2B34
+color1                =         #EC5f67
+color2                =         #99C794
+color3                =         #FAC863
+color4                =         #6699CC
+color5                =         #C594C5
+color6                =         #5FB3B3
+color7                =         #C0C5CE
+color8                =         #65737E
+color9                =         #EC5f67
+color10               =         #99C794
+color11               =         #FAC863
+color12               =         #6699CC
+color13               =         #C594C5
+color14               =         #5FB3B3
+color15               =         #D8DEE9
+color16               =         #F99157
+color17               =         #AB7967
+color18               =         #343D46
+color19               =         #4F5B66
+color20               =         #A7ADBA
+color21               =         #CDD3DE
+highlight             =         #DDEEDD
 
 [hints]
-padding = 2
-foreground = #dcdccc
-background = #3f3f3f
-border = #3f3f3f
-border_width = 0.5
-roundness = 2.0
-quick_url=true
 
-#font = Fira Code Light Italic 13
-#boldfont = TamzenForPowerline10x20b 17
-#font = Fira Code Light Italic 13
-#boldfont = Fira Code Bold Italic 13
-#font = Tamzen Bold Italic normal 17
-#font = Hack Italic 13
-#font = M+ 1mn italic 15
-#boldfont = M+ 1mn bold 15
-#
-#
-#color0     = #090a18
-#color1     = #ff778a
-#color2     = #6ab539
-#color3     = #bfa01a
-#color4     = #4aaed3
-#color5     = #e58a82
-#color6     = #29b3bb
-#color7     = #a59ebd
-#color8     = #260e22
-#color9     = #f78e2f
-#color10    = #60ba80
-#color11    = #de9b1d
-#color12    = #8ba7ea
-#color13    = #e08bd6
-#color14    = #2cbab6
-#color15    = #b4abac
-#
-#color0 = #000000
-#color1 = #65FFF2
-#color2 = #6778FA
-#color3 = #78FF67
-#color4 = #ED67FF
-#color5 = #FF6676
-#color6 = #FFEC65
-#color7 = #ffffff
-#color8 = #000000
-#color9 = #64FFF1
-#color10 = #6779F9
-#color11 = #79FF65
-#color12 = #ED67FF
-#color13 = #FF6678
-#color14 = #FFEC62
-#color15 = #ffffff
-#background = #090a18
-#foreground = #b4abac
+font                  =         Fantasque Sans Mono 13
+padding               =         2
+foreground            =         #dcdccc
+background            =         #3f3f3f
+border                =         #3f3f3f
+border_width          =         0.5
+roundness             =         2.0
+quick_url             =         true
 
-##black
-#color0                    = #1C1C1C
-#color8                    = #4d4d4d
-##red
-#color1                    = #D81860
-#color9                    = #F00060
-##green
-#color2                    = #B7CE42
-#color10                   = #BDE077
-##yellow
-#color3                    = #FEA63C
-#color11                   = #FFE863
-##blue
-#color4                    = #66AABB
-#color12                   = #AACCBB
-##magenta
-#color5                    = #B7416E
-#color13                   = #BB4466
-##cyan
-#color6                    = #5E7175
-#color14                   = #A3BABF
-##white
-#color7                    = #DDEEDD
-#color15                   = #6C887A
-#foreground  = #fffaf4
-#background  = #0e1019
+# vim: ft=dosini cms=#%s
