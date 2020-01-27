@@ -86,8 +86,13 @@ super + alt + {h,j,k,l}
 
 # Focus the node for the given path jump
 
-super + {p,b,comma,period}
-	bspc node -f @{parent,brother,first,second}
+super + {p,b}
+	bspc node -f @{parent,brother}
+
+# Focus the next monitor
+
+super + period
+  bspc monitor -f next
 
 # Focus the next/previous node in the current desktop
 
@@ -131,7 +136,7 @@ useful_programs_which_can_be_used_in_any_window_manager='
 # Launch Terminal (urxvtc)
 
 super + Return
-  urxvtc
+  termite
 
 # Launch termite
 
@@ -209,18 +214,22 @@ super + x
 # Soft volume up/down buttons
 
 XF86Audio{Lower,Raise}Volume
-  notify-send -u low -t 1500 -a ponymix "volume" "$(ponymix --max-volume 300 {decrease,increase} 3)"
+  notify-send -i $HOME/.local/share/icons/drops/volume.png \
+     -u low -t 1500 -a ponymix "volume" "$(ponymix --max-volume \
+      300 {decrease,increase} 3)"
 
 # Soft mute button
 
 XF86AudioMute
-  ponymix --output toggle && notify-send -u low -t 1500 -a ponymix "volume" \
+  ponymix --output toggle && notify-send -i \
+    $HOME/.local/share/icons/drops/muted.png -u low -t 1500 -a ponymix "volume" \
   "output $(ponymix --output is-muted || echo 'un')muted"
  
 # Mute/Unmute mic
 
 ctrl + XF86AudioMute
-  ponymix --input toggle && notify-send -u low -t 1500 -a ponymix "volume" \
+  ponymix --input toggle && notify-send -i \
+    $HOME/.local/share/icons/drops/muted.png -u low -t 1500 -a ponymix "volume" \
   "input $(ponymix --input is-muted || echo 'un')muted"
 
 # vim:ft=sh
