@@ -19,7 +19,7 @@ In the name of Allah, the most Gracious, the most Merciful.
 # If you use one, that will source ~/.xprofile so execute these programs from
 # there instead.
 
-"$HOME"/.config/bspwm/autostart.sh &
+#"$HOME"/.config/bspwm/autostart.sh &
 
 # Define some functions
 
@@ -32,6 +32,15 @@ multimonitors()
     bspc monitor $monitor -d $(seq $start_from $(( start_from + per_monitor - 1)))
     start_from=$(( start_from + per_monitor ))
  done
+}
+
+multibar() {
+  # check how many monitors are connected and start polybar on all of them.
+  pkill polybar
+  while pgrep -x polybar >/dev/null; do sleep 1; done
+  xrandr -q | awk '/ connected / {print $1}' | while read -r monitor _; do
+  polybar -r "$monitor" & 
+done
 }
 
 # Divide workspaces/desktops to all connected monitors
@@ -49,6 +58,10 @@ bspc config \
 # Rules for windows
 
 bspc config external_rules_command "$HOME"/.config/bspwm/external_rules
+
+# Start polybar on all connected monitors
+
+multibar &
 
 # Border width and gaps between windows
 
