@@ -738,10 +738,10 @@ function push() {
 
 }
 
-mpv() {
+m() {
 
   mpd_state="$(mpc | awk '/playing|paused/ {print $1}')"
-  files="$@"
+  files=$@
   if [ $mpd_state = '[playing]' ]; then
    state=0
   else
