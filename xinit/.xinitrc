@@ -15,6 +15,5 @@ In the name of Allah, the most Gracious, the most Merciful.
 '
 
 
-#[ -f ~/.xprofile ] && . ~/.xprofile
-#exec /usr/bin/dwm 2>/tmp/dwm.log
+[ -f ~/.xprofile ] && . ~/.xprofile
 exec bspwm >/tmp/bspwm-"$USER".log 2>&1

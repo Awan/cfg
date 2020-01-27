@@ -121,7 +121,6 @@ alias cp='cp -i'
 alias mv='mv -i'
 #alias pb="curl -sF c=@- 'https://ptpb.pw/?u=1' | xsel"
 alias mi='mid3v2'
-alias m='mpv'
 alias mnv='mpv --no-video'
 alias mp='mpv --loop-file'
 alias mq='mpv --really-quiet --speed=0.50 --loop-file'
