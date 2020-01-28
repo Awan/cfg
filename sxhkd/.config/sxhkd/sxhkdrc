@@ -39,6 +39,11 @@ super + g
 super + {_,shift } + q
   bspc node -{c,k}
 
+# Increase/Decrease window gaps
+
+super + {minus,plus,equal}
+  "$HOME"/.config/bspwm/gaps {dec,inc,def}
+
 # Push focused window to scratchpad (background)
 
 super + shift + i

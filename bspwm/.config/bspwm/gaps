@@ -1,0 +1,39 @@
+#!/bin/sh     
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓
+░░░░░░░░░░
+
+░█▀▀░█▀█░█▀█░█▀▀
+░█░█░█▀█░█▀▀░▀▀█
+░▀▀▀░▀░▀░▀░░░▀▀▀
+'
+
+case $1 in 
+  inc|dec|def)
+    action=$1
+    ;;
+esac
+
+default_gaps=3
+
+gaps_cmd() {
+  bspc config window_gap $1
+}
+
+case $action in
+  inc)
+    gaps_cmd $(( $(bspc config window_gap) + 3 ))
+    ;;
+  dec)
+    gaps_cmd $(( $(bspc config window_gap) - 3 ))
+    ;;
+  def)
+    gaps_cmd $default_gaps
+    ;;
+esac
+   
