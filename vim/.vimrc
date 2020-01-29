@@ -14,7 +14,7 @@ let g:zenburn_old_Visual = 1
 let g:zenburn_high_contrast = 1
 let g:zenburn_force_dark_Background = 1
 set fo+=w
-colorscheme molokai
+colorscheme desert
 cmap w!! %!sudo tee > /dev/null %
 
 " Set relative number but also show current line number (no zero for current
