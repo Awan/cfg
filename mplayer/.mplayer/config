@@ -9,3 +9,6 @@ vo="gl"
 lavdopts="threads=4"
 ass=true
 subfont-osd-scale="2"
+alang="en"
+softvol="yes"
+softvol-max="400"
