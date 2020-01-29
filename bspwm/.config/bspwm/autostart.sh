@@ -20,7 +20,7 @@ notify_time=10
 
 # For some java apps
 
-wmname LG3D &
+#wmname LG3D &
 
 run() {
   if ! pgrep $1 ;
@@ -41,16 +41,6 @@ fi
 export DESKTOP_SESSION=bspwm
 # No tty
 export XDG_SESSION_TYPE=x11
-
-
-multibar() {
-  # check how many monitors are connected and start polybar on all of them.
-  pkill polybar
-  while pgrep -x polybar >/dev/null; do sleep 1; done
-  xrandr -q | awk '/ connected / {print $1}' | while read -r monitor _; do
-  polybar -r "$monitor" & 
-done
-}
 
 tab() {
   # Configure only laptop's screen if no external monitor is connected.
@@ -104,9 +94,8 @@ run unclutter --ignore-scrolling --fork --timeout 1 &
 
 # DPMS and lock screen
 
-xset s "$(($inactivity_timeout - $notify_time))" "$notify_time" &
-xset dpms "$(($inactivity_timeout * 3))" "$(($inactivity_timeout * 4))" "$(($inactivity_timeout * 5))" &
-xss-lock -n "$HOME"/.config/bspwm/lock.sh -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' &
+xset dpms $inactivity_timeout &
+run xss-lock -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' &
 
 # Start Notification daemon
 
@@ -136,11 +125,10 @@ else
   tabular
 fi
 
-# Start polybar on all monitors connected
-
-multibar 
-
 # Start a scratchpad
 
-sleep 1
-urxvtc -T 'scratchpad' -geometry 65x20 & 
+#sleep 1
+#urxvtc -T 'scratchpad' -geometry 65x20 & 
+termite -t scratchpad &
+
+# vim:ft=sh

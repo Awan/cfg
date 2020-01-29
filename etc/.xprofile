@@ -94,12 +94,8 @@ run unclutter --ignore-scrolling --fork --timeout 1 &
 
 # DPMS and lock screen
 
-#xset s "$(($inactivity_timeout - $notify_time))" "$notify_time" &
-#xset dpms "$(($inactivity_timeout * 3))" "$(($inactivity_timeout * 4))" "$(($inactivity_timeout * 5))" &
-#xss-lock -n "$HOME"/.config/bspwm/lock.sh -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' &
-
-xset dpms 120 125 130 &
-xss-lock -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' &
+xset dpms $inactivity_timeout &
+run xss-lock -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' &
 
 # Start Notification daemon
 
