@@ -14,7 +14,7 @@ let g:zenburn_old_Visual = 1
 let g:zenburn_high_contrast = 1
 let g:zenburn_force_dark_Background = 1
 set fo+=w
-colorscheme desert
+colorscheme vim-hardaway
 cmap w!! %!sudo tee > /dev/null %
 
 " Set relative number but also show current line number (no zero for current
@@ -90,6 +90,8 @@ set nobackup
 set showcmd
 set whichwrap=b,s,<,>,[,]
 set laststatus=2
+let g:colors_name = 'vim-hardaway'
+let g:airline_theme = 'vim_hardaway'
 let g:instant_markdown_browser = "/usr/bin/google-chrome-stable --new-window"
 let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
 let g:instant_markdown_port = 47479
