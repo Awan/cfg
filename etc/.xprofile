@@ -95,7 +95,7 @@ run unclutter --ignore-scrolling --fork --timeout 1 &
 # DPMS and lock screen
 
 xset dpms $inactivity_timeout &
-run xss-lock -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' &
+xss-lock -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' &
 
 # Start Notification daemon
 
