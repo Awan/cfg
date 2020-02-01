@@ -84,6 +84,11 @@ super + {t,shift + t,s,f}
 super + alt + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
 
+# Send a focused window to presel
+
+super + y
+  bspc node $(bspc query -N -n) -n newest.\!automatic.local
+
 # Move the floating windows 
 
 super + alt + {h,j,k,l}
