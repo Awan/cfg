@@ -34,6 +34,10 @@ case $class in
   Gimp)
    echo "desktop = ^5"
    ;;
+ Anydesk)
+   echo "desktop = ^4"
+   echo "follow = on"
+   ;;
 esac
 
 case $title in
