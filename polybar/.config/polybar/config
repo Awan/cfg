@@ -31,7 +31,7 @@ margin-bottom = 0
 [bar/eDP-1]
 monitor = ${env:MONITOR:eDP-1}
 monitor-fallback = eDP1
-bottom = true
+bottom = false
 width = 100%
 height = 25
 offset-x = 0
@@ -49,15 +49,13 @@ padding-left = 0
 padding-right = 1
 module-margin-left = 2
 module-margin-right = 2
-;font-0 = Terminus :pixelsize=12;4
 font-0 =  FontAwesome
-font-1 = DejaVu Sans:pixelsize=11
-#modules-left = date wlan memory cpu xbacklight mic pavolume battery abdullah gmail
-modules-left = date wlan memory cpu pulseaudio arch_backlight temperature battery 
-;modules-center = xworkspaces
-modules-center = bspwm
-modules-right = mpd-new
-#modules-right =  mpd mic pavolume backlight memory cpu battery date menu
+font-1 = Monospace:weight=bold:italic:pixelsize=15
+font-2 = DejaVu Sans:pixelsize=11
+font-3 =  Segoe UI Emoji
+modules-right = bspwm
+modules-center = mpd
+modules-left = date hijri wlan battery temperature cpu mem pulseaudio arch_backlight
 tray-position = right
 tray-padding = 6
 ;tray-background = #24292A00
@@ -239,6 +237,7 @@ tail = true
 format-connected = <ramp-signal> <label-connected>
 format-connected-underline = #9f78e1
 label-connected =  %essid%%{A}
+label-connected-foreground = ${xrdb:polybar.color16}
 label-disconnected = 
 format-disconnected = <label-disconnected>
 ramp-signal-0 = 
@@ -246,6 +245,33 @@ ramp-signal-1 = 
 ramp-signal-2 = 
 ramp-signal-3 = 
 ramp-signal-4 = 
+;ramp-signal-0 = 😱
+;ramp-signal-1 = 😠
+;ramp-signal-2 = 😒
+;ramp-signal-3 = 😊
+;ramp-signal-4 = 😃
+;ramp-signal-5 = 😈
+
+;label-connected = %essid%
+;format-disconnected = <label-disconnected>
+;label-disconnected =   Disconnected
+label-disconnected-foreground = ${colors.foreground-alt}
+format-packetloss = <animation-packetloss> <label-connected>
+animation-packetloss-0 = ⚠
+animation-packetloss-0-foreground = #ffa64c
+animation-packetloss-1 = 📶
+animation-packetloss-1-foreground = #000000
+; Framerate in milliseconds
+animation-packetloss-framerate = 500
+label-packetloss = %essid%
+label-packetloss-foreground = #eefafafa
+;ramp-signal-0 =  
+;ramp-signal-1 =  
+;ramp-signal-2 =  
+;ramp-signal-3 =  
+;ramp-signal-4 =  
+;ramp-signal-5 =  
+
 ramp-signal-foreground = ${colors.foreground-alt}
 
 
@@ -266,18 +292,20 @@ format-padding = 1
 type = internal/cpu
 interval = 2
 format-prefix = "cpu "
-format-prefix-foreground = ${xrdb:polybar*color3}
+format-prefix-foreground = ${xrdb:polybar.color3}
 format-underline = #f90000
 label = %percentage%%
+label-foreground = ${xrdb:polybar.color16}
 
 
 [module/memory]
 type = internal/memory
 interval = 2
 format-prefix = "mem "
-format-prefix-foreground = ${xrdb:polybar*color2}
+format-prefix-foreground = ${xrdb:polybar.color2}
 format-underline = #4bffdc
 label = %percentage_used%%
+label-foreground = ${xrdb:polybar.color12}
 
 
 [module/date]
@@ -288,38 +316,52 @@ date-alt = " %d %b -"
 time = %H:%M
 time-alt = %H:%M:%S
 format-prefix = " "
+;format-prefix = "🕓"
+format-prefix-foreground = ${xrdb:polybar*color5}
+format-underline = #0a6cf5
+;label = %date% %time%
+label = %time%
+label-foreground = #9A32DB
+
+[module/time]
+type = custom/script
+exec = ~/.config/polybar/scripts/time.py
+format-prefix = " "
 format-prefix-foreground = ${xrdb:polybar*color4}
 format-underline = #0a6cf5
-label = %date% %time%
-
 
 [module/battery]
 type = internal/battery
 battery = BAT0
 adapter = AC0
 full-at = 100
+poll-interval = 5
+time-format = %H:%M
 format-charging = <animation-charging> <label-charging>
 format-charging-underline = #ffb52a
-label-charging = %percentage%% - time left %time%
+label-charging =  %percentage%% %time%
+label-charging-foreground = ${xrdb:polybar.color9}
 format-discharging = <ramp-capacity> <label-discharging>
 format-discharging-underline = ${self.format-charging-underline}
-label-discharging = %percentage%% - time left %time%
+label-discharging = %percentage%% %time%
+label-discharging-foreground = ${xrdb:polybar.color9}
+format-full = <ramp-capacity> <label-full>
 format-full-prefix = " "
-format-full-prefix-foreground = ${colors.foreground-alt}
+format-full-prefix-foreground = ${xrdb:polybar.color1}
 format-full-underline = ${self.format-charging-underline}
-label-full = %percentage%%
+;label-full = %percentage%% - fully charged!
 ramp-capacity-0 = " "
 ramp-capacity-1 = " "
 ramp-capacity-2 = " "
 ramp-capacity-3 = " "
 ramp-capacity-4 = " "
 ramp-capacity-foreground = ${colors.foreground-alt}
-animation-charging-0 = " "
-animation-charging-1 = " "
-animation-charging-2 = " "
-animation-charging-3 = " "
-animation-charging-4 = " "
-animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-0 = "  "
+animation-charging-1 = "  "
+animation-charging-2 = "  "
+animation-charging-3 = "  "
+animation-charging-4 = "  "
+animation-charging-foreground = ${colors.foreground}
 animation-charging-framerate = 750
 
 [module/battery2]
@@ -365,7 +407,6 @@ animation-charging-framerate = 750
 [module/mpd]
 type = internal/mpd
 format-online = "<label-song> <label-time> <icon-prev> <icon-stop> <toggle> <icon-next>"
-;format-prefix-foreground = ${xrdb:polybar*color6}
 format-underline = #FF00DB
 format-prefix-foreground = #00A5FF
 icon-prev = 
@@ -374,7 +415,7 @@ icon-play-prefix = #f00
 icon-play = 
 icon-pause = 
 icon-next = 
-label-song = %artist% - %title%
+label-song = %title%
 label-song-foreground = #00A5FF
 label-song-maxlen = 40
 label-song-ellipsis = true
@@ -569,11 +610,13 @@ toggle-off-foreground = #66
 [module/pulseaudio]
 type = internal/pulseaudio
 sink = alsa_output.pci-0000_00_1b.0.analog-stereo
+use-ui-max = true
 format-volume = <ramp-volume><label-volume> 
-label-volume =  %percentage%%
-label-volume-foreground = ${root.foreground}
-label-muted = 🔇 muted
-label-muted-foreground = #666
+label-volume =  %percentage%%
+label-volume-foreground = ${xrdb:polybar.color13}
+label-muted = 🔇 
+label-muted-foreground = #
+label-active-font = 4
 bar-volume-width = 10
 bar-volume-foreground-0 = #55aa55
 bar-volume-foreground-1 = #55aa55
@@ -582,7 +625,7 @@ bar-volume-foreground-3 = #55aa55
 bar-volume-foreground-4 = #55aa55
 bar-volume-foreground-5 = #f5a70a
 bar-volume-foreground-6 = #ff5555
-bar-volume-gradient = false
+bar-volume-gradient = true
 bar-volume-indicator = 
 bar-volume-indicator-font = 2
 bar-volume-fill = 
@@ -593,7 +636,6 @@ bar-volume-empty-foreground = ${colors.foreground-alt}
 ramp-volume-0 = 🔈
 ramp-volume-1 = 🔉
 ramp-volume-2 = 🔊
-
 
 [module/mic]
 type = internal/pulseaudio
@@ -645,6 +687,7 @@ warn-temperature = 70
 format = <ramp><label>
 format-padding = 1
 ;label = %{A1:termite --exec='watch sensors' & disown:} %temperature%%{A}
+label-foreground = ${xrdb:polybar.color11}
 ramp-0 = ""
 ramp-0-foreground = ${xrdb:polybar*color4}
 ramp-1 = ""
@@ -656,7 +699,7 @@ ramp-3-foreground = ${xrdb:polybar*urgent}
 format-warn = <label-warn>
 label-warn = " %temperature-c%"
 label-warn-padding = 1
-label-warn-foreground = ${colors.urgent}
+label-warn-foreground = ${xrdb:polybar.urgent}
 
 
 [module/window_switch]
@@ -665,6 +708,14 @@ interval = 5
 label = "%{A1:skippy-xd:} %{A3:skippy-xd:} %output% %{A} %{A}"
 exec = echo ""
 format = <label>
+
+[module/hijri]
+type = custom/script
+#exec = "python -c 'from ummalqura.hijri_date import HijriDate; from datetime import date; print(HijriDate.get_hijri_date(date.today()))'"
+exec = ~/.config/polybar/scripts/hijri.py
+tail = false
+interval = 180
+label-foreground = ${xrdb:polybar.color5}
 
 
 [bar/dwm]
@@ -701,5 +752,10 @@ module-margin-right = 2
 inherit = bar/eDP-1
 monitor = HDMI-2
 
+
+
+[bar/XWAYLAND0]
+inherit = bar/eDP-1
+monitor = XWAYLAND0
 
 ; vim:ft=dosini
