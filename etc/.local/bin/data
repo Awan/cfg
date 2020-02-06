@@ -30,7 +30,7 @@ def get_info_1(user):
     r = requests.post(url_1, data={'number': user})
     soup = BeautifulSoup(r.content, 'html.parser')
     for data in soup.find_all('tr'):
-        print(data.get_text(separator=': -------> ', strip=True))
+        print(data.get_text(separator=' : ', strip=True))
 
 
 
