@@ -50,12 +50,12 @@ padding-right = 1
 module-margin-left = 2
 module-margin-right = 2
 font-0 =  FontAwesome
-font-1 = Monospace:weight=bold:italic:pixelsize=15
+font-1 = Monospace:weight=regular:pixelsize=13
 font-2 = DejaVu Sans:pixelsize=11
 font-3 =  Segoe UI Emoji
 modules-right = bspwm
 modules-center = mpd
-modules-left = date hijri wlan battery temperature cpu mem pulseaudio arch_backlight
+modules-left = date hijri wlan battery temperature cpu memory pulseaudio arch_backlight
 tray-position = right
 tray-padding = 6
 ;tray-background = #24292A00
