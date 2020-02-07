@@ -76,7 +76,7 @@ for side in top right bottom left ; do
   bspc config ${side}_padding       $padding
 done
 
-# Ignore EWMH focus requests. If enabled, opening new program in already
+# Ignore EWMH focus requests. If true, opening new program in already
 # opened instance will have direct
 # focus too. Like if you're on desktop 8 and you open a URL from mutt, and
 # chrome is configured as url launcher, it will send the url to chrome opened
