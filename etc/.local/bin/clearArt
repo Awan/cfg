@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 	
 printf '\e]20;;100x100+1000+1000\a'
 
