@@ -764,3 +764,10 @@ dua() {
   echo "بارك الله فيك وبارك لك ونفع بك حقق الله أمنياتك وأسعدك في الدنيا والآخرة" \
   | xclip -selection clipboard
 }
+
+sitemap() {
+  # submit sitemap to google 
+  google_url="https://www.google.com/webmasters/sitemaps/ping?sitemap="
+  path="https://abdullah.today/sitemap.xml"
+  /usr/bin/curl $google_url$path
+}

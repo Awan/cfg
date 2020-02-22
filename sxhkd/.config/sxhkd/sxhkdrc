@@ -32,7 +32,7 @@ super + m
 # Swap the current node and the biggest node
 
 super + g
-	bspc node -s biggest.local
+	bspc node -s biggest.local || bspc node -s next.local
 
 # Close/kill a window
 
@@ -41,8 +41,8 @@ super + {_,shift } + q
 
 # Increase/Decrease window gaps
 
-super + {minus,plus,equal}
-  "$HOME"/.config/bspwm/gaps {dec,inc,def}
+super + {minus,plus}
+  bspc config window_gap {3,13}
 
 # Push focused window to scratchpad (background)
 
@@ -114,10 +114,16 @@ super + {_,shift + }c
 super + bracket{left,right}
 	bspc desktop -f {prev,next}.local
 
-# Focus the last node/desktop
+# Focus the next node
 
-super + {Tab,semicolon}
-	bspc {desktop,node} -f next
+super + Tab
+	bspc node -f next
+
+# Focus the next occupied desktop
+
+super + semicolon
+  bspc desktop next.occupied -f
+
 
 # Focus the older or newer node in the focus history
 
@@ -219,7 +225,7 @@ alt + shift + bracket{left,right}
 # Lock the screen
 
 super + x
-  physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' 
+  i3lock -efc 000000 ; sleep 10 && pgrep i3lock && xset dpms force off
 
 # Soft volume up/down buttons
 
