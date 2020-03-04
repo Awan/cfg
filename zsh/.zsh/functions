@@ -771,3 +771,7 @@ sitemap() {
   path="https://abdullah.today/sitemap.xml"
   /usr/bin/curl $google_url$path
 }
+
+baqara() {
+  /usr/bin/mpv --no-resume-playback ~/haq/shuraim/002{001..286}.mp3 
+}
