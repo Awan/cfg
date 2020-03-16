@@ -41,6 +41,7 @@
 	co = checkout
   cob = checkout -b
   cp = cherry-pick
+  cc = cherry-pick --continue
 	cm = checkout master
 	b = branch
 	lg = log --pretty=oneline --abbrev-commit
