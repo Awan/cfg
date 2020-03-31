@@ -64,10 +64,15 @@ super + {_, shift + } {h,j,k,l}
 alt + {_, shift + } {h,j,k,l}
   "$HOME"/.config/bspwm/{resize,presel} {west,south,north,east}
 
-# Launch Browser. 
+# Launch Browser(chrome). 
 
 super + w
   if pgrep chrome; then bspc desktop -f 2 ; else $BROWSER ; fi
+
+# Launch Browser(opera).
+
+super + W
+  opera
 
 # Toggle full screen of focused window
 
