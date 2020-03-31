@@ -775,3 +775,14 @@ sitemap() {
 baqara() {
   /usr/bin/mpv --no-resume-playback ~/haq/shuraim/002{001..286}.mp3 
 }
+
+gifspeed() {
+  # reduce gif speed to half
+
+  mkdir -p gifs_with_speed
+
+  for file in *.gif
+  do
+    convert -delay 10x100 $file gifs_with_speed/`basename $file`
+  done
+}

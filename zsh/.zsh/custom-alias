@@ -1,4 +1,5 @@
 alias ls='ls --color=auto'
+mouse='sudo modprobe 842'
 alias anydesk='anydesk && xmodmap ~/.Xmodmap'
 alias zq='zathura $HOME/kit/pdf/Quran/Quran.pdf &'
 alias jbs='JEKYLL_ENV=production bundle exec jekyll serve'
