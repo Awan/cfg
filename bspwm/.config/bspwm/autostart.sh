@@ -86,7 +86,7 @@ xset +fp "$user_fonts_dir" && xset fp rehash
 
 # Start urxvt in daemon mode
 
-run urxvtd -q -o -f &
+#run urxvtd -q -o -f &
 
 # No mouse when idle
 
