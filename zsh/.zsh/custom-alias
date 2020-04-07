@@ -5,7 +5,7 @@ alias zq='zathura $HOME/kit/pdf/Quran/Quran.pdf &'
 alias jbs='JEKYLL_ENV=production bundle exec jekyll serve'
 alias getip="curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//'"
 alias du='du -h'
-alias youtube='google-chrome-stable --app=https://youtube.com'
+alias youtube='google-chrome-stable --app=https://youtube.com &'
 alias colorize='toilet --gay -f term $@'
 alias xquery='xdg-mime query filetype $1'
 alias c='xclip-copyfile'
