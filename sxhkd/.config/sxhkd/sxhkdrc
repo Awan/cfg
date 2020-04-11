@@ -74,6 +74,11 @@ super + w
 super + W
   opera
 
+# Launch arch wiki offline
+
+super + alt + w
+  google-chrome-stable /usr/share/doc/arch-wiki/html/en/ &
+
 # Toggle full screen of focused window
 
 super + f
