@@ -21,7 +21,7 @@ instance=$3
 title=$(xdotool getwindowname $wid)
 
 case $class in
-  [Rr]edshift-*|[Tt]int2|[Pp]inentry-*|[Mm]pv|[Mm]u[Pp][Dd][Ff]|[Mm]Player|[Tt]hunar|[Ff]im|[Gg]picview|[Nn]itrogen|[Aa]randr|[Gg]alculator|[Ff]ont-manager|[Oo]blogout|[Pp]eek|[Ss]kype|[Xx]fce4-appfinder|[Gg]pick|[Gg]mrun|[Xx][Cc]alc|[Pp]avucontrol|[Vv]lc|[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|[Pp]qiv|[Aa]tril|[Ee]vince|[Zz]athura|scratchpad)
+  [Rr]edshift-*|[Tt]int2|[Pp]inentry-*|[Mm]pv|[Mm]u[Pp][Dd][Ff]|[Mm]Player|[Tt]hunar|[Ff]im|[Gg]picview|[Nn]itrogen|[Aa]randr|[Gg]alculator|[Ff]ont-manager|[Oo]blogout|[Pp]eek|[Ss]kype|[Xx]fce4-appfinder|[Xx]fce4-about|[Gg]pick|[Gg]mrun|[Xx][Cc]alc|[Pp]avucontrol|[Vv]lc|[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|[Pp]qiv|[Aa]tril|[Ee]vince|[Zz]athura|scratchpad)
   echo "state = floating"
   echo "center = on"
   ;;
