@@ -130,6 +130,7 @@ fi
 
 #sleep 1
 #urxvtc -T 'scratchpad' -geometry 65x20 & 
-termite -t scratchpad &
+#termite -t scratchpad &
+xfce4-terminal -T scratchpad --font='Fantasque Sans Mono Italic 16' &
 
 # vim:ft=sh
