@@ -56,3 +56,5 @@ It will symlink vim. If you wanna use this configurations for root user, use `-t
 - `stow -t /root vim`
 
 **Note:** stow will only create a symlink if a config file doesn't already exist. You must delete/backup if there is a default config for a program. 
+
+[![Stargazers over time](https://starchart.cc/Awan/cfg.svg)](https://starchart.cc/Awan/cfg)
