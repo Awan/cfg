@@ -31,4 +31,4 @@ FontName=Fantasque Sans Mono Italic 16
 BackgroundMode=TERMINAL_BACKGROUND_TRANSPARENT
 ColorForeground=#17f018
 BackgroundDarkness=0.750000
-
+MiscMiddleClickOpensUri=TRUE
