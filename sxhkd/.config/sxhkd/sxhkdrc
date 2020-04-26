@@ -162,7 +162,7 @@ useful_programs_which_can_be_used_in_any_window_manager='
 # Launch Terminal 
 
 super + Return
-  xfce4-terminal
+  termite
 
 # Launch termite
 
