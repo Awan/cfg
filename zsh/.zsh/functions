@@ -768,7 +768,7 @@ dua() {
 sitemap() {
   # submit sitemap to google 
   google_url="https://www.google.com/webmasters/sitemaps/ping?sitemap="
-  path="https://abdullah.today/sitemap.xml"
+  path=$1
   /usr/bin/curl $google_url$path
 }
 
