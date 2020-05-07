@@ -1,4 +1,5 @@
 alias ls='ls --color=auto'
+alias lsc='ls | wc -l'
 mouse='sudo modprobe 842'
 alias anydesk='anydesk && xmodmap ~/.Xmodmap'
 alias zq='zathura $HOME/kit/pdf/Quran/Quran.pdf &'
