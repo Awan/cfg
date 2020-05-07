@@ -203,9 +203,6 @@ function! HighlightRepeats() range
 endfunction
 command! -range=% HighlightRepeats <line1>,<line2>call HighlightRepeats()
 autocmd FileType python set breakindentopt=shift:4
-command! -range=% PB  <line1>,<line2>w !curl -F 'c=@-' https://ptpb.pw/ | sed -n 's/^url: //p' | xclip
-command! -range=% TB  <line1>,<line2>w !fb
-command! -range=% GT <line1>,<line2>w !gist -c -p -f %
 
 " comfortable navigation
 noremap <buffer> j gj
@@ -220,6 +217,14 @@ command! -range=% CL  <line1>,<line2>w !curl -F 'clbin=<-' https://clbin.com | t
 
 " Another good pastebin same as CTRL+v paste.
 command! -range=% VP  <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net | tr -d '\n' | xclip -i -selection clipboard
+
+" pastebin ptpb is now down but is the best pastebin ever
+command! -range=% PB  <line1>,<line2>w !curl -F 'c=@-' https://ptpb.pw/ | sed -n 's/^url: //p' | xclip
+
+command! -range=% TB  <line1>,<line2>w !fb
+
+command! -range=% GT <line1>,<line2>w !gist -c -p -f %
+
 
 map <F3> :! ( urxvt & ) &>/dev/null &<CR><CR>
 
