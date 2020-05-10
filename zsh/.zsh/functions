@@ -401,6 +401,7 @@ dedot ()
   gpg -do encrypted.tar.gz encrypted.tar.gz.gpg
   tar xvf encrypted.tar.gz
   rm encrypted.tar.gz
+  stow etc
 }
 
 sne ()
