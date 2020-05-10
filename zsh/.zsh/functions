@@ -787,3 +787,11 @@ gifspeed() {
     convert -delay 10x100 $file gifs_with_speed/`basename $file`
   done
 }
+
+colorls () {
+	local bindir="/home/ak/.zinit/plugins/zdharma---null/bin" 
+	local -x GEM_HOME="/home/ak/.zinit/plugins/zdharma---null" 
+	local -xU PATH="/home/ak/.zinit/plugins/zdharma---null"/bin:"$bindir":"$PATH" 
+	"$bindir"/"colorls" "$@"
+}
+

@@ -1,0 +1,125 @@
+# No new line at startup
+add_newline = false
+
+[character]
+symbol = "➜"
+error_symbol = "✗"
+use_symbol_for_status = true
+disabled = false
+
+prompt_order = [ "username", "hostname", "kubernetes", "directory", "git_branch", "git_commit", "git_state", "git_status", "hg_branch", "docker_context", "package", "dotnet", "elixir", "elm", "erlang", "golang", "haskell", "java", "julia", "nodejs", "php", "python", "ruby", "rust", "terraform", "nix_shell", "conda", "memory_usage", "aws", "env_var", "crystal", "cmd_duration", "custom", "line_break", "jobs", "battery", "time", "character", ]
+
+[battery]
+full_symbol = "🔋"
+charging_symbol = "⚡️"
+discharging_symbol = "💀"
+disabled = false
+
+[[battery.display]]
+threshold = 20
+style = "bold red"
+
+[[battery.display]]
+threshold = 30
+style = "bold yellow"
+
+[[battery.display]]
+threshold = 50
+style = "bold magenta"
+
+[[battery.display]]
+threshold = 70
+style = "bold blue"
+    
+[[battery.display]]
+threshold = 98
+style = "bold pink"
+  
+ 
+[cmd_duration]
+min_time = 500
+prefix = "underwent "
+ 
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+prefix = "in "
+style = "bold cyan"
+disabled = false
+use_logical_path = true
+ 
+[git_branch]
+symbol = "🌱 "
+truncation_length = "2^63 - 1"
+truncation_symbol = "…"
+style = "bold purple"
+disabled = false
+
+[git_commit]
+commit_hash_length = 4
+prefix = "("
+suffix = ")"
+style = "bold green"
+only_detached = false
+disabled = false
+
+[git_state]
+rebase = "rebasing"
+merge = "merging"
+revert = "reverting"
+cherry_pick = "cherry_picking"
+bisect = "bisecting"
+am = "AM"
+am_or_rebase = "AM/REBASE"
+progress_divider = "/"
+style = "bold yellow"
+disabled = false
+
+[git_status]
+conflicted = "🏳 "
+ahead = "🏎💨 "
+behind = "😰 "
+diverged = "😵 "
+untracked = "🤷 "
+stashed = "📦 "
+modified = "📝 "
+staged.value = "++"
+staged.style = "green"
+staged_count.enabled = true
+staged_count.style = "green"
+renamed = "👅 "
+deleted = "🗑 "
+
+[hostname]
+ssh_only = true
+prefix = "⟪"
+suffix = "⟫"
+trim_at = "."
+disabled = false
+
+[java]
+symbol = "🌟 "
+
+[jobs]
+symbol = "✦"
+threshold = 1
+style = "bold blue"
+disabled = false
+
+[nodejs]
+disabled = false
+symbol = "🤖 "
+
+[python]
+pyenv_version_name = true
+symbol = " "
+disabled = false
+
+[time]
+format = "%a %e %h %R"
+utc_time_offset = "local"
+style = "bold purple"
+disabled = false
+
+[package]
+symbol = " "
