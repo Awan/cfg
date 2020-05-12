@@ -1,4 +1,3 @@
-alias ls='ls --color=auto'
 alias lsa='ls -lah'
 alias ..='cd .. 2>/dev/null || cd "$(dirname $PWD)"'
 alias lsc='ls | wc -l'
