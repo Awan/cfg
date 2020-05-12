@@ -57,7 +57,7 @@ style = "bold purple"
 disabled = false
 
 [git_commit]
-commit_hash_length = 4
+commit_hash_length = 6
 prefix = "("
 suffix = ")"
 style = "bold green"
