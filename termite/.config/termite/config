@@ -14,8 +14,8 @@
 
 [options]
 
-font                  =         Fira Code Light 15
-boldfont              =         Fira Code Bold 15
+font                  =         Fira Code Light 13
+boldfont              =         Fira Code Bold 13
 # boldfont              =         Fantasque Mans Mono Bold Italic 16
 word_chars            =         " " '"'&()*,;<=>?@[]^{|}\"()*,<>[]{}|''"\
 allow_bold            =         true

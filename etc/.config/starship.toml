@@ -13,6 +13,7 @@ prompt_order = [ "username", "hostname", "kubernetes", "directory", "git_branch"
 full_symbol = "🔋"
 charging_symbol = "⚡️"
 discharging_symbol = "💀"
+threshold = 98
 disabled = false
 
 [[battery.display]]
