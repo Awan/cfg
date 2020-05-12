@@ -795,3 +795,11 @@ colorls () {
 	"$bindir"/"colorls" "$@"
 }
 
+mkuser () {
+  # Create a new user with creating new homedir, zsh as shell, adding it to
+  # audio, video and wheel group 
+
+  username="$1"
+  sudo useradd -m -G wheel,input,audio,video -s `which zsh` "$username" && sudo passwd "$username"
+
+}

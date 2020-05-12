@@ -73,3 +73,4 @@ else
   export LD_PRELOAD=$HOME/.local/bin/libstderred_for_pi.so${LD_PRELOAD:+:$LD_PRELOAD}
 fi
 export STDERRED_BLACKLIST="^(git|ffmpeg)$"
+export GIT_DISCOVERY_ACROSS_FILESYSTEM=true
