@@ -30,3 +30,7 @@ fi
 if [[ $commands[todo.sh] ]]; then
   alias todo='todo.sh'
 fi
+
+if [[ $commands[cmus] ]]; then
+  alias cms='cmus-remote'
+fi
