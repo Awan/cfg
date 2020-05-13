@@ -16,8 +16,8 @@
 
 #font                  =         Fira Code Light 13
 font                   =        Fantasque Sans Mono Italic 17
-boldfont              =         Fira Code Bold 13
-# boldfont              =         Fantasque Sans Mono Bold Italic 16
+#boldfont              =         Fira Code Bold 13
+boldfont              =         Fantasque Sans Mono Bold Italic 16
 word_chars            =         " " '"'&()*,;<=>?@[]^{|}\"()*,<>[]{}|''"\
 allow_bold            =         true
 bold_is_bright        =         true
