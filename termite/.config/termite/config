@@ -14,10 +14,8 @@
 
 [options]
 
-#font                  =         Fira Code Light 13
-font                   =        Fantasque Sans Mono Italic 17
-#boldfont              =         Fira Code Bold 13
-boldfont              =         Fantasque Sans Mono Bold Italic 16
+font                  =         Ubuntu Mono derivative Powerline Italic 17
+boldfont              =         Ubuntu Mono derivative Powerline Bold Italic 17
 word_chars            =         " " '"'&()*,;<=>?@[]^{|}\"()*,<>[]{}|''"\
 allow_bold            =         true
 bold_is_bright        =         true
