@@ -10,7 +10,6 @@
 " ░░▀░░▀▀▀░▀░▀
 
 set ruler
-set runtimepath+=~/.vim/vim-devicons
 colorscheme zenburn
 let g:zenburn_old_Visual = 1
 let g:zenburn_high_contrast = 1
