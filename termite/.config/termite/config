@@ -14,8 +14,11 @@
 
 [options]
 
-font                  =         Ubuntu Mono derivative Powerline Italic 17
-boldfont              =         Ubuntu Mono derivative Powerline Bold Italic 17
+font                  =          Source Code Pro Regular 13
+boldfont              =          Source Code Pro Bold 13
+bolditalicfont        =          Source Code Pro Bold Italic 13
+#font                  =         Ubuntu Mono derivative Powerline Italic 17
+#boldfont              =         Ubuntu Mono derivative Powerline Bold Italic 17
 word_chars            =         " " '"'&()*,;<=>?@[]^{|}\"()*,<>[]{}|''"\
 allow_bold            =         true
 bold_is_bright        =         true
@@ -76,7 +79,7 @@ highlight             =         #DDEEDD
 
 [hints]
 
-font                  =         Fantasque Sans Mono 13
+font                  =         Fantasque Sans Mono 15
 padding               =         2
 foreground            =         #dcdccc
 background            =         #3f3f3f
