@@ -10,10 +10,11 @@
 " ░░▀░░▀▀▀░▀░▀
 
 set ruler
-colorscheme zenburn
-let g:zenburn_old_Visual = 1
-let g:zenburn_high_contrast = 1
-let g:zenburn_force_dark_Background = 1
+"set bg=dark
+"colorscheme zenburn
+"let g:zenburn_old_Visual = 1
+"let g:zenburn_high_contrast = 1
+"let g:zenburn_force_dark_Background = 1
 set fo+=w
 cmap w!! %!sudo tee > /dev/null %
 
@@ -33,15 +34,14 @@ command! TranslateOpen call translate#open_trans_buf('')
 command! TranslateClear call translate#clear_trans_buf()
 
 set hlsearch
-autocmd! bufwritepost ~/.Xresources !xrdb -load ~/.Xresources && urxvtc 
-autocmd! bufwritepost ~/.zshrc	!source ~/.zshrc
-autocmd! bufwritepost ~/.config/sxhkd/sxhkdrc	!pkill -USR1 -x sxhkd
-autocmd! bufwritepost ~/cfg/sxhkd/.config/sxhkd/sxhkdrc	!pkill -USR1 -x sxhkd
-autocmd! bufwritepost ~/.zsh/custom-alias !source ~/.zsh/custom-alias
-autocmd! bufwritepost ~/cfg/zsh/.zsh/custom-alias !source ~/cfg/zsh/.zsh/custom-alias
+autocmd! bufwritepost $HOME/.Xresources !xrdb -load $HOME/.Xresources && urxvtc 
+autocmd! bufwritepost $HOME/.zshrc	!source $HOME/.zshrc
+autocmd! bufwritepost $HOME/.config/sxhkd/sxhkdrc	!pkill -USR1 -x sxhkd
+autocmd! bufwritepost $HOME/cfg/sxhkd/.config/sxhkd/sxhkdrc	!pkill -USR1 -x sxhkd
+autocmd! bufwritepost $HOME/cfg/zsh/.zsh/custom-alias !source $HOME/.zsh/custom-alias
+autocmd! bufwritepost $HOME/cfg/polybar/.config/polybar/*.conf !bspc wm -r >/dev/null 2>&1 
 set nocp
 filetype on
-set bg=dark
 au BufNewFile,BufRead *Pkgfile set filetype=sh
 set textwidth=80
 if !&scrolloff
