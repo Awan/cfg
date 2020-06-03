@@ -162,7 +162,7 @@ useful_programs_which_can_be_used_in_any_window_manager='
 # Launch Terminal 
 
 super + Return
-  termite
+  xfce4-terminal
 
 # Launch termite
 
@@ -214,7 +214,7 @@ Print
 
 alt + Print
   import -quality 100 -window root /tmp/foo.png && curl -F'file=@/tmp/foo.png' \
-  http://0x0.st | tee /tmp/foo.txt | xclip && notify-send -t 1500 -i \
+  http://0x0.st | tee /tmp/foo.txt | xclip && notify-send -t 3500 -i \
   "$HOME"/.local/share/icons/drops/imgur.png "Screenshot posted: $(cat /tmp/foo.txt)"
 
 # Soft Explorer button for File Manager
