@@ -11,7 +11,7 @@
 
 set ruler
 "set bg=dark
-"colorscheme zenburn
+colorscheme murphy
 "let g:zenburn_old_Visual = 1
 "let g:zenburn_high_contrast = 1
 "let g:zenburn_force_dark_Background = 1
