@@ -17,7 +17,8 @@ colorscheme murphy
 "let g:zenburn_force_dark_Background = 1
 set fo+=w
 cmap w!! %!sudo tee > /dev/null %
-
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && v:this_session == "" | NERDTree | endif
 " Set relative number but also show current line number (no zero for current
 " line)
 set number relativenumber
@@ -129,6 +130,7 @@ let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
 :noremap <leader>u :w<Home>silent <End> !urlview<CR>
+map <leader>n :NERDTreeToggle<CR>
 autocmd BufEnter *.md exe 'noremap <F5> :!google-chrome-stable %:p<CR>'
 au BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
 autocmd BufReadPost *
