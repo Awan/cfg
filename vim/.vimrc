@@ -131,6 +131,7 @@ let g:airline_symbols.linenr = ''
 
 :noremap <leader>u :w<Home>silent <End> !urlview<CR>
 map <leader>n :NERDTreeToggle<CR>
+let NERDTreeShowHidden = 1
 autocmd BufEnter *.md exe 'noremap <F5> :!google-chrome-stable %:p<CR>'
 au BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
 autocmd BufReadPost *
