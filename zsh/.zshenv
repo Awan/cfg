@@ -6,8 +6,8 @@ BROWSER=$(which google-chrome-stable)
 # Set Terminal
 
 if [ -z "$TERMINAL" ]; then
-  if (( $+commands[urxvt] )); then
-    TERMINAL=urxvt
+  if (( $+commands[xfce4-terminal] )); then
+    TERMINAL=xfce4-terminal
   elif (( $+commands[termite] )); then
     TERMINAL=termite
   fi
