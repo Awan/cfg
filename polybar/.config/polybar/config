@@ -20,7 +20,7 @@ include-file = ~/.config/polybar/modules.conf
 [bar/eDP-1]
 inherit = bar/ultimate
 modules-right = backlight pulseaudio memory cpu temperature battery wlan bspwm
-modules-center = 
+modules-center = cmus
 modules-left = date hijri mpd 
 
 [bar/HDMI-2]
@@ -29,7 +29,6 @@ monitor = HDMI-2
 modules-right = pulseaudio memory cpu temperature battery wlan 
 modules-center = 
 modules-left = bspwm
-
 
 [bar/XWAYLAND0]
 inherit = bar/ultimate

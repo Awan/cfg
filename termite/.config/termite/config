@@ -14,9 +14,9 @@
 
 [options]
 
-font                  =          Source Code Pro Regular 13
-boldfont              =          Source Code Pro Bold 13
-bolditalicfont        =          Source Code Pro Bold Italic 13
+font                  =          Terminus (TTF) italic 17
+boldfont              =          Terminus (TTF) iold 19
+bolditalicfont        =          Terminus (TTF) bold italic 19
 #font                  =         Ubuntu Mono derivative Powerline Italic 17
 #boldfont              =         Ubuntu Mono derivative Powerline Bold Italic 17
 word_chars            =         " " '"'&()*,;<=>?@[]^{|}\"()*,<>[]{}|''"\

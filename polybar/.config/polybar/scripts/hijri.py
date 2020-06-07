@@ -41,7 +41,6 @@ day_names_in_en = {
         }
 
 
-
 today = convert.Gregorian.today().to_hijri()
 
 
@@ -50,9 +49,11 @@ def get_day():
 
     return day_names_in_en[day_of_week]
 
+
 def get_month():
     month = today.month
 
     return month_names_in_en[month]
+
 
 print(get_day(), get_month(), today.day)
