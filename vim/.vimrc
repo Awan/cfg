@@ -19,6 +19,7 @@ set fo+=w
 cmap w!! %!sudo tee > /dev/null %
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && v:this_session == "" | NERDTree | endif
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 " Set relative number but also show current line number (no zero for current
 " line)
 set number relativenumber
@@ -88,6 +89,7 @@ set noshowmode
 set undofile
 set undodir=~/.vim/undodir
 set viminfo='10,\"100,:20,%,n~/.viminfo
+autocmd BufWritePre *.c,*.cpp,*.cc,*.h,*.sh,*.hpp,*.py,*.m,*.mm :%s/\s\+$//e
 set nobackup
 set showcmd
 set whichwrap=b,s,<,>,[,]
@@ -99,9 +101,12 @@ let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
 let g:instant_markdown_port = 47479
 let g:powerline_pycmd = 'py3'
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#ale#enabled = 1
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
 let g:airline#extensions#tabline#formatter = 'default'
 let g:airline_powerline_fonts = 1
-
+ 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
@@ -125,13 +130,18 @@ let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
 let g:airline_right_sep = ''
 let g:airline_right_alt_sep = ''
+let g:ale_fix_on_save = 1
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
 :noremap <leader>u :w<Home>silent <End> !urlview<CR>
 map <leader>n :NERDTreeToggle<CR>
+nnoremap <silent> <leader>f :NERDTreeFind<CR>
 let NERDTreeShowHidden = 1
+let NERDTreeQuitOnOpen = 0
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
 autocmd BufEnter *.md exe 'noremap <F5> :!google-chrome-stable %:p<CR>'
 au BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
 autocmd BufReadPost *
