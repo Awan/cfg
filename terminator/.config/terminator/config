@@ -1,0 +1,30 @@
+[global_config]
+  use_custom_url_handler = True
+  custom_url_handler = urlview
+  title_use_system_font = False
+  title_font = Terminus (TTF) Medium Italic 17
+[keybindings]
+[profiles]
+  [[default]]
+    background_color = "#300a24"
+    background_darkness = 0.95
+    background_type = transparent
+    cursor_shape = underline
+    cursor_color = "#ef2929"
+    cursor_color_fg = False
+    font = Tamzen Bold Italic 17
+    foreground_color = "#ffffff"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    use_system_font = False
+    copy_on_selection = True
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+[plugins]
