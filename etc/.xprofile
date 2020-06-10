@@ -16,6 +16,7 @@ user_fonts_dir=$HOME/.local/share/fonts
 # Inactivity timeout
 inactivity_timeout=180
 # Time before exectuing lock 
+# shellcheck disable=2034
 notify_time=10
 
 # For some java apps
@@ -23,16 +24,17 @@ notify_time=10
 #wmname LG3D &
 
 run() {
-  if ! pgrep $1 ;
+  if ! pgrep "$1" ;
   then
-    $@&
+    "$@"&
   fi
 }
 
 
 if [ -d /etc/X11/xinit/xinitrc.d ]; then
   for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
-    [ -x $f ] && . $f
+    # shellcheck disable=1090
+    [ -x "$f" ] && . "$f"
     done
     unset f
 fi
@@ -48,6 +50,7 @@ tab() {
     --gamma 0.76:0.75:0.68 "$@"
 }
 
+# shellcheck disable=SC2120
 tabular() {
   # Configure external monitor if exists
   tab
@@ -60,11 +63,11 @@ sxhkd &
 
 # Load Xresources 
 
-[ -f $user_resources ] && xrdb -merge "$user_resources"
+[ -f "$user_resources" ] && xrdb -merge "$user_resources"
 
 # Load keymaps
 
-[ -f $user_keymaps ] && xmodmap "$user_keymaps"
+[ -f "$user_keymaps" ] && xmodmap "$user_keymaps"
 
 # Run compositor
 
@@ -112,7 +115,7 @@ redshift -c ~/.config/redshift/redshift.conf &
 
 # Start tmux if not already running
 
-[ -z $TMUX ] && tmux new-session -s $USER -d 
+[ -z "$TMUX" ] && tmux new-session -s "$USER" -d 
 
 # Set brightness to 30 at boot
 
@@ -123,6 +126,7 @@ light -S 30 &
 if [ "$(xrandr -q | awk '/ connected / {print $1}' | wc -l)" -eq 1 ]; then
   tab --primary
 else
+  # shellcheck disable=SC2119
   tabular
 fi
 
