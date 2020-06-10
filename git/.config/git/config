@@ -44,6 +44,9 @@
   cc = cherry-pick --continue
 	cm = checkout master
 	b = branch
+  c = commit
+  ca = commit --amend
+  cam = commit -am
 	lg = log --pretty=oneline --abbrev-commit
 [credential]
 	helper = cache
