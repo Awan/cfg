@@ -1,8 +1,6 @@
 [global_config]
   use_custom_url_handler = True
-  custom_url_handler = urlview
-  title_use_system_font = False
-  title_font = Terminus (TTF) Medium Italic 17
+  custom_url_handler = ~/.urlview
 [keybindings]
 [profiles]
   [[default]]
@@ -12,7 +10,7 @@
     cursor_shape = underline
     cursor_color = "#ef2929"
     cursor_color_fg = False
-    font = Tamzen Bold Italic 17
+    font = Tamzen Bold Italic 22
     foreground_color = "#ffffff"
     show_titlebar = False
     scrollbar_position = hidden

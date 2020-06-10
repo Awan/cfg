@@ -14,9 +14,9 @@
 
 [options]
 
-font                  =          Terminus (TTF) italic 17
-boldfont              =          Terminus (TTF) iold 19
-bolditalicfont        =          Terminus (TTF) bold italic 19
+font                  =          Tamzen Bold Italic 22
+boldfont              =          Tamzen Bold 22
+bolditalicfont        =          Tamzen Bold Italic 24
 #font                  =         Ubuntu Mono derivative Powerline Italic 17
 #boldfont              =         Ubuntu Mono derivative Powerline Bold Italic 17
 word_chars            =         " " '"'&()*,;<=>?@[]^{|}\"()*,<>[]{}|''"\
