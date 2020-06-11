@@ -19,12 +19,28 @@
 	smudge = git-lfs smudge -- %f
 [color]
 	ui = always
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+[color "status"]
+  added = yellow
+  changed = green 
+  untracked = red
 [diff]
 	colorMoved = dimmed_zebra
-	tool = vimdiff
+  renames = true
+	tool = icdiff
 	submodule = log
 [difftool]
     prompt = false
+[difftool "icdiff"]
+  cmd = icdiff --line-numbers $LOCAL $REMOTE
 [gpg]
 	program = gpg
 [core]
@@ -34,6 +50,7 @@
     #pager = vimpager
 	symlinks = true
 	excludesfile = ~/.config/git/ignore
+  whitespace = -trailing-space
 [alias]
 	last = log -1 HEAD
   bD = branch -D  # delete branch
@@ -47,7 +64,13 @@
   c = commit
   ca = commit --amend
   cam = commit -am
-	lg = log --pretty=oneline --abbrev-commit
+  lg = log --pretty=format:\"%C(yellow)%h %ar %C(auto)%d %Creset %s, %Cblue%cn\" --graph --all
+  st = stash save --include-untracked
+  m = commit --message
+  pop = stash pop
+  amd = commit --amend --no-edit
+  force = push --force-with-lease
+  dirs = "!f(){ git diff --dirstat=files,0 HEAD~1 | awk '{print $2}' | cut -d '/' -f 1 | sort | uniq ; }; f"
 [credential]
 	helper = cache
 [help]
@@ -56,7 +79,28 @@
   smtpEncryption = tls
   smtpServer = mail.abdullah.today
   smtpUser = abdullah
- 
+[log]
+  abbrevCommit = true
+[push]
+  followTags = true
+[tag]
+  sort = version:refname
+[pull]
+  rebase = true
+[status]
+  branch = true
+  showStash = true
+[rebase] 
+  autoStash = true
+  instructionFormat = %s [%an]
+[sequence]
+  editor = interactive-rebase-tool
+[merge]
+  tool = vimdiff
+  conflictstyle = diff3
+[mergetool "vimdiff"]
+  prompt = false
+
 [github]
 	user = Awan
 [notabug]

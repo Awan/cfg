@@ -9,12 +9,38 @@
 " ░▀▄▀░░█░░█░█
 " ░░▀░░▀▀▀░▀░▀
 
+set nocompatible
 set ruler
-"set bg=dark
-colorscheme murphy
-"let g:zenburn_old_Visual = 1
-"let g:zenburn_high_contrast = 1
-"let g:zenburn_force_dark_Background = 1
+set title
+set titlelen=0
+set titlestring=%t%(\ %m%)%(\ (%{hostname()}\ %{expand(\"%:p:~:h\")})%)%(\ %a%)
+let perl_no_extended_vars=1
+let python_no_builtin_highlight=1
+if &term == "linux"
+    set bg=dark
+endif
+if has("gui_running")
+    "configure in gvimrc
+elseif &t_Co == 256
+    silent! color desert
+    silent! color zenburn
+else
+    silent! color slate
+endif
+
+if has("termguicolors")
+	if &term == "tmux-256color"
+		let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+		let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+	endif
+	if &term =~ "^(tmux|xterm)-256color"
+		set termguicolors
+	endif
+endif
+
+
+
+colorscheme molokai
 set fo+=w
 cmap w!! %!sudo tee > /dev/null %
 autocmd StdinReadPre * let s:std_in=1
@@ -22,7 +48,8 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && v:this_session == ""
 " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 " Set relative number but also show current line number (no zero for current
 " line)
-set number relativenumber
+silent! set number relativenumber
+silent! set numberwidth=4
 
 if exists('g:loaded_translate_plugin')
   finish
@@ -47,59 +74,102 @@ filetype on
 au BufNewFile,BufRead *Pkgfile set filetype=sh
 set textwidth=80
 if !&scrolloff
-  set scrolloff=1
+  set scrolloff=3
 endif
 if !&sidescrolloff
   set sidescrolloff=5
 endif
 set fileencoding=utf-8
+set encoding=utf-8
+"set foldmethod=indent
+"set foldlevel=99
 filetype plugin indent on
 set showmode
 set ai
 set sc
-set noincsearch
+set incsearch
 set completeopt=menuone
 set ignorecase
+set gdefault
+com! -complete=file -bang -nargs=? W :w<bang> <args>
 set smartcase
 set cursorline
-set cursorcolumn
+"set cursorcolumn
 set noexpandtab
 set backspace=indent,eol,start
-syntax on
+if has("syntax")
+    syntax on
+    syntax sync minlines=200
+endif
 if has('mouse') | set mouse=a | endif 
 let mapleader=" "
 set hidden
+set autoread
 set history=10000
 filetype indent on
 filetype plugin on
 set linebreak 
+set display+=lastline
+set display+=truncate
+set display+=uhex
+silent! set listchars=eol:¬,tab:→.,extends:»,precedes:«,trail:•
 set wrap
-set tabstop=2
-set shiftwidth=2
+set tabstop=8
+set smarttab copyindent preserveindent
+set shiftwidth=4
+set softtabstop=4
 set expandtab
+retab
 set clipboard=unnamed,unnamedplus
 set ttyfast
 set smartindent
 set wildmenu
+silent! set wildignorecase
+set noerrorbells visualbell t_vb=
+set shortmess+=I
 set autoindent
-set nohlsearch
+set nocindent
+set cinkeys=0{,0},0),:,!,o,O,e
+set formatoptions=tcrqnj
+set comments-=:%
+set comments-=:XCOMM
 set lazyredraw
-set showmatch
+set noshowmatch
+if has("unix")
+    if has("nvim")
+        set undofile
+    else
+        silent! set undodir=~/.vim/undodir//
+        silent! set undofile
+    endif
+endif
 set noshowmode 
-set undofile
-set undodir=~/.vim/undodir
 set viminfo='10,\"100,:20,%,n~/.viminfo
 autocmd BufWritePre *.c,*.cpp,*.cc,*.h,*.sh,*.hpp,*.py,*.m,*.mm :%s/\s\+$//e
+set modeline
 set nobackup
 set showcmd
 set whichwrap=b,s,<,>,[,]
 set laststatus=2
-let g:colors_name = 'vim-hardaway'
-let g:airline_theme = 'vim_hardaway'
+set splitbelow splitright
+set tabpagemax=20
+if &t_Co > 16
+	setl cursorline
+	au WinEnter * setl cursorline
+	au WinLeave * setl nocursorline
+	au FocusGained * setl cursorline
+	au FocusLost * setl nocursorline
+endif
+
+"let g:colors_name = 'molokai'
+let g:airline_theme = 'molokai'
 let g:instant_markdown_browser = "/usr/bin/google-chrome-stable --new-window"
 let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
 let g:instant_markdown_port = 47479
 let g:powerline_pycmd = 'py3'
+let g:ycm_autoclose_preview_window_after_completion = 1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#ale#enabled = 1
 let g:ale_sign_error = '●'
@@ -138,6 +208,11 @@ let g:airline_symbols.linenr = ''
 :noremap <leader>u :w<Home>silent <End> !urlview<CR>
 map <leader>n :NERDTreeToggle<CR>
 nnoremap <silent> <leader>f :NERDTreeFind<CR>
+nnoremap ; :
+nnoremap K <nop>
+nnoremap q :q
+nnoremap Q gq
+inoremap # X#
 let NERDTreeShowHidden = 1
 let NERDTreeQuitOnOpen = 0
 let NERDTreeMinimalUI = 1
@@ -193,9 +268,16 @@ if !exists(":DiffOrig")
         \ wincmd p | diffthis
 endif
 
-if &t_Co == 8 && $TERM !~# '^linux\|^Eterm|^screen-*'
-  set t_Co=16
+"if &t_Co == 8 && $TERM !~# '^linux\|^Eterm|^screen-*'
+"  set t_Co=16
+"endif
+
+if has("nvim")
+	silent! set guicursor=
 endif
+
+hi CursorLineNr cterm=NONE
+
 
 
 " duplicate lines
@@ -220,10 +302,63 @@ command! -range=% HighlightRepeats <line1>,<line2>call HighlightRepeats()
 autocmd FileType python set breakindentopt=shift:4
 
 " comfortable navigation
-noremap <buffer> j gj
-noremap <buffer> k gk
-noremap <buffer> gj j
-noremap <buffer> gk k
+" noremap <buffer> j gj
+" noremap <buffer> k gk
+" noremap <buffer> gj j
+" noremap <buffer> gk k
+
+nnoremap k gk
+nnoremap j gj
+nnoremap <Up> gk
+nnoremap <Down> gj
+nnoremap <Tab> %
+vnoremap <Tab> %
+
+if has("nvim") || has("terminal")
+	tnoremap <Esc> <C-\><C-n>
+endif
+
+nnoremap <Leader>l :ls<CR>:b<Space>
+nnoremap <Leader>h :nohlsearch<CR>
+nnoremap <Leader>rw :%s/\<<C-r><C-w>\>/
+" sort CSS properties
+nnoremap <Leader>S ?{<CR>jV/^\s*\}?$<CR>k:sort<CR>:noh<CR>
+" reselect pasted text
+nnoremap <Leader>v `[V`]
+" rewrap current paragraph
+nnoremap <Leader>w gq}
+" strip trailing whitespace
+nnoremap <Leader>W :%s/\s\+$//<CR>:let @/=""<CR>
+
+" fix application-numpad mode
+if !has("nvim")
+	" (Vim 8.1) with Num Lock off, Num5 is parsed as individual commands
+	map! <Esc>OE <Nop>
+endif
+
+
+set nottimeout		" disable timeout for key codes (enabled by defaults.vim)
+
+""" File-specific behavior
+
+if has("autocmd")
+	au BufNewFile,BufRead COMMIT_EDITMSG,git-rebase-todo
+	\ setl nomodeline
+
+	au BufNewFile,BufRead /etc/motd
+	\ setl et
+
+	au BufNewFile,BufRead authorized_keys*,known_hosts,id_*.pub
+	\ setl ft=conf wrap nolinebreak
+
+	au! BufNewFile */_posts/2*.html
+	\ 0r %:h/_template.html
+
+	if has("nvim")
+		" Neovim 0.2.1: terminal buffers now have line numbers
+		au! TermOpen * setl nonumber norelativenumber
+	endif
+endif
 
 
 " some pastebins commands
