@@ -164,15 +164,15 @@ useful_programs_which_can_be_used_in_any_window_manager='
 super + Return
   terminator
 
-# Launch termite
+# Termite
 
 alt + Return
-  termite 
+  termite
 
 # Launch dmenu
 
 super + d
-  dmenu_run
+  "$HOME"/.local/bin/dmenu_run
 
 # Toggle mpd
 
