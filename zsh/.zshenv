@@ -13,6 +13,17 @@ if [ -z "$TERMINAL" ]; then
   fi
 fi
 
+TERMCMD=$TERMINAL
+
+if [ -d ~/git/mysite ]; then
+  export SITE="$HOME/git/mysite"
+  export post="$SITE/content/posts"
+fi
+
+if [ -d ~/.local/bin ]; then
+  export mpath="$HOME/.local/bin/"
+fi
+
 if [ -d ~/.perl5 ]; then
   export PERL5LIB="~/.perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
   export PERL_LOCAL_LIB_ROOT="~/.perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
@@ -20,7 +31,6 @@ if [ -d ~/.perl5 ]; then
   export PERL_MM_OPT="INSTALL_BASE=~/.perl5"
 fi
 
-TERMCMD=$TERMINAL
 
 # Set editor
 
