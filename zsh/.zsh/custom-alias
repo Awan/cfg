@@ -68,7 +68,7 @@ alias xq='xbps-query'
 alias xi='sudo xbps-install'
 alias xr='sudo xbps-remove'
 alias vx='$EDITOR ~/.Xresources'
-alias vg='$EDITOR ~/.config/git/config'
+if [ -f ~/.config/git/config ]; then alias vg="git config -e --global"; fi
 alias vmc='$EDITOR ~/.config/nvim/init.vim'
 alias fst='sudo $EDITOR /etc/fstab'
 #alias u="urxvt -pixmap '`find ~/pix/wall/ -name '*.jpg' | sort -R | head -n 1`;style=tiled' -T myKitten &" 

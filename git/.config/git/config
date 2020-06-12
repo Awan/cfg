@@ -5,7 +5,7 @@
 	signingkey = 0xFC5978915CBC7BC7
 	username = Abdullah
 [push]
-  default = current
+        default = current
 [commit]
 	gpgSign = true
 [tag]
@@ -20,90 +20,99 @@
 [color]
 	ui = always
 [color "branch"]
-  current = yellow reverse
-  local = yellow
-  remote = green
+        current = yellow reverse
+        local = yellow
+        remote = green
 [color "diff"]
-  meta = yellow bold
-  frag = magenta bold
-  old = red bold
-  new = green bold
+        meta = yellow bold
+        frag = magenta bold
+        old = red bold
+        new = cyan 
 [color "status"]
-  added = yellow
-  changed = green 
-  untracked = red
+        added = yellow bold
+        changed = magenta bold
+	untracked = red bold
 [diff]
-	colorMoved = dimmed_zebra
-  renames = true
-	tool = icdiff
-	submodule = log
+        colorMoved = dimmed_zebra
+        renames = true
+        tool = icdiff
+        submodule = log
 [difftool]
-    prompt = false
+        prompt = false
 [difftool "icdiff"]
-  cmd = icdiff --line-numbers $LOCAL $REMOTE
+        cmd = icdiff --line-numbers $LOCAL $REMOTE
 [gpg]
 	program = gpg
 [core]
 	autocrlf = false
 	safecrlf = true
 	editor = vim
-    #pager = vimpager
+        #pager = vimpager
 	symlinks = true
 	excludesfile = ~/.config/git/ignore
-  whitespace = -trailing-space
+#         fsmonitor = some program to find last changed file since given time. (try find)
+        whitespace = -trailing-space
 [alias]
 	last = log -1 HEAD
-  bD = branch -D  # delete branch
-  bm = branch -m # rename current branch to $name
+        bD = branch -D  # delete branch
+        bm = branch -m # rename current branch to $name
 	co = checkout
-  cob = checkout -b
-  cp = cherry-pick
-  cc = cherry-pick --continue
+        cob = checkout -b
+        cp = cherry-pick
+        cc = cherry-pick --continue
 	cm = checkout master
 	b = branch
-  c = commit
-  ca = commit --amend
-  cam = commit -am
-  lg = log --pretty=format:\"%C(yellow)%h %ar %C(auto)%d %Creset %s, %Cblue%cn\" --graph --all
-  st = stash save --include-untracked
-  m = commit --message
-  pop = stash pop
-  amd = commit --amend --no-edit
-  force = push --force-with-lease
-  dirs = "!f(){ git diff --dirstat=files,0 HEAD~1 | awk '{print $2}' | cut -d '/' -f 1 | sort | uniq ; }; f"
+        c = commit
+        ca = commit --amend
+        cam = commit -am
+        lg = log --pretty=format:\"%C(yellow)%h %ar %C(auto)%d %Creset %s, %Cblue%cn\" --graph --all
+        st = stash save --include-untracked
+        m = commit --message
+        pop = stash pop
+        amd = commit --amend --no-edit
+        force = push --force-with-lease
+        dirs = "!f(){ git diff --dirstat=files,0 HEAD~1 | awk '{print $2}' | cut -d '/' -f 1 | sort | uniq ; }; f"
+	tp = rev-parse --show-toplevel
+	d = diff
+	dc = diff --cached
+	s = status
 [credential]
 	helper = cache
 [help]
 	autocorrect = 1
 [sendemail]
-  smtpEncryption = tls
-  smtpServer = mail.abdullah.today
-  smtpUser = abdullah
+        smtpEncryption = tls
+        smtpServer = mail.abdullah.today
+        smtpUser = abdullah
 [log]
-  abbrevCommit = true
+        abbrevCommit = true
 [push]
-  followTags = true
+        followTags = true
 [tag]
-  sort = version:refname
+        sort = version:refname
 [pull]
-  rebase = true
+        rebase = true
 [status]
-  branch = true
-  showStash = true
+	branch = true
+	showStash = true
+	submodulesummary = true
+	showUntrackedFiles = all
 [rebase] 
-  autoStash = true
-  instructionFormat = %s [%an]
+        autoStash = true
+        instructionFormat = %s [%an]
 [sequence]
-  editor = interactive-rebase-tool
+        editor = interactive-rebase-tool
 [merge]
-  tool = vimdiff
-  conflictstyle = diff3
+        tool = vimdiff
+        conflictstyle = diff3
 [mergetool "vimdiff"]
-  prompt = false
-
+        prompt = false
 [github]
 	user = Awan
 [notabug]
-    user = Abdullah
+        user = Abdullah
 [gitlab]
-    user = Abdullah
+        user = Abdullah
+[advice]
+	addignoredfile = true
+	waitingForEditor = true
