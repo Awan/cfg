@@ -16,6 +16,11 @@ set titlelen=0
 set titlestring=%t%(\ %m%)%(\ (%{hostname()}\ %{expand(\"%:p:~:h\")})%)%(\ %a%)
 let perl_no_extended_vars=1
 let python_no_builtin_highlight=1
+let g:zenburn_high_Contrast=1
+let g:zenburn_old_Visual=1
+let g:colors_name = 'zenburn'
+let g:airline_theme = 'zenburn'
+
 if &term == "linux"
     set bg=dark
 endif
@@ -40,7 +45,6 @@ endif
 
 
 
-colorscheme molokai
 set fo+=w
 cmap w!! %!sudo tee > /dev/null %
 autocmd StdinReadPre * let s:std_in=1
@@ -161,8 +165,6 @@ if &t_Co > 16
 	au FocusLost * setl nocursorline
 endif
 
-"let g:colors_name = 'molokai'
-let g:airline_theme = 'molokai'
 let g:instant_markdown_browser = "/usr/bin/google-chrome-stable --new-window"
 let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
 let g:instant_markdown_port = 47479
@@ -207,11 +209,13 @@ let g:airline_symbols.linenr = ''
 
 :noremap <leader>u :w<Home>silent <End> !urlview<CR>
 map <leader>n :NERDTreeToggle<CR>
+" comment out current line
+map <leader>c 0i# <ESC>
 nnoremap <silent> <leader>f :NERDTreeFind<CR>
 nnoremap ; :
 nnoremap K <nop>
 nnoremap q :q
-nnoremap Q gq
+nnoremap Q q
 inoremap # X#
 let NERDTreeShowHidden = 1
 let NERDTreeQuitOnOpen = 0
