@@ -10,7 +10,7 @@
     cursor_shape = underline
     cursor_color = "#ef2929"
     cursor_color_fg = False
-    font = Tamzen Bold Italic 22
+    font = Cousine for Powerline Italic 17
     foreground_color = "#ffffff"
     show_titlebar = False
     scrollbar_position = hidden
