@@ -41,7 +41,7 @@ case $class in
 esac
 
 case $title in
-  scratchpad)
+  scratchpad|'Terminator Preferences')
     echo "state = floating"
     ;;
 esac

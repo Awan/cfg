@@ -52,6 +52,11 @@
 	excludesfile = ~/.config/git/ignore
 #         fsmonitor = some program to find last changed file since given time. (try find)
         whitespace = -trailing-space
+# 	bigFileThreshold = 
+	commentchar = auto
+	preloadindex = true
+	notesRef = refs/notes/commits
+	quotepath = true
 [alias]
 	last = log -1 HEAD
         bD = branch -D  # delete branch
@@ -63,8 +68,7 @@
 	cm = checkout master
 	b = branch
         c = commit
-        ca = commit --amend
-        cam = commit -am
+        ca = commit -a
         lg = log --pretty=format:\"%C(yellow)%h %ar %C(auto)%d %Creset %s, %Cblue%cn\" --graph --all
         st = stash save --include-untracked
         m = commit --message
@@ -97,6 +101,7 @@
 	showStash = true
 	submodulesummary = true
 	showUntrackedFiles = all
+	relativePaths = true
 [rebase] 
         autoStash = true
         instructionFormat = %s [%an]
