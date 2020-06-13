@@ -1,5 +1,5 @@
-set mainfont {sans 9}
-set textfont {monospace 9}
+set mainfont {Sans 9}
+set textfont {{Misc Tamsyn} 19}
 set uifont {sans 9 bold}
 set tabstop 8
 set findmergefiles 0
@@ -51,12 +51,13 @@ set indexcirclecolor #00ff00
 set circlecolors {white blue gray blue blue}
 set linkfgcolor blue
 set circleoutlinecolor black
-set geometry(main) 1023x826+564+11
+set web_browser google-chrome-stable
+set geometry(main) 1920x1050+-3+-3
 set geometry(state) normal
-set geometry(topwidth) 1023
+set geometry(topwidth) 1920
 set geometry(topheight) 225
-set geometry(pwsash0) "701 1"
-set geometry(pwsash1) "990 1"
-set geometry(botwidth) 873
-set geometry(botheight) 596
+set geometry(pwsash0) "997 1"
+set geometry(pwsash1) "1035 1"
+set geometry(botwidth) 1017
+set geometry(botheight) 820
 set permviews {}
