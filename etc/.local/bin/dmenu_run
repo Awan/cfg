@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+prompt='run »'
+ignore='mm'
+hist=${XDG_CACHE_HOME:-$HOME/.cache}/dmenu.history
+
+perl='
+sub uniq (@) { my %seen; grep {!$seen{$_}++} @_; }
+sub rank {
+	my ($time) = @_;
+	my $age = time - $time;
+	return  4  if $age < 3600;
+	return  2  if $age < 86400;
+	return 1/2 if $age < 604800;
+	return 1/4;
+}
+$histfile = shift @ARGV // die("missing histfile argument\n");
+if (open(my $f, "<", $histfile)) {
+	@history = ();
+	$ts = 0;
+	while (<$f>) {
+		chomp;
+		if (/^#(\d+)$/)		{ $ts = int $1; }
+		elsif ($ts)		{ push @history, [$ts, $_]; $ts = 0; }
+		elsif (/^: (\d+):\d+;(.+)$/)
+					{ push @history, [int($1), $2]; }
+		elsif (/^(\d+) (.+)$/)	{ push @history, [int($1), $2]; }
+		else			{ push @history, [0, $_]; }
+	}
+	close($f);
+} else {
+	exit if $!{ENOENT};
+	die("could not open histfile: $!\n");
+}
+exit if !@history;
+for (@history) {
+	my ($time, $item) = @$_;
+	if ($time{$item} < $time) {
+		$time{$item} = $time;
+	}
+}
+@history = map {$_->[1]} @history;
+$count{$_} += 1 for @history;
+$count{$_} *= rank($time{$_}) for keys %time;
+say for reverse
+	sort {$count{$a} <=> $count{$b}}
+	uniq @history;
+'
+
+_ignore="^($ignore)( |\$)"
+
+input=$(perl -E "$perl" "$hist" | dmenu -l 7 -p "$prompt")
+
+if [[ "$input" ]]; then
+	if ! [[ "$input" =~ $_ignore ]]; then
+		echo "$(date +%s) $input" >> "$hist"
+	fi
+	echo "$input" | ${SHELL:-/bin/sh} &
+fi
