@@ -31,17 +31,30 @@ if [ -d ~/.perl5 ]; then
   export PERL_MM_OPT="INSTALL_BASE=~/.perl5"
 fi
 
-
 # Set editor
 
 set_editor() {
   export EDITOR="$@"
   export GIT_EDITOR="$@"
   export VISUAL="$@"
+  alias v="$@"
 }
 
-set_editor $(which vim)
+# Get editor
 
+get_editor()
+{
+    if (( $+commands[nvim] )); then
+        set_editor $(which nvim)
+    elif
+        (( $+commands[vim] )); then
+        set_editor $(which vim)
+    elif (( $+commands[vi] )); then
+        set_editor $(which vi)
+    fi
+}
+
+get_editor
 
 XDG_DATA_HOME=$HOME/.local/share
 XDG_CONFIG_HOME=$HOME/.config

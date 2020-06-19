@@ -24,3 +24,4 @@ __init__.py
 imgur/.config/imgur-screenshot/credentials.conf
 etc/.config/gtk-3.0/bookmarks
 cmus/
+nvim/.local/share/nvim/undo/

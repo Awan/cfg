@@ -48,7 +48,7 @@ set certificate_file                                                            
 set crypt_autosign                                                                                       = yes
 set crypt_replyencrypt                                                                                   = yes
 set date_format                                                                                          = "%d/%m"
-set editor                                                                                               = vim
+set editor                                                                                               = "$EDITOR +':set textwidth=0'"
 set fast_reply                                                                                           = yes
 set header_cache                                                                                         = ~/.cache/mutt
 set imap_keepalive                                                                                       = 300
@@ -58,7 +58,7 @@ set mail_check_stats                                                            
 set mailcap_path                                                                                         = ~/.config/mutt/mailcap
 set mbox_type                                                                                            = Maildir
 set message_cachedir                                                                                     = ~/.cache/mutt/messages
-set pager                                                                                                = vim
+set pager                                                                                                = $EDITOR
 set pager_context                                                                                        = 3
 set pager_index_lines                                                                                    = 8
 set pgp_autosign                                                                                         = yes
@@ -92,7 +92,7 @@ set ssl_starttls                                                                
 set timeout                                                                                              = 3
 set use_from                                                                                             = yes
 set quit
-set visual                                                                                               = vim
+set visual                                                                                               = $EDITOR
 set wait_key                                                                                             = no
 set status_format                                                                                        = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
 set sort_re
