@@ -211,6 +211,8 @@ alias wars='telnet towel.blinkenlights.nl'
 alias moon='curl -sL http://wttr.in/moon | head -n-4'
 alias mount='mount | column -t'
 alias scrot='import png:- | xclip -selection c -t image/png'
+# alias v='$EDITOR'
+# alias vi='$EDITOR'
 
 # zsh global functions
 alias -g null="2>&1 >/dev/null"

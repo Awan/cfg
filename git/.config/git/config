@@ -1,4 +1,18 @@
-# This is Git's per-user configuration file.
+###############################################################
+#                                                             #
+# In the name of Allah, the most Gracious, the most Merciful. #
+#                                                             #
+#  ▓▓▓▓▓▓▓▓▓▓                                                 #
+# ░▓ Author ▓ Abdullah <https://abdullah.today>               #
+# ░▓▓▓▓▓▓▓▓▓▓                                                 #
+# ░░░░░░░░░░                                                  #
+#                                                             # 
+# ░█▀▀░▀█▀░▀█▀░█▀▀░█▀█░█▀█░█▀▀░▀█▀░█▀▀                        #
+# ░█░█░░█░░░█░░█░░░█░█░█░█░█▀▀░░█░░█░█                        #
+# ░▀▀▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀░░░▀▀▀░▀▀▀                        #
+#                                                             #
+############################################################### 
+
 [user]
 	name = Abdullah
 	email = abdullah@abdullah.today
@@ -46,7 +60,7 @@
 [core]
 	autocrlf = false
 	safecrlf = true
-	editor = vim
+	editor = $EDITOR
         #pager = vimpager
 	symlinks = true
 	excludesfile = ~/.config/git/ignore
@@ -108,9 +122,9 @@
 [sequence]
         editor = interactive-rebase-tool
 [merge]
-        tool = vimdiff
+        tool = $(EDITOR)
         conflictstyle = diff3
-[mergetool "vimdiff"]
+[mergetool "($EDITOR)"]
         prompt = false
 [github]
 	user = Awan
@@ -121,3 +135,5 @@
 [advice]
 	addignoredfile = true
 	waitingForEditor = true
+
+# vim: set ft=gitconfig :
