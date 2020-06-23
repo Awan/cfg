@@ -20,10 +20,10 @@ script_file="$scripts_dir/$1"
 
 
 if [ -f $script_file ]; then
-	vim $script_file
+	 $EDITOR $script_file
 else
 	echo "#!/bin/sh \
     $($HOME/.local/bin/author $(basename $script_file))" > $script_file
 	chmod +x $script_file
-	vim $script_file
+	$EDITOR $script_file
 fi

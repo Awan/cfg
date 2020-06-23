@@ -1,0 +1,17 @@
+# Base URL to use for the pinnwand instance you want to interact with, this is
+# the pastebin that steck will use. Don't forget the trailing slash!
+base = "https://bpa.st/"
+
+# The value for default confirmation. If you set this to false then you won't
+# need to confirm any pastes. Be careful as you might accidentally paste things
+# you might not want to paste.
+confirm = true
+
+# By default steck will try to guess at the filetypes of files using libmagic
+# bindings. If you wish to turn off this behaviour then this is the place to
+# do so.
+magic = true
+
+# Steck will call git check-ignore on the files passed to it, if you don't
+# want to do this you can turn it off.
+ignore = true
