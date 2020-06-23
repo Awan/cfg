@@ -12,7 +12,7 @@
 import requests
 import subprocess as sp
 
-SERVICE = 'https://bpaste.net'
+SERVICE = 'https://bpa.st'
 LEXER = sp.sys.argv[2]
 
 
