@@ -3,17 +3,17 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """                                                                 """
 """                                                                 """
-""" 	In the name of Allah, the most Gracious, the most Merciful. """
-""" 	 							    """
-""" 	 ▓▓▓▓▓▓▓▓▓▓						    """
-""" 	░▓ Author ▓ Abdullah <https://abdullah.today>               """
-""" 	░▓▓▓▓▓▓▓▓▓▓						    """
-""" 	░░░░░░░░░░						    """
-""" 								    """
-""" 	░█▀█░█░█░▀█▀░█▄█					    """
-""" 	░█░█░▀▄▀░░█░░█░█					    """
-""" 	░▀░▀░░▀░░▀▀▀░▀░▀                                            """
-""" 							    	    """
+"""     In the name of Allah, the most Gracious, the most Merciful. """
+"""                                                                 """
+"""      ▓▓▓▓▓▓▓▓▓▓                                                 """
+"""     ░▓ Author ▓ Abdullah <https://abdullah.today>               """
+"""     ░▓▓▓▓▓▓▓▓▓▓                                                 """
+"""     ░░░░░░░░░░                                                  """
+"""                                                                 """
+"""     ░█▀█░█░█░▀█▀░█▄█                                            """
+"""     ░█░█░▀▄▀░░█░░█░█                                            """
+"""     ░▀░▀░░▀░░▀▀▀░▀░▀                                            """
+"""                                                                 """
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -26,14 +26,13 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 " Plugins
 
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } | Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' 
+Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 
 " Initialize vim-plug
 
 call plug#end()
 
 " Show relative numbers
-
 set rnu nu
 " w!! to write file as sudo
 set fo+=w
@@ -46,11 +45,6 @@ function! SaveIfUnsaved()
 endfunction
 " au FocusLost,BufLeave * :call SaveIfUnsaved()
 au FocusGained,BufEnter * :silent! !
-
-" NerdTree
-
-autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && v:this_session == "" | NERDTree | endif
 
 set ruler
 
@@ -75,39 +69,33 @@ else
 endif
 
 if has("termguicolors")
-	if &term == "tmux-256color"
-		let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-		let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-	endif
-	if &term =~ "^(tmux|xterm)-256color"
-		set termguicolors
-	endif
+        if &term == "tmux-256color"
+                let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+                let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+        endif
+        if &term =~ "^(tmux|xterm)-256color"
+                set termguicolors
+        endif
 endif
 
+" Sessions management
+" No help windows
+set sessionoptions-=help
+set sessionoptions-=curdir
 
-silent! set number relativenumber
 silent! set numberwidth=4
 
-if exists('g:loaded_translate_plugin')
-  finish
-endif
-let g:loaded_translate_plugin = 1
-command! -nargs=* Translate call translate#run(<q-args>)
-command! -nargs=* -range TranslateVisual call translate#visual(<q-args>)
-command! -nargs=* -range TranslateReplace call translate#replace(<q-args>)
-command! TranslateOpen call translate#open_trans_buf('')
-command! TranslateClear call translate#clear_trans_buf()
 set hlsearch
 autocmd! bufwritepost $HOME/.Xresources !xrdb -load $HOME/.Xresources && urxvtc 
-autocmd! bufwritepost $HOME/.zshrc	!source $HOME/.zshrc
-autocmd! bufwritepost $HOME/.config/sxhkd/sxhkdrc	!pkill -USR1 -x sxhkd
-autocmd! bufwritepost $HOME/cfg/sxhkd/.config/sxhkd/sxhkdrc	!pkill -USR1 -x sxhkd
+autocmd! bufwritepost $HOME/.zshrc      !source $HOME/.zshrc
+autocmd! bufwritepost $HOME/.config/sxhkd/sxhkdrc       !pkill -USR1 -x sxhkd
+autocmd! bufwritepost $HOME/cfg/sxhkd/.config/sxhkd/sxhkdrc     !pkill -USR1 -x sxhkd
 autocmd! bufwritepost $HOME/cfg/zsh/.zsh/custom-alias !source $HOME/.zsh/custom-alias
 autocmd! bufwritepost $HOME/cfg/polybar/.config/polybar/*.conf !bspc wm -r >/dev/null 2>&1 
 set nocp
 filetype on
 au BufNewFile,BufRead *Pkgfile set filetype=sh
-set textwidth=80
+"set textwidth=80
 if !&scrolloff
   set scrolloff=3
 endif
@@ -191,11 +179,11 @@ set laststatus=2
 set splitbelow splitright
 set tabpagemax=20
 if &t_Co > 16
-	setl cursorline
-	au WinEnter * setl cursorline
-	au WinLeave * setl nocursorline
-	au FocusGained * setl cursorline
-	au FocusLost * setl nocursorline
+        setl cursorline
+        au WinEnter * setl cursorline
+        au WinLeave * setl nocursorline
+        au FocusGained * setl cursorline
+        au FocusLost * setl nocursorline
 endif
 
 let g:instant_markdown_browser = "/usr/bin/google-chrome-stable --new-window"
@@ -240,22 +228,18 @@ let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
 :noremap <leader>u :w<Home>silent <End> !urlview<CR>
-map <leader>n :NERDTreeToggle<CR>
+map <leader>n :CocCommand explorer<CR>
 " comment out current line
 map <leader>c 0i# <ESC>
-nnoremap <silent> <leader>f :NERDTreeFind<CR>
 nnoremap ; :
 nnoremap K <nop>
 nnoremap q :q
 nnoremap qq :q!<CR>
 nnoremap Q q
 inoremap # #
-let NERDTreeShowHidden = 1
-let NERDTreeQuitOnOpen = 0
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
 autocmd BufEnter *.md exe 'noremap <F5> :!google-chrome-stable %:p<CR>'
 au BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
+au BufNewFile,BufRead /dev/shm/pass.* setlocal noswapfile nobackup noundofile
 autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
      \   exe "normal! g`\"" |
@@ -345,10 +329,11 @@ nnoremap <Tab> %
 vnoremap <Tab> %
 
 if has("nvim") || has("terminal")
-	tnoremap <Esc> <C-\><C-n>
+        tnoremap <Esc> <C-\><C-n>
 endif
 
 nnoremap <Leader>l :ls<CR>:b<Space>
+nnoremap <Leader>b :bd<CR>
 nnoremap <Leader>h :nohlsearch<CR>
 nnoremap <Leader>rw :%s/\<<C-r><C-w>\>/
 " sort CSS properties
@@ -362,8 +347,8 @@ nnoremap <Leader>W :%s/\s\+$//<CR>:let @/=""<CR>
 
 " fix application-numpad mode
 if !has("nvim")
-	" (Vim 8.1) with Num Lock off, Num5 is parsed as individual commands
-	map! <Esc>OE <Nop>
+        " (Vim 8.1) with Num Lock off, Num5 is parsed as individual commands
+        map! <Esc>OE <Nop>
 endif
 set nottimeout
 let g:python_host_prog = "/usr/bin/python2.7"
@@ -379,24 +364,37 @@ inoremap <silent><expr> <Tab>
       \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
 
+noremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+
 
 if has("autocmd")
-	au BufNewFile,BufRead COMMIT_EDITMSG,git-rebase-todo
-	\ setl nomodeline
+        au BufNewFile,BufRead COMMIT_EDITMSG,git-rebase-todo
+        \ setl nomodeline
 
-	au BufNewFile,BufRead /etc/motd
-	\ setl et
+        au BufNewFile,BufRead /etc/motd
+        \ setl et
 
-	au BufNewFile,BufRead authorized_keys*,known_hosts,id_*.pub
-	\ setl ft=conf wrap nolinebreak
+        au BufNewFile,BufRead authorized_keys*,known_hosts,id_*.pub
+        \ setl ft=conf wrap nolinebreak
 
-	au! BufNewFile */_posts/2*.html
-	\ 0r %:h/_template.html
+        au! BufNewFile */_posts/2*.html
+        \ 0r %:h/_template.html
 
-	if has("nvim")
-		" Neovim 0.2.1: terminal buffers now have line numbers
-		au! TermOpen * setl nonumber norelativenumber
-	endif
+        if has("nvim")
+                " Neovim 0.2.1: terminal buffers now have line numbers
+                au! TermOpen * setl nonumber norelativenumber
+        endif
 endif
 
 
@@ -421,7 +419,7 @@ map <F3> :! ( urxvt & ) &>/dev/null &<CR><CR>
 nmap <silent> <Leader>m :w<CR>:!clear && python % > /tmp/vim-py.out && cat /tmp/vim-py.out && rm -f /tmp/vim-py.out<CR>
 
 " Run bash code without exiting vim
-nmap <silent> <Leader>b :w<CR>:!clear && bash % > /tmp/vim-bash.out && cat /tmp/vim-bash.out && rm -f /tmp/vim-bash.out<CR>
+" nmap <silent> <Leader>b :w<CR>:!clear && bash % > /tmp/vim-bash.out && cat /tmp/vim-bash.out && rm -f /tmp/vim-bash.out<CR>
 " Json highlight comments
 autocmd FileType json syntax match Comment +\/\/.\+$+
 

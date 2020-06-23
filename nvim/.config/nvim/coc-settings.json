@@ -1,0 +1,11 @@
+{
+"explorer.position": "floating",
+"explorer.toggle": true,
+"explorer.file.showHiddenFiles": true,
+"explorer.icon.enableVimDevicons": true,
+"explorer.buffer.showHiddenBuffers": false,
+"coc.preferences.colorSupport": true,
+"explorer.openAction.relativePath": true,
+"explorer.openAction.strategy": "tab",
+"session.directory": "~/.local/share/nvim/sessions"
+}
