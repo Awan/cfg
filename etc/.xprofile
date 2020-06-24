@@ -86,6 +86,7 @@ xsetroot -cursor_name ul_angle &
 # Add fonts directories
 
 xset +fp "$user_fonts_dir" && xset fp rehash 
+xset +fp /usr/share/fonts/ && xset fp rehash
 
 # Start urxvt in daemon mode
 
