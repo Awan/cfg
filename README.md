@@ -46,7 +46,7 @@ I manage my dotfiles with [gnu stow](http://www.gnu.org/software/stow/), a symli
 
 or clone it [from source](https://savannah.gnu.org/git/?group=stow) and [build it](http://git.savannah.gnu.org/cgit/stow.git/tree/INSTALL.md) yourself.
 
-Once stow is installed, just cd into this repository and create symlinks using stow like this,
+Once stow is installed, just cd into this repository and create symlinks using stow like this:
 
 - `cd ~`
 - ` git clone https://gitlab.com/Abdullah/cfg.git`
@@ -57,6 +57,20 @@ It will symlink vim. If you wanna use this configurations for root user, use `-t
 
 - `stow -t /root vim`
 
+
 **Note:** stow will only create a symlink if a config file doesn't already exist. You must delete/backup if there is a default config for a program. 
+
+
+# Polybar
+
+Polybar is a stylish status bar. You have to compile it from [source](https://github.com/polybar/polybar.git).
+
+In [AUR](https://aur.archlinux.org), you can find a [PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=polybar).
+
+Here are the dependencies you must have to use polybar with customized stylish icons.
+
+- [Font Awesome 4](https://aur.archlinux.org/packages/ttf-font-awesome-4)
+
+
 
 [![Stargazers over time](https://starchart.cc/Awan/cfg.svg)](https://starchart.cc/Awan/cfg)
