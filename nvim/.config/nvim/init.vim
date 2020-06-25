@@ -26,7 +26,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 " Plugins
 
-Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' 
 
 " Initialize vim-plug
 
@@ -63,7 +63,7 @@ else
 endif
 
 if &diff
-"    setup for diff mode
+    highlight! link DiffText MatchParen
 else
 "    setup for non-diff mode
 endif
@@ -227,7 +227,7 @@ let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
-:noremap <leader>u :w<Home>silent <End> !urlview<CR>
+noremap <leader>u :w \| startinsert \| term urlview %<CR>
 map <leader>n :CocCommand explorer<CR>
 " comment out current line
 map <leader>c 0i# <ESC>
