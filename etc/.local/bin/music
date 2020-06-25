@@ -1,0 +1,53 @@
+#!/bin/sh     
+
+# shellcheck disable=2034
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓
+░░░░░░░░░░
+
+░█▄█░█░█░█▀▀░▀█▀░█▀▀
+░█░█░█░█░▀▀█░░█░░█░░
+░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀
+'
+
+mpd_status=$(mpc | awk '/playing|paused/ {print $1}')
+
+if [ "$mpd_status" = "[paused]" ];
+then
+    player="cmus"
+elif [ "$mpd_status" = "[playing]" ];
+then
+    player="mpc"
+else
+    player="cmus"
+fi
+
+
+if [ "$player" = "mpc" ];
+then
+    case "$1" in
+        toggle) mpc toggle;;
+        next) mpc next;;
+        prev) mpc prev;;
+        lilbak) mpc seek -10;;
+        bigbak) mpc seek -120;;
+        lilfor) mpc seek +10;;
+        bigfor) mpc seek +120;;
+    esac
+elif [ "$player" = "cmus" ];
+then
+    case "$1" in
+        toggle)cmus-remote -u;;
+        next) cmus-remote -n;;
+        prev) cmus-remote -r;;
+        lilbak) cmus-remote -k -10;;
+        bigbak) cmus-remote -k -120;;
+        lilfor) cmus-remote -k +10;;
+        bigfor) cmus-remote -k +120;;
+    esac
+fi

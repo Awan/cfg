@@ -177,17 +177,17 @@ super + d
 # Toggle mpd
 
 alt + b
-  mpc toggle
+  music toggle
 
 # Read The Quran
 
 super + z
-  zathura "$HOME"/kit/pdf/Quran/Quran.pdf
+    zathura "$HOME/kit/pdf/Quran/Quran.pdf"
 
 # Reload sxhkd
 
 super + Escape
-  pkill -USR1 -x sxhkd
+    pkill -USR1 -x sxhkd
 
 soft_buttons='
 
@@ -198,7 +198,7 @@ soft_buttons='
 # Soft Launch button
 
 XF86LaunchA
-  mpc toggle
+    mpc toggle
 
 # Soft Brightness keys
 
@@ -225,12 +225,12 @@ XF86Explorer
 # Music little backward/forward
 
 alt + bracket{left,right}
-  mpc seek {-10,+10}
+  music {lilbak,lilfor}
 
 # Music backward/forward
 
 alt + shift + bracket{left,right}
-  mpc seek {-120,+120}
+  music {bigbak,bigfor}
  
 # Lock the screen
 
@@ -258,4 +258,3 @@ ctrl + XF86AudioMute
     $HOME/.local/share/icons/drops/muted.png -u low -t 1500 -a ponymix "volume" \
   "input $(ponymix --input is-muted || echo 'un')muted"
 
-# vim:ft=sh
