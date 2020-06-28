@@ -1,0 +1,12 @@
+[Unit]
+Description=Wake me up for Fajr Prayer
+
+[Service]
+Environment=DISPLAY=:0
+Type=oneshot
+ExecStart=/usr/bin/mpv --no-resume-playback --really-quiet --volume=130 %h/.local/share/misc/Kursi.ogg
+
+[Install]
+WantedBy=timers.target
+
+# vim:ft=systemd

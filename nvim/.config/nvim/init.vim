@@ -327,14 +327,21 @@ nnoremap <Up> gk
 nnoremap <Down> gj
 nnoremap <Tab> %
 vnoremap <Tab> %
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
+
 
 if has("nvim") || has("terminal")
         tnoremap <Esc> <C-\><C-n>
 endif
 
+
 nnoremap <Leader>l :ls<CR>:b<Space>
 nnoremap <Leader>b :bd<CR>
 nnoremap <Leader>h :nohlsearch<CR>
+nnoremap <Leader>t :terminal<CR>
 nnoremap <Leader>rw :%s/\<<C-r><C-w>\>/
 " sort CSS properties
 nnoremap <Leader>S ?{<CR>jV/^\s*\}?$<CR>k:sort<CR>:noh<CR>
