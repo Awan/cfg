@@ -1,0 +1,13 @@
+[Unit]
+Description=Wake me up for Fajr Prayer
+
+[Timer]
+OnCalendar=*-*-* 03:12:00
+Persistent=true
+Unit=fajr.service
+
+[Install]
+WantedBy=timers.target
+
+
+# vim: ft=systemd

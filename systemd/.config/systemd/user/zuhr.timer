@@ -1,0 +1,13 @@
+[Unit]
+Description=Wake me up for Zuhr Prayer
+
+[Timer]
+OnCalendar=*-*-* 12:00:00
+Persistent=true
+Unit=zuhr.service
+
+[Install]
+WantedBy=timers.target
+
+
+# vim: ft=systemd

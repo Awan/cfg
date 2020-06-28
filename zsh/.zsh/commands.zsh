@@ -29,3 +29,20 @@ fi
 if [[ $commands[cmus] ]]; then
   alias cms='cmus-remote'
 fi
+
+if [[ $commands[systemctl] ]]; then
+ alias scdr='systemctl --user daemon-reload'
+ alias scst='systemctl --user status'
+ alias scrs='systemctl --user restart'
+ alias scsr='systemctl --user start'
+ alias scens='systemctl --user enable --now'
+ alias scds='systemctl --user disable'
+ alias scdsn='systemctl --user disable --now'
+ alias sscdr='sudo systemctl daemon-reload'
+ alias sscst='sudo systemctl status'
+ alias sscrs='sudo systemctl restart'
+ alias sscsr='sudo systemctl start'
+ alias sscens='sudo systemctl enable --now'
+ alias sscds='sudo systemctl disable'
+ alias sscdsn='sudo systemctl disable --now'
+fi

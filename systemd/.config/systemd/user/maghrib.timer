@@ -1,0 +1,13 @@
+[Unit]
+Description=Wake me up for Maghrib Prayer
+
+[Timer]
+OnCalendar=*-*-* 19:10:00
+Persistent=true
+Unit=maghrib.service
+
+[Install]
+WantedBy=timers.target
+
+
+# vim: ft=systemd

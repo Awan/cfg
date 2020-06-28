@@ -8,3 +8,5 @@ Unit=isync.service
 
 [Install]
 WantedBy=timers.target
+
+# vim: ft=systemd

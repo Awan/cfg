@@ -6,8 +6,8 @@ BROWSER=$(which google-chrome-stable)
 # Set Terminal
 
 if [ -z "$TERMINAL" ]; then
-  if (( $+commands[terminator] )); then
-    TERMINAL=terminator
+  if (( $+commands[alacritty] )); then
+    TERMINAL=alacritty
   elif (( $+commands[termite] )); then
     TERMINAL=termite
   fi

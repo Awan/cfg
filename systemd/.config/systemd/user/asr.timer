@@ -1,0 +1,13 @@
+[Unit]
+Description=Wake me up for Asr Prayer
+
+[Timer]
+OnCalendar=*-*-* 15:45:00
+Persistent=true
+Unit=asr.service
+
+[Install]
+WantedBy=timers.target
+
+
+# vim: ft=systemd
