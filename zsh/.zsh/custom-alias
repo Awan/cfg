@@ -1,7 +1,7 @@
 alias lsa='ls -lah'
+alias jtl='journalctl -f'
 alias ggc='cd ~/git/playground/'
 alias px='pwd | xclip' 
-alias mutt='mutt && mbsync -VXa >/dev/null'
 alias ..='cd .. 2>/dev/null || cd "$(dirname $PWD)"'
 alias lsc='ls | wc -l'
 alias mouse='sudo modprobe 842'
