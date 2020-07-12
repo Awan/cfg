@@ -86,7 +86,7 @@ set sessionoptions-=curdir
 silent! set numberwidth=4
 
 set hlsearch
-autocmd! bufwritepost $HOME/.Xresources !xrdb -load $HOME/.Xresources && urxvtc 
+autocmd! bufwritepost $HOME/.Xresources !xrdb -load $HOME/.Xresources 
 autocmd! bufwritepost $HOME/.zshrc      !source $HOME/.zshrc
 autocmd! bufwritepost $HOME/.config/sxhkd/sxhkdrc       !pkill -USR1 -x sxhkd
 autocmd! bufwritepost $HOME/cfg/sxhkd/.config/sxhkd/sxhkdrc     !pkill -USR1 -x sxhkd

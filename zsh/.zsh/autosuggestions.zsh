@@ -1,1 +1,1 @@
-zsh-autosuggestions/zsh-autosuggestions.zsh
+/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh

@@ -49,7 +49,7 @@ window:
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
   #     - buttonless: Title bar, transparent background, but no title bar buttons
-  decorations: full
+  #decorations: full
 
   # Startup Mode (changes require restart)
   #
@@ -60,7 +60,7 @@ window:
   #
   # Values for `startup_mode` (macOS only):
   #   - SimpleFullscreen
-  startup_mode: Windowed
+  #startup_mode: Windowed
 
   # Window title
   title: Alacritty
@@ -76,7 +76,7 @@ window:
   #
   # Override the variant of the GTK theme. Commonly supported values are `dark` and `light`.
   # Set this to `None` to use the default theme variant.
-  gtk_theme_variant: None
+  gtk_theme_variant: dark
 
 #scrolling:
   # Maximum number of lines in the scrollback buffer.
@@ -97,7 +97,8 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: FiraMono Nerd Font
+    # family: Source Code Pro
+    family: Monospace 
 
     # The `style` can be specified to pick a specific face.
     style: Regular
@@ -108,7 +109,7 @@ font:
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: FiraMono Nerd Font
+    family: Monospace
 
     # The `style` can be specified to pick a specific face.
     style: Bold
@@ -119,7 +120,9 @@ font:
     #
     # If the italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: FiraMono Nerd Font
+    family: Monospace
+
+
 
     # The `style` can be specified to pick a specific face.
     style: Italic
@@ -130,13 +133,13 @@ font:
     #
     # If the bold italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: FiraMono Nerd Font
+    family: Monospace
 
     # The `style` can be specified to pick a specific face.
     style: Bold Italic
 
   # Point size
-  size: 9.0
+  size: 11.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -174,8 +177,8 @@ draw_bold_text_with_bright_colors: false
 colors:
   # Default colors
   primary:
-    background: '#000000'
-    foreground: '#eaeaea'
+    background: '#0e1019'
+    foreground: '#fffaf4'
 
     # Bright and dim foreground colors
     #
@@ -190,8 +193,8 @@ colors:
   # Colors which should be used to draw the terminal cursor. If these are unset,
   # the cursor color will be the inverse of the cell color.
   cursor:
-    text: '#000000'
-    cursor: '#ffffff'
+    text: '#bde077'
+    cursor: '#ff0018'
 
   # Selection colors
   #
@@ -199,8 +202,8 @@ colors:
   # background is unset, selection color will be the inverse of the cell colors.
   # If only text is unset the cell text color will remain the same.
   selection:
-    text: '#eaeaea'
-    background: '#404040'
+    text: '#000000'
+    background: '#c397d8'
 
   # Normal colors
   normal:
@@ -363,7 +366,7 @@ mouse:
     #   - (Linux/BSD) xdg-open
     #   - (Windows) explorer
     launcher:
-      program: ~/.urlview
+      program: urlview
     #  args: []
 
     # URL modifiers

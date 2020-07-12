@@ -10,48 +10,55 @@
 ! ░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀
 
 
-! Colors
+*.foreground:   #f8f8f2
+*.background:   #272822
+*.cursorColor:  #f8f8f2
 
-!black
-*color0                    : #1C1C1C
-*color8                    : #4d4d4d
-!red
-*color1                    : #D81860
-*color9                    : #F00060
-!green
-*color2                    : #B7CE42
-*color10                   : #BDE077
-!yellow
-*color3                    : #FEA63C
-*color11                   : #FFE863
-!blue
-*color4                    : #66AABB
-*color12                   : #AACCBB
-!magenta
-*color5                    : #B7416E
-*color13                   : #BB4466
-!cyan
-*color6                    : #5E7175
-*color14                   : #A3BABF
-!white
-*color7                    : #DDEEDD
-*color15                   : #6C887A
-*.foreground  : #fffaf4
-*.background  : #0e1019
-*.cursorColor : #ff0018
+! black
+*.color0:       #272822
+*.color8:       #75715e
+
+! red
+*.color1:       #f92672
+*.color9:       #f92672
+
+! green
+*.color2:       #a6e22e
+*.color10:      #a6e22e
+
+! yellow
+*.color3:       #f4bf75
+*.color11:      #f4bf75
+
+! blue
+*.color4:       #66d9ef
+*.color12:      #66d9ef
+
+! magenta
+*.color5:       #ae81ff
+*.color13:      #ae81ff
+
+! cyan
+*.color6:       #a1efe4
+*.color14:      #a1efe4
+
+! white
+*.color7:       #f8f8f2
+*.color15:      #f9f8f5
+
 
 ! URxvt 
 
 ! if remote host is having problems with rxvt-unicode, copy
 ! /usr/share/terminfo/r/rxvt-unicode at hosts ~/.terminfo/r/rxvt-unicode
 
-URxvt*font                 : xft:FantasqueSansMono Nerd Font:Italic:size=21, xft:Fantasque Sans Mono:Italic:size=21, xft:DejaVu Sans Mono for Powerline:size=21, xft:Segoe UI Emoji:size=21, xft:SimHei:size=21
-URxvt*boldfont             : xft:Bitstream Vera Sans Mono:Bold:size=17:antialias=true
-URxvt*bolditalicfont       : xft:Bitstream Vera Sans Mono:Bold:italic:size=17:antialias=true
+URxvt*font                 : xft:FantasqueSansMono Nerd Font:Italic:size=15, xft:PowerlineSymbols, xft:HackNerd Font:Italic:size=15, xft:DejaVu Sans Mono for Powerline:size=15, xft:Segoe UI Emoji:size=15, xft:SimHei:size=15
+URxvt*boldfont             : xft:Bitstream Vera Sans Mono:Bold:size=15:antialias=true
+URxvt*bolditalicfont       : xft:Bitstream Vera Sans Mono:Bold:italic:size=15:antialias=true
 URxvt*utf                  : 1
 URxvt*locale               : 1
 URxvt.imlocale             : en_US.UTF-8
-URxvt*letterSpace          : 0
+URxvt*letterSpace          : 3
 URxvt*termName             : rxvt-unicode-256color
 URxvt*geometry             : 96x30
 URxvt*background           : #1B2B34
@@ -177,13 +184,47 @@ polybar*color17                : #D7AFF9
 
 ! XTERM
 
-XTerm.vt100.faceName         :Fantasque Sans Mono:italic:size=15:antialias=true
-XTerm.vt100.boldFont         :Fantasque Sans Mono:bold:italic:size=15
-xterm.scaleHeight           : 1.01
-xterm*termName              : xterm-256color
-xterm*geometry              : 96x30
-xterm*reverseVideo          : 0
-xterm*loginShell            : 1
+// XTerm.vt100.faceName         :Fantasque Sans Mono:italic:size=17:antialias=true
+// XTerm.vt100.boldFont         :Fantasque Sans Mono:bold:italic:size=17
+XTerm.vt100.faceName         : FantasqueSansMono Nerd Font:size=17
+XTerm.vt100.metaSendsEscape  : 1
+XTerm.vt100.saveLines        : 4096
+XTerm*vt100*geometry         : 80x25
+xterm.pointerShape	     : ul_angle
+xterm.scaleHeight            : 1.01
+xterm*termName               : xterm-256color
+xterm*reverseVideo           : 0
+xterm*loginShell             : 0
+xterm*scrollTtyOutput        : 0
+xterm*charClass		     : 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48
+xterm*eightBitInput          : 0
+xterm*boldMode               : 0
+xterm*colorBDMode            : 1
+xterm*colorBD                : rgb:fc/fc/fc
+XTerm*vt100*translations:    #override \n\
+    Ctrl <KeyPress> Insert: copy-selection(CLIPBOARD) \n\
+        Shift <KeyPress> Insert: insert-selection(CLIPBOARD)
+
+xterm*foreground             : rgb:a8/a8/a8
+xterm*background             : rgb:00/00/00
+xterm*color0                 : rgb:00/00/00
+xterm*color1                 : rgb:a8/00/00
+xterm*color2                 : rgb:00/a8/00
+xterm*color3                 : rgb:a8/54/00
+xterm*color4                 : rgb:00/00/a8
+xterm*color5                 : rgb:a8/00/a8
+xterm*color6                 : rgb:00/a8/a8
+xterm*color7                 : rgb:a8/a8/a8
+xterm*color8                 : rgb:54/54/54
+xterm*color9                 : rgb:fc/54/54
+xterm*color10                : rgb:54/fc/54
+xterm*color11                : rgb:fc/fc/54
+xterm*color12                : rgb:54/54/fc
+xterm*color13                : rgb:fc/54/fc
+xterm*color14                : rgb:54/fc/fc
+xterm*color15                : rgb:fc/fc/fc
+
+
 
 ! Dmenu
 

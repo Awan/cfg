@@ -22,135 +22,139 @@ for_bspwm='
 # Exit/restart bspwm
 
 alt + shift + {q,r}
-  bspc {quit,wm -r}
+    bspc {quit,wm -r}
 
 # alternate between the tiled and monocle layout
 
 super + m
-	bspc desktop -l next
+    bspc desktop -l next
 
 # Swap the current node and the biggest node
 
 super + g
-	bspc node -s biggest.local || bspc node -s next.local
+    bspc node -s biggest.local || bspc node -s next.local
 
 # Close/kill a window
 
 super + {_,shift } + q
-  bspc node -{c,k}
+    bspc node -{c,k}
 
 # Increase/Decrease window gaps
 
 super + {minus,plus}
-  bspc config window_gap {3,13}
+    bspc config window_gap {3,13}
 
 # Push focused window to scratchpad (background)
 
 super + shift + i
-  "$HOME"/.config/bspwm/scratchpad.sh toggle-flag
+    "$HOME"/.config/bspwm/scratchpad.sh toggle-flag
 
 # Hide/Un-Hide a window pushed to scratchpad previously
 
 super + i
-  "$HOME"/.config/bspwm/scratchpad.sh switch-app
+    "$HOME"/.config/bspwm/scratchpad.sh switch-app
 
 # Move focus in given direction, and swap windows in given direction 
 
 super + {_, shift + } {h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
+    bspc node -{f,s} {west,south,north,east}
 
 # Resize nodes and preselections
 
 alt + {_, shift + } {h,j,k,l}
-  "$HOME"/.config/bspwm/{resize,presel} {west,south,north,east}
+    "$HOME"/.config/bspwm/{resize,presel} {west,south,north,east}
 
 # Launch Browser(chrome). 
 
 super + w
-  if pgrep chrome; then bspc desktop -f 2 ; else $BROWSER ; fi
+    if pgrep chrome; then bspc desktop -f 2 ; else $BROWSER ; fi
 
 # Launch Browser(opera).
 
 super + W
-  opera
+    opera
+
+# Launch qutebrowser
+super + alt + w
+    qutebrowser
 
 # Launch arch wiki offline
 
 super + alt + w
-  google-chrome-stable /usr/share/doc/arch-wiki/html/en/ &
+    google-chrome-stable /usr/share/doc/arch-wiki/html/en/ &
 
 # Toggle full screen of focused window
 
 super + f
-  bspc node --state \~fullscreen
+    bspc node --state \~fullscreen
 
 # Set the window state
 
 super + {t,shift + t,s,f}
-	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+    bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 # Set the node flags
 
 super + alt + {m,x,y,z}
-	bspc node -g {marked,locked,sticky,private}
+    bspc node -g {marked,locked,sticky,private}
 
 # Send a focused window to presel
 
 super + y
-  bspc node $(bspc query -N -n) -n newest.\!automatic.local
+    bspc node $(bspc query -N -n) -n newest.\!automatic.local
 
 # Move the floating windows 
 
 super + alt + {h,j,k,l}
-  bspc node -v {-20 0,0 20,0 -20,20 0}
+    bspc node -v {-20 0,0 20,0 -20,20 0}
 
 # Focus the node for the given path jump
 
 super + {p,b}
-	bspc node -f @{parent,brother}
+    bspc node -f @{parent,brother}
 
 # Focus the next monitor
 
 super + period
-  bspc monitor -f next
+    bspc monitor -f next
 
 # Focus the next/previous node in the current desktop
 
 super + {_,shift + }c
-	bspc node -f {next,prev}.local
+    bspc node -f {next,prev}.local
 
 # Focus the next/previous desktop in the current monitor
 
 super + bracket{left,right}
-	bspc desktop -f {prev,next}.local
+    bspc desktop -f {prev,next}.local
 
 # Focus the next node
 
 super + Tab
-	bspc node -f next
+    bspc node -f next
 
 # Focus the next occupied desktop
 
 super + semicolon
-  bspc desktop next.occupied -f
+    bspc desktop next.occupied -f
 
 
 # Focus the older or newer node in the focus history
 
 super + {o,u}
-	bspc wm -h off; \
-	bspc node {older,newer} -f; \
-	bspc wm -h on
+    bspc wm -h off; \
+    bspc node {older,newer} -f; \
+    bspc wm -h on
 
 # Focus or send to the given desktop
 
 super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '^{1-9,10}'
+    bspc {desktop -f,node -d} '^{1-9,10}'
 
 # Rotate desktop
 
 alt + space
-  bspc node @/ --rotate {90,-90}
+    bspc node @/ --rotate {90,-90}
 
 useful_programs_which_can_be_used_in_any_window_manager='
 
@@ -162,22 +166,22 @@ useful_programs_which_can_be_used_in_any_window_manager='
 # Launch Terminal 
 
 super + Return
-  alacritty
+    $TERMINAL
 
 # Termite
 
 alt + Return
-  termite
+    termite
 
 # Launch dmenu
 
 super + d
-  "$HOME"/.local/bin/dmenu_run
+    "$HOME"/.local/bin/dmenu_run
 
 # Toggle mpd
 
 alt + b
-  music toggle
+    music toggle
 
 # Read The Quran
 
@@ -203,7 +207,7 @@ XF86LaunchA
 # Soft Brightness keys
 
 XF86MonBrightness{Down,Up}
-  light {-U 4,-A 4} && notify-send -u low -t 1500 -a light "Brightness"  "$(light -G | cut -d . -f 1)"
+    light {-U 4,-A 4} && notify-send -u low -t 1500 -a light "Brightness"  "$(light -G | cut -d . -f 1)"
 
 # Soft print combo for Screenshot
 
@@ -213,9 +217,9 @@ Print
 # Print and push to imgur, get URL in clipboard
 
 alt + Print
-  import -quality 100 -window root /tmp/foo.png && curl -F'file=@/tmp/foo.png' \
-  http://0x0.st | tee /tmp/foo.txt | xclip && notify-send -t 3500 -i \
-  "$HOME"/.local/share/icons/drops/imgur.png "Screenshot posted: $(cat /tmp/foo.txt)"
+    import -quality 100 -window root /tmp/foo.png && curl -F'file=@/tmp/foo.png' \
+    http://0x0.st | tee /tmp/foo.txt | xclip && notify-send -t 3500 -i \
+    "$HOME"/.local/share/icons/drops/imgur.png "Screenshot posted: $(cat /tmp/foo.txt)"
 
 # Soft Explorer button for File Manager
 
@@ -225,36 +229,37 @@ XF86Explorer
 # Music little backward/forward
 
 alt + bracket{left,right}
-  music {lilbak,lilfor}
+    music {lilbak,lilfor}
 
 # Music backward/forward
 
 alt + shift + bracket{left,right}
-  music {bigbak,bigfor}
+    music {bigbak,bigfor}
  
 # Lock the screen
 
 super + x
-  i3lock -efc 000000 ; sleep 10 && pgrep i3lock && xset dpms force off
+    i3lock -efc 000000 ; sleep 10 && pgrep i3lock && xset dpms force off
 
 # Soft volume up/down buttons
 
 XF86Audio{Lower,Raise}Volume
-  notify-send -i $HOME/.local/share/icons/drops/volume.png \
-     -u low -t 1500 -a ponymix "volume" "$(ponymix --max-volume \
-      300 {decrease,increase} 3)"
+    notify-send -i $HOME/.local/share/icons/drops/volume.png \
+    -u low -t 1500 -a ponymix "volume" "$(ponymix --max-volume \
+    300 {decrease,increase} 3)"
 
 # Soft mute button
 
 XF86AudioMute
-  ponymix --output toggle && notify-send -i \
+    ponymix --output toggle && notify-send -i \
     $HOME/.local/share/icons/drops/muted.png -u low -t 1500 -a ponymix "volume" \
-  "output $(ponymix --output is-muted || echo 'un')muted"
+    "output $(ponymix --output is-muted || echo 'un')muted"
  
 # Mute/Unmute mic
 
 ctrl + XF86AudioMute
-  ponymix --input toggle && notify-send -i \
+    ponymix --input toggle && notify-send -i \
     $HOME/.local/share/icons/drops/muted.png -u low -t 1500 -a ponymix "volume" \
-  "input $(ponymix --input is-muted || echo 'un')muted"
+    "input $(ponymix --input is-muted || echo 'un')muted"
 
+# vim: ft=sh

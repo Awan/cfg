@@ -32,7 +32,7 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 [color]
-	ui = always
+	ui = auto
 [color "branch"]
         current = yellow reverse
         local = yellow
@@ -58,19 +58,20 @@
 [gpg]
 	program = gpg
 [core]
-	autocrlf = false
+	autocrlf = input
 	safecrlf = true
 	editor = $EDITOR
         #pager = vimpager
 	symlinks = true
 	excludesfile = ~/.config/git/ignore
 #         fsmonitor = some program to find last changed file since given time. (try find)
-        whitespace = -trailing-space
+	whitespace = trailing-space,-space-before-tab,indent-with-non-tab,cr-at-eol
 # 	bigFileThreshold = 
 	commentchar = auto
 	preloadindex = true
 	notesRef = refs/notes/commits
 	quotepath = true
+	pager = less
 [alias]
 	last = log -1 HEAD
         bD = branch -D  # delete branch

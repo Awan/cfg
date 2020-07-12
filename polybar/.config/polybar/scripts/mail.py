@@ -46,6 +46,7 @@ def sync(mail_count):
     else:
         print(args.badge, flush=True)
     if not args.mute and mail_count_was < mail_count_now and mail_count_now > 0:
+        subprocess.run(['/usr/bin/mbsync', '-VXa'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(['/usr/bin/mpv', '--no-resume-playback', '--volume=45',
             '--really-quiet', '/home/ak/.local/share/misc/phansi.aac' ])
     return mail_count_now
