@@ -102,8 +102,6 @@ endif
 if !&sidescrolloff
   set sidescrolloff=5
 endif
-set fileencoding=utf-8
-set encoding=utf-8
 "set foldmethod=indent
 "set foldlevel=99
 filetype plugin indent on
@@ -427,7 +425,21 @@ nmap <silent> <Leader>m :w<CR>:!clear && python % > /tmp/vim-py.out && cat /tmp/
 
 " Run bash code without exiting vim
 " nmap <silent> <Leader>b :w<CR>:!clear && bash % > /tmp/vim-bash.out && cat /tmp/vim-bash.out && rm -f /tmp/vim-bash.out<CR>
+"
 " Json highlight comments
 autocmd FileType json syntax match Comment +\/\/.\+$+
+
+" For all text files, set textwidth to 78
+autocmd FileType text setlocal textwidth=78
+
+" UTF-8 support
+if has("multi_byte")
+    if &termencoding == ""
+        let &termencoding = "utf-8"
+    endif
+    set encoding=utf-8
+    setglobal fileencoding=utf-8
+endif
+
 
 " vim: set ft=vim :
