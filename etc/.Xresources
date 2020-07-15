@@ -52,14 +52,14 @@
 ! if remote host is having problems with rxvt-unicode, copy
 ! /usr/share/terminfo/r/rxvt-unicode at hosts ~/.terminfo/r/rxvt-unicode
 
-URxvt*font                 : xft:FantasqueSansMono Nerd Font:Italic:size=15, xft:PowerlineSymbols, xft:HackNerd Font:Italic:size=15, xft:DejaVu Sans Mono for Powerline:size=15, xft:Segoe UI Emoji:size=15, xft:SimHei:size=15
+URxvt*font                 : xft:FantasqueSansMono Nerd Font:Italic:size=15, xft:Waffle, xft:HackNerd Font:Italic:size=15, xft:DejaVu Sans Mono for Powerline:size=15, xft:Segoe UI Emoji:size=15, xft:SimHei:size=15
 URxvt*boldfont             : xft:Bitstream Vera Sans Mono:Bold:size=15:antialias=true
 URxvt*bolditalicfont       : xft:Bitstream Vera Sans Mono:Bold:italic:size=15:antialias=true
 URxvt*utf                  : 1
 URxvt*locale               : 1
 URxvt.imlocale             : en_US.UTF-8
 URxvt*letterSpace          : 3
-URxvt*termName             : rxvt-unicode-256color
+URxvt*termName             : screen-256color
 URxvt*geometry             : 96x30
 URxvt*background           : #1B2B34
 URxvt*reverseVideo         : 0
