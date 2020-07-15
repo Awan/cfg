@@ -80,7 +80,7 @@ super + alt + w
 
 # Launch arch wiki offline
 
-super + alt + w
+super + shift + alt + w
     google-chrome-stable /usr/share/doc/arch-wiki/html/en/ &
 
 # Toggle full screen of focused window
