@@ -870,13 +870,13 @@ dep ()
   site_url="https://abdullah.today"
   source_dir="$HOME/git/mysite/"
   rendered_dir="$HOME/git/mysite/public/"
-  cd "$rendered_dir"
-  msg="$(git log -n1 --format='%B')"
   cd "$source_dir"
-  git add public/
+  msg="$(git log -n1 --format='%B')"
+  cd "$rendered_dir"
+  git add .
   echo "Run git status and commit now!"
-  git commit -am "$msg" && git push; cd public; git push
-  echo "$site_url is live now!" && cd "$source_dir"
+  git commit -am "$msg" && git push; cd "$source_dir"; git push
+  echo "$site_url is live now!" 
 }
 
 hgn ()
@@ -924,4 +924,9 @@ isinstalled () {
 newest () 
 {
     /usr/bin/ls -Art $1* | tail -n 1
+}
+
+bbb ()
+{
+    cat "$1" | base64 | tr -d '\n' | xclip
 }
