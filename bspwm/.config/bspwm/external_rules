@@ -38,6 +38,13 @@ case $class in
    echo "desktop = ^4"
    echo "follow = on"
    ;;
+ Docky)
+   echo "layer = above"
+   echo "manage = on"
+   echo "border = off"
+   echo "focus = off"
+   echo "locked = on"
+   ;;
 esac
 
 case $title in

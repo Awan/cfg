@@ -779,8 +779,8 @@ Q () {
   Surah="$1"
   Ayah="$2"
   Qari="$3"
-  path="$HOME/haq/shuraim/"
-  [ -z "$Qari" ] && path="$HOME/haq/sudais/"
+  path="$HOME/haq/sudais/"
+  [ -z "$Qari" ] && path="$HOME/haq/shuraim/"
  
   if [ -z "$Surah" ] || [ -z "$Ayah" ]; then
     exit 1

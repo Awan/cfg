@@ -1,4 +1,5 @@
 alias lsa='ls -lah'
+alias gimp='((gimp > /dev/null 2>&1)&)'
 alias jtl='journalctl -f'
 alias ggc='cd ~/git/playground/'
 alias px='pwd | xclip' 
