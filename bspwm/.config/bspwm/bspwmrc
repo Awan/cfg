@@ -162,3 +162,10 @@ bspc config active_border_color     $pure_magenta
 # Normal border color
 
 bspc config normal_border_color     $pure_cyan
+
+# Mouse
+
+bspc config pointer_modifier mod4
+bspc config pointer_action3 resize_side
+bspc config pointer_action3 resize_corner
+bspc config pointer_action1 move
