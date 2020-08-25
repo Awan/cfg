@@ -100,6 +100,9 @@ bspc config borderless_monocle      true
 
 bspc config gapless_monocle         true
 
+# Move focus from tiled windows to floating
+
+bspc config directional_focus_tightness low
 
 # Focus the window under the pointer
 
