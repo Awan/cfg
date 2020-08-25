@@ -2,7 +2,7 @@
 Description=Wake me up for Maghrib Prayer
 
 [Timer]
-OnCalendar=*-*-* 19:10:00
+OnCalendar=*-*-* 18:45:00
 Persistent=true
 Unit=maghrib.service
 

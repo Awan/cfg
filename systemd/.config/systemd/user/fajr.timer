@@ -2,7 +2,7 @@
 Description=Wake me up for Fajr Prayer
 
 [Timer]
-OnCalendar=*-*-* 03:12:00
+OnCalendar=*-*-* 03:45:00
 Persistent=true
 Unit=fajr.service
 

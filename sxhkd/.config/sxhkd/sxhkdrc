@@ -58,8 +58,12 @@ super + i
 
 # Move focus in given direction, and swap windows in given direction 
 
-super + {_, shift + } {h,j,k,l}
-    bspc node -{f,s} {west,south,north,east}
+super + {h,j,k,l}
+    win={west,south,north,east}; \
+    bspc node -f $win || bspc monitor -f $win
+
+super + shift + {h,j,k,l}
+    bspc node -s {west,south,north,east}
 
 # Resize nodes and preselections
 
