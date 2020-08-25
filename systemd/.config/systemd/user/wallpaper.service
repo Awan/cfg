@@ -4,8 +4,7 @@ Description=Set random wallpaper
 [Service]
 Type=oneshot
 Environment="walls_dir=%h/pix/wall/collection"
-Environment="walls_cmd=/usr/bin/feh --bg-fill"
-ExecStart=/bin/sh -c 'find -L "$walls_dir" -type f -name "*.jpg" -o -name "*.png" -print0 | shuf -n1 -z | xargs -0 $walls_cmd'
+ExecStart=/bin/sh -c '/usr/bin/feh --randomize --recursive --bg-scale "$walls_dir"'
 
 [Install]
 WantedBy=default.target
