@@ -14,8 +14,8 @@
 
 [options]
 
-font                  =          Monospace 17
-boldfont              =          Monspace Bold 17
+font                  =          Monospace Italic 17
+boldfont              =          Monspace Bold Italic 17
 bolditalicfont        =          Monospace Bold Italic 17
 #font                  =         Ubuntu Mono derivative Powerline Italic 17
 #boldfont              =         Ubuntu Mono derivative Powerline Bold Italic 17

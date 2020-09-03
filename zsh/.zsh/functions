@@ -502,6 +502,13 @@ playandroid ()
   adb shell am start -a android.intent.action.VIEW -d file://$music_file -t $format
 }
 
+imei ()
+# Get IMEI from connected android devices
+{
+  adb shell 'service call iphonesubinfo 1 | grep -o "[0-9a-f]\{8\} " | tail -n+3 | while read a; do echo -n "\u${a:4:4}\u${a:0:4}"; done'
+
+}
+
 apkrun ()
 # starts an apk which you give to it as first argument. You can get the name of
 # the package by using `adb shell pm list packages`
@@ -928,5 +935,15 @@ newest ()
 
 bbb ()
 {
-    cat "$1" | base64 | tr -d '\n' | xclip
+    base64 < "$1" | tr -d '\n' | xclip
+}
+
+man() {
+    LESS_TERMCAP_md=$'\e[01;31m' \
+    LESS_TERMCAP_me=$'\e[0m' \
+    LESS_TERMCAP_se=$'\e[0m' \
+    LESS_TERMCAP_so=$'\e[01;44;33m' \
+    LESS_TERMCAP_ue=$'\e[0m' \
+    LESS_TERMCAP_us=$'\e[01;32m' \
+    command man "$@"
 }

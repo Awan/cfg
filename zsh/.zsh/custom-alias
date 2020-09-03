@@ -1,4 +1,5 @@
 alias lsa='ls -lah'
+alias ip='ip --color=auto'
 alias gimp='((gimp > /dev/null 2>&1)&)'
 alias jtl='journalctl -f'
 alias ggc='cd ~/git/playground/'
@@ -92,7 +93,7 @@ alias cD='cd ~/sys/downloads'
 alias ds="dirs -v | head -n 10"
 alias lla='ls -la'
 alias lc='ls | wc -l'
-alias less=/usr/share/vim/vim82/macros/less.sh
+#alias less=/usr/share/vim/vim82/macros/less.sh
 #alias less=$PAGER
 #alias zless=$PAGER
 alias chmod='chmod --preserve-root'
@@ -113,7 +114,6 @@ alias cdd='cd ~/.cfg'
 alias q='exit'
 alias sm='sudo mount'
 alias fk='$EDITOR ~/.zsh/functions'
-alias f='fish'
 alias plz='sudo $(fc -ln -1)'
 alias rfz='source $HOME/.zshrc'
 alias vz='$EDITOR $HOME/.zshrc'
