@@ -59,7 +59,7 @@ URxvt*utf                  : 1
 URxvt*locale               : 1
 URxvt.imlocale             : en_US.UTF-8
 URxvt*letterSpace          : 3
-URxvt*termName             : screen-256color
+URxvt*termName             : xterm-256color
 URxvt*geometry             : 96x30
 URxvt*background           : #1B2B34
 URxvt*reverseVideo         : 0
