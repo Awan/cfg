@@ -851,6 +851,7 @@ getscr() {
     notify-send -t 3500 -i \
     $HOME/.local/share/icons/drops/imgur.png \
     "Screenshot saved: $new_scrot_file.png" 
+  feh $new_scrot_file
 }
 
 srm () {
@@ -946,4 +947,10 @@ man() {
     LESS_TERMCAP_ue=$'\e[0m' \
     LESS_TERMCAP_us=$'\e[01;32m' \
     command man "$@"
+}
+
+andial() {
+# Make a phone call from connected android devices
+    phone_number="$1"
+    adb shell am start -a android.intent.action.CALL -d tel:$phone_number
 }
