@@ -954,3 +954,45 @@ andial() {
     phone_number="$1"
     adb shell am start -a android.intent.action.CALL -d tel:$phone_number
 }
+
+macgen() {
+# mac generator
+dd if=/dev/random bs=2 count=3 2>/dev/null | perl -e '$hex = <>; $hex = unpack("H*", $hex) ; $hex =~ s/(..)(?!.?$)/$1:/g; print "$hex\n"'
+}
+
+kp() {
+# kill a process like opera, chrome
+local sum
+local items
+local app="$1"
+if [ -z "$app" ];
+then
+    echo "First argument - pattern to grep from processes"
+else
+    sum=0
+    for i in `ps aux | grep -i "$app" | grep -v "grep" | awk '{print $6}'`
+    do
+        sum=$(($i + $sum))
+    done
+    sum=$(echo "scale=2; $sum / 1024.0" | bc)
+    if [[ $sum != "0" ]]
+    then
+        echo "${fg[blue]}${app}${reset_color} is having ${fg[green]}${sum}${reset_color} MBs of RAM."
+    for i in `ps aux | grep -v 'grep' | grep -i "$app" | awk '{print $2}'`
+    do
+        notify-send -i ${app} -t 1500 "process ${i} is gone!"
+        kill -9 $i
+    done
+else
+    echo "There are no processes with pattern '${fg[blue]}${app}${reset_color}' are running."
+    fi
+fi
+}
+
+ryt()
+{
+# record a youtube video from my screen
+    today="$HOME/mus/you/yt-"$(date +%F_%T)
+    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :0.0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 $today.mkv
+
+ }

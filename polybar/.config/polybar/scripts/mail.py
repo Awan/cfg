@@ -52,10 +52,33 @@ def sync(mail_count):
     return mail_count_now
 
 
-while True:
+try:
+    import httplib
+except:
+    import http.client as httplib
+
+
+def is_connected():
+    conn = httplib.HTTPConnection('mail.abdullah.today', timeout=1)
     try:
+        conn.request('HEAD', '/')
+        conn.close()
+        return True
+    except:
+        conn.close()
+        return False
+
+
+while True:
+    if is_connected():
         mail_count_was = sync(mail_count_was)
         time.sleep(10)
-    except (errors.HttpError, ServerNotFoundError, OSError) as error:
-        print(error_badge + str(error), flush=True)
+    else:
+        print('no network!')
         time.sleep(5)
+#        try:
+#            mail_count_was = sync(mail_count_was)
+#            time.sleep(10)
+#        except (errors.HttpError, ServerNotFoundError, OSError) as error:
+#            print(error_badge + str(error), flush=True)
+#            time.sleep(5)
