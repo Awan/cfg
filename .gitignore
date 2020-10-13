@@ -1,5 +1,6 @@
 mutt/.config/mutt/credentials/
 mpv/.config/mpv/watch_later/
+mpv/.config/mpv/watched_file
 elinks/.elinks/bookmarks
 gpg/
 ipython/.ipython/profile_default/startup/
