@@ -7,7 +7,8 @@ re=$'\e[37m'
 
 # get os
 get_os() {
-  os=$(source /etc/os-release && echo "$ID $VERSION_ID")
+#  os=$(source /etc/os-release && echo "$ID $VERSION_ID")
+    os=$(source /etc/os-release && echo "$PRETTY_NAME $BUILD_ID")
 }
 
 # get kernel
@@ -54,7 +55,8 @@ get_wm() {
 
 # get number of packages
 get_packages() {
-  packages=$(dpkg --get-selections | grep -cv deinstall)
+#  packages=$(dpkg --get-selections | grep -cv deinstall)
+    packages=$(pacman -Q | wc -l)
 }
 
 # get cpu info

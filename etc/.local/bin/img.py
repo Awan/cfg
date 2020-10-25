@@ -2,13 +2,13 @@
 # coding: utf-8
 """
 Pictures taken from phones and cameras are usually have large in size.
-This script will get some files from a directory and saves them back 
-but with file size decreased. 
+This script will get some files from a directory and saves them back
+but with file size decreased.
 
- ▓▓▓▓▓▓▓▓▓▓ 
-░▓ Author ▓ Abdullah <https://abdullah.today> 
-░▓▓▓▓▓▓▓▓▓▓ 
-░░░░░░░░░░ 
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓
+░░░░░░░░░░
 
 The MIT License (MIT)
 Copyright (c) 2019 Abdullah <abdullah@abdullah.today>
@@ -36,7 +36,7 @@ from PIL import Image
 sp.os.makedirs('resized_images', exist_ok=True)
 
 for files in sp.os.listdir('.'):
-    if not (files.endswith('.jpg') or files.endswith('.png') or files.endswith('.jpeg')):
+    if not (files.endswith('.jpg') or files.endswith('.png') or files.endswith('.jpeg') or files.endswith('.JPG') or files.endswith('.PNG') or files.endswith('.JPEG')):
         continue
     obj = Image.open(files)
     print("Resizing and Saving %s..." % (files))

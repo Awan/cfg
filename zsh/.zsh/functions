@@ -851,7 +851,7 @@ getscr() {
     notify-send -t 3500 -i \
     $HOME/.local/share/icons/drops/imgur.png \
     "Screenshot saved: $new_scrot_file.png" 
-  feh $new_scrot_file
+  feh $scrot_dir$new_scrot_file.png
 }
 
 srm () {

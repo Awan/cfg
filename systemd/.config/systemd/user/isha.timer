@@ -2,7 +2,7 @@
 Description=Wake me up for Isha Prayer
 
 [Timer]
-OnCalendar=*-*-* 20:15:00
+OnCalendar=*-*-* 18:45:00
 Persistent=true
 Unit=isha.service
 
