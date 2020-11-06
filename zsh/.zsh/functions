@@ -996,3 +996,8 @@ ryt()
     ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :0.0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.today':y=h-line_h-30:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=35:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Ubuntu Bold Nerd Font Complete.ttf:fontcolor=green" $today.mkv
 
  }
+
+drd()
+{
+feh --bg-scale '/home/ak/pix/wall/collection/470768.jpg'
+}

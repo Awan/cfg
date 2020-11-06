@@ -52,13 +52,13 @@
 ! if remote host is having problems with rxvt-unicode, copy
 ! /usr/share/terminfo/r/rxvt-unicode at hosts ~/.terminfo/r/rxvt-unicode
 
-URxvt*font                 : xft:FantasqueSansMono Nerd Font:Italic:size=15, xft:Waffle, xft:HackNerd Font:Italic:size=15, xft:DejaVu Sans Mono for Powerline:size=15, xft:Segoe UI Emoji:size=15, xft:SimHei:size=15, xft:MonospaceNerd Font:15
-URxvt*boldfont             : xft:Bitstream Vera Sans Mono:Bold:size=15:antialias=true
-URxvt*bolditalicfont       : xft:Bitstream Vera Sans Mono:Bold:italic:size=15:antialias=true
+urxvt*font: xft:Source Code Pro:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:size=17,xft:Inconsolata for Powerline:pixelsize=17,xft:Bitstream Vera Sans Mono:pixelsize=17,xft:Waffle, xft:HackNerd Font:Italic:size=15, xft:DejaVu Sans Mono for Powerline:size=15, xft:Segoe UI Emoji:size=15, xft:SimHei:size=15, xft:MonospaceNerd Font:15
+urxvt*boldFont: xft:Source Code Pro:Bold:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:Bold:size=17,xft:Inconsolata for Powerline:pixelsize=17:Bold,xft:Bitstream Vera Sans Mono:pixelsize=17:Bold,xft:Waffle, xft:HackNerd Font:Italic:size=15, xft:DejaVu Sans Mono for Powerline:size=15, xft:Segoe UI Emoji:size=15, xft:SimHei:size=15, xft:MonospaceNerd Font:15
+urxvt*bolditalicFont: xft:Source Code Pro:Bold:italic:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:Bold:italic:size=17,xft:Inconsolata for Powerline:pixelsize=17:Bold:italic,xft:Bitstream Vera Sans Mono:pixelsize=17:Bold:italic,xft:Waffle, xft:HackNerd Font:Italic:size=15, xft:DejaVu Sans Mono for Powerline:size=15, xft:Segoe UI Emoji:size=15, xft:SimHei:size=15, xft:MonospaceNerd Font:15
+URxvt*letterSpace          : 1
 URxvt*utf                  : 1
 URxvt*locale               : 1
 URxvt.imlocale             : en_US.UTF-8
-URxvt*letterSpace          : 3
 URxvt*termName             : xterm-256color
 URxvt*geometry             : 96x30
 URxvt*background           : #1B2B34
