@@ -722,27 +722,27 @@ push() {
   fi
 }
 
-m() {
-
-  mpd_state="$(mpc | awk '/playing|paused/ {print $1}')"
-  files=$@
-  if [ $mpd_state = '[playing]' ]; then
-   state=0
-  else
-    state=1
-  fi
-
-  play() {
-   if [ $state = 0 ]; then
-    mpc pause >/dev/null
-    /usr/bin/mpv $files
-    mpc play >/dev/null
-  else
-    /usr/bin/mpv $files
-  fi
-  }
-play
-}
+#m() {
+#
+#  mpd_state="$(mpc | awk '/playing|paused/ {print $1}')"
+#  files=$@
+#  if [ $mpd_state = '[playing]' ]; then
+#   state=0
+#  else
+#    state=1
+#  fi
+#
+#  play() {
+#   if [ $state = 0 ]; then
+#    mpc pause >/dev/null
+#    /usr/bin/mpv $files
+#    mpc play >/dev/null
+#  else
+#    /usr/bin/mpv $files
+#  fi
+#  }
+#play
+#}
 
 dua() {
   echo "بارك الله فيك وبارك لك ونفع بك حقق الله أمنياتك وأسعدك في الدنيا والآخرة" \
@@ -993,7 +993,7 @@ ryt()
 {
 # record a youtube video from my screen
     today="$HOME/mus/you/yt-"$(date +%F_%T)
-    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :0.0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.today':y=h-line_h-30:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=35:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Ubuntu Bold Nerd Font Complete.ttf:fontcolor=green" $today.mkv
+    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :0.0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.today':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=35:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Ubuntu Bold Nerd Font Complete.ttf:fontcolor=green" $today.mkv
 
  }
 
