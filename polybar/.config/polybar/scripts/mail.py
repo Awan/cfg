@@ -59,7 +59,7 @@ except:
 
 
 def is_connected():
-    conn = httplib.HTTPConnection('mail.abdullah.today', timeout=1)
+    conn = httplib.HTTPConnection('mail.abdullah.today', timeout=3)
     try:
         conn.request('HEAD', '/')
         conn.close()
