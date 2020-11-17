@@ -28,3 +28,4 @@ cmus/
 nvim/.local/share/nvim/undo/
 tig/.local/share/tig/history
 systemd/.config/systemd/user/timers.target.wants/
+cmus/.config/cmus/autosave
