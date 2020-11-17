@@ -21,17 +21,16 @@ instance=$3
 title=$(xdotool getwindowname $wid)
 
 case $class in
-  [Rr]edshift-*|[Tt]int2|[Pp]inentry-*|[Mm]u[Pp][Dd][Ff]|[Mm]Player|[Tt]hunar|[Ff]im|[Gg]picview|[Nn]itrogen|[Aa]randr|[Gg]alculator|[Ff]ont-manager|[Oo]blogout|[Pp]eek|[Ss]kype|[Xx]fce4-appfinder|[Xx]fce4-about|[Gg]pick|[Gg]mrun|[Xx][Cc]alc|[Pp]avucontrol|[Vv]lc|[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|[Pp]qiv|[Aa]tril|[Ee]vince|[Zz]athura|scratchpad|fzfmenu|[Gg]itk|[Gg]it-gui|[Ll]eafpad|scrcpy)
-  echo "state = floating"
-  echo "center = on"
-  ;;
-[Mm]pv|gl)
+  [Rr]edshift-*|[Tt]int2|[Pp]inentry-*|[Mm]u[Pp][Dd][Ff]|[Tt]hunar|[Ff]im|[Gg]picview|[Nn]itrogen|[Aa]randr|[Gg]alculator|[Ff]ont-manager|[Oo]blogout|[Pp]eek|[Ss]kype|[Xx]fce4-appfinder|[Xx]fce4-about|[Gg]pick|[Gg]mrun|[Xx][Cc]alc|[Pp]avucontrol|[Vv]lc|[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|[Pp]qiv|[Aa]tril|[Ee]vince|[Zz]athura|scratchpad|fzfmenu|[Gg]itk|[Gg]it-gui|[Ll]eafpad|scrcpy)
+    echo "state = floating"
+    echo "center = on"
+    ;;
+[Mm]pv|gl|[Mm]Player)
     echo "state = floating"
     echo "sticky = on"
     echo "focus = on"
     echo "manage = on"
-    xdotool windowsize $wid 896 497
-    xdotool windowmove $wid 1020 25
+    echo "rectangle = 745x468+1174+28"
     ;;
   Google-chrome)
     echo "desktop = ^2"
@@ -44,6 +43,10 @@ case $class in
    ;;
  Anydesk)
    echo "desktop = ^4"
+   echo "follow = on"
+   ;;
+ [Tt]elegram*)
+   echo "desktop = ^5"
    echo "follow = on"
    ;;
  Docky)
