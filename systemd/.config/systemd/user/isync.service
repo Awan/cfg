@@ -3,5 +3,5 @@ Description=Mailbox Sync
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/mbsync -VXa
+ExecStart=/usr/bin/mbsync -Xa
 ExecStartPost=/usr/bin/notmuch new

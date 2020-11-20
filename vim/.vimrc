@@ -388,4 +388,8 @@ nmap <silent> <Leader>m :w<CR>:!clear && python % > /tmp/vim-py.out && cat /tmp/
 " Run bash code without exiting vim
 nmap <silent> <Leader>b :w<CR>:!clear && bash % > /tmp/vim-bash.out && cat /tmp/vim-bash.out && rm -f /tmp/vim-bash.out<CR>
 
+" Highlight comments italic
+highlight Comment cterm = italic
+
+
 " vim: set ft=vim :

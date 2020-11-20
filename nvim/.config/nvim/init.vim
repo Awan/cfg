@@ -441,5 +441,8 @@ if has("multi_byte")
     setglobal fileencoding=utf-8
 endif
 
+" Highlight comments italic
+highlight Comment cterm = italic
+
 
 " vim: set ft=vim :

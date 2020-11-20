@@ -52,34 +52,34 @@ urgent_on_bell        =         true
 
 [colors]
 
-foreground            =         #C0C5CE
-foreground_bold       =         #C0C5CE
-cursor                =         #C0C5CE
-background            =         #1B2B34
-color0                =         #1B2B34
-color1                =         #EC5f67
-color2                =         #99C794
-color3                =         #FAC863
-color4                =         #6699CC
-color5                =         #C594C5
-color6                =         #5FB3B3
-color7                =         #C0C5CE
-color8                =         #65737E
-color9                =         #EC5f67
-color10               =         #99C794
-color11               =         #FAC863
-color12               =         #6699CC
-color13               =         #C594C5
-color14               =         #5FB3B3
-color15               =         #D8DEE9
-color16               =         #F99157
-color17               =         #AB7967
-color18               =         #343D46
-color19               =         #4F5B66
-color20               =         #A7ADBA
-color21               =         #CDD3DE
-highlight             =         #DDEEDD
 
+background="#102029"
+foreground="#EDEEF0"
+cursorColor="#EDEEF0"
+
+color0="#102029"
+color8="#0E374B"
+
+color1="#C9647E"
+color9="#D87E8F"
+
+color2="#7CABA3"
+color10="#ADD4CF"
+
+color3="#C7C8B7"
+color11="#EBDECD"
+
+color4="#71AAC5"
+color12="#A7CBE3"
+
+color5="#F4ADB1"
+color13="#F8CBCE"
+
+color6="#7CBBC0"
+color14="#A5D3D9"
+
+color7="#D9DBE3"
+color15="#EDEEF0"
 [hints]
 
 font                  =         Fantasque Sans Mono 15

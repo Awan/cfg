@@ -46,7 +46,7 @@ def sync(mail_count):
     else:
         print(args.badge, flush=True)
     if not args.mute and mail_count_was < mail_count_now and mail_count_now > 0:
-        subprocess.run(['/usr/bin/mbsync', '-VXa'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(['/usr/bin/mbsync', '-Xa'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(['/usr/bin/mpv', '--no-resume-playback', '--volume=45',
             '--really-quiet', '/home/ak/.local/share/misc/phansi.aac' ])
     return mail_count_now
@@ -70,15 +70,16 @@ def is_connected():
 
 
 while True:
-    if is_connected():
-        mail_count_was = sync(mail_count_was)
-        time.sleep(10)
-    else:
-        print('no network!')
-        time.sleep(5)
-#        try:
-#            mail_count_was = sync(mail_count_was)
-#            time.sleep(10)
-#        except (errors.HttpError, ServerNotFoundError, OSError) as error:
-#            print(error_badge + str(error), flush=True)
-#            time.sleep(5)
+#        time.sleep(5)
+#    if is_connected():
+#        mail_count_was = sync(mail_count_was)
+#        time.sleep(10)
+#    else:
+#        print('no network!')
+#        time.sleep(5)
+        try:
+            mail_count_was = sync(mail_count_was)
+            time.sleep(10)
+        except (errors.HttpError, ServerNotFoundError, OSError) as error:
+            print(error_badge + str(error), flush=True)
+            time.sleep(5)
