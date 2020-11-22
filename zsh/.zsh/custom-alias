@@ -1,4 +1,5 @@
 alias lsa='ls -lah'
+alias r='ranger $@'
 alias m='mpv'
 alias ip='ip --color=auto'
 alias gimp='((gimp > /dev/null 2>&1)&)'

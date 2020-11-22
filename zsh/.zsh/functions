@@ -629,15 +629,6 @@ listcon ()
   netstat -atn | grep "$port" | sort -k5
 }
 
-r ()
-{
-  if [[ "$TERM" == rxvt-unicode-256color ]]; then
-    ranger
-  else
-    urxvtc -e ranger 2>/dev/null || urxvt -e ranger &
-  fi
-}
-
 replace_all() { ag "$1" -l | xargs sed -i -e "s/$1/$2/g" }
 
 aw ()
@@ -992,7 +983,7 @@ fi
 ryt()
 {
 # record a youtube video from my screen
-    today="$HOME/mus/you/yt-"$(date +%F_%T)
+    today="$HOME/you/yt-"$(date +%F_%T)
     ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :0.0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.today':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=35:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Ubuntu Bold Nerd Font Complete.ttf:fontcolor=green" $today.mkv
 
  }
@@ -1000,7 +991,7 @@ ryt()
 rtty()
 {
     # record my tty for youtube
-    today="$HOME/mus/you/yt-"$(date +%F_%T)
+    today="$HOME/you/yt-"$(date +%F_%T)
     ffmpeg -f pulse -ac 2 -i default -f fbdev -r 30 -i /dev/fb0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.today':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=35:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Ubuntu Bold Nerd Font Complete.ttf:fontcolor=green" $today.mkv
 }
 

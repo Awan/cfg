@@ -20,6 +20,14 @@ class=$2
 instance=$3
 title=$(xdotool getwindowname $wid)
 
+# if there are more than 4 tiled windows on desktop, open new ones as floating
+
+# tiled_windows=$(bspc query -N -d focused -n '.!hidden.!floating.!fullscreen.window' | wc -l)
+
+# if [ $tiled_windows -gt 3 ]; then
+#     echo "state = floating"
+# fi
+
 case $class in
   [Rr]edshift-*|[Tt]int2|[Pp]inentry-*|[Mm]u[Pp][Dd][Ff]|[Tt]hunar|[Ff]im|[Gg]picview|[Nn]itrogen|[Aa]randr|[Gg]alculator|[Ff]ont-manager|[Oo]blogout|[Pp]eek|[Ss]kype|[Xx]fce4-appfinder|[Xx]fce4-about|[Gg]pick|[Gg]mrun|[Xx][Cc]alc|[Pp]avucontrol|[Vv]lc|[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|[Pp]qiv|[Aa]tril|[Ee]vince|[Zz]athura|scratchpad|fzfmenu|[Gg]itk|[Gg]it-gui|[Ll]eafpad|scrcpy|[Mm]Player)
     echo "state = floating"
@@ -48,6 +56,7 @@ case $class in
  [Tt]elegram*)
    echo "desktop = ^5"
    echo "follow = on"
+   echo "focus = on"
    ;;
  Docky)
    echo "layer = above"
