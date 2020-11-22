@@ -134,7 +134,7 @@ fi
 # Start a scratchpad
 
 #sleep 1
-urxvtc -T 'scratchpad' -geometry 80x25 & 
+urxvtc -T 'scratchpad' -geometry 75x20 & 
 #termite -t scratchpad &
 #xfce4-terminal -T scratchpad --font='Fantasque Sans Mono Italic 16' &
 
