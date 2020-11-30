@@ -57,6 +57,7 @@ case $class in
    echo "desktop = ^5"
    echo "follow = on"
    echo "focus = on"
+   echo "state = floating"
    ;;
  Docky)
    echo "layer = above"
