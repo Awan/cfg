@@ -6,17 +6,8 @@ BROWSER=$(which google-chrome-stable)
 # Set Terminal
 
 if [ -z "$TERMINAL" ]; then
-    if (( $+commands[urxvt] )); then
-        if pgrep urxvtd >/dev/null ; then
-            TERMINAL=urxvtc
-        else
-            TERMINAL=urxvt
-        fi
-    elif (( $+commands[xterm] )); then
-        TERMINAL=xterm
-        alias xterm='xterm -uc'
-    elif (( $+commands[termite] )); then
-        TERMINAL=termite
+    if (( $+commands[alacritty] )); then
+        TERMINAL=alacritty
     fi
 fi
 

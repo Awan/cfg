@@ -66,8 +66,9 @@ multibar &
 # Border width and gaps between windows
 
 border_width=5
+window_gaps=11
 bspc config border_width            $border_width
-bspc config window_gap              $border_width
+bspc config window_gap              $window_gaps
 
 # Padding
 

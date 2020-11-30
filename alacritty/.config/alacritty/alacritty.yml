@@ -97,8 +97,13 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    # family: Source Code Pro
-    family: Monospace 
+    #     family: Source Code Pro
+    #     family: '3270Medium Nerd Font Mono'
+    # family: Monospace 
+    #     family: TamzenForPowerline
+    # family: ProFontWindows Nerd Font Mono
+    #     family: '3270SemiNarrow Nerd Font Mono'
+    family: GohuFont Nerd Font
 
     # The `style` can be specified to pick a specific face.
     style: Regular
@@ -109,7 +114,13 @@ font:
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: Monospace
+    # family: Monospace
+    #     family: Source Code Pro
+    #     family: '3270Medium Nerd Font Mono'
+    #     family: TamzenForPowerline
+    #     family: ProFontWindows Nerd Font Mono
+    #     family: '3270SemiNarrow Nerd Font Mono'
+    family: GohuFont Nerd Font
 
     # The `style` can be specified to pick a specific face.
     style: Bold
@@ -120,7 +131,13 @@ font:
     #
     # If the italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: Monospace
+    # family: Monospace
+    #     family: Source Code Pro
+    #     family: '3270Medium Nerd Font Mono'
+    #     family: TamzenForPowerline
+    #     family: ProFontWindows Nerd Font Mono
+    #     family: '3270SemiNarrow Nerd Font Mono'
+    family: GohuFont Nerd Font
 
 
 
@@ -133,13 +150,19 @@ font:
     #
     # If the bold italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: Monospace
+    # family: Monospace
+    #     family: Source Code Pro
+    #     family: '3270Medium Nerd Font Mono'
+    #     family: TamzenForPowerline
+    #     family: ProFontWindows Nerd Font Mono
+    #     family: '3270SemiNarrow Nerd Font Mono'
+    family: GohuFont Nerd Font
 
     # The `style` can be specified to pick a specific face.
     style: Bold Italic
 
   # Point size
-  size: 11.0
+  size: 11
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -171,7 +194,7 @@ font:
   #use_thin_strokes: true
 
 # If `true`, bold text is drawn using the bright color variants.
-draw_bold_text_with_bright_colors: false
+draw_bold_text_with_bright_colors: true
 
 # Colors (Tomorrow Night Bright)
 colors:
@@ -194,6 +217,7 @@ colors:
   # the cursor color will be the inverse of the cell color.
   cursor:
     text: '#bde077'
+      #     text: '#b9ca4a'
     cursor: '#ff0018'
 
   # Selection colors
@@ -281,7 +305,7 @@ bell:
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 1.0
+background_opacity: 0.8
 
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
@@ -303,7 +327,7 @@ cursor:
 
   # If this is `true`, the cursor will be rendered as a hollow box when the
   # window is not focused.
-  unfocused_hollow: true
+  unfocused_hollow: false
 
 # Live config reload (changes require restart)
 live_config_reload: true

@@ -178,6 +178,7 @@ useful_programs_which_can_be_used_in_any_window_manager='
 '
 
 # Launch Terminal 
+# make sure to set $TERMINAL env
 
 super + Return
     $TERMINAL
