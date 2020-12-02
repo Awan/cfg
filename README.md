@@ -1,3 +1,4 @@
+![bspwm](https://user-images.githubusercontent.com/42554663/100934595-ca9d7e00-3510-11eb-8943-4061ea1040ea.png)
 ![dwm](https://user-images.githubusercontent.com/42554663/62346164-8827f380-b50e-11e9-8538-a25c46c51af9.png)
 ![lewany](https://user-images.githubusercontent.com/42554663/68199427-d8b45e80-ffdf-11e9-80d5-b8666ceff734.png)
 ![Yaseen](https://user-images.githubusercontent.com/42554663/67501758-3ff81780-f69e-11e9-8f68-dda0695eda3d.png)
@@ -43,6 +44,12 @@ I manage my dotfiles with [gnu stow](http://www.gnu.org/software/stow/), a symli
 - `sudo yum install stow`
 - `sudo pacman install stow`
 - `brew install stow`
+
+or 
+
+```bash
+$ curl https://git.io/JILE5 | sh
+```
 
 or clone it [from source](https://savannah.gnu.org/git/?group=stow) and [build it](http://git.savannah.gnu.org/cgit/stow.git/tree/INSTALL.md) yourself.
 
