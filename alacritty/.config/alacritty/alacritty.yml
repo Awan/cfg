@@ -97,13 +97,15 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    #     family: Source Code Pro
+    family: Source Code Pro
     #     family: '3270Medium Nerd Font Mono'
     # family: Monospace 
     #     family: TamzenForPowerline
     # family: ProFontWindows Nerd Font Mono
     #     family: '3270SemiNarrow Nerd Font Mono'
-    family: GohuFont Nerd Font
+    #     family: GohuFont Nerd Font
+    #     family: Dina Font
+    #     family: Anonymous Pro
 
     # The `style` can be specified to pick a specific face.
     style: Regular
@@ -115,12 +117,14 @@ font:
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
     # family: Monospace
-    #     family: Source Code Pro
+    family: Source Code Pro
     #     family: '3270Medium Nerd Font Mono'
     #     family: TamzenForPowerline
     #     family: ProFontWindows Nerd Font Mono
     #     family: '3270SemiNarrow Nerd Font Mono'
-    family: GohuFont Nerd Font
+    #     family: GohuFont Nerd Font
+    #     family: Dina Font
+    #     family: Anonymous Pro
 
     # The `style` can be specified to pick a specific face.
     style: Bold
@@ -132,12 +136,14 @@ font:
     # If the italic family is not specified, it will fall back to the
     # value specified for the normal font.
     # family: Monospace
-    #     family: Source Code Pro
+    family: Source Code Pro
     #     family: '3270Medium Nerd Font Mono'
     #     family: TamzenForPowerline
     #     family: ProFontWindows Nerd Font Mono
     #     family: '3270SemiNarrow Nerd Font Mono'
-    family: GohuFont Nerd Font
+    #     family: GohuFont Nerd Font
+    #     family: Dina Font
+    #     family: Anonymous Pro
 
 
 
@@ -151,12 +157,14 @@ font:
     # If the bold italic family is not specified, it will fall back to the
     # value specified for the normal font.
     # family: Monospace
-    #     family: Source Code Pro
+    family: Source Code Pro
     #     family: '3270Medium Nerd Font Mono'
     #     family: TamzenForPowerline
     #     family: ProFontWindows Nerd Font Mono
     #     family: '3270SemiNarrow Nerd Font Mono'
-    family: GohuFont Nerd Font
+    #     family: GohuFont Nerd Font
+    #     family: Dina Font
+    #     family: Anonymous Pro
 
     # The `style` can be specified to pick a specific face.
     style: Bold Italic
