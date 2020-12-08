@@ -17,9 +17,9 @@
 #font                  =          FiraMono NerdFont 17
 #boldfont              =          FiraMono NerdFont Bold 17
 #bolditalicfont        =          FiraMono Nerd Font Bold Italic 17
-font                  =         Source Code Pro  22
-boldfont              =         Source Code Pro  Bold 22
-bolditalicfont        =         Source Code Pro  Bold Italic 22
+font                  =         Source Code Pro 17
+boldfont              =         Source Code Pro  Bold 17
+bolditalicfont        =         Source Code Pro  Bold Italic 17
 #font                  =         Ubuntu Mono derivative Powerline Italic 17
 #boldfont              =         Ubuntu Mono derivative Powerline Bold Italic 17
 word_chars            =         " " '"'&()*,;<=>?@[]^{|}\"()*,<>[]{}|''"\
