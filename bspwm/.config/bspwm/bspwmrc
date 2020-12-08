@@ -73,8 +73,12 @@ bspc config window_gap              $window_gaps
 # Padding
 
 padding="0"
-for side in top right bottom left ; do
+for side in right bottom left ; do
   bspc config ${side}_padding       $padding
+done
+
+for side in top right bottom left; do
+    bspc config ${side}_monocle_padding 0
 done
 
 # Ignore EWMH focus requests. If true, opening new program in already
