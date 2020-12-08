@@ -1,10 +1,17 @@
 #!/bin/sh
-# In the name of Allah, the most Gracious, the most Merciful.
-#
-#  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah <https://abdullah.today> 
-# ░▓▓▓▓▓▓▓▓▓▓ 
-# ░░░░░░░░░░ 
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░░░░░░░░░░
+
+░█░█░█▀█░█▀▄░█▀█░█▀▀░▀█▀░█░░░█▀▀
+░▄▀▄░█▀▀░█▀▄░█░█░█▀▀░░█░░█░░░█▀▀
+░▀░▀░▀░░░▀░▀░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀
+'
 
 
 # Xresources file
@@ -106,6 +113,11 @@ xss-lock -- i3lock -c 000000 &
 
 run dunst -c "$HOME"/.config/dunst/dunstrc &
 
+# Battery notification
+
+$HOME/.local/bin/battery_low &
+
+
 # Mute the mic
 
 pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
@@ -133,8 +145,9 @@ fi
 
 # Start a scratchpad
 
+alacritty --dimensions 55 15 --position 550 175 -t 'scratchpad' &
 #sleep 1
-urxvtc -T 'scratchpad' -geometry 75x20 & 
+# urxvtc -T 'scratchpad' -geometry 75x20 & 
 #termite -t scratchpad &
 #xfce4-terminal -T scratchpad --font='Fantasque Sans Mono Italic 16' &
 
