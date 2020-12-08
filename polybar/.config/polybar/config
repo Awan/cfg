@@ -19,7 +19,7 @@ include-file = ~/.config/polybar/modules.conf
 
 [bar/eDP-1]
 inherit = bar/ultimate
-modules-right = backlight pulseaudio memory cpu temperature battery wlan bspwm
+modules-right = arch_backlight pulseaudio memory cpu temperature battery wlan bspwm
 modules-center = 
 modules-left = date hijri mpd inbox
 
