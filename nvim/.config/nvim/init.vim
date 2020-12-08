@@ -30,7 +30,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 " Plugins
 
-Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' 
+Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal'
 
 " Initialize vim-plug
 
@@ -81,6 +81,7 @@ if has("termguicolors")
                 set termguicolors
         endif
 endif
+
 
 " Sessions management
 " No help windows
@@ -360,8 +361,8 @@ if !has("nvim")
         map! <Esc>OE <Nop>
 endif
 set nottimeout
-let g:python_host_prog = "/usr/bin/python2.7"
-let g:python3_host_prog = "/usr/bin/python3.8"
+"let g:python_host_prog = "/usr/bin/python2.7"
+let g:python3_host_prog = "/usr/bin/python3.9"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
