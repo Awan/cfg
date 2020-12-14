@@ -1,2 +1,5 @@
 WebBrowser=google-chrome
+MailReader=mutt
+FileManager=custom-FileManager
+TerminalEmulator=custom-TerminalEmulator
 
