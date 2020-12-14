@@ -1,0 +1,48 @@
+#!/bin/sh     
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░░░░░░░░░░
+
+░█░░░█▀█░█▀▀░█░█░█▄█░█▀▀
+░█░░░█░█░█░░░█▀▄░█░█░█▀▀
+░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀░▀░▀▀▀
+'
+
+# A simple script which gets current screen as image, suspends the dunst (notification system) and locks the screen.
+
+# Get the screenshot
+
+import -window root /tmp/i3lock-gen.png
+
+# Apply pixelation
+
+convert /tmp/i3lock-gen.png -scale 10% -scale 1000% /tmp/i3lock-converted.png
+
+# Apply padlock in the center
+
+convert /tmp/i3lock-converted.png ~/.local/share/misc/lock.png -gravity center -composite /tmp/i3lock-final.png
+
+# Suspend the notification display
+
+pkill -u "$USER" -USR1 dunst
+
+# Lock the screen
+
+i3lock -ef -i /tmp/i3lock-final.png
+
+# Wait for 5 seconds and then force the display off.
+
+sleep 5 && pgrep i3lock && xset dpms force off
+
+# Remove the temporary files
+
+rm /tmp/i3lock-*
+
+# Resume notification display
+
+pkill -u "$USER" -USR2 dunst
