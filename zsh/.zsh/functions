@@ -1005,6 +1005,14 @@ rarea()
     ffmpeg -v 16 -r 30 -f x11grab -s "${w}x${h}" -i ":0.0+$x,$y" -preset ultrafast -c:v h264 -pix_fmt yuv420p -crf 20 $today.mkv
 }
 
+rec4mobi()
+{
+    # Record videos for mobile devices
+    today="$HOME/you/mob-"$(date +%F_%T)
+    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :0.0 -acodec aac -b:a 320k -ar 48000 -vcodec libx264 -preset ultrafast -b:v 15M -threads 4 -pix_fmt yuv420p -cpu-used 0 $today.mp4
+
+}
+
 drd()
 {
 feh --bg-scale '/home/ak/pix/wall/collection/470768.jpg'
