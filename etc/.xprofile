@@ -28,12 +28,12 @@ notify_time=10
 
 # For some java apps
 
-#wmname LG3D &
+#wmname LG3D
 
 run() {
   if ! pgrep "$1" ;
   then
-    "$@"&
+    "$@" &
   fi
 }
 
@@ -66,7 +66,7 @@ tabular() {
 
 # Start sxhkd 
 
-sxhkd &
+run sxhkd 
 
 # Load Xresources 
 
@@ -78,44 +78,44 @@ sxhkd &
 
 # Run compositor
 
-run picom -b --config "$HOME"/.config/picom/picom.conf &
+run picom -b --config "$HOME"/.config/picom/picom.conf 
 
 # Restore the last wallpaper
 
-"$HOME"/.fehbg &
+"$HOME"/.fehbg 
 
 # Set cursor shape
 
-xsetroot -cursor_name ul_angle &
+xsetroot -cursor_name ul_angle 
 
-#xcompmgr -c -f D 5 &
+#xcompmgr -c -f D 5 
 
 # Add fonts directories
 
-xset +fp "$user_fonts_dir" && xset fp rehash 
-xset +fp /usr/share/fonts/ && xset fp rehash
+xset +fp "$user_fonts_dir" && xset fp rehash &
+xset +fp /usr/share/fonts/ && xset fp rehash &
 
 # Start urxvt in daemon mode
 
-run urxvtd -q -o -f &
+# run urxvtd -q -o -f 
 
 # No mouse when idle
 
-run unclutter --ignore-scrolling --fork --timeout 1 &
+run unclutter --ignore-scrolling --fork --timeout 1 
 
 # DPMS and lock screen
 
 xset dpms $inactivity_timeout &
-#xss-lock -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' &
-xss-lock -- i3lock -c 000000 &
+#xss-lock -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' 
+run xss-lock -- ~/.local/bin/lockme  
 
 # Start Notification daemon
 
-run dunst -c "$HOME"/.config/dunst/dunstrc &
+run dunst -c "$HOME"/.config/dunst/dunstrc 
 
 # Battery notification
 
-$HOME/.local/bin/battery_low &
+run $HOME/.local/bin/battery_low 
 
 
 # Mute the mic
@@ -124,15 +124,15 @@ pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 
 # Redshift for less eye strain
 
-redshift -c ~/.config/redshift/redshift.conf &
+run redshift -c ~/.config/redshift/redshift.conf
 
 # Start tmux if not already running
 
-[ -z "$TMUX" ] && tmux new-session -s "$USER" -d 
+# [ -z "$TMUX" ] && tmux new-session -s "$USER" -d 
 
 # Set brightness to 30 at boot
 
-light -S 30 &
+run light -S 30
 
 # Configure multihead.
 
@@ -147,8 +147,8 @@ fi
 
 alacritty --dimensions 55 15 --position 550 175 -t 'scratchpad' &
 #sleep 1
-# urxvtc -T 'scratchpad' -geometry 75x20 & 
-#termite -t scratchpad &
-#xfce4-terminal -T scratchpad --font='Fantasque Sans Mono Italic 16' &
+# urxvtc -T 'scratchpad' -geometry 75x20 
+#termite -t scratchpad
+#xfce4-terminal -T scratchpad --font='Fantasque Sans Mono Italic 16'
 
 # vim:ft=sh
