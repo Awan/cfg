@@ -43,18 +43,11 @@ super + {_,shift } + q
 
 super + {minus,plus}
     bspc config window_gap {3,13}
-# super + {minus,plus}
-#     bspc config -d focused window_gap $((`bspc config -d focused window_gap` {-,+} 3))
 
-# Push focused window to scratchpad (background)
+# Push focused window to scratchpad (background), Un-Hide it
 
-super + shift + i
-    "$HOME"/.config/bspwm/scratchpad.sh toggle-flag
-
-# Hide/Un-Hide a window pushed to scratchpad previously
-
-super + i
-    "$HOME"/.config/bspwm/scratchpad.sh switch-app
+super + {_,shift } + i
+    "$HOME"/.config/bspwm/scratchpad.sh {switch-app,toggle-flag}
 
 # Move focus in given direction, and swap windows in given direction 
 
@@ -165,6 +158,11 @@ alt + n
         bspc desktop --focus next; \
         bspc node --focus ${id}
 
+# Toggle cmus
+
+alt + v
+    cmus-remote -u || notify-send 'cmus is not running'
+
 # Rotate desktop
 
 alt + space
@@ -180,13 +178,13 @@ useful_programs_which_can_be_used_in_any_window_manager='
 # Launch Terminal 
 # make sure to set $TERMINAL env
 
-super + Return
-    $TERMINAL
+super {_,shift} + Return
+    {$TERMINAL,termite}
 
 # Termite
 
-alt + Return
-    termite
+alt {_, shift } + Return
+    {kitty,xterm}
 
 # Launch dmenu
 
@@ -254,7 +252,7 @@ alt + shift + bracket{left,right}
 # Lock the screen
 
 super + x
-    i3lock -efc 000000 ; sleep 10 && pgrep i3lock && xset dpms force off
+    ~/.local/bin/lockme 
 
 # Soft volume up/down buttons
 
