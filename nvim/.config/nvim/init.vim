@@ -30,7 +30,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 " Plugins
 
-Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal'
+Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs'
 
 " Initialize vim-plug
 
