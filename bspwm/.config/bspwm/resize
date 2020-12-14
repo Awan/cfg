@@ -16,7 +16,7 @@ In the name of Allah, the most Gracious, the most Merciful.
 
 
 if bspc query -N -n focused.floating > /dev/null; then
-    step=20
+    step=50
 else
     step=100
 fi
