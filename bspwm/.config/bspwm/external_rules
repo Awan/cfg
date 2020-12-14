@@ -33,7 +33,7 @@ case $class in
     echo "state = floating"
     echo "center = on"
     ;;
-[Mm]pv)
+[Mm]pv|gl)
     echo "state = floating"
     echo "sticky = on"
     echo "focus = on"
