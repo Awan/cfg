@@ -992,7 +992,18 @@ rtty()
 {
     # record my tty for youtube
     today="$HOME/you/yt-"$(date +%F_%T)
-    ffmpeg -f pulse -ac 2 -i default -f fbdev -r 30 -i /dev/fb0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.today':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=75:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv }
+    ffmpeg -f pulse -ac 2 -i default -f fbdev -r 30 -i /dev/fb0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.today':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=75:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv 
+}
+
+rarea()
+{
+    # Record an area of the screen. Hacksaw is the dependency.
+    today="$HOME/you/yt-"$(date +%F_%T)
+    hacksaw -n | IFS=+x read -r w h x y
+    w=$((w + w % 2))
+    h=$((h + h % 2))
+    ffmpeg -v 16 -r 30 -f x11grab -s "${w}x${h}" -i ":0.0+$x,$y" -preset ultrafast -c:v h264 -pix_fmt yuv420p -crf 20 $today.mkv
+}
 
 drd()
 {
@@ -1008,3 +1019,17 @@ andvid()
     ffmpeg -i $video_file -vcodec h264 -s 1280x720 $output_file
 
 }
+
+draw()
+{
+    # floating window of $TERMINAL with specified geometry
+    # Get geometry
+    thickness=$(bspc config border_width)
+    color=$(bspc config focused_border_color)
+    hacksaw -ns $thickness -c $color | IFS=+x read -r w h x y
+    # Add a new rule
+    bspc rule -a \* -o state=floating rectangle="$((w - 2 * thickness))x$((h - 2 * thickness))+$x+$y"
+    # Execute $TERMINAL
+    $TERMINAL &
+}
+
