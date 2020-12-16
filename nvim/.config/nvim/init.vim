@@ -107,8 +107,9 @@ endif
 if !&sidescrolloff
   set sidescrolloff=5
 endif
-"set foldmethod=indent
-"set foldlevel=99
+set foldlevel=4
+set foldmethod=marker
+set foldmarker=<<<,>>>
 filetype plugin indent on
 set showmode
 set fo+=w
@@ -121,7 +122,10 @@ set gdefault
 com! -complete=file -bang -nargs=? W :w<bang> <args>
 set smartcase
 set cursorline
-"set cursorcolumn
+set cursorcolumn
+hi CursorColumn guifg=red guibg=#5e81ac
+set colorcolumn=+1
+hi ColorColumn guifg=#232526 guibg=#7b1113
 set noexpandtab
 set backspace=indent,eol,start
 if has("syntax")
@@ -140,6 +144,7 @@ set display+=lastline
 set display+=truncate
 set display+=uhex
 silent! set listchars=eol:¬,tab:→.,extends:»,precedes:«,trail:•
+set list
 set wrap
 set tabstop=8
 set smarttab copyindent preserveindent
@@ -188,6 +193,7 @@ if &t_Co > 16
         au FocusGained * setl cursorline
         au FocusLost * setl nocursorline
 endif
+hi CursorLine guifg=white guibg=#2b3f4a
 
 let g:instant_markdown_browser = "/usr/bin/google-chrome-stable --new-window"
 let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
@@ -202,7 +208,7 @@ let g:ale_sign_error = '●'
 let g:ale_sign_warning = '.'
 let g:airline#extensions#tabline#formatter = 'default'
 let g:airline_powerline_fonts = 1
- 
+
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
