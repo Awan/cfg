@@ -1,4 +1,4 @@
-#!/bin/sh     
+#!/bin/sh
 coded_by='
 
 In the name of Allah, the most Gracious, the most Merciful.
@@ -13,36 +13,41 @@ In the name of Allah, the most Gracious, the most Merciful.
 ░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀░▀░▀▀▀
 '
 
-# A simple script which gets current screen as image, suspends the dunst (notification system) and locks the screen.
+# A simple locker which uses xss-lock, notify-send (libnotify) and i3lock.
 
-# Get the screenshot
 
-import -window root /tmp/i3lock-gen.png
+_locker="$(readlink -f "$0")"
+_timeout=100
+_notify=10
+wallpapers_dir="$HOME/pix/wall/collection"
+random_wall="$(find "$wallpapers_dir" -type f -iname '*.png' -print0 | xargs -0 shuf -e -n 1 -z | xargs -0)"
+padlock="$HOME/.local/share/misc/lock.png"
+wall_pic="/tmp/locker.png"
+icon="$HOME/.local/share/icons/drops/xautolock.png"
 
-# Apply pixelation
+gen_wall() {
+    convert "$random_wall" "$padlock" -gravity center -composite "$wall_pic"
+}
 
-convert /tmp/i3lock-gen.png -scale 10% -scale 1000% /tmp/i3lock-converted.png
+gen_wall
 
-# Apply padlock in the center
-
-convert /tmp/i3lock-converted.png ~/.local/share/misc/lock.png -gravity center -composite /tmp/i3lock-final.png
-
-# Suspend the notification display
-
-pkill -u "$USER" -USR1 dunst
-
-# Lock the screen
-
-i3lock -ef -i /tmp/i3lock-final.png
-
-# Wait for 5 seconds and then force the display off.
-
-sleep 5 && pgrep i3lock && xset dpms force off
-
-# Remove the temporary files
-
-rm /tmp/i3lock-*
-
-# Resume notification display
-
-pkill -u "$USER" -USR2 dunst
+case "$1" in
+    start)
+        xset s $(($_timeout - $_notify)) $_notify
+        xset dpms $(($_timeout * 3)) $(($_timeout * 4)) $(($_timeout * 5))
+        exec xss-lock -n "$_locker notifyme" -l $_locker lock
+        ;;
+    notifyme)
+        trap 'exit 0' TERM INT
+        trap "kill %% ; wait" EXIT
+        notify-send -u critical -t $((_notify * 1000)) \
+            "Screen will be locked in 10 seconds..." \
+            -i "$icon"
+        sleep 2147483647 &
+        wait
+        ;;
+    lock)
+        i3lock -efi "$wall_pic"
+        sleep 5 && pgrep i3lock && xset dpms force off
+        ;;
+esac
