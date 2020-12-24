@@ -38,10 +38,12 @@ case $class in
     echo "sticky = on"
     echo "focus = on"
     echo "manage = on"
-    echo "rectangle = 745x468+1174+28"
+    echo "rectangle = 890x451+0+628"
     ;;
   Google-chrome)
     echo "desktop = ^2"
+    echo "private = on"
+    echo "follow = on"
     ;;
   Opera)
     echo "desktop = ^3"
@@ -58,6 +60,7 @@ case $class in
    echo "follow = on"
    echo "focus = on"
    echo "state = floating"
+   echo "rectangle = 1136x674+418+212"
    ;;
  Docky)
    echo "layer = above"
@@ -69,7 +72,7 @@ case $class in
 esac
 
 case $title in
-  scratchpad|'Terminator Preferences')
+  scratchpad|'Terminator Preferences'|'Picture in picture')
     echo "state = floating"
     ;;
 esac
