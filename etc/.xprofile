@@ -107,7 +107,7 @@ run unclutter --ignore-scrolling --fork --timeout 1
 
 xset dpms $inactivity_timeout &
 #xss-lock -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' 
-run xss-lock -- ~/.local/bin/lockme  
+run ~/.local/bin/lockme start
 
 # Start Notification daemon
 
