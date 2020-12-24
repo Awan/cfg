@@ -121,11 +121,11 @@ set ignorecase
 set gdefault
 com! -complete=file -bang -nargs=? W :w<bang> <args>
 set smartcase
-set cursorline
 set cursorcolumn
-hi CursorColumn guifg=red guibg=#5e81ac
 set colorcolumn=+1
-hi ColorColumn guifg=#232526 guibg=#7b1113
+set cursorline
+hi ColorColumn guifg=#232526 guibg=#F92672
+hi CursorColumn guifg=white guibg=#2b3f4a
 set noexpandtab
 set backspace=indent,eol,start
 if has("syntax")
