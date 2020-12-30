@@ -83,7 +83,6 @@ fi
 
 
 
-export PET_GITLAB_ACCESS_TOKEN=$(pass snippets-api)
 export GPG_TTY=$(tty)
 export SSH_AUTH_SOCK=/run/user/$(id -u)/gnupg/S.gpg-agent.ssh
 export PYENV_ROOT="$HOME/.pyenv"
