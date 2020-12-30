@@ -157,8 +157,7 @@ pure_magenta="#FF00FF"
 vivid_red="#ff3232"
 hot_pink="#ff69b4"
 up_maroon="#7b1113"
-
-
+awesome="#B443F3"
 
 # Feedback color of preselection
 
@@ -166,7 +165,7 @@ bspc config presel_feedback_color   $baby_blue
 
 # Focused Border color
 
-bspc config focused_border_color    $mint_cream
+bspc config focused_border_color    $awesome
 
 # Active border color 
 
