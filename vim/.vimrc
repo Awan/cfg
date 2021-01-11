@@ -27,7 +27,7 @@ endif
 if has("gui_running")
     "configure in gvimrc
 elseif &t_Co == 256
-    silent! color desert
+    silent! color fuchsia
     silent! color zenburn
 else
     silent! color slate
