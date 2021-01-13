@@ -80,7 +80,7 @@
         cob = checkout -b
         cp = cherry-pick
         cc = cherry-pick --continue
-	cm = checkout master
+	cm = switch -
 	b = branch
         c = commit
         ca = commit -a
@@ -138,3 +138,5 @@
 	waitingForEditor = true
 
 # vim: set ft=gitconfig :
+[init]
+	defaultBranch = master
