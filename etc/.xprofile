@@ -105,18 +105,32 @@ run unclutter --ignore-scrolling --fork --timeout 1
 
 # DPMS and lock screen
 
-xset dpms $inactivity_timeout &
+#xset dpms $inactivity_timeout &
 #xss-lock -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' 
-run ~/.local/bin/lockme start
-
+# run xautolock -time 2 -locker "/usr/bin/i3lock -c 000075" -notify 30 -notifier "notify-send -u critical -t 10000 -- 'Locking the screen in 30 seconds...'"
+xset s 30 60
+run xss-lock -n ~/.local/bin/dim_screen -- ~/.local/bin/i3lock
 # Start Notification daemon
 
-run dunst -c "$HOME"/.config/dunst/dunstrc 
+run dunst -c "$HOME"/.config/dunst/dunstrc
 
 # Battery notification
 
-run $HOME/.local/bin/battery_low 
+run $HOME/.local/bin/battery_low
 
+# Get wireless network connectivity/disconnectivity
+
+wifi_info() {
+    for iface in /var/run/wpa_supplicant/* ;
+    do
+        iface="${iface##*/}"
+        if [ -d "/sys/class/net/${iface}/phy80211" ]; then
+                wpa_cli -p /var/run/wpa_supplicant -i "${iface}" -a "${HOME}/.local/bin/wpa_notify"
+        fi
+    done
+}
+
+run wifi_info
 
 # Mute the mic
 
