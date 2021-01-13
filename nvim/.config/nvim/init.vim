@@ -61,7 +61,7 @@ endif
 if has("gui_running")
     "configure in gvimrc
 elseif &t_Co == 256
-    silent! color koehler
+    silent! color monokai
 else
     silent! color slate
 endif
@@ -100,7 +100,7 @@ autocmd! bufwritepost $HOME/cfg/polybar/.config/polybar/*.conf !bspc wm -r >/dev
 set nocp
 filetype on
 au BufNewFile,BufRead *Pkgfile set filetype=sh
-"set textwidth=80
+set textwidth=80
 if !&scrolloff
   set scrolloff=3
 endif
@@ -162,7 +162,7 @@ set shortmess+=I
 set autoindent
 set nocindent
 set cinkeys=0{,0},0),:,!,o,O,e
-set formatoptions=tcrqnj
+set formatoptions=tcrqnjw
 set comments-=:%
 set comments-=:XCOMM
 set lazyredraw
@@ -435,7 +435,7 @@ map <F3> :! ( urxvt & ) &>/dev/null &<CR><CR>
 nmap <silent> <Leader>m :w<CR>:!clear && python % > /tmp/vim-py.out && cat /tmp/vim-py.out && rm -f /tmp/vim-py.out<CR>
 
 " Run bash code without exiting vim
-" nmap <silent> <Leader>b :w<CR>:!clear && bash % > /tmp/vim-bash.out && cat /tmp/vim-bash.out && rm -f /tmp/vim-bash.out<CR>
+nmap <silent> <Leader>o :w<CR>:!clear && sh -x % > /tmp/vim-bash.out && cat /tmp/vim-bash.out && rm -f /tmp/vim-bash.out<CR>
 "
 " Json highlight comments
 autocmd FileType json syntax match Comment +\/\/.\+$+
