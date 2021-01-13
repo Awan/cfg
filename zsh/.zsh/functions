@@ -18,6 +18,10 @@ mkd ()
   mkdir -p "$@" && cd "$_";
 }
 
+osc ()
+{
+    mkd ~/osc/oscp
+}
 # for webm videos to mp4
 
 webm2mp4 ()
@@ -493,6 +497,16 @@ apkpath ()
   adb shell pm path $package | awk -F: -v pkg=$package 'index($0, pkg) {print $2}'
 }
 
+apkbkup ()
+{
+    # Create a backup for an android application
+    # Get application name using apkname function
+    # This backup can be restored later using `adb install application.apk; adb restore backup.adb`
+    backup_file="$1".adb
+    application="$2"
+    adb backup -f "$backup_file" -apk "$application"
+}
+
 playandroid ()
 # play music files on android. first argument should be the path and second
 # should be the file format, like, audio/mp3, video/mp4
@@ -871,6 +885,7 @@ dep ()
   rendered_dir="$HOME/git/mysite/public/"
   cd "$source_dir"
   msg="$(git log -n1 --format='%B')"
+  hugo -D
   cd "$rendered_dir"
   git add .
   echo "Run git status and commit now!"
