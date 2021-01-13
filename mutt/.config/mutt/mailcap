@@ -9,7 +9,7 @@ audio/*                  ; /usr/bin/mpv %s                             ; copious
 video/*                  ; /usr/bin/mpv %s                             ; copiousoutput
 
 #text/html;                      /usr/bin/qutebrowser %s
-text/plain;                     urxvtc -name attach -e /usr/bin/vim -f %s;
+text/plain;                     alacritty -e nvim -f %s;
 #text/plain;charset=us-ascii	less; needsterminal
 #text/*;                         less 
 application/msword;             catdoc %s; copiousoutput
