@@ -254,7 +254,7 @@ alt + shift + bracket{left,right}
 # Lock the screen
 
 super + x
-    ~/.local/bin/lockme lock
+    ~/.local/bin/i3lock
 
 # Soft volume up/down buttons
 
@@ -277,4 +277,6 @@ ctrl + XF86AudioMute
     $HOME/.local/share/icons/drops/muted.png -u low -t 1500 -a ponymix "volume" \
     "input $(ponymix --input is-muted || echo 'un')muted"
 
+XF86Display
+    systemctl suspend
 # vim: ft=sh
