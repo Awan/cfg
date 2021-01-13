@@ -76,7 +76,7 @@ In [AUR](https://aur.archlinux.org), you can find a [PKGBUILD](https://aur.archl
 
 Here are the dependencies you must have to use polybar with customized stylish icons.
 
-- [Font Awesome 4](https://aur.archlinux.org/packages/ttf-font-awesome-4)
+- [Font Awesome 4](https://aur.archlinux.org/ttf-font-awesome-4)
 
 
 
