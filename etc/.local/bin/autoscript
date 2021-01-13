@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# shellcheck disable=2034
 coded_by='
 
 In the name of Allah, the most Gracious, the most Merciful.
@@ -22,8 +22,8 @@ script_file="$scripts_dir/$1"
 if [ -f $script_file ]; then
 	 $EDITOR $script_file
 else
-	echo "#!/bin/sh \
-    $($HOME/.local/bin/author $(basename $script_file))" > $script_file
-	chmod +x $script_file
-	$EDITOR $script_file
+	echo "#!/bin/sh\
+$($HOME/.local/bin/author $(basename $script_file))" > $script_file
+chmod +x $script_file
+$EDITOR $script_file
 fi
