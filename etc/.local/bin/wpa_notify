@@ -1,4 +1,18 @@
-#!/usr/bin/env bash
+#!/bin/sh
+# shellcheck disable=2034
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░░░░░░░░░░
+
+░█░█░█▀█░█▀█░░░░░█▀█░█▀█░▀█▀░▀█▀░█▀▀░█░█
+░█▄█░█▀▀░█▀█░░░░░█░█░█░█░░█░░░█░░█▀▀░░█░
+░▀░▀░▀░░░▀░▀░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀░░░░▀░
+'
 
 # Get notified about connecting/disconnecting network with dunst, notify-send
 # and wpa_supplicant. Keep this script somewhere in your $PATH and add this to
@@ -13,11 +27,9 @@
 #done
 
 
-if [[ "${2}" == 'DISCONNECTED' ]] ; then
-  printf -v msg '%s disconnected' "$1"
+if [ "${2}" = 'DISCONNECTED' ] ; then
+        notify-send -t 3000 'wpa_supplicant' "$1 disconnected!"
 else
   ssid="$(wpa_cli -p "${WPA_CTRL_DIR}" -i "${1}" list_networks | awk "\$1 == ${WPA_ID} { print \$2 }")"
-  printf -v msg '%s connected to %s (%s)' "${1}" "${ssid:-unknown SSID}" "${WPA_ID}"
+        notify-send -t 3000 'wpa_supplicant' "connected to $ssid"
 fi
-
-notify-send -t 3000 'wpa_supplicant' "${msg}"
