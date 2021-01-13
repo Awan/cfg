@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcode disable=2034
 coded_by='
 
 In the name of Allah, the most Gracious, the most Merciful.
@@ -21,7 +22,7 @@ is_charger_connected=$(cat /sys/class/power_supply/AC/online)
 
 
 while true; do
-  if (( "$( < /sys/class/power_supply/BAT0/capacity )" < 30 )); then
+  if [ "$battery_status" -le 30 ] && [ "$is_charger_connected" -eq 0 ]; then
     notify-send -u critical "Battery critically low"
   fi
   sleep 60
