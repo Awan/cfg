@@ -1,0 +1,46 @@
+#!/bin/sh
+# shellcheck disable=2034
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░░░░░░░░░░
+
+░█▀▄░▀█▀░█▄█░░░░░█▀▀░█▀▀░█▀▄░█▀▀░█▀▀░█▀█
+░█░█░░█░░█░█░░░░░▀▀█░█░░░█▀▄░█▀▀░█▀▀░█░█
+░▀▀░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀░▀
+'
+
+# A shell script which dims the screen. Its a part of my BSPWM setup which uses
+# xss-lock, i3lock and this script. Example to append in ~/.xprofile
+# `xset s 30 60 &; xss-lock -n this_script -- i3lock -n`
+# It will dim the screen's brightness with a fade after 30 seconds inactivity,
+# locks the screen after 60 seconds and turn the screen off.
+
+light -O
+
+brighten() {
+        light -I
+}
+
+fade() {
+    i=$(light -G | cut -d "." -f 1)
+    if [ "$i" -eq 0 ]; then
+        return
+    else
+        until [ "$((i-=1))" -eq 0 ]; do
+            light -S "$i"
+            sleep 0.01
+        done
+    fi
+}
+
+fade
+trap 'exit 0' TERM INT
+trap "brighten; kill %%" EXIT
+fade
+sleep 2147483647 &
+wait

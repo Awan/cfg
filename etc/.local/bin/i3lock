@@ -1,0 +1,24 @@
+#!/bin/sh
+# shellcheck disable=2034
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░░░░░░░░░░
+
+░▀█▀░▀▀█░█░░░█▀█░█▀▀░█░█
+░░█░░░▀▄░█░░░█░█░█░░░█▀▄
+░▀▀▀░▀▀░░▀▀▀░▀▀▀░▀▀▀░▀░▀
+'
+
+revert() {
+    xset dpms 0 0 0
+}
+
+trap revert HUP INT TERM
+xset +dpms dpms 5 5 5
+/usr/bin/i3lock -enfc 000070
+revert
