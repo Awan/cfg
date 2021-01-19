@@ -52,9 +52,13 @@
 ! if remote host is having problems with rxvt-unicode, copy
 ! /usr/share/terminfo/r/rxvt-unicode at hosts ~/.terminfo/r/rxvt-unicode
 
-urxvt*font: xft:Monaco:size=17,xft:Source Code Pro:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:size=17,xft:Inconsolata for Powerline:pixelsize=17,xft:Bitstream Vera Sans Mono:pixelsize=17,xft:Waffle, xft:HackNerd Font:Italic:size=17, xft:DejaVu Sans Mono for Powerline:size=17, xft:Segoe UI Emoji:size=17, xft:SimHei:size=17, xft:MonospaceNerd Font:17
-urxvt*boldFont: xft:Monaco:Bold:size=17,xft:Source Code Pro:Bold:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:Bold:size=17,xft:Inconsolata for Powerline:pixelsize=17:Bold,xft:Bitstream Vera Sans Mono:pixelsize=17:Bold,xft:Waffle, xft:HackNerd Font:Italic:size=17, xft:DejaVu Sans Mono for Powerline:size=17, xft:Segoe UI Emoji:size=17, xft:SimHei:size=17, xft:MonospaceNerd Font:17
-urxvt*bolditalicFont: xft:Monaco:Bold:Italic:size=17,xft:Source Code Pro:Bold:italic:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:Bold:italic:size=17,xft:Inconsolata for Powerline:pixelsize=17:Bold:italic,xft:Bitstream Vera Sans Mono:pixelsize=17:Bold:italic,xft:Waffle, xft:HackNerd Font:Italic:size=17, xft:DejaVu Sans Mono for Powerline:size=17, xft:Segoe UI Emoji:size=17, xft:SimHei:size=17, xft:MonospaceNerd Font:17
+!URxvt.font: xft:Mononoki Nerd Font:size=12, \
+!            xft:JoyPixels:size=12, \
+!            xft:Monospace:style=Medium:size=12
+
+urxvt*font: xft:Mononoki Nerd Font:size=17,xft:Source Code Pro:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:size=17,xft:Inconsolata for Powerline:pixelsize=17,xft:Bitstream Vera Sans Mono:pixelsize=17,xft:Waffle, xft:HackNerd Font:Italic:size=17, xft:DejaVu Sans Mono for Powerline:size=17, xft:SimHei:size=17, xft:Monospace:17
+urxvt*boldFont: xft:Mononoki Nerd Font:Bold:size=17,xft:Source Code Pro:Bold:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:Bold:size=17,xft:Inconsolata for Powerline:pixelsize=17:Bold,xft:Bitstream Vera Sans Mono:pixelsize=17:Bold,xft:Waffle, xft:HackNerd Font:Italic:size=17, xft:DejaVu Sans Mono for Powerline:size=17, xft:Segoe UI Emoji:size=17, xft:SimHei:size=17, xft:Monospace:17
+urxvt*bolditalicFont: xft:Mononoki Nerd Font:Bold:Italic:size=17,xft:Source Code Pro:Bold:italic:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:Bold:italic:size=17,xft:Inconsolata for Powerline:pixelsize=17:Bold:italic,xft:Bitstream Vera Sans Mono:pixelsize=17:Bold:italic,xft:Waffle, xft:HackNerd Font:Italic:size=17, xft:DejaVu Sans Mono for Powerline:size=17, xft:Segoe UI Emoji:size=15, xft:SimHei:size=17, xft:Monospace:17
 URxvt*letterSpace          : 1
 URxvt*utf                  : 1
 URxvt*locale               : 1
@@ -126,11 +130,20 @@ URxvt*perl-ext-common      : vim,default,matcher,font-size
 URxvt*vim-scrollback       : M-s
 URxvt*vim-scrollback-paste : M-p
 URxvt*clipboard.copycmd    : xsel -ib
-URxvt.keysym.C-Up:     font-size:increase
-URxvt.keysym.C-Down:   font-size:decrease
-URxvt.keysym.C-S-Up:   font-size:incglobal
-URxvt.keysym.C-S-Down: font-size:decglobal
+URxvt.keysym.C-Up          :     font-size:increase
+URxvt.keysym.C-Down        :   font-size:decrease
+URxvt.keysym.C-S-Up        :   font-size:incglobal
+URxvt.keysym.C-S-Down      : font-size:decglobal
 
+
+! XFT
+Xft.dpi                    : 96
+Xft.antialias              : true
+Xft.hinting                : true
+Xft.rgba                   : rgb
+Xft.autohint               : true
+Xft.hintstyle              : hintfull
+Xft.lcdfilter              : lcdfilter
 
 ! Polybar
 
@@ -184,8 +197,6 @@ polybar*color17                : #D7AFF9
 
 ! XTERM
 
-// XTerm.vt100.faceName         :Fantasque Sans Mono:italic:size=17:antialias=true
-// XTerm.vt100.boldFont         :Fantasque Sans Mono:bold:italic:size=17
 XTerm.vt100.faceName         : FantasqueSansMono Nerd Font:size=17
 XTerm.vt100.metaSendsEscape  : 1
 XTerm.vt100.saveLines        : 4096
