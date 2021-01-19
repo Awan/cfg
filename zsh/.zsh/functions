@@ -18,10 +18,6 @@ mkd ()
   mkdir -p "$@" && cd "$_";
 }
 
-osc ()
-{
-    mkd ~/osc/oscp
-}
 # for webm videos to mp4
 
 webm2mp4 ()
@@ -1056,3 +1052,12 @@ draw()
     $TERMINAL &
 }
 
+zal () {
+    curl -s https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.csv
+}
+
+nowall()
+{
+ awk '{print $4}' ~/.fehbg | xargs rm
+ systemctl --user restart wallpaper.service
+}
