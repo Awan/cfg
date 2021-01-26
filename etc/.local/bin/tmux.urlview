@@ -12,18 +12,18 @@ get_tmux_option() {
 }
 
 find_executable() {
-  if type urlscan >/dev/null 2>&1; then
-    echo "urlscan"
+  if type urlview >/dev/null 2>&1; then
+    echo "urlview"
   elif type extract_url >/dev/null 2>&1; then
     echo "extract_url"
   fi
 }
 
-readonly key="$(get_tmux_option "@urlscan-key" "u")"
+readonly key="$(get_tmux_option "@urlview-key" "u")"
 readonly cmd="$(find_executable)"
 
 if [ -z "$cmd" ]; then
-  tmux display-message "Failed to load tmux-urlscan: neither urlscan nor extract_url were found on the PATH"
+  tmux display-message "Failed to load tmux-urlview: neither urlscan nor extract_url were found on the PATH"
 else
   tmux bind-key "$key" capture-pane -J \\\; \
     save-buffer "${TMPDIR:-/tmp}/tmux-buffer" \\\; \
