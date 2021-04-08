@@ -10,56 +10,44 @@
 ! ░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀
 
 
-*.foreground:   #f8f8f2
-*.background:   #272822
 *.cursorColor:  #f8f8f2
+*background:  #575757
+*foreground:  #dcdccc
 
-! black
-*.color0:       #272822
-*.color8:       #75715e
-
-! red
-*.color1:       #f92672
-*.color9:       #f92672
-
-! green
-*.color2:       #a6e22e
-*.color10:      #a6e22e
-
-! yellow
-*.color3:       #f4bf75
-*.color11:      #f4bf75
-
-! blue
-*.color4:       #66d9ef
-*.color12:      #66d9ef
-
-! magenta
-*.color5:       #ae81ff
-*.color13:      #ae81ff
-
-! cyan
-*.color6:       #a1efe4
-*.color14:      #a1efe4
-
-! white
-*.color7:       #f8f8f2
-*.color15:      #f9f8f5
-
+!black
+*color0:      #666666
+*color8:      #888888
+!red
+*color1:      #ff8278
+*color9:      #ff8278
+!green
+*color2:      #bde077
+*color10:     #bde077
+!yellow
+*color3:      #eadc84
+*color11:     #eadc84
+!blue
+*color4:      #77bee0
+*color12:     #77bee0
+!magenta
+*color5:      #dd91f3
+*color13:     #dd91f3
+!cyan
+*color6:      #ffc178
+*color14:     #ffc178
+!white
+*color7:      #dddddd
+*color15:     #cccccc
 
 ! URxvt 
 
 ! if remote host is having problems with rxvt-unicode, copy
 ! /usr/share/terminfo/r/rxvt-unicode at hosts ~/.terminfo/r/rxvt-unicode
 
-!URxvt.font: xft:Mononoki Nerd Font:size=12, \
-!            xft:JoyPixels:size=12, \
-!            xft:Monospace:style=Medium:size=12
-
-urxvt*font: xft:Mononoki Nerd Font:size=17,xft:Source Code Pro:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:size=17,xft:Inconsolata for Powerline:pixelsize=17,xft:Bitstream Vera Sans Mono:pixelsize=17,xft:Waffle, xft:HackNerd Font:Italic:size=17, xft:DejaVu Sans Mono for Powerline:size=17, xft:SimHei:size=17, xft:Monospace:17
-urxvt*boldFont: xft:Mononoki Nerd Font:Bold:size=17,xft:Source Code Pro:Bold:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:Bold:size=17,xft:Inconsolata for Powerline:pixelsize=17:Bold,xft:Bitstream Vera Sans Mono:pixelsize=17:Bold,xft:Waffle, xft:HackNerd Font:Italic:size=17, xft:DejaVu Sans Mono for Powerline:size=17, xft:Segoe UI Emoji:size=17, xft:SimHei:size=17, xft:Monospace:17
-urxvt*bolditalicFont: xft:Mononoki Nerd Font:Bold:Italic:size=17,xft:Source Code Pro:Bold:italic:pixelsize=17,xft:FantasqueSansMono for Powerline Nerd Font:Bold:italic:size=17,xft:Inconsolata for Powerline:pixelsize=17:Bold:italic,xft:Bitstream Vera Sans Mono:pixelsize=17:Bold:italic,xft:Waffle, xft:HackNerd Font:Italic:size=17, xft:DejaVu Sans Mono for Powerline:size=17, xft:Segoe UI Emoji:size=15, xft:SimHei:size=17, xft:Monospace:17
-URxvt*letterSpace          : 1
+urxvt*font: xft:mononoki:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:size=17
+urxvt*boldFont: xft:mononoki:Bold:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:Bold:size=17
+urxvt*bolditalicFont: xft:mononoki:Bold:Italic:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:Bold:Italic:size=17
+URxvt*letterSpace          : -1
 URxvt*utf                  : 1
 URxvt*locale               : 1
 URxvt.imlocale             : en_US.UTF-8
@@ -88,7 +76,7 @@ URxvt*blurRadius           : 1x65
 URxvt*fading               : 25
 URxvt*fadeColor            : #008B8B
 URxvt*utmpInhibit          : 1
-URxvt*urgentOnBell         : 1
+URxvt*urgentOnBell         : 0
 URxvt*visualBell           : 0
 URxvt*mapAlert             : 0
 URxvt*meta8                : 0
@@ -98,7 +86,7 @@ URxvt*insecure             : 0
 URxvt*cursorUnderline      : 1
 URxvt*cursorBlink          : 0
 URxvt*pointerBlank         : 1
-URxvt*iconFile             : /usr/share/icons/Adwaita/16x16/apps/utilities-terminal-symbolic.symbolic.png
+!URxvt*iconFile             : /usr/local/share/icons/scalable/apps/utilities-terminal-symbolic.svg
 URxvt*pointerShape         : ul_angle
 URxvt*intensityStyles      : 1
 URxvt*saveLines            : 9999
@@ -121,7 +109,7 @@ URxvt*perl-lib             : /home/ak/.urxvt/ext
 URxvt*iso14755             : 1
 URxvt*iso14755_52          : 1
 URxvt*matcher.button       : 2
-URxvt*url-launcher         : /usr/bin/google-chrome-stable
+URxvt*url-launcher         : /usr/local/bin/chrome
 URxvt*url-select.underline : 1
 URxvt*matcher.rend.0       : Uline Bold fg5
 URxvt*selection.pattern-0  : ([[                           : word                : ]]+)
@@ -130,20 +118,14 @@ URxvt*perl-ext-common      : vim,default,matcher,font-size
 URxvt*vim-scrollback       : M-s
 URxvt*vim-scrollback-paste : M-p
 URxvt*clipboard.copycmd    : xsel -ib
-URxvt.keysym.C-Up          :     font-size:increase
-URxvt.keysym.C-Down        :   font-size:decrease
-URxvt.keysym.C-S-Up        :   font-size:incglobal
-URxvt.keysym.C-S-Down      : font-size:decglobal
+URxvt.keysym.C-Up:     font-size:increase
+URxvt.keysym.C-Down:   font-size:decrease
+URxvt.keysym.C-S-Up:   font-size:incglobal
+URxvt.keysym.C-S-Down: font-size:decglobal
+
+*visualBell          : true
 
 
-! XFT
-Xft.dpi                    : 96
-Xft.antialias              : true
-Xft.hinting                : true
-Xft.rgba                   : rgb
-Xft.autohint               : true
-Xft.hintstyle              : hintfull
-Xft.lcdfilter              : lcdfilter
 
 ! Polybar
 
@@ -197,7 +179,9 @@ polybar*color17                : #D7AFF9
 
 ! XTERM
 
-XTerm.vt100.faceName         : FantasqueSansMono Nerd Font:size=17
+// XTerm.vt100.faceName         :Fantasque Sans Mono:italic:size=17:antialias=true
+// XTerm.vt100.boldFont         :Fantasque Sans Mono:bold:italic:size=17
+XTerm.vt100.faceName         : Mononoki:size=17
 XTerm.vt100.metaSendsEscape  : 1
 XTerm.vt100.saveLines        : 4096
 XTerm*vt100*geometry         : 80x25
@@ -207,6 +191,7 @@ xterm*termName               : xterm-256color
 xterm*reverseVideo           : 0
 xterm*loginShell             : 0
 xterm*scrollTtyOutput        : 0
+xterm*scrollBar              : 0
 xterm*charClass		     : 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48
 xterm*eightBitInput          : 0
 xterm*boldMode               : 0
@@ -259,3 +244,101 @@ Xcursor.size                : 16
 ! Xautolock
 
 Xautolock.locker            : "/usr/bin/physlock -mp 'Aur tum apny Rab ki kon kon c nematon ko jhutlawo gy?'"
+
+! Xidle
+XIdle.timeout               : 120
+
+! Xlock
+XLock.dpmsoff               : 1
+XLock.description           : off
+XLock.background            : black
+XLock.foreground            : white
+XLock.mode                  : clock
+XLock.erasemode:
+XLock.erasedelay            : 400
+XLock.erasetime             : 2
+XLock.allowaccess           : off
+XLock.debug                 : off
+XLock.description           : on
+XLock.echokeys              : on
+XLock.echokey               : *
+XLock.enablesaver           : off
+XLock.resetsaver            : on
+XLock.grabmouse             : on
+XLock.grabserver            : off
+XLock.hide                  : on
+XLock.install               : on
+XLock.mousemotion           : off
+XLock.mono                  : off
+XLock.sound                 : off
+XLock.showdate              : on
+XLock.timeelapsed           : off
+XLock.usefirst              : on
+XLock.visual                :
+XLock.nice                  : 10
+XLock.lockdelay             : 0
+XLock.unlockdelay           : 0
+XLock.timeout               : 30
+XLock.font                  : -*-tamsyn-medium-*-*-*-17-*-*-*-*-*-*-*
+XLock.planfont              : -*-tamsyn-medium-*-*-*-17-*-*-*-*-*-*-*
+XLock.username              : Name:
+XLock.password              : Password:
+XLock.info                  : Enter password to unlock; select icon to lock.
+XLock.validate              : Validating login...
+XLock.invalid               : Invalid login.
+XLock.invalidCapsLock       : Invalid login, Caps Lock on.
+XLock.attempt               : failed attempt.
+XLock.attempts              : failed attempts.
+XLock.geometry              :
+XLock.icongeometry          :
+XLock.wireframe             : off
+XLock.use3d                 : off
+XLock.delta3d               : 1.5
+XLock.none3d                : Black
+XLock.right3d               : Blue
+XLock.left3d                : Red
+XLock.both3d                : Magenta
+XLock.program               : fortune -s
+XLock.messagesfile          :
+XLock.messagefile           :
+XLock.message               :
+XLock.messagefont           : -*-tamsyn-medium-*-*-*-17-*-*-*-*-*-*-*
+XLock.logoutButton          : -1
+XLock.logoutButtonLabel     : Logout
+XLock.logoutButtonHelp      : Click here to logout
+XLock.logoutFailedString    : Auto-logout failed
+XLock.startCmd              :
+XLock.endCmd                :
+XLock.pipepassCmd           :
+XLock.logoutCmd             :
+XLock.dpmsstandby           : -1
+XLock.dpmssuspend           : -1
+XLock.dpmsoff               : -1
+XLock.mailCmd               :
+XLock.mailIcon              :
+XLock.nomailIcon            :
+XLock.blank.delay           : 3000000
+XLock.blank.count           : 1
+XLock.blank.cycles          : 1
+XLock.blank.size            : 1
+XLock.blank.ncolors         : 64
+XLock.blank.saturation      : 1
+XLock.blank.bitmap          :
+XLock.random.delay          : 1
+XLock.random.count          : 1
+XLock.random.cycles         : 1
+XLock.random.size           : 1
+XLock.random.ncolors        : 64
+XLock.random.saturation     : 1
+XLock.random.bitmap         :
+XLock.random.duration       : 60
+XLock.random.modelist       :
+XLock.random.sequential     : False
+XLock.random.fullrandom     : True
+
+! Misc
+*VT100.utf8                 : 1
+*VT100*geometry             : 160x50
+*VT100.colorBDMode          : True
+*VT100.colorULMode          : True
+*VT100.veryBoldColors       : 6
