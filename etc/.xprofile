@@ -103,6 +103,10 @@ xset +fp /usr/share/fonts/ && xset fp rehash &
 
 run unclutter --ignore-scrolling --fork --timeout 1 
 
+# Set cursor
+
+xsetroot -cursor_shape ul_angle
+
 # DPMS and lock screen
 
 #xset dpms $inactivity_timeout &
@@ -131,6 +135,8 @@ wifi_info() {
 }
 
 run wifi_info
+
+wpa_cli -p /var/run/wpa_supplicant -i wlp3s0 -B "$HOME/.local/bin/wpa_notify"
 
 # Mute the mic
 
@@ -162,7 +168,6 @@ fi
 
 alacritty --dimensions 55 15 --position 550 175 -t 'scratchpad' &
 #sleep 1
-# urxvtc -T 'scratchpad' -geometry 75x20 
 #termite -t scratchpad
 #xfce4-terminal -T scratchpad --font='Fantasque Sans Mono Italic 16'
 
