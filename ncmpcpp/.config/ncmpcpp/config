@@ -50,19 +50,17 @@ song_columns_list_format = "(35)[red]{t} (15)[magenta]{b} (50)[cyan]{a}"
 
 # Visualizer path
 
-visualizer_fifo_path = "/tmp/mpd.fifo"
+visualizer_data_source = "/tmp/mpd.fifo"
 
 # Visualizer name
 
 visualizer_output_name = "my_fifo"
 
-# Visualizer interval
-
-visualizer_sync_interval = "15"
-
 # If stereo visualizer enabled
 
 visualizer_in_stereo = "yes"
+
+buffer_time "100000"
 
 # Visualizer color
 

@@ -5,11 +5,7 @@ BROWSER=$(which google-chrome-stable)
 
 # Set Terminal
 
-if [ -z "$TERMINAL" ]; then
-    if (( $+commands[alacritty] )); then
-        TERMINAL=alacritty
-    fi
-fi
+TERMINAL=alacritty
 
 TERMCMD=$TERMINAL
 
