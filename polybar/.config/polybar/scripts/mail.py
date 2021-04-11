@@ -13,6 +13,9 @@ In the name of Allah, the most Gracious, the most Merciful.
 ░▀░░░▀▀▀░▀▀▀░░▀░░▀▀░░▀░▀░▀░▀
 """
 
+# Install dependencies
+# pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+
 import imaplib
 import argparse
 import subprocess
