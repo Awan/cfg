@@ -1,0 +1,20 @@
+#!/bin/sh
+# shellcheck disable=2034
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░░░░░░░░░░
+
+
+'
+# Toggles touchpad
+
+device_name="$(xinput list | grep -P '(?<= )[\w\s:]*(?i)(touchpad|synaptics)(?-i).*?(?=\s*id)' -o | head -n1)"
+
+[ "$(xinput list-props "$device_name" | grep -P ".*Device Enabled.*\K.(?=$)" -o)" = "1" ] &&
+    xinput disable "$device_name" ||
+    xinput enable "$device_name"

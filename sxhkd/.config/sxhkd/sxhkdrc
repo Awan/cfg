@@ -24,6 +24,9 @@ for_bspwm='
 alt + shift + {q,r}
     bspc {quit,wm -r}
 
+# Toggle touchpad
+alt + e
+    "$HOME/.local/bin/touchpad"
 # alternate between the tiled and monocle layout
 
 super + m
