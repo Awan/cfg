@@ -26,11 +26,11 @@ ncmpcpp_directory = "~/.config/ncmpcpp"
 
 # Collection directory for Host
 
-mpd_music_dir = "~/kit/mp3"
+mpd_music_dir = "~/mus"
 
 # Lyrics directory. Must be created or you'll get one in $HOME
 
-lyrics_directory = "~/kit/mp3/lyrics"
+lyrics_directory = "~/mus/lyrics"
 
 # Progress of running song look
 

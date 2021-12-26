@@ -15,8 +15,8 @@ Path ~/.mail/
 Inbox ~/.mail/Inbox
 
 Channel abdullah
-Master :abdullah-remote:
-Slave :abdullah-local:
+Far :abdullah-remote:
+Near :abdullah-local:
 Patterns *
 CopyArrivalDate yes
 Create Both

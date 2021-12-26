@@ -15,6 +15,8 @@ etc/.local/share/ranger
 elinks/
 etc/.local/share/recently-used.xbel
 etc/.local/share/xorg
+vim/.vim/autoload
+vim/.vim/plugged
 vim/.vim/doc
 etc/.local/share/gvfs-metadata/
 etc/.local/share/keyrings/
@@ -25,9 +27,15 @@ mpd/.config/mpd/database
 __init__.py
 imgur/.config/imgur-screenshot/credentials.conf
 etc/.config/gtk-3.0/bookmarks
-cmus/
 nvim/.local/share/nvim/undo/
 tig/.local/share/tig/history
 systemd/.config/systemd/user/timers.target.wants/
 cmus/.config/cmus/autosave
 xfce/.config/xfce4
+cmus/.config/cmus/resume
+cmus/.config/cmus/search-history
+cmus/.config/cmus/cache
+cmus/.config/cmus/command-history
+cmus/.config/cmus/lib.pl
+cmus/.config/cmus/playlists/default
+cmus/.config/cmus/queue.pl

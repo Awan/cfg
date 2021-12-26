@@ -504,8 +504,7 @@ apkbkup ()
 }
 
 playandroid ()
-# play music files on android. first argument should be the path and second
-# should be the file format, like, audio/mp3, video/mp4
+# play music files on android. first argument should be the path and second should be the file format, like, audio/mp3, video/mp4
 {
   music_file="$1"
   format="$2"

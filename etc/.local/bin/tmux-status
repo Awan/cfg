@@ -118,4 +118,4 @@ temperature()
 
 
 
-echo `music` -  `temperature`  - `mails` - `wifi` - `just_ram` - `battery` - `date_time`
+echo "♥  `music` ♥ `temperature` ♥  `mails` ♥  `wifi` ♥  `just_ram` ♥ `battery` ♥  `date_time` ♥ "

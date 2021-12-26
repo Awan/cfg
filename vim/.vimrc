@@ -19,15 +19,15 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Install vim-plug 
-"if empty(glob('~/.vim/autoload/plug.vim'))
-"  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-"    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"endif
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
 "
 "" Run PlugInstall if there are missing plugins
-"autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-"  \| PlugInstall --sync | source $MYVIMRC
-"\| endif
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
 "
 "" sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 "
@@ -35,15 +35,15 @@
 "
 "" Directory to save plugins
 "
-"call plug#begin('~/.vim/plugged')
+call plug#begin('~/.vim/plugged')
 "
 "" Plugins
 "
-"Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs'
+Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs'
 "
 "" Initialize vim-plug
 "
-"call plug#end()
+call plug#end()
 "
 " Use vim settings rather than vi
 if &compatible
@@ -231,43 +231,43 @@ hi CursorLine guifg=white guibg=#2b3f4a
 let g:instant_markdown_browser = "/usr/bin/google-chrome-stable --new-window"
 let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
 let g:instant_markdown_port = 47479
-"let g:powerline_pycmd = 'py3'
+let g:powerline_pycmd = 'py3'
 "let g:ycm_autoclose_preview_window_after_completion = 1
 "map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
-"let g:airline#extensions#tabline#enabled = 1
-"let g:airline#extensions#ale#enabled = 1
-"let g:ale_sign_error = '●'
-"let g:ale_sign_warning = '.'
-"let g:airline#extensions#tabline#formatter = 'default'
-"let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#ale#enabled = 1
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
+let g:airline#extensions#tabline#formatter = 'default'
+let g:airline_powerline_fonts = 1
 "
-"if !exists('g:airline_symbols')
-"    let g:airline_symbols = {}
-"endif
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
 "
 "" unicode symbols
-"let g:airline_left_sep = '»'
-"let g:airline_left_sep = '▶'
-"let g:airline_right_sep = '«'
-"let g:airline_right_sep = '◀'
-"let g:airline_symbols.linenr = '␊'
-"let g:airline_symbols.linenr = '␤'
-"let g:airline_symbols.linenr = '¶'
-"let g:airline_symbols.branch = '⎇'
-"let g:airline_symbols.paste = 'ρ'
-"let g:airline_symbols.paste = 'Þ'
-"let g:airline_symbols.paste = '∥'
-"let g:airline_symbols.whitespace = 'Ξ'
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
 "" airline symbols
-"let g:airline_left_sep = ''
-"let g:airline_left_alt_sep = ''
-"let g:airline_right_sep = ''
-"let g:airline_right_alt_sep = ''
-"let g:ale_fix_on_save = 1
-"let g:airline_symbols.branch = ''
-"let g:airline_symbols.readonly = ''
-"let g:airline_symbols.linenr = ''
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:ale_fix_on_save = 1
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
 
 noremap <leader>u :w \| startinsert \| term urlview %<CR>
 map <leader>n :CocCommand explorer<CR>
