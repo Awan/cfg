@@ -148,7 +148,8 @@ set sc
 if has('reltime')
     set incsearch
 endif
-set nrformats=octal
+"set nrformats=octal
+set nrformats=bin,hex,unsigned
 set completeopt=menuone
 set ignorecase
 set wrapscan
