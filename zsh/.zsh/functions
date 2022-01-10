@@ -751,6 +751,8 @@ dua() {
 
 sitemap() {
   # submit sitemap to google 
+  # For simplicity, add sitemap to robots.txt and then use this function to 
+  # update it in Google like this: sitemap https://abdullah.today/robots.txt
   google_url="https://www.google.com/webmasters/sitemaps/ping?sitemap="
   path=$1
   /usr/bin/curl $google_url$path
