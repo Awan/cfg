@@ -142,6 +142,10 @@ wpa_cli -p /var/run/wpa_supplicant -i wlp3s0 -B "$HOME/.local/bin/wpa_notify"
 
 pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 
+# Set default volume to 80%
+
+pactl set-sink-volume 0 80% &
+
 # Redshift for less eye strain
 
 # lets run with systemd ;-)

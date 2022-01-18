@@ -1062,3 +1062,14 @@ nowall()
  awk '{print $4}' ~/.fehbg | xargs rm
  systemctl --user restart wallpaper.service
 }
+
+doips()
+{
+    # docker containers IPs with IDs
+    for ID in $(docker ps -q | awk '{print $1}');
+    do
+        IP=$(docker inspect --format="{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" "$ID")
+        NAME=$(docker ps | grep "$ID" | awk '{print $NF}')
+        printf "%s %s\n" "$IP" "$NAME"
+    done
+}
