@@ -1,0 +1,324 @@
+#!/bin/sh
+# shellcheck disable=2034
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░░░░░░░░░░
+
+░█▄█░█░█░░░░░█▀█░█▀█░█▀█░█▀▀░█░░
+░█░█░░█░░░░░░█▀▀░█▀█░█░█░█▀▀░█░░
+░▀░▀░░▀░░▀▀▀░▀░░░▀░▀░▀░▀░▀▀▀░▀▀▀
+'
+COLOR_DEFAULT_FG="#a7a5a5"
+COLOR_DEFAULT_BG="#000000"
+COLOR_MONITOR_FG="#8dbcdf"
+COLOR_MONITOR_BG="#333232"
+COLOR_FOCUSED_MONITOR_FG="#b1d0e8"
+COLOR_FOCUSED_MONITOR_BG="#144b6c"
+COLOR_FREE_FG="#737171"
+COLOR_FREE_BG="#333232"
+COLOR_FOCUSED_FREE_FG="#000000"
+COLOR_FOCUSED_FREE_BG="#504e4e"
+COLOR_OCCUPIED_FG="#a7a5a5"
+COLOR_OCCUPIED_BG="#333232"
+COLOR_FOCUSED_OCCUPIED_FG="#d6d3d2"
+COLOR_FOCUSED_OCCUPIED_BG="#504e4e"
+COLOR_URGENT_FG="#f15d66"
+COLOR_URGENT_BG="#333232"
+COLOR_FOCUSED_URGENT_FG="#501d1f"
+COLOR_FOCUSED_URGENT_BG="#d5443e"
+COLOR_STATE_FG="#89b09c"
+COLOR_STATE_BG="#333232"
+COLOR_TITLE_FG="#a8a2c0"
+COLOR_TITLE_BG="#333232"
+COLOR_SYS_FG="#b1a57d"
+COLOR_SYS_BG="#333232"
+COLOR_RED="#FF0000"
+num_mon=$(bspc query -M | wc -l)
+PANEL_FIFO=/tmp/panel-fifo
+PANEL_HEIGHT=24
+# PANEL_FONT="-bitstream-terminal-medium-r-normal--18-140-100-100-c-110-iso8859-1"
+PANEL_FONT="-xos4-terminus-bold-r-normal--18-180-72-72-c-100-iso10646-1"
+PANEL_WM_NAME=bspwm_panel
+
+if xdo id -a "$PANEL_WM_NAME" > /dev/null ; then
+	printf "%s\n" "The panel is already running." >&2
+	exit 1
+fi
+
+trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
+
+[ -e "$PANEL_FIFO" ] && rm "$PANEL_FIFO"
+mkfifo "$PANEL_FIFO"
+
+datetime() {
+    echo -n "%{F#00FFFF}%{B#000000}$(date "+%a %-d %b %H:%M:%S")%{F-}%{B-}"
+}
+
+cpu() {
+    cpu=$(ps -eo pcpu | awk 'BEGIN {sum=0.0f} {sum+=$1} END {print sum}')
+    temperature=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))°c
+    echo -n "%{F#FFF042}%{B#000000}CPU:$cpu %{F-}%{B-}%{F#00FFFF}%{B#000000}$temperature%{F-}%{B-}"
+}
+
+wifi(){
+    ssid="$(iw dev wlp3s0 link | awk -F: '/SSID/ {print $NF}')"
+    echo -n "%{F#F10CF1}%{B#000000}$ssid%{F-}%{B-}"
+}
+
+battery() {
+    sysfs="/sys/class/power_supply"
+    _battery="BAT0"
+    mains="AC"
+    power_now="$(cat $sysfs/$_battery/power_now)"
+    energy_now="$(cat $sysfs/$_battery/energy_now)"
+    energy_full="$(cat $sysfs/$_battery/energy_full)"
+    ac_on="$(cat $sysfs/$mains/online)"
+    is_charger_connected="$(cat /sys/class/power_supply/AC/online)"
+    if [ $is_charger_connected = 0 ]; then
+        echo -n "%{F#FF0000}%{B#000000}Discharging: %{F-}%{B-}"
+    elif [ $is_charger_connected = 1 ]; then
+        echo -n "%{F#00FF00}%{B#000000}Charging: %{F-}%{B-}"
+    else
+        echo -n "%{F#0000FF}%{B#000000}AC: %{F-}%{B-}"
+    fi
+
+    battery_percentage="$(cat /sys/class/power_supply/BAT0/capacity)"
+    if [ $battery_percentage -gt 60 ]; then
+        echo -n "%{F#00FF00}%{B#000000}$battery_percentage%% %{F-}%{B-}"
+    elif [ $battery_percentage -gt 30 ]; then
+        echo -n "%{F#FFFF00}%{B#000000}$battery_percentage%% %{F-}%{B-}"
+    elif [ $battery_percentage -lt 30 ] && [ "${power_now}" -ne 0 ] ; then
+        notify-send -u critical -t 30000 "Battery critically low!"
+    else
+        echo -n "%{F#FF0000}%{B#000000}$battery_percentage%% %{F-}%{B-}"
+    fi
+
+    if [ "${ac_on}" -ne 0 ]; then
+        if [ "${power_now}" -ne 0 ] ; then
+            remaining_time=$(( (energy_full - energy_now) * 60 / power_now ))
+        else
+            remaining_time="?"
+        fi
+    else
+        if [ "${power_now}" -ne 0 ] ; then
+            remaining_time="$(( energy_now * 60 / power_now ))"
+        else
+            remaining_time="?"
+        fi
+    fi
+
+    echo -n "%{F#9D10A4}%{B#000000}$remaining_time mins"
+}
+
+volume(){
+    current_volume="$(pamixer --get-volume)"
+    is_muted="$(pamixer --get-volume-human)"
+    if [ "${is_muted}" = "muted" ] ; then
+        vol="muted"
+    else
+        vol="$current_volume"
+    fi
+
+    echo -n "%{A:pamixer -t:}%{F#5E81AC}%{B#000000}Vol:$vol%{A}%{F-}%{B-}"
+}
+
+mails() {
+    count=$(find $HOME/.mail/Inbox/new -type f -print | wc -l)
+    if [ $count -ne 0 ]; then
+        printf '%%{F#FF0000}%%{B#000000}Mails: %d%%{F-}%%{B-}' $count
+    fi
+}
+
+ram(){
+    used_ram="$(free | awk '/Mem:/ {print int($3/$2 * 100.0)}')%"
+    echo -n "%{F#B443F3}%{B#000000}RAM:$used_ram %{F-}%{B-}"
+}
+
+music() {
+    stat=$(cmus-remote -Q 2>/dev/null | awk '/status/{print $2}')
+    if [ -z $stat ]; then
+        # do nothing
+        :
+    elif [ $stat = 'paused' ]; then
+        # do nothing
+        :
+    elif [ $stat = 'playing' ]; then
+        artist=$(cmus-remote -C status | grep 'tag\ artist' | cut -d ' ' -f 3-)
+        title=$(cmus-remote -C status | grep 'tag\ title' | cut -d ' ' -f 3-)
+        full_time=$(cmus-remote -C status | awk '/duration/{print $2}')
+        now_time=$(cmus-remote -C status | awk '/position/{print $2}')
+        hours=$(($full_time / 3600))
+        now_hours=$(($now_time / 3600))
+        minutes=$(($full_time % 3600))
+        now_minutes=$(($now_time % 3600))
+        test $hours -gt 0 && dur="$hours:"
+        test $now_hours -gt 0 && now_dur="$now_hours:"
+        duration="$dur$(printf '%02d:%02d' $(($minutes / 60)) $(($minutes % 60)))"
+        position="$now_dur$(printf '%02d:%02d' $(($now_minutes / 60)) $(($now_minutes % 60)))"
+        echo -n "%{F#00ffff}%{B#000000}$artist - %{F#daa520}%{B#000000}$title - %{F#ff00dd}%{B#000000}$position/$duration"
+    fi
+}
+
+all_info() {
+    while true; do
+        echo "B" "$(battery)"
+        echo "G" "$(wifi)"
+        echo "H" "$(datetime)"
+#         echo "C" "$(brightness)"
+        echo "Y" "$(cpu)"
+        echo "N" "$(mails)"
+        echo "Z" "$(music)"
+        echo "R" "$(ram)"
+        echo "V" "$(volume)"
+        sleep 1
+    done
+}
+
+all_info > "$PANEL_FIFO" &
+bspc subscribe report > "$PANEL_FIFO" &
+
+
+my_panel() {
+
+    while read -r line ; do
+    	case $line in
+            B*)
+                battery="${line#?}"
+                ;;
+#             C*)
+#                 brightness="${line#?}"
+#                 ;;
+            H*)
+                date="${line#?}"
+                ;;
+            G*)
+                wifi="${line#?}"
+                ;;
+            Y*)
+                cpu="${line#?}"
+                ;;
+            N*)
+                mails="${line#?}"
+                ;;
+            Z*)
+                music="${line#?}"
+                ;;
+            R*)
+                ram="${line#?}"
+                ;;
+            V*)
+                volume="${line#?}"
+                ;;
+	    W*)
+	       # bspwm's state
+			wm=
+			IFS=':'
+			set -- ${line#?}
+			while [ $# -gt 0 ] ; do
+				item=$1
+				name=${item#?}
+				case $item in
+					[mM]*)
+						case $item in
+							m*)
+								# monitor
+								FG=$COLOR_MONITOR_FG
+								BG=$COLOR_MONITOR_BG
+								on_focused_monitor=
+								;;
+							M*)
+								# focused monitor
+								FG=$COLOR_FOCUSED_MONITOR_FG
+								BG=$COLOR_FOCUSED_MONITOR_BG
+								on_focused_monitor=1
+								;;
+						esac
+						[ $num_mon -lt 2 ] && shift && continue
+						wm="${wm}%{F${FG}}%{B${BG}}%{A:bspc monitor -f ${name}:} ${name} %{A}%{B-}%{F-}"
+						;;
+					[fFoOuU]*)
+						case $item in
+							f*)
+								# free desktop
+								FG=$COLOR_FREE_FG
+								BG=$COLOR_FREE_BG
+								UL=$BG
+								;;
+							F*)
+								if [ "$on_focused_monitor" ] ; then
+									# focused free desktop
+									FG=$COLOR_FOCUSED_FREE_FG
+									BG=$COLOR_FOCUSED_FREE_BG
+									UL=$BG
+								else
+									# active free desktop
+									FG=$COLOR_FREE_FG
+									BG=$COLOR_FREE_BG
+									UL=$COLOR_FOCUSED_FREE_BG
+								fi
+								;;
+							o*)
+								# occupied desktop
+								FG=$COLOR_OCCUPIED_FG
+								BG=$COLOR_OCCUPIED_BG
+								UL=$BG
+								;;
+							O*)
+								if [ "$on_focused_monitor" ] ; then
+									# focused occupied desktop
+									FG=$COLOR_FOCUSED_OCCUPIED_FG
+									BG=$COLOR_FOCUSED_OCCUPIED_BG
+									UL=$BG
+								else
+									# active occupied desktop
+									FG=$COLOR_OCCUPIED_FG
+									BG=$COLOR_OCCUPIED_BG
+									UL=$COLOR_FOCUSED_OCCUPIED_BG
+								fi
+								;;
+							u*)
+								# urgent desktop
+								FG=$COLOR_URGENT_FG
+								BG=$COLOR_URGENT_BG
+								UL=$BG
+								;;
+							U*)
+								if [ "$on_focused_monitor" ] ; then
+									# focused urgent desktop
+									FG=$COLOR_FOCUSED_URGENT_FG
+									BG=$COLOR_FOCUSED_URGENT_BG
+									UL=$BG
+								else
+									# active urgent desktop
+									FG=$COLOR_URGENT_FG
+									BG=$COLOR_URGENT_BG
+									UL=$COLOR_FOCUSED_URGENT_BG
+								fi
+								;;
+						esac
+						wm="${wm}%{F${FG}}%{B${BG}}%{A:bspc desktop -f ${name}:}%{A5:bspc desktop -f next:}%{A4:bspc desktop -f prev:} ${name} %{A}%{A}%{A}%{B-}%{F-}"
+						;;
+					[LTG]*)
+						# layout, state and flags
+						wm="${wm}%{F$COLOR_STATE_FG}%{B$COLOR_STATE_BG} ${name} %{B-}%{F-}"
+						;;
+				esac
+				shift
+			done
+			;;
+	esac
+	printf "%s\n" "%{l}${wm} ${music} %{r}${mails} ${cpu} ${ram} ${wifi} ${volume} ${battery} ${date}"
+done
+}
+
+my_panel < "$PANEL_FIFO" | lemonbar -a 32 -u 2 -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "$PANEL_FONT" -f "$ICONS_FONT" -F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" | sh &
+
+wid=$(xdo id -m -a "$PANEL_WM_NAME")
+xdo above -t "$(xdo id -N Bspwm -n root | sort | head -n 1)" "$wid"
+
+wait
