@@ -130,7 +130,7 @@ volume(){
 mails() {
     count=$(find $HOME/.mail/Inbox/new -type f -print | wc -l)
     if [ $count -ne 0 ]; then
-        printf '%%{F#FF0000}%%{B#000000}Mails: %d%%{F-}%%{B-}' $count
+        printf '%%{F#FF0000}%%{B#000000}Mails:%d%%{F-}%%{B-}' $count
     fi
 }
 
