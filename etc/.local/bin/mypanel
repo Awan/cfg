@@ -92,8 +92,9 @@ battery() {
         echo -n "%{F#00FF00}%{B#000000}$battery_percentage%% %{F-}%{B-}"
     elif [ $battery_percentage -gt 30 ]; then
         echo -n "%{F#FFFF00}%{B#000000}$battery_percentage%% %{F-}%{B-}"
-    elif [ $battery_percentage -lt 30 ] && [ "${power_now}" -ne 0 ] ; then
+    elif [ $battery_percentage -lt 30 ] && [ "${is_charger_connected}" -ne 1 ] ; then
         notify-send -u critical -t 30000 "Battery critically low!"
+        echo -n "%{F#FF3361}%{B#000000}$battery_percentage%% %{F-}%{B-}"
     else
         echo -n "%{F#FF0000}%{B#000000}$battery_percentage%% %{F-}%{B-}"
     fi
