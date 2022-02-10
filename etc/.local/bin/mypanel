@@ -80,11 +80,11 @@ battery() {
     ac_on="$(cat $sysfs/$mains/online)"
     is_charger_connected="$(cat /sys/class/power_supply/AC/online)"
     if [ $is_charger_connected = 0 ]; then
-        echo -n "%{F#FF0000}%{B#000000}Discharging: %{F-}%{B-}"
+        echo -n "%{F#FF0000}%{B#000000}Discharging:%{F-}%{B-}"
     elif [ $is_charger_connected = 1 ]; then
-        echo -n "%{F#00FF00}%{B#000000}Charging: %{F-}%{B-}"
+        echo -n "%{F#00FF00}%{B#000000}Charging:%{F-}%{B-}"
     else
-        echo -n "%{F#0000FF}%{B#000000}AC: %{F-}%{B-}"
+        echo -n "%{F#0000FF}%{B#000000}AC:%{F-}%{B-}"
     fi
 
     battery_percentage="$(cat /sys/class/power_supply/BAT0/capacity)"

@@ -166,6 +166,9 @@ alt + n
 alt + v
     cmus-remote -u || notify-send 'cmus is not running'
 
+alt + +
+    pamixer -i 10%
+
 # Rotate desktop
 
 alt + space
