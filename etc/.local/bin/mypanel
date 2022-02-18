@@ -116,6 +116,25 @@ battery() {
     echo -n "%{F#9D10A4}%{B#000000}$remaining_time mins"
 }
 
+spotify_music()
+{
+    if ! pgrep -x spotify >/dev/null; 
+    then
+        # do nothing
+        exit
+    else
+        cmd="org.freedesktop.DBus.Properties.Get"
+        domain="org.mpris.MediaPlayer2"
+        path="/org/mpris/MediaPlayer2"
+        meta=$(dbus-send --print-reply --dest=${domain}.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:${domain}.Player string:Metadata)
+        artist=$(echo "$meta" | sed -nr '/xesam:artist"/,+2s/^ +string "(.*)"$/\1/p' | tail -1)
+        album=$(echo "$meta" | sed -nr '/xesam:album"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
+        title=$(echo "$meta" | sed -nr '/xesam:title"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
+    fi
+
+    echo -n "${*:-%artist% %title%}" | sed "s/%artist%/%{F#00FFFF}%{B#000000}$artist/g;s/%title%/%{F#DAA520}%{B#000000}$title/g;s/%album%/$album/g"i | sed 's/&/\\&/g'
+}
+
 volume(){
     current_volume="$(pamixer --get-volume)"
     is_muted="$(pamixer --get-volume-human)"
@@ -176,6 +195,7 @@ all_info() {
         echo "Z" "$(music)"
         echo "R" "$(ram)"
         echo "V" "$(volume)"
+        echo "S" "$(spotify_music)"
         sleep 1
     done
 }
@@ -214,6 +234,9 @@ my_panel() {
                 ;;
             V*)
                 volume="${line#?}"
+                ;;
+            S*)
+                spotify_music="${line#?}"
                 ;;
 	    W*)
 	       # bspwm's state
@@ -313,7 +336,7 @@ my_panel() {
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${wm} ${music} %{r}${mails} ${cpu} ${ram} ${wifi} ${volume} ${battery} ${date}"
+	printf "%s\n" "%{l}${wm} ${music} ${spotify_music} %{r}${mails} ${cpu} ${ram} ${wifi} ${volume} ${battery} ${date}"
 done
 }
 
