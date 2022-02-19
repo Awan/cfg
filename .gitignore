@@ -37,5 +37,5 @@ cmus/.config/cmus/search-history
 cmus/.config/cmus/cache
 cmus/.config/cmus/command-history
 cmus/.config/cmus/lib.pl
-cmus/.config/cmus/playlists/default
+cmus/.config/cmus/playlists/
 cmus/.config/cmus/queue.pl
