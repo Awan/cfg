@@ -1,0 +1,23 @@
+#!/bin/sh
+# shellcheck disable=2034
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░░░░░░░░░░
+
+'
+# Muisc player seek backward and forward
+# check if cmus is playing or not
+
+duration=$1
+_cmus_state=$(cmus-remote -Q | awk 'NR==1{print $2}')
+
+if [ $_cmus_state = 'playing' ]; then
+    cmus-remote -k $duration
+else
+    mpc seek $duration
+fi

@@ -247,12 +247,12 @@ XF86Explorer
 # Music little backward/forward
 
 alt + bracket{left,right}
-    mpc seek {-15,+15}
+    ~/.local/bin/music_seek {-15,+15}
 
 # Music backward/forward
 
 alt + shift + bracket{left,right}
-    mpc seek {-100,+100}
+    ~/.local/bin/music_seek {-100,+100}
  
 # Lock the screen
 
