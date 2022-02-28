@@ -1,4 +1,5 @@
 alias lsa='ls -lah'
+alias li='ls -li'
 alias r='ranger $@'
 alias m='mpv'
 alias ip='ip --color=auto'

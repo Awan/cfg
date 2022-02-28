@@ -161,6 +161,7 @@ bind common ^E win-scroll-down
 bind common ^F win-page-down
 bind common ^L refresh
 bind common ^R toggle repeat_current
+bind common ^T push run id3tool {}
 bind common ^Y win-scroll-up
 bind common a win-add-l
 bind common b player-next

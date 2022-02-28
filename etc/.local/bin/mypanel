@@ -43,6 +43,9 @@ PANEL_FIFO=/tmp/panel-fifo
 PANEL_HEIGHT=24
 # PANEL_FONT="-bitstream-terminal-medium-r-normal--18-140-100-100-c-110-iso8859-1"
 PANEL_FONT="-xos4-terminus-bold-r-normal--18-180-72-72-c-100-iso10646-1"
+# PANEL_FONT="-bitstream-charter-medium-r-normal--19-140-100-100-p-106-iso8859-1"
+# ICONS_FONT="-misc-font awesome 6 free regular-medium-r-normal--0-0-0-0-p-0-iso10646-1"
+ICONS_FONT="-misc-font awesome 6 free solid-black-r-normal--0-0-0-0-p-0-iso10646-1"
 PANEL_WM_NAME=bspwm_panel
 
 if xdo id -a "$PANEL_WM_NAME" > /dev/null ; then
@@ -180,7 +183,19 @@ music() {
         test $now_hours -gt 0 && now_dur="$now_hours:"
         duration="$dur$(printf '%02d:%02d' $(($minutes / 60)) $(($minutes % 60)))"
         position="$now_dur$(printf '%02d:%02d' $(($now_minutes / 60)) $(($now_minutes % 60)))"
-        echo -n "%{F#00ffff}%{B#000000}$artist - %{F#daa520}%{B#000000}$title - %{F#ff00dd}%{B#000000}$position/$duration"
+        echo -n "%{F#00ffff}%{B#000000}$artist - %{F#daa520}%{B#000000}$title %{F#FF69B4}❤️ %{B#000000}%{F#ff00dd}%{B#000000}$position/$duration"
+    fi
+}
+
+mpd_music(){
+    stat=$(mpc | awk 'NR==2{print $1}')
+    if [ $stat = '[paused]' ]; then
+        # do nothing
+        :
+    elif [ $stat = '[playing]' ]; then
+        artist_and_album=$(mpc current)
+        position=$(mpc | awk 'NR==2{print $3}')
+        echo -n "%{F#00ffff}%{B#000000}$artist_and_album %{F#FF69B4}❤️ %{B#000000}%{F#daa520}%{B#000000}$position"
     fi
 }
 
@@ -196,6 +211,7 @@ all_info() {
         echo "R" "$(ram)"
         echo "V" "$(volume)"
         echo "S" "$(spotify_music)"
+        echo "P" "$(mpd_music)"
         sleep 1
     done
 }
@@ -237,6 +253,9 @@ my_panel() {
                 ;;
             S*)
                 spotify_music="${line#?}"
+                ;;
+            P*)
+                mpd_music="${line#?}"
                 ;;
 	    W*)
 	       # bspwm's state
@@ -336,7 +355,7 @@ my_panel() {
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${wm} ${music} ${spotify_music} %{r}${mails} ${cpu} ${ram} ${wifi} ${volume} ${battery} ${date}"
+	printf "%s\n" "%{l}${wm} ${mpd_music} ${spotify_music} ${music} %{r}${mails} ${cpu} ${ram} ${wifi} ${volume} ${battery} ${date}"
 done
 }
 
