@@ -164,7 +164,11 @@ alt + n
 # Toggle cmus
 
 alt + v
-    cmus-remote -u || notify-send 'cmus is not running'
+    cmus-remote -u || if (  (/usr/bin/tmux has-session -t $USER) ); then \
+        /usr/bin/tmux new-window cmus; \
+    else; \
+        /usr/bin/tmux new-session -d -s $USER cmus; \
+    fi
 
 # Rotate desktop
 
