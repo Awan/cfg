@@ -16,6 +16,9 @@ source ~/.config/mutt/aliases
 set folder                                                                                               = ~/.mail/
 mailboxes                     = $HOME/.mail/Inbox $HOME/.mail/Sent $HOME/.mail/Outbox $HOME/.mail/Drafts $HOME/.mail/Spam $HOME/.mail/Trash
 set from                                                                                                 = abdullah@abdullah.today
+set realname                                                                                             = "Abdullah Khabir"
+set use_from                                                                                             = yes
+set envelope_from                                                                                        = yes
 set sendmail                                                                                             = msmtp
 set abort_noattach                                                                                       = "no"
 set abort_noattach_regexp                                                                                = "attach"
@@ -90,7 +93,6 @@ set spoolfile                                                                   
 set ssl_force_tls                                                                                        = yes
 set ssl_starttls                                                                                         = yes
 set timeout                                                                                              = 3
-set use_from                                                                                             = yes
 set quit
 set visual                                                                                               = $EDITOR
 set wait_key                                                                                             = no
@@ -162,7 +164,7 @@ macro index,pager U "<enter-command>set pipe_decode  = yes<enter><pipe-message>u
 
 # headers
 
-my_hdr User-Agent: 'Eat your heart out, Windows Lusers'
+my_hdr User-Agent: Eat your heart out, Windows Lusers
 hdr_order from: to: cc: date: subject:
 unhdr_order *
 

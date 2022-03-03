@@ -69,7 +69,7 @@ cpu() {
 }
 
 wifi(){
-    ssid="$(iw dev wlp3s0 link | awk -F: '/SSID/ {print $NF}')"
+    ssid="$(iw dev wlan0 link | awk -F: '/SSID/ {print $NF}')"
     echo -n "%{F#F10CF1}%{B#000000}$ssid%{F-}%{B-}"
 }
 

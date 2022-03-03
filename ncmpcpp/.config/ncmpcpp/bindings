@@ -407,10 +407,10 @@ def_key "g"
 #  jump_to_position_in_song
 #
 def_key "h"
-   previous_column
+  seek_backward
 #
 def_key "l"
-   next_column
+   seek_forward
 #  show_lyrics
 #
 def_key "O"
