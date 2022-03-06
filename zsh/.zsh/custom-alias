@@ -56,6 +56,7 @@ alias pgf='prt-get fsearch'
 alias pgi='sudo prt-get install'
 alias ltd='ls *(m0)' # files and dirs modified in the last day
 alias lt='ls *(.m0)' # files modified in last day (no dirs)
+alias ltr='ls -ltr'
 alias lnew='ls *(.om[1,3])' # list three newest
 alias lsrdir='ls -d *(/om[1])'
 alias lH='ls -d .*' # only hidden files

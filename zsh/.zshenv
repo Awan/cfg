@@ -53,6 +53,7 @@ get_editor
 XDG_DATA_HOME=$HOME/.local/share
 XDG_CONFIG_HOME=$HOME/.config
 XDG_CACHE_HOME=$HOME/.cache
+XDG_RUNTIME_DIR=/run/user/`id -u`
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi

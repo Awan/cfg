@@ -406,11 +406,11 @@ def_key "g"
    move_home
 #  jump_to_position_in_song
 #
-def_key "h"
-  seek_backward
+#def_key "h"
+#  seek_backward
 #
-def_key "l"
-   seek_forward
+#def_key "l"
+#   seek_forward
 #  show_lyrics
 #
 def_key "O"
@@ -522,6 +522,12 @@ def_key "G"
 def_key "q"
   quit
   run_external_command "clearArt"
+
+def_key "h"
+    run_external_command "mpc seek -10 > /dev/null 2>&1"
+
+def_key "l"
+    run_external_command "mpc seek +10 > /dev/null 2>&1"
 #
 #def_command "scroll_down" [immediate]
 #   run_external_command "~/bin/cover"
