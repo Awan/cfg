@@ -62,6 +62,10 @@ datetime() {
     echo -n "%{F#00FFFF}%{B#000000}$(date "+%a %-d %b %H:%M:%S")%{F-}%{B-}"
 }
 
+brightness() {
+    echo -n "%{F#FA58F4}%{B#000000}BR:%{F-}%{B-}%{F#28DECB}%{B#000000}$(light -G | cut -d . -f 1)% %{F-}%{B-}"
+}
+
 cpu() {
     cpu=$(ps -eo pcpu | awk 'BEGIN {sum=0.0f} {sum+=$1} END {print sum}')
     temperature=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))°c
@@ -204,7 +208,7 @@ all_info() {
         echo "B" "$(battery)"
         echo "G" "$(wifi)"
         echo "H" "$(datetime)"
-#         echo "C" "$(brightness)"
+        echo "C" "$(brightness)"
         echo "Y" "$(cpu)"
         echo "N" "$(mails)"
         echo "Z" "$(music)"
@@ -227,9 +231,9 @@ my_panel() {
             B*)
                 battery="${line#?}"
                 ;;
-#             C*)
-#                 brightness="${line#?}"
-#                 ;;
+            C*)
+                brightness="${line#?}"
+                ;;
             H*)
                 date="${line#?}"
                 ;;
@@ -355,7 +359,7 @@ my_panel() {
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${wm} ${mpd_music} ${spotify_music} ${music} %{r}${mails} ${cpu} ${ram} ${wifi} ${volume} ${battery} ${date}"
+	printf "%s\n" "%{l}${wm} ${mpd_music} ${spotify_music} ${music} %{r}${mails} ${brightness} ${cpu} ${ram} ${wifi} ${volume} ${battery} ${date}"
 done
 }
 
