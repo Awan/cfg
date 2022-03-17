@@ -39,7 +39,7 @@ call plug#begin('~/.vim/plugged')
 "
 "" Plugins
 "
-Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs'
+Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs' | Plug 'dkarter/bullets.vim'
 "
 "" Initialize vim-plug
 "
@@ -49,6 +49,10 @@ call plug#end()
 if &compatible
     set nocompatible
 endif
+
+" vim bullets for .md, .txt, and gitcommit
+let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'mail']
+
 " Show relative numbers
 set rnu nu
 " Set colorscheme

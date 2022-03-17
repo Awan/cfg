@@ -89,16 +89,15 @@ music()
 {
   is_playing=$(mpc | grep "^\[playing\]" | awk '{print $1}')
   how_long_the_tags_are=$(mpc | head -1 | wc -c)
-  shorter_tags=$(mpc --format='[%title% - %artist%]' current | head -1 | head -c 30)
+  shorter_tags=$(mpc --format='[%artist% - %title%]' current | head -1 | head -c 30)
 
   if [ "$is_playing" = "[playing]" ]; then
     if [ "$how_long_the_tags_are" -lt 30 ]; then
-      echo "$(mpc --format='[%title% - %artist%]' current)"
+      echo "$(mpc --format='[%artist% - %title%]' current)"
     else
       echo "$shorter_tags..."
     fi
   fi
-    
 
 }
 
