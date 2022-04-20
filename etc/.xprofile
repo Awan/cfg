@@ -113,8 +113,8 @@ xsetroot -cursor_shape ul_angle
 #xss-lock -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' 
 # run xautolock -time 2 -locker "/usr/bin/i3lock -c 000075" -notify 30 -notifier "notify-send -u critical -t 10000 -- 'Locking the screen in 30 seconds...'"
 xset s 60 120
-# run xss-lock -n ~/.local/bin/dim_screen -- ~/.local/bin/i3lock
-run xss-lock -n ~/.local/bin/dim_screen -- physlock -dp 'You cant run this system, fuckin looser'
+run xss-lock -n ~/.local/bin/dim_screen -- ~/.local/bin/i3lock
+# run xss-lock -n ~/.local/bin/dim_screen -- physlock -dp 'You cant run this system, fuckin looser'
 # Start Notification daemon
 
 run dunst -c "$HOME"/.config/dunst/dunstrc

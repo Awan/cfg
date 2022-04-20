@@ -1,4 +1,5 @@
 alias lsa='ls -lah'
+alias rami='shred -fzuv $@'
 alias li='ls -li'
 alias r='ranger $@'
 alias m='mpv'

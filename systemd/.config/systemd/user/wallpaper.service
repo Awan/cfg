@@ -3,7 +3,7 @@ Description=Set random wallpaper
 
 [Service]
 Type=oneshot
-Environment="walls_dir=%h/mus/album_arts/nazia"
+Environment="walls_dir=%h/pix/wall/collection"
 ExecStart=/bin/sh -c '/usr/bin/feh --randomize --recursive --bg-scale "$walls_dir"'
 
 [Install]
