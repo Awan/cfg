@@ -125,7 +125,9 @@ jump_to_now_playing_song_at_start = "yes"
 
 # Execute shell command once song is changed
 
-execute_on_song_change = "~/.config/ncmpcpp/cover" (uncomment it for album art)
+# execute_on_song_change = "~/.config/ncmpcpp/cover" (uncomment it for album art)
+
+execute_on_song_change = "~/.config/ncmpcpp/song_info" 
 
 #user_interface = "classic" (uncomment it for album art)
 

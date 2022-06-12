@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# So this script is executed when new song is played in mpd.
+
+current_song=$(mpc current)
+
+notify-send "$current_song"
