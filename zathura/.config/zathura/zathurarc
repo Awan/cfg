@@ -1,7 +1,7 @@
 # show statusbar and scrollbar
 
 set guioptions shv
-set smooth-scroll "true"
+# set smooth-scroll "true"
 
 # collapse $HOME to ~
 

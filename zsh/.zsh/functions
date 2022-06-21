@@ -1073,3 +1073,8 @@ doips()
         printf "%s %s\n" "$IP" "$NAME"
     done
 }
+
+usbtr() {
+    # Open connected android devices USB Tethering settings
+    adb shell am start -n com.android.settings/.TetherSettings
+}
