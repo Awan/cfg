@@ -143,7 +143,6 @@ alias hr='printf $(printf "\e[$(shuf -i 91-97 -n 1);1m%%%ds\e[0m\n" $(tput cols)
 alias starwars='telnet towel.blinkenlights.nl'
 alias e='evince'
 alias sv='sudo $EDITOR'
-alias aws='v $HOME/.config/sxhkd/sxhkdrc'
 alias rf='source $HOME/.bashrc'
 alias a='cd $HOME/.config'
 alias sk='autoscript'
