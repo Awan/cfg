@@ -24,7 +24,7 @@ webm2mp4 ()
 {
   for file in *.webm
   do 
-    ffmpeg -i "$file" "`basename "$file" .webm` .mp4"
+    ffmpeg -i "$file" "`basename "$file" .webm`.mp4"
   done
 }
 
