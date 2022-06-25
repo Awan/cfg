@@ -135,4 +135,3 @@ window_type dock
 
 # xsync [<bool>]             # whether to operate on X server synchronously (SLOOOOW)
 # xsync false
-

@@ -62,7 +62,8 @@ bspc config external_rules_command "$HOME"/.config/bspwm/external_rules
 # Start polybar on all connected monitors
 
 # multibar &
-
+# Start stalonetray
+stalonetray &
 # Start lemonbar
 $HOME/.local/bin/mypanel &
 
