@@ -205,7 +205,7 @@ music() {
 
 mpd_music(){
     stat=$(mpc | awk 'NR==2{print $1}')
-    if [ $stat = '[paused]' ]; then
+    if [ -z $stat ] || [ $stat = '[paused]' ]; then
         # do nothing
         :
     elif [ $stat = '[playing]' ]; then
