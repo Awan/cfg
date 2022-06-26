@@ -63,14 +63,14 @@ bspc config external_rules_command "$HOME"/.config/bspwm/external_rules
 
 # multibar &
 # Start stalonetray
-stalonetray &
+# stalonetray &
 # Start lemonbar
 $HOME/.local/bin/mypanel &
 
 # Border width and gaps between windows
 
 border_width=3
-window_gaps=11
+window_gaps=10
 bspc config border_width            $border_width
 bspc config window_gap              $window_gaps
 
@@ -81,9 +81,9 @@ for side in right bottom left ; do
   bspc config ${side}_padding       $padding
 done
 
-for side in top right bottom left; do
-    bspc config ${side}_monocle_padding 0
-done
+#for side in top right bottom left; do
+#    bspc config ${side}_monocle_padding 20
+#done
 
 # Ignore EWMH focus requests. If true, opening new program in already
 # opened instance will have direct
@@ -103,7 +103,7 @@ bspc config split_ratio             0.50
 
 # If monocle layout, no border to windows.
 
-bspc config borderless_monocle      true
+bspc config borderless_monocle      false
 
 # No gaps as well
 
@@ -128,7 +128,7 @@ bspc config click_to_focus          any
 
 # if there is only one window, set the layout monocle.
 
-bspc config single_monocle          true
+bspc config single_monocle          false
 
 # Pointer actions when pressing mod + button
 
