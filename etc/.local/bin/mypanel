@@ -13,46 +13,36 @@ In the name of Allah, the most Gracious, the most Merciful.
 ░█░█░░█░░░░░░█▀▀░█▀█░█░█░█▀▀░█░░
 ░▀░▀░░▀░░▀▀▀░▀░░░▀░▀░▀░▀░▀▀▀░▀▀▀
 '
-COLOR_DEFAULT_FG="#a7a5a5"
-COLOR_DEFAULT_BG="#000000"
-COLOR_MONITOR_FG="#8dbcdf"
-COLOR_MONITOR_BG="#333232"
-COLOR_FOCUSED_MONITOR_FG="#b1d0e8"
-COLOR_FOCUSED_MONITOR_BG="#144b6c"
-# COLOR_FREE_FG="#737171"
-COLOR_FREE_FG="#a7a5a5"
-# COLOR_FREE_BG="#333232"
-COLOR_FREE_BG="#000000"
-# COLOR_FOCUSED_FREE_FG="#000000"
-COLOR_FOCUSED_FREE_FG="#E9967A"
-# COLOR_FOCUSED_FREE_BG="#504e4e"
-COLOR_FOCUSED_FREE_BG="#000000"
-# COLOR_OCCUPIED_FG="#a7a5a5"
-COLOR_OCCUPIED_FG="#A0522D"
-# COLOR_OCCUPIED_BG="#333232"
-COLOR_OCCUPIED_BG="#000000"
-# COLOR_FOCUSED_OCCUPIED_FG="#d6d3d2"
-COLOR_FOCUSED_OCCUPIED_FG="#006400"
-# COLOR_FOCUSED_OCCUPIED_BG="#504e4e"
-COLOR_FOCUSED_OCCUPIED_BG="#000000"
-COLOR_URGENT_FG="#f15d66"
-COLOR_URGENT_BG="#333232"
-COLOR_FOCUSED_URGENT_FG="#501d1f"
-COLOR_FOCUSED_URGENT_BG="#d5443e"
-# COLOR_STATE_FG="#89b09c"
-COLOR_STATE_FG="#a7a5a5"
-# COLOR_STATE_BG="#333232"
-COLOR_STATE_BG="#000000"
-COLOR_TITLE_FG="#a8a2c0"
-COLOR_TITLE_BG="#333232"
-# COLOR_SYS_FG="#b1a57d"
-COLOR_SYS_FG="#a7a5a5"
-# COLOR_SYS_BG="#333232"
-COLOR_SYS_BG="#000000"
+COLOR_DEFAULT_FG="#FFA7A5A5"
+# COLOR_DEFAULT_FG="#FF000000"
+COLOR_DEFAULT_BG="#AA000000"
+# COLOR_DEFAULT_BG="#AAFFFFFF"
+COLOR_MONITOR_FG="#FF8DBCDF"
+COLOR_MONITOR_BG="#AA333232"
+COLOR_FOCUSED_MONITOR_FG="#FFB1D0E8"
+COLOR_FOCUSED_MONITOR_BG="#AA144B6C"
+COLOR_FREE_FG="#FFA7A5A5"
+COLOR_FREE_BG="#AA000000"
+COLOR_FOCUSED_FREE_FG="#FFE9967A"
+COLOR_FOCUSED_FREE_BG="#AA000000"
+COLOR_OCCUPIED_FG="#FFA0522D"
+COLOR_OCCUPIED_BG="#AA000000"
+COLOR_FOCUSED_OCCUPIED_FG="#FF006400"
+COLOR_FOCUSED_OCCUPIED_BG="#AA000000"
+COLOR_URGENT_FG="#FFF15D66"
+COLOR_URGENT_BG="#AA333232"
+COLOR_FOCUSED_URGENT_FG="#FF501D1f"
+COLOR_FOCUSED_URGENT_BG="#AAD5443E"
+COLOR_STATE_FG="#FFA7A5A5"
+COLOR_STATE_BG="#AA000000"
+COLOR_TITLE_FG="#FFA8A2C0"
+COLOR_TITLE_BG="#AA333232"
+COLOR_SYS_FG="#FFA7A5A5"
+COLOR_SYS_BG="#AA000000"
 COLOR_RED="#FF0000"
 num_mon=$(bspc query -M | wc -l)
 PANEL_FIFO=/tmp/panel-fifo
-PANEL_HEIGHT=24
+PANEL_HEIGHT=20
 # PANEL_FONT="-bitstream-terminal-medium-r-normal--18-140-100-100-c-110-iso8859-1"
 PANEL_FONT="-xos4-terminus-bold-r-normal--18-180-72-72-c-100-iso10646-1"
 # PANEL_FONT="-bitstream-charter-medium-r-normal--19-140-100-100-p-106-iso8859-1"
@@ -71,22 +61,22 @@ trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
 mkfifo "$PANEL_FIFO"
 
 datetime() {
-    echo -n "%{F#00FFFF}%{B#000000}$(date "+%a %-d %b %H:%M:%S")%{F-}%{B-}"
+    echo -n "%{F#FF00FFFF}%{B#AA000000}$(date "+%a %-d %b %H:%M:%S")%{F-}%{B-}"
 }
 
 brightness() {
-    echo -n "%{F#FA58F4}%{B#000000}BR:%{F-}%{B-}%{F#28DECB}%{B#000000}$(light -G | cut -d . -f 1)% %{F-}%{B-}"
+    echo -n "%{F#FFFA58F4}%{B#AA000000}BR:%{F-}%{B-}%{F#FF28DECB}%{B#AA000000}$(light -G | cut -d . -f 1)% %{F-}%{B-}"
 }
 
 cpu() {
     cpu=$(ps -eo pcpu | awk 'BEGIN {sum=0.0f} {sum+=$1} END {print sum}')
     temperature=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))°c
-    echo -n "%{F#FFF042}%{B#000000}CPU:$cpu %{F-}%{B-}%{F#00FFFF}%{B#000000}$temperature%{F-}%{B-}"
+    echo -n "%{F#FFFFF042}%{B#AA000000}CPU:$cpu %{F-}%{B-}%{F#FF00FFFF}%{B#AA000000}$temperature%{F-}%{B-}"
 }
 
 wifi(){
     ssid="$(iw dev wlan0 link | awk -F: '/SSID/ {print $NF}')"
-    echo -n "%{F#F10CF1}%{B#000000}$ssid%{F-}%{B-}"
+    echo -n "%{F#FFF10CF1}%{B#AA000000}$ssid%{F-}%{B-}"
 }
 
 battery() {
@@ -99,23 +89,23 @@ battery() {
     ac_on="$(cat $sysfs/$mains/online)"
     is_charger_connected="$(cat /sys/class/power_supply/AC/online)"
     if [ $is_charger_connected = 0 ]; then
-        echo -n "%{F#FF0000}%{B#000000}Discharging:%{F-}%{B-}"
+        echo -n "%{F#FFFF0000}%{B#AA000000}Discharging:%{F-}%{B-}"
     elif [ $is_charger_connected = 1 ]; then
-        echo -n "%{F#00FF00}%{B#000000}Charging:%{F-}%{B-}"
+        echo -n "%{F#FF00FF00}%{B#AA000000}Charging:%{F-}%{B-}"
     else
-        echo -n "%{F#0000FF}%{B#000000}AC:%{F-}%{B-}"
+        echo -n "%{F#FF0000FF}%{B#AA000000}AC:%{F-}%{B-}"
     fi
 
     battery_percentage="$(cat /sys/class/power_supply/BAT0/capacity)"
     if [ $battery_percentage -gt 60 ]; then
-        echo -n "%{F#00FF00}%{B#000000}$battery_percentage%% %{F-}%{B-}"
+        echo -n "%{F#FF00FF00}%{B#AA000000}$battery_percentage%% %{F-}%{B-}"
     elif [ $battery_percentage -gt 30 ]; then
-        echo -n "%{F#FFFF00}%{B#000000}$battery_percentage%% %{F-}%{B-}"
+        echo -n "%{F#FFFFFF00}%{B#AA000000}$battery_percentage%% %{F-}%{B-}"
     elif [ $battery_percentage -lt 30 ] && [ "${is_charger_connected}" -ne 1 ] ; then
         notify-send -u critical -t 30000 "Battery critically low!"
-        echo -n "%{F#FF3361}%{B#000000}$battery_percentage%% %{F-}%{B-}"
+        echo -n "%{F#FFFF3361}%{B#AA000000}$battery_percentage%% %{F-}%{B-}"
     else
-        echo -n "%{F#FF0000}%{B#000000}$battery_percentage%% %{F-}%{B-}"
+        echo -n "%{F#FFFF0000}%{B#AA000000}$battery_percentage%% %{F-}%{B-}"
     fi
 
     if [ "${ac_on}" -ne 0 ]; then
@@ -132,7 +122,7 @@ battery() {
         fi
     fi
 
-    echo -n "%{F#9D10A4}%{B#000000}$remaining_time mins"
+    echo -n "%{F#FF9D10A4}%{B#AA000000}$remaining_time mins"
 }
 
 spotify_music()
@@ -151,7 +141,8 @@ spotify_music()
         title=$(echo "$meta" | sed -nr '/xesam:title"/,+2s/^ +variant +string "(.*)"$/\1/p' | tail -1)
     fi
 
-    echo -n "${*:-%artist% %title%}" | sed "s/%artist%/%{F#00FFFF}%{B#000000}$artist/g;s/%title%/%{F#DAA520}%{B#000000}$title/g;s/%album%/$album/g"i | sed 's/&/\\&/g'
+    echo -n "${*:-%artist% %title%}" | sed "s/%artist%/%{F#FF00FFFF}%{B#AA000000}$artist/g;s/%title%/%{F#FFDAA520}%{B#AA000000}$title/g;s/%album%/$album/g"i | sed 's/&/\\&/g'
+
 }
 
 volume(){
@@ -163,19 +154,19 @@ volume(){
         vol="$current_volume"
     fi
 
-    echo -n "%{A:pamixer -t:}%{F#5E81AC}%{B#000000}Vol:$vol%{A}%{F-}%{B-}"
+    echo -n "%{A:pamixer -t:}%{F#FF5E81AC}%{B#AA000000}Vol:$vol%{A}%{F-}%{B-}"
 }
 
 mails() {
     count=$(find $HOME/.mail/Inbox/new -type f -print | wc -l)
     if [ $count -ne 0 ]; then
-        printf '%%{F#FF0000}%%{B#000000}Mails:%d%%{F-}%%{B-}' $count
+        printf '%%{F#FFFF0000}%%{BAA#000000}Mails:%d%%{F-}%%{B-}' $count
     fi
 }
 
 ram(){
     used_ram="$(free | awk '/Mem:/ {print int($3/$2 * 100.0)}')%"
-    echo -n "%{F#B443F3}%{B#000000}RAM:$used_ram %{F-}%{B-}"
+    echo -n "%{F#FFB443F3}%{B#AA000000}RAM:$used_ram %{F-}%{B-}"
 }
 
 music() {
@@ -199,7 +190,7 @@ music() {
         test $now_hours -gt 0 && now_dur="$now_hours:"
         duration="$dur$(printf '%02d:%02d' $(($minutes / 60)) $(($minutes % 60)))"
         position="$now_dur$(printf '%02d:%02d' $(($now_minutes / 60)) $(($now_minutes % 60)))"
-        echo -n "%{F#00ffff}%{B#000000}$artist - %{F#daa520}%{B#000000}$title %{F#FF69B4}❤️ %{B#000000}%{F#ff00dd}%{B#000000}$position/$duration"
+        echo -n "%{F#FF00ffff}%{B#AA000000}$artist - %{F#FFdaa520}%{B#AA000000}$title %{F#FFFF69B4}❤️ %{B#AA000000}%{F#FFff00dd}%{B#AA000000}$position/$duration"
     fi
 }
 
@@ -211,7 +202,7 @@ mpd_music(){
     elif [ $stat = '[playing]' ]; then
         artist_and_album=$(mpc current)
         position=$(mpc | awk 'NR==2{print $3}')
-        echo -n "%{F#00ffff}%{B#000000}$artist_and_album %{F#FF69B4}❤️ %{B#000000}%{F#daa520}%{B#000000}$position"
+        echo -n "%{F#FF00ffff}%{B#AA000000}$artist_and_album %{F#FFFF69B4}❤️ %{B#AA000000}%{F#FFdaa520}%{B#AA000000}$position"
     fi
 }
 
@@ -375,7 +366,8 @@ my_panel() {
 done
 }
 
-my_panel < "$PANEL_FIFO" | lemonbar -a 32 -u 2 -n "$PANEL_WM_NAME" -g 1877x24+0+0 -f "$PANEL_FONT" -f "$ICONS_FONT" -F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" | sh &
+my_panel < "$PANEL_FIFO" | lemonbar -a 32 -u 2 -n "$PANEL_WM_NAME" -g  \
+1742x31+85+12 -f "$PANEL_FONT" -f "$ICONS_FONT" -F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" | sh &
 
 wid=$(xdo id -m -a "$PANEL_WM_NAME")
 xdo above -t "$(xdo id -N Bspwm -n root | sort | head -n 1)" "$wid"
