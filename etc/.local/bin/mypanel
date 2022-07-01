@@ -14,9 +14,9 @@ In the name of Allah, the most Gracious, the most Merciful.
 ░▀░▀░░▀░░▀▀▀░▀░░░▀░▀░▀░▀░▀▀▀░▀▀▀
 '
 COLOR_DEFAULT_FG="#FFA7A5A5"
+COLOR_TRANSPARENT="#FF000000"
 # COLOR_DEFAULT_FG="#FF000000"
-COLOR_DEFAULT_BG="#AA000000"
-# COLOR_DEFAULT_BG="#AAFFFFFF"
+COLOR_DEFAULT_BG="#AAFFFFFF"
 COLOR_MONITOR_FG="#FF8DBCDF"
 COLOR_MONITOR_BG="#AA333232"
 COLOR_FOCUSED_MONITOR_FG="#FFB1D0E8"
@@ -47,8 +47,12 @@ PANEL_HEIGHT=20
 PANEL_FONT="-xos4-terminus-bold-r-normal--18-180-72-72-c-100-iso10646-1"
 # PANEL_FONT="-bitstream-charter-medium-r-normal--19-140-100-100-p-106-iso8859-1"
 # ICONS_FONT="-misc-font awesome 6 free regular-medium-r-normal--0-0-0-0-p-0-iso10646-1"
-ICONS_FONT="-misc-font awesome 6 free solid-black-r-normal--0-0-0-0-p-0-iso10646-1"
+# ICONS_FONT="-misc-font awesome 6 free solid-black-r-normal--0-0-0-0-p-0-iso10646-1"
+ICONS_FONT="PowerlineSymbols-20"
+ICONS_FONT_2="FontAwesome-20"
 PANEL_WM_NAME=bspwm_panel
+left_corner="%{F#FF28DECB}%{F-}%{B-}"
+right_corner="%{F#FF28DECB}%{F-}%{B-}"
 
 if xdo id -a "$PANEL_WM_NAME" > /dev/null ; then
 	printf "%s\n" "The panel is already running." >&2
@@ -59,9 +63,10 @@ trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
 
 [ -e "$PANEL_FIFO" ] && rm "$PANEL_FIFO"
 mkfifo "$PANEL_FIFO"
-
+modules_bg="B#AAFFFFFF"
+modules_fg="F#FF000000"
 datetime() {
-    echo -n "%{F#FF00FFFF}%{B#AA000000}$(date "+%a %-d %b %H:%M:%S")%{F-}%{B-}"
+    echo -n "%{$modules_fg}%{$modules_bg}$(date "+%a %-d %b %H:%M:%S")%{F-}%{B-}"
 }
 
 brightness() {
@@ -76,7 +81,12 @@ cpu() {
 
 wifi(){
     ssid="$(iw dev wlan0 link | awk -F: '/SSID/ {print $NF}')"
-    echo -n "%{F#FFF10CF1}%{B#AA000000}$ssid%{F-}%{B-}"
+    if [ -z "${ssid}" ]; then
+        # Do nothing
+        :
+    else
+        echo -n "%{F#FFF10CF1}%{B#AA000000}$ssid%{F-}%{B-}"
+    fi
 }
 
 battery() {
@@ -160,7 +170,9 @@ volume(){
 mails() {
     count=$(find $HOME/.mail/Inbox/new -type f -print | wc -l)
     if [ $count -ne 0 ]; then
-        printf '%%{F#FFFF0000}%%{BAA#000000}Mails:%d%%{F-}%%{B-}' $count
+#         printf '%%{F#FFFF0000}%%{BAA#000000}Mails:%d%%{F-}%%{B-}' $count
+#         echo -n "{F#FFFF0000}%{B#AA000000}Mails:$count %{F-}%{B-}"
+        echo -n "%{F#FFFF0000}%{B#AA000000}Mails:$count %{F-}%{B-}"
     fi
 }
 
@@ -202,7 +214,7 @@ mpd_music(){
     elif [ $stat = '[playing]' ]; then
         artist_and_album=$(mpc current)
         position=$(mpc | awk 'NR==2{print $3}')
-        echo -n "%{F#FF00ffff}%{B#AA000000}$artist_and_album %{F#FFFF69B4}❤️ %{B#AA000000}%{F#FFdaa520}%{B#AA000000}$position"
+        echo -n "%{F#FF00ffff}%{B#2F343F}$artist_and_album %{F#FFFF69B4}❤️ %{B#AA000000}%{F#FFdaa520}%{B#AA000000}$position"
     fi
 }
 
@@ -362,12 +374,14 @@ my_panel() {
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${wm} ${mpd_music} ${spotify_music} ${music} %{r}${mails} ${brightness} ${cpu} ${ram} ${wifi} ${volume} ${battery} ${date}"
+# 	printf "%s\n" "%{l}${wm} ${mpd_music} ${spotify_music} ${music} %{r}${mails} ${brightness} ${cpu} ${ram} ${wifi} ${volume} ${battery} ${date}"
+	printf "%s\n" "%{l}${left_corner} ${wm} ${mpd_music} ${spotify_music} ${music} %{r}${mails} ${brightness} ${cpu} ${ram} ${wifi} ${volume} ${battery} ${date} ${right_corner}"
 done
 }
 
-my_panel < "$PANEL_FIFO" | lemonbar -a 32 -u 2 -n "$PANEL_WM_NAME" -g  \
-1742x31+85+12 -f "$PANEL_FONT" -f "$ICONS_FONT" -F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" | sh &
+my_panel < "$PANEL_FIFO" | lemonbar -a 32 -u 2 -o -5 -n "$PANEL_WM_NAME" -g  \
+1742x31+85+12 -B "$COLOR_TRANSPARENT" -f "$PANEL_FONT" -f "$ICONS_FONT" -f \
+"$ICONS_FONT_2"  -F "$COLOR_DEFAULT_FG" | sh &
 
 wid=$(xdo id -m -a "$PANEL_WM_NAME")
 xdo above -t "$(xdo id -N Bspwm -n root | sort | head -n 1)" "$wid"

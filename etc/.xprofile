@@ -170,9 +170,11 @@ else
   tabular
 fi
 
+run stalonetray 
+
 # Start a scratchpad
 
-alacritty --dimensions 55 15 --position 550 175 -t 'scratchpad' &
+# alacritty --dimensions 55 15 --position 550 175 -t 'scratchpad' &
 #sleep 1
 #termite -t scratchpad
 #xfce4-terminal -T scratchpad --font='Fantasque Sans Mono Italic 16'

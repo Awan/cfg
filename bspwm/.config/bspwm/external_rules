@@ -69,6 +69,12 @@ case $class in
    echo "focus = off"
    echo "locked = on"
    ;;
+ [Ss]talonetray)
+   echo "layer = above"
+   echo "manage = off"
+   echo "focus = off"
+   echo "locked = on"
+   ;;
 esac
 
 case $title in

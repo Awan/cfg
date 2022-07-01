@@ -13,38 +13,38 @@
 
 # background <color>         # color can be specified as an HTML hex triplet or
                              # as a name from rgb.txt, note that '#' must be quoted
-background "#000000"
+# background "#2F343F"
 
 # decorations <decspec>      # set trays window decorations; possible values for
                              # decspec are: all, title, border, none
-decorations none
+decorations border
 
 # display <display name>     # as usual
 
 # dockapp_mode <mode>        # set dockapp mode, which can be either simple (for
                              # e.g. OpenBox, wmaker for WindowMaker, or none
                              # (default). NEW in @VERSION_STR@.
-dockapp_mode simple
+dockapp_mode none
 
 # fuzzy_edges [<level>]      # enable fuzzy edges and set fuzziness level. level
                              # can be from 0 (disabled) to 3; this setting works
                              # with tinting and/or transparent and/or pixmap
                              # backgrounds
-fuzzy_edges 0
+fuzzy_edges 3
 
 # geometry <geometry>        # tray's geometry in standard X notation; width and
                              # height are specified in slot_size multiples
-geometry 1x1+1877
+geometry 3x1+10+15
 
 # grow_gravity <gravity>     # one of N, S, E, W, NW, NE, SW, SE; tray will grow
                              # in the direction opposite to one specified by
 							 # grow_gravity; if horizontal or vertical
 							 # direction is not specified, tray will not grow in
 							 # that direction
-grow_gravity W
+grow_gravity SW
 
 # icon_gravity <gravity>     # icon placement gravity, one of NW, NE, SW, SE
-icon_gravity SE
+icon_gravity SW
 
 # icon_size <int>            # specifies dimensions of typical icon slot
 icon_size 24
@@ -53,8 +53,7 @@ icon_size 24
                              # be err (default), info, or trace (enabled only
                              # when stalonetray configured with --enable-debug)
                              # NEW in @VERSION_STR@.
-log_level trace
-kludges force_icons_size
+log_level err
 
 # kludges kludge[,kludge]    # enable specific kludges to work around
                              # non-conforming WMs and/or stalonetray bugs.
@@ -67,17 +66,18 @@ kludges force_icons_size
                              #     icon_size
                              # * use_icon_hints - use icon window hints to
                              #     dtermine icon size
+kludges force_icons_size,fix_window_pos
 
 # max_geometry <geometry>    # maximal tray dimensions; 0 in width/height means
                              # no limit
-max_geometry 0x0
+max_geometry 4x1-150-24
 
 # no_shrink [<bool>]         # disables shrink-back mode
-no_shrink true
+no_shrink false
 
 # parent_bg [<bool>]         # whether to use pseudo-transparency
                              # (looks better when reparented into smth like FvwmButtons)
-parent_bg false
+# parent_bg false
 
 # pixmap_bg <path_to_xpm>    # use pixmap from specified xpm file for (tiled) background
 # pixmap_bg /home/user/.stalonetraybg.xpm
@@ -85,7 +85,7 @@ parent_bg false
 # scrollbars <mode>          # enable/disable scrollbars; mode is either
                              # vertical, horizontal, all or none (default)
                              # NEW in @VERSION_STR@.
-scrollbars none
+# scrollbars none
 
 # scrollbars-size <size>     # scrollbars step in pixels; default is slot_size / 4
 # scrollbars-step 8
@@ -104,19 +104,19 @@ skip_taskbar true
 sticky true
 
 # tint_color <color>         # set tinting color
-tint_color white
+# tint_color white
 
 # tint_level <level>         # set tinting level; level ranges from 0 (disabled)
                              # to 255
-tint_level 0
+# tint_level 0
 
 # transparent [<bool>]       # whether to use root-transparency (background
                              # image must be set with Esetroot or compatible utility)
-transparent false
+transparent true
 
 # vertical [<bool>]          # whether to use vertical layout (horisontal layout
                              # is used by default)
-vertical false
+# vertical false
 
 # window_layer <layer>       # set the EWMH-compatible window layer; one of:
                              # bottom, normal, top
@@ -134,5 +134,5 @@ window_strut auto
 window_type dock
 
 # xsync [<bool>]             # whether to operate on X server synchronously (SLOOOOW)
-xsync false
+# xsync false
 
