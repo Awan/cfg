@@ -170,7 +170,7 @@ else
   tabular
 fi
 
-run stalonetray 
+# run stalonetray 
 
 # Start a scratchpad
 

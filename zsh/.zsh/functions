@@ -1078,3 +1078,12 @@ usbtr() {
     # Open connected android devices USB Tethering settings
     adb shell am start -n com.android.settings/.TetherSettings
 }
+
+geometry() {
+    # Get a geometry for panel and other apps to put their window there
+    if [ -x /usr/sbin/slop ]; then
+        slop -f "%xx%y+%w+%h"
+    else
+        echo "Please install slop first..."
+    fi
+}
