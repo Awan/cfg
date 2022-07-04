@@ -44,10 +44,10 @@ PANEL_HEIGHT=24
 #PANEL_GEOMETRY="1867x18+52+0"
 # PANEL_FONT="-bitstream-terminal-medium-r-normal--18-140-100-100-c-110-iso8859-1"
 # PANEL_FONT="-xos4-terminus-bold-r-normal--18-180-72-72-c-100-iso10646-1"
-PANEL_FONT="TerminusBold-17"
+# PANEL_FONT="TerminusBold-17"
 # PANEL_FONT="TamzenForPowerline-17"
 # PANEL_FONT="SourceCodePro-15"
-# PANEL_FONT="UbuntuMonoNerdFont-15"
+PANEL_FONT="UbuntuMonoNerdFont-15"
 # PANEL_FONT="-bitstream-charter-medium-r-normal--19-140-100-100-p-106-iso8859-1"
 # ICONS_FONT="-misc-font awesome 6 free regular-medium-r-normal--0-0-0-0-p-0-iso10646-1"
 # ICONS_FONT="-misc-font awesome 6 free solid-black-r-normal--0-0-0-0-p-0-iso10646-1"
@@ -149,8 +149,14 @@ wifi(){
 
 cpu() {
     cpu=$(ps -eo pcpu | awk 'BEGIN {sum=0.0f} {sum+=$1} END {print sum}')
-    temperature=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))°c
-    echo -n "%{F#FFFFF042}CPU:%{F-}%{F#FF9181E7}$cpu %{F#FF00FFFF}$temperature"
+    temp=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))
+    if [ $temp -ge 60 ];
+    then
+        temperature="%{F#F92672}$temp°c%{F-}"
+    else
+        temperature="%{F#00FFFF}$temp°c%{F-}"
+    fi
+    echo -n "%{F#FFF042}CPU:%{F-}%{F#9181E7}$cpu $temperature"
 }
 
 mails() {
@@ -205,7 +211,7 @@ battery() {
 
 ram(){
     used_ram="$(free | awk '/Mem:/ {print int($3/$2 * 100.0)}')%"
-    echo -n "%{F#B443F3}RAM:$used_ram%%{F-}"
+    echo -n "%{F#B443F3}RAM:%{F-}%{F#58FAF4}$used_ram%%{F-}"
 }
 
 volume(){
