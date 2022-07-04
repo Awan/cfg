@@ -56,7 +56,7 @@ let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'mail']
 " Show relative numbers
 set rnu nu
 " Set colorscheme
-color afterglow
+color molokai
 " Set status line
 set laststatus=2
 set statusline=
@@ -130,7 +130,8 @@ autocmd! bufwritepost $HOME/.zshrc      !source $HOME/.zshrc
 autocmd! bufwritepost $HOME/.config/sxhkd/sxhkdrc       !pkill -USR1 -x sxhkd
 autocmd! bufwritepost $HOME/cfg/sxhkd/.config/sxhkd/sxhkdrc     !pkill -USR1 -x sxhkd
 autocmd! bufwritepost $HOME/cfg/zsh/.zsh/custom-alias !source $HOME/.zsh/custom-alias
-autocmd! bufwritepost $HOME/cfg/polybar/.config/polybar/*.conf !bspc wm -r >/dev/null 2>&1
+autocmd! bufwritepost $HOME/cfg/polybar/.config/polybar/*.{conf,ini} !bspc wm -r >/dev/null 2>&1
+autocmd! bufwritepost $HOME/cfg/bspwm/.config/bspwm/bspwmrc !bspc wm -r >/dev/null 2>&1
 autocmd! bufwritepost $HOME/cfg/etc/.local/bin/mypanel !pkill mypanel && $HOME/.local/bin/mypanel & disown
 set nocp
 filetype on

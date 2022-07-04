@@ -61,16 +61,16 @@ bspc config external_rules_command "$HOME"/.config/bspwm/external_rules
 
 # Start polybar on all connected monitors
 
-# multibar &
+multibar &
 # Start stalonetray
-stalonetray &
+# stalonetray &
 # Start lemonbar
-$HOME/.local/bin/mypanel &
+# $HOME/.local/bin/mypanel &
 
 # Border width and gaps between windows
 
 border_width=3
-window_gaps=11
+window_gaps=5
 bspc config border_width            $border_width
 bspc config window_gap              $window_gaps
 

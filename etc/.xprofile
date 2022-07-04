@@ -122,7 +122,7 @@ run dunst -c "$HOME"/.config/dunst/dunstrc
 # Battery notification
 # Only run this script if status bar isn't lemonbar (mypanel script does that)
 
-# run $HOME/.local/bin/battery_low
+run $HOME/.local/bin/battery_low
 
 # Get wireless network connectivity/disconnectivity
 

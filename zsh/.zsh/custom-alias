@@ -128,7 +128,7 @@ alias ss='sudo systemctl'
 alias cdg='cd $HOME/git'
 alias clock='ncmpcpp -s clock'
 alias cm='mutt 2>/dev/null'
-alias vp='$EDITOR $HOME/.config/polybar/config'
+alias vp='$EDITOR $HOME/.config/polybar/config.ini'
 alias cp='cp -i'
 alias mv='mv -i'
 #alias pb="curl -sF c=@- 'https://ptpb.pw/?u=1' | xsel"

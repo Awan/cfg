@@ -24,15 +24,15 @@ COLOR_FREE_FG="#737171"
 COLOR_FREE_BG="#333232"
 COLOR_FOCUSED_FREE_FG="#000000"
 COLOR_FOCUSED_FREE_BG="#504e4e"
-COLOR_OCCUPIED_FG="#a7a5a5"
+COLOR_OCCUPIED_FG="#ae81ff"
 COLOR_OCCUPIED_BG="#333232"
-COLOR_FOCUSED_OCCUPIED_FG="#d6d3d2"
+COLOR_FOCUSED_OCCUPIED_FG="#f4bf75"
 COLOR_FOCUSED_OCCUPIED_BG="#504e4e"
 COLOR_URGENT_FG="#f15d66"
 COLOR_URGENT_BG="#333232"
 COLOR_FOCUSED_URGENT_FG="#501d1f"
 COLOR_FOCUSED_URGENT_BG="#d5443e"
-COLOR_STATE_FG="#89b09c"
+COLOR_STATE_FG="#a1efe4"
 COLOR_STATE_BG="#333232"
 COLOR_TITLE_FG="#a8a2c0"
 COLOR_TITLE_BG="#333232"
@@ -108,13 +108,21 @@ cmus_music() {
         :
     elif [ $stat = 'playing' ]; then
         artist=$(cmus-remote -C status | grep 'tag\ artist' | cut -d ' ' -f 3-)
-        title=$(cmus-remote -C status | grep 'tag\ title' | cut -d ' ' -f 3-)
-        if expr length "$title" '<=' 30 1>/dev/null; then
+        if [ ${#artist} -le 15 ]; then
             :
         else
-            title=$(cmus-remote -C status | grep 'tag\ title' | cut -d ' ' \
-        -f 3- | head -c 30)
+            artist=$(cmus-remote -C status | grep 'tag\ artist' | cut -d ' ' -f\
+                3- | head -c 15)
         fi
+        title=$(cmus-remote -C status | grep 'tag\ title' | cut -d ' ' -f 3-)
+        if [ ${#title} -le 15 ]; then
+            :
+        else
+            title=$(cmus-remote -C status | grep 'tag\ title' | cut -d ' ' -f\
+                3- | head -c 15)
+        fi
+
+
         full_time=$(cmus-remote -C status | awk '/duration/{print $2}')
         now_time=$(cmus-remote -C status | awk '/position/{print $2}')
         hours=$(($full_time / 3600))
