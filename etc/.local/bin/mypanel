@@ -223,7 +223,7 @@ volume(){
         vol="$current_volume"
     fi
 
-    echo -n "%{A:pamixer -t:}%{F#FF5E81AC}Vol:$vol%{A}"
+    echo -n "%{A:pamixer -t:}%{F#5E81AC}Vol:%{F-}%{F#FF8916}$vol%{F-}%{A}"
 }
 
 all_info() {
