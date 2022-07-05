@@ -143,7 +143,7 @@ wifi(){
         # Do nothing
         :
     else
-        echo -n "%{F#FFF10CF1}$ssid%{F-}"
+        echo -n "%{F#D1FF50}$ssid%{F-}"
     fi
 }
 
@@ -211,7 +211,7 @@ battery() {
 
 ram(){
     used_ram="$(free | awk '/Mem:/ {print int($3/$2 * 100.0)}')%"
-    echo -n "%{F#B443F3}RAM:%{F-}%{F#58FAF4}$used_ram%%{F-}"
+    echo -n "%{F#B443F3}RAM:%{F-}%{F#B89C6C}$used_ram%%{F-}"
 }
 
 volume(){
