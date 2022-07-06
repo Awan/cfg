@@ -133,6 +133,7 @@ autocmd! bufwritepost $HOME/cfg/zsh/.zsh/custom-alias !source $HOME/.zsh/custom-
 autocmd! bufwritepost $HOME/cfg/polybar/.config/polybar/*.{conf,ini} !bspc wm -r >/dev/null 2>&1
 autocmd! bufwritepost $HOME/cfg/bspwm/.config/bspwm/bspwmrc !bspc wm -r >/dev/null 2>&1
 autocmd! bufwritepost $HOME/cfg/etc/.local/bin/mypanel !pkill mypanel && $HOME/.local/bin/mypanel & disown
+autocmd! bufwritepost $HOME/cfg/sway/.config/sway/config !swaymsg reload
 set nocp
 filetype on
 au BufNewFile,BufRead *Pkgfile set filetype=sh
@@ -145,7 +146,7 @@ if !&sidescrolloff
 endif
 set foldlevel=4
 set foldmethod=marker
-"set foldmarker=<<<,>>>
+set foldmarker=<<<,>>>
 filetype plugin indent on
 set showmode
 set fo+=w
@@ -164,7 +165,7 @@ set gdefault
 com! -complete=file -bang -nargs=? W :w<bang> <args>
 set smartcase
 set cursorcolumn
-set colorcolumn=+1
+"set colorcolumn=+1
 set cursorline
 hi ColorColumn guifg=#232526 guibg=#F92672
 hi CursorColumn guifg=white guibg=#2b3f4a
