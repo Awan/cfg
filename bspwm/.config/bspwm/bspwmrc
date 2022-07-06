@@ -69,7 +69,7 @@ $HOME/.local/bin/mypanel &
 
 # Border width and gaps between windows
 
-border_width=3
+border_width=1
 window_gaps=5
 bspc config border_width            $border_width
 bspc config window_gap              $window_gaps
@@ -189,4 +189,5 @@ bspc config pointer_action3 resize_side
 bspc config pointer_action3 resize_corner
 bspc config pointer_action1 move
 sleep 1
-alacritty -t 'scratchpad' &
+urxvtc -g 70x20 -title 'scratchpad'
+# alacritty -t 'scratchpad' &
