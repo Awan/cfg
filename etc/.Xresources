@@ -44,9 +44,16 @@
 ! if remote host is having problems with rxvt-unicode, copy
 ! /usr/share/terminfo/r/rxvt-unicode at hosts ~/.terminfo/r/rxvt-unicode
 
-urxvt*font: xft:mononoki:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:size=17
-urxvt*boldFont: xft:mononoki:Bold:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:Bold:size=17
-urxvt*bolditalicFont: xft:mononoki:Bold:Italic:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:Bold:Italic:size=17
+!urxvt*font: xft:mononoki:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:size=17
+!urxvt*boldFont: xft:mononoki:Bold:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:Bold:size=17
+!urxvt*bolditalicFont: xft:mononoki:Bold:Italic:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:Bold:Italic:size=17
+!urxvt*font: -misc-tamsyn-bold-r-normal--20-145-100-100-c-100-iso8859-1
+!urxvt*font: xft:Terminus:size=17
+!urxvt*boldFont: xft:Terminus:Bold:size=17
+!urxvt*bolditalicFont: xft:Terminus:Bold:Italic:size=17
+urxvt*font                 : xft:GohuFont\ Nerd\ Font:size=17
+urxvt*boldFont             : xft:GohuFont\ Nerd\ Font:Bold:size=17
+urxvt*bolditalicFont       : xft:GohuFont\ Nerd\ Font:Bold:Italic:size=17
 URxvt*letterSpace          : -1
 URxvt*utf                  : 1
 URxvt*locale               : 1
@@ -92,7 +99,7 @@ URxvt*intensityStyles      : 1
 URxvt*saveLines            : 9999
 URxvt*buffered             : 1
 URxvt*depth                : 32
-URxvt*visual               : 0x16f
+!URxvt*visual               : 0x16f
 URxvt*override-redirect    : 0
 URxvt*externalBorder       : 15
 URxvt*internalBorder       : 15
@@ -109,7 +116,7 @@ URxvt*perl-lib             : /home/ak/.urxvt/ext
 URxvt*iso14755             : 1
 URxvt*iso14755_52          : 1
 URxvt*matcher.button       : 2
-URxvt*url-launcher         : /usr/local/bin/chrome
+URxvt*url-launcher         : /usr/sbin/google-chrome-stable
 URxvt*url-select.underline : 1
 URxvt*matcher.rend.0       : Uline Bold fg5
 URxvt*selection.pattern-0  : ([[                           : word                : ]]+)
@@ -250,7 +257,6 @@ XIdle.timeout               : 120
 
 ! Xlock
 XLock.dpmsoff               : 1
-XLock.description           : off
 XLock.background            : black
 XLock.foreground            : white
 XLock.mode                  : clock
@@ -311,9 +317,6 @@ XLock.startCmd              :
 XLock.endCmd                :
 XLock.pipepassCmd           :
 XLock.logoutCmd             :
-XLock.dpmsstandby           : -1
-XLock.dpmssuspend           : -1
-XLock.dpmsoff               : -1
 XLock.mailCmd               :
 XLock.mailIcon              :
 XLock.nomailIcon            :
