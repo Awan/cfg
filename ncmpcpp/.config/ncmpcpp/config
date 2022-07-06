@@ -10,8 +10,7 @@
 
 # User interface
 
-# user_interface = "alternative" (you must comment it for album art)
-user_interface = "classic"
+user_interface = "alternative" (you must comment it for album art)
 
 # Host
 
@@ -35,18 +34,15 @@ lyrics_directory = "~/mus/lyrics"
 
 # Progress of running song look
 
-progressbar_look = "▪▪▫"
+progressbar_look = "─╼"
 
 # Collection format
 
 song_library_format = "{%t - }{%a}|{%f}"
 
-song_status_format = "$2%a $9• $5%n. $b%t$/b $9• $4%b {(Disc %d) }$9• $5%y$9"
-
-# song_list_format = "{$5%n▕ $9}{$4%a$4 - $9}{$8%t$/b$8}|{$1$b%f$/b$9}$R{$8▕ $7%b$9}{$8▕ $5%l$9}"
 # Playing song's status
 
-# song_status_format = "{(%l) }{%a - }{%t}|{%f}"
+song_status_format = "{(%l) }{%a - }{%t}|{%f}"
 
 # Columns format
 
@@ -92,11 +88,11 @@ playlist_shorten_total_times = yes
 
 # Default display mode for Playlist. columns/classic
 #
-playlist_display_mode = classic
+playlist_display_mode = columns
 
 # Default display mode for Browser. classic/columns
 #
-browser_display_mode = classic
+browser_display_mode = columns
 
 # Default display mode for Search engine.
 #              
@@ -129,9 +125,7 @@ jump_to_now_playing_song_at_start = "yes"
 
 # Execute shell command once song is changed
 
-# execute_on_song_change = "~/.config/ncmpcpp/cover" (uncomment it for album art)
-
-execute_on_song_change = "~/.config/ncmpcpp/song_info" 
+execute_on_song_change = "~/.config/ncmpcpp/cover" (uncomment it for album art)
 
 #user_interface = "classic" (uncomment it for album art)
 
@@ -141,10 +135,7 @@ enable_window_title = "yes"
 
 # Header visible or not
 
-header_visibility = "no" 
-
-header_window_color = "red"
-
+header_visibility = "yes" 
 
 # Show titles above time, song, album, artist, (no need, I already know whats in
 # which column)
@@ -162,10 +153,6 @@ statusbar_visibility = "yes"
 # Make it colorful
 
 colors_enabled = "yes"
-volume_color = "cyan"
-main_window_color = "blue"
-
-# empty_tag_color = "yellow" 
 
 # No cyclic scrolling, I use `gg` & `G` instead 
 
@@ -178,12 +165,10 @@ space_add_mode = "add_remove"
 # Clock format. If you enable seconds, it will need more screen else clock won't
 # be displayed
 
-clock_display_seconds = "yes"
+clock_display_seconds = "no"
 
 # Remaining time of currently playing song
 display_remaining_time = "no"
-
-display_bitrate = "yes"
 
 # Editor path
 
@@ -193,5 +178,4 @@ external_editor = $(which vim)
 
 use_console_editor = "yes"
 
-current_item_prefix = " >>> "
-current_item_suffix = " <<< "
+# 
