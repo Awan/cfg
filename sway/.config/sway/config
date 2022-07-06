@@ -15,16 +15,17 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term termite
+set $term footclient
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu dmenu_path | dmenu | xargs swaymsg exec --
+# set $menu dmenu_path | dmenu | xargs swaymsg exec --
+set $menu dmenu_run 
 
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * resolution 1920x1080 bg /home/ak/pix/wall/00000833_abendrot_3200x2000.jpg fill
+output * resolution 1920x1080 bg ~/pix/wall/collection/29919.jpg fill
 #
 # Example configuration:
 #
@@ -50,7 +51,7 @@ exec swayidle -w \
 #
 # Example configuration:
 #
-input "1739:0:Synaptics_TM2668-002" {
+input type:touchpad {
        dwt enabled
        tap enabled
        natural_scroll enabled
@@ -217,10 +218,13 @@ bindsym $mod+r mode "resize"
 #        inactive_workspace #32323200 #32323200 #5c5c5c
 #    }
 #}
-exec polybar -r eDP-1 
+# exec polybar -r eDP-1 
 
-#include /etc/sway/config.d/*
+include /etc/sway/config.d/*
 
 # gaps
-gaps inner 5
-gaps outer 5
+gaps inner 10
+gaps outer 10
+
+# Disable xwayland
+#xwayland disable
