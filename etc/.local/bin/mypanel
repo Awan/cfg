@@ -42,12 +42,12 @@ num_mon=$(bspc query -M | wc -l)
 PANEL_FIFO=/tmp/panel-fifo
 PANEL_HEIGHT=24
 #PANEL_GEOMETRY="1867x18+52+0"
-# PANEL_FONT="-bitstream-terminal-medium-r-normal--18-140-100-100-c-110-iso8859-1"
-# PANEL_FONT="-xos4-terminus-bold-r-normal--18-180-72-72-c-100-iso10646-1"
+#PANEL_FONT="-bitstream-terminal-medium-r-normal--18-140-100-100-c-110-iso8859-1"
+PANEL_FONT="-xos4-terminus-bold-r-normal--18-180-72-72-c-100-iso10646-1"
 # PANEL_FONT="TerminusBold-17"
 # PANEL_FONT="TamzenForPowerline-17"
 # PANEL_FONT="SourceCodePro-15"
-PANEL_FONT="UbuntuMonoNerdFont-15"
+#PANEL_FONT="UbuntuMonoNerdFont-15"
 # PANEL_FONT="-bitstream-charter-medium-r-normal--19-140-100-100-p-106-iso8859-1"
 # ICONS_FONT="-misc-font awesome 6 free regular-medium-r-normal--0-0-0-0-p-0-iso10646-1"
 # ICONS_FONT="-misc-font awesome 6 free solid-black-r-normal--0-0-0-0-p-0-iso10646-1"
@@ -108,18 +108,18 @@ cmus_music() {
         :
     elif [ $stat = 'playing' ]; then
         artist=$(cmus-remote -C status | grep 'tag\ artist' | cut -d ' ' -f 3-)
-        if [ ${#artist} -le 15 ]; then
+        if [ ${#artist} -le 16 ]; then
             :
         else
             artist=$(cmus-remote -C status | grep 'tag\ artist' | cut -d ' ' -f\
-                3- | head -c 15)
+                3- | head -c 16)
         fi
         title=$(cmus-remote -C status | grep 'tag\ title' | cut -d ' ' -f 3-)
-        if [ ${#title} -le 15 ]; then
+        if [ ${#title} -le 16 ]; then
             :
         else
             title=$(cmus-remote -C status | grep 'tag\ title' | cut -d ' ' -f\
-                3- | head -c 15)
+                3- | head -c 16)
         fi
 
 
