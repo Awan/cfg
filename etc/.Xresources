@@ -51,9 +51,13 @@
 !urxvt*font: xft:Terminus:size=17
 !urxvt*boldFont: xft:Terminus:Bold:size=17
 !urxvt*bolditalicFont: xft:Terminus:Bold:Italic:size=17
-urxvt*font                 : xft:GohuFont\ Nerd\ Font:size=17
-urxvt*boldFont             : xft:GohuFont\ Nerd\ Font:Bold:size=17
-urxvt*bolditalicFont       : xft:GohuFont\ Nerd\ Font:Bold:Italic:size=17
+URxvt*font                 : xft:GohuFont\ Nerd\ Font:size=17, \
+xft:DejaVuSansMono\ Nerd\ Font:size=17
+!xft:FontAwesome\ 6\ Brands\ Regular:size=17
+URxvt*boldFont             : xft:GohuFont\ Nerd\ Font:Bold:size=17, \
+xft:DejaVuSansMono\ Nerd\ Font:Bold:size=17
+URxvt*bolditalicFont       : xft:GohuFont\ Nerd\ Font:Bold:Italic:size=17, \
+xft:DejaVuSansMono\ Nerd\ Font:Bold:Italic:size=17
 URxvt*letterSpace          : -1
 URxvt*utf                  : 1
 URxvt*locale               : 1
