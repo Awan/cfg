@@ -74,7 +74,7 @@ datetime() {
 }
 
 brightness() {
-    echo -n "%{F#FFFA58F4}BR:%{F-}%{F#FF28DECB}$(light -G | cut -d . -f 1)%"
+    echo -n "%{A4:light -A 10:}%{A5:light -U 10:}%{F#FFFA58F4}BR:%{F-}%{F#FF28DECB}$(light -G | cut -d . -f 1)%{A}%{A}"
 }
 
 mpd_music(){
@@ -223,7 +223,7 @@ volume(){
         vol="$current_volume"
     fi
 
-    echo -n "%{A:pamixer -t:}%{F#5E81AC}Vol:%{F-}%{F#FF8916}$vol%{F-}%{A}"
+    echo -n "%{A:pamixer -t:}%{A4:pamixer --allow-boost -i 10:}%{A5:pamixer --allow-boost -d 10:}%{F#5E81AC}Vol:%{F-}%{F#FF8916}$vol%{F-}%{A}%{A}%{A}"
 }
 
 all_info() {
@@ -384,7 +384,7 @@ my_panel() {
 done
 }
 
-my_panel < "$PANEL_FIFO" | lemonbar -a 32 -u 2 -n "$PANEL_WM_NAME" -g \
+my_panel < "$PANEL_FIFO" | lemonbar -a 36 -u 2 -n "$PANEL_WM_NAME" -g \
     x$PANEL_HEIGHT -f "$PANEL_FONT" -F "$COLOR_DEFAULT_FG" -B \
     "$COLOR_DEFAULT_BG" | sh &
 
