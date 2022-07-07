@@ -60,8 +60,6 @@ visualizer_output_name = "my_fifo"
 
 visualizer_in_stereo = "yes"
 
-buffer_time "100000"
-
 # Visualizer color
 
 visualizer_color = 41, 83, 119, 155, 185, 215, 209, 203, 197, 161
@@ -125,7 +123,7 @@ jump_to_now_playing_song_at_start = "yes"
 
 # Execute shell command once song is changed
 
-execute_on_song_change = "~/.config/ncmpcpp/cover" (uncomment it for album art)
+execute_on_song_change = "~/.config/ncmpcpp/song_info" (uncomment it for album art)
 
 #user_interface = "classic" (uncomment it for album art)
 
