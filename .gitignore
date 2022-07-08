@@ -30,7 +30,6 @@ etc/.config/gtk-3.0/bookmarks
 nvim/.local/share/nvim/undo/
 tig/.local/share/tig/history
 systemd/.config/systemd/user/timers.target.wants/
-cmus/.config/cmus/autosave
 xfce/.config/xfce4
 cmus/.config/cmus/resume
 cmus/.config/cmus/search-history
@@ -39,3 +38,4 @@ cmus/.config/cmus/command-history
 cmus/.config/cmus/lib.pl
 cmus/.config/cmus/playlists/
 cmus/.config/cmus/queue.pl
+cmus/.config/cmus/autosave
