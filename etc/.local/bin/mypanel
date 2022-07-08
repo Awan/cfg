@@ -133,7 +133,7 @@ cmus_music() {
         test $now_hours -gt 0 && now_dur="$now_hours:"
         duration="$dur$(printf '%02d:%02d' $(($minutes / 60)) $(($minutes % 60)))"
         position="$now_dur$(printf '%02d:%02d' $(($now_minutes / 60)) $(($now_minutes % 60)))"
-        echo -n "%{F#FF00FFFF}$artist - %{F#FFDAA520}$title %{F#FFFF00DD}$position/$duration"
+        echo -n "%{A:cmus-remote --prev 2>/dev/null:}%{F#FF00FFFF}$artist - %{F#FFDAA520}$title%{A} %{A:cmus-remote --next 2>/dev/null:}%{F#FFFF00DD}$position/$duration%{A}"
     fi
 }
 
