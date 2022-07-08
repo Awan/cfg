@@ -39,3 +39,4 @@ cmus/.config/cmus/lib.pl
 cmus/.config/cmus/playlists/
 cmus/.config/cmus/queue.pl
 cmus/.config/cmus/autosave
+polybar/.config/polybar/scripts/
