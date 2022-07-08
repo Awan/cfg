@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 # shellcheck disable=2034
 coded_by='
 
@@ -13,8 +13,15 @@ In the name of Allah, the most Gracious, the most Merciful.
 '
 # Toggles touchpad
 
-device_name="$(xinput list | grep -P '(?<= )[\w\s:]*(?i)(touchpad|synaptics)(?-i).*?(?=\s*id)' -o | head -n1)"
+device_name="$(xinput list | grep -Eio '(touchpad|glidepoint)\s*id\=[0-9]{1,2}'\
+    | grep -Eo '[0-9]{1,2}')"
+is_enabled="$(xinput list-props $device_name | grep 'Device Enabled' | \
+    awk '{print $4}')"
 
-[ "$(xinput list-props "$device_name" | grep -P ".*Device Enabled.*\K.(?=$)" -o)" = "1" ] &&
-    xinput disable "$device_name" ||
-    xinput enable "$device_name"
+if [ ${is_enabled} -eq 1 ]; then
+    xinput disable $device_name
+    notify-send -u critical -t 1200 'Touchpad disabled'
+else
+    xinput enable $device_name
+    notify-send 'Touchpad enabled'
+fi
