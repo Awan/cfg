@@ -351,3 +351,12 @@ XLock.random.fullrandom     : True
 *VT100.colorBDMode          : True
 *VT100.colorULMode          : True
 *VT100.veryBoldColors       : 6
+
+! xft
+Xft.autohint                : 0
+Xft.lcdfilter               : lcddefault
+Xft.hintstyle               : hintslight
+Xft.hinting                 : 1
+Xft.antialias               : 1
+Xft.rgba                    : rgb
+Xft.dpi                     : 96
