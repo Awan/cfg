@@ -344,9 +344,9 @@ if !exists(":DiffOrig")
         \ wincmd p | diffthis
 endif
 
-"if &t_Co == 8 && $TERM !~# '^linux\|^Eterm|^screen-*'
-"  set t_Co=16
-"endif
+if $TERM !~# '^linux\|^Eterm|^screen-*|^tmux-*'
+  set t_Co=8
+endif
 
 if has("nvim")
     silent! set guicursor=
