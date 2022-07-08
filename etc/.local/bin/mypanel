@@ -69,15 +69,21 @@ mkfifo "$PANEL_FIFO"
 modules_bg="B#AAFFFFFF"
 modules_fg="F#FF000000"
 
+
 datetime() {
-    echo -n "%{F#B443F3}$(date "+%a %-d %b %H:%M:%S")"
+
+    printf "%s" "%{F#B443F3}$(date "+%a %-d %b %H:%M:%S")"
+
 }
 
 brightness() {
-    echo -n "%{A4:light -A 10:}%{A5:light -U 10:}%{F#FFFA58F4}BR:%{F-}%{F#FF28DECB}$(light -G | cut -d . -f 1)%{A}%{A}"
+
+    printf "%s%%" "%{A4:light -A 10:}%{A5:light -U 10:}%{F#FFFA58F4}BR:%{F-}%{F#FF28DECB}$(light -G | cut -d . -f 1)%{A}%{A}"
+
 }
 
-mpd_music(){
+mpd_music() {
+
     # Only check other things if mpd is up and ready...
     stat=$(mpc | awk 'NR==2{print $1}')
     if [ -z $stat ] || [ $stat = '[paused]' ]; then
@@ -91,14 +97,17 @@ mpd_music(){
         if [ "${#info}" -le 25 ]; then
             :
         else
-            info="$(mpc --format='[[%artist% -]%title%]|[%file%]' current \
-                | head -c 30)"
+            info="$(mpc --format='[[%artist% - ]%title%]|[%file%]' current \
+                | head -c 32)"
         fi
-        echo -n "%{A:mpc prev>/dev/null 2>&1:}%{F#FF00FFFF}$info%{F-}%{A} %{A:mpc next>/dev/null 2>&1:}%{F#FFDAA520}$position%{F-}%{A}"
+
+        printf "%s" "%{A:mpc prev>/dev/null 2>&1:}%{F#FF00FFFF}$info%{F-}%{A} %{A:mpc next>/dev/null 2>&1:}%{F#FFDAA520}$position%{F-}%{A}"
     fi
+
 }
 
 cmus_music() {
+
     stat=$(cmus-remote -Q 2>/dev/null | awk '/status/{print $2}')
     if [ -z $stat ]; then
         # do nothing
@@ -133,21 +142,25 @@ cmus_music() {
         test $now_hours -gt 0 && now_dur="$now_hours:"
         duration="$dur$(printf '%02d:%02d' $(($minutes / 60)) $(($minutes % 60)))"
         position="$now_dur$(printf '%02d:%02d' $(($now_minutes / 60)) $(($now_minutes % 60)))"
-        echo -n "%{A:cmus-remote --prev 2>/dev/null:}%{F#FF00FFFF}$artist - %{F#FFDAA520}$title%{A} %{A:cmus-remote --next 2>/dev/null:}%{F#FFFF00DD}$position/$duration%{A}"
+        printf "%s" "%{A:cmus-remote --prev 2>/dev/null:}%{F#FF00FFFF}$artist - %{F#FFDAA520}$title%{A} %{A:cmus-remote --next 2>/dev/null:}%{F#FFFF00DD}$position/$duration%{A}"
     fi
+
 }
 
-wifi(){
+wifi() {
+
     ssid="$(iw dev wlan0 link | awk -F: '/SSID/ {print $NF}')"
     if [ -z "${ssid}" ]; then
         # Do nothing
         :
     else
-        echo -n "%{F#D1FF50}$ssid%{F-}"
+        printf "%s" "%{F#D1FF50}$ssid%{F-}"
     fi
+
 }
 
 cpu() {
+
     cpu=$(ps -eo pcpu | awk 'BEGIN {sum=0.0f} {sum+=$1} END {print sum}')
     temp=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))
     if [ $temp -ge 60 ];
@@ -156,17 +169,21 @@ cpu() {
     else
         temperature="%{F#00FFFF}$temp°c%{F-}"
     fi
-    echo -n "%{F#FFF042}CPU:%{F-}%{F#9181E7}$cpu $temperature"
+    printf "%s" "%{F#FFF042}CPU:%{F-}%{F#9181E7}$cpu $temperature"
+
 }
 
 mails() {
+
     count=$(find $HOME/.mail/Inbox/new -type f -print | wc -l)
     if [ $count -ne 0 ]; then
-        echo -n "%{F#FFFF0000}Mails:$count %{F-}"
+        printf "%s" "%{F#FFFF0000}Mails:%{F-}%{F#FFF4C430}$count%{F-}"
     fi
+
 }
 
 battery() {
+
     sysfs="/sys/class/power_supply"
     _battery="BAT0"
     mains="AC"
@@ -176,22 +193,22 @@ battery() {
     ac_on="$(cat $sysfs/$mains/online)"
     is_charger_connected="$(cat /sys/class/power_supply/AC/online)"
     if [ $is_charger_connected = 0 ]; then
-        echo -n "%{F#FFFF0000}Discharging:%{F-}%{B-}"
+        printf "%s" "%{F#FFFF0000}Discharging:%{F-}"
     elif [ $is_charger_connected = 1 ]; then
-        echo -n "%{F#FF00FF00}Charging:%{F-}%{B-}"
+        printf "%s" "%{F#FF00FF00}Charging:%{F-}"
     else
-        echo -n "%{F#FF0000FF}AC:%{F-}%{B-}"
+        printf "%s" "%{F#FF0000FF}AC:%{F-}"
     fi
     battery_percentage="$(cat /sys/class/power_supply/BAT0/capacity)"
     if [ $battery_percentage -gt 60 ]; then
-        echo -n "%{F#FF00FF00}$battery_percentage%% %{F-}%{B-}"
+        printf "%s" "%{F#FF00FF00}$battery_percentage% %{F-}"
     elif [ $battery_percentage -gt 30 ]; then
-        echo -n "%{F#FFFFFF00}$battery_percentage%% %{F-}%{B-}"
+        printf "%s" "%{F#FFFFFF00}$battery_percentage% %{F-}"
     elif [ $battery_percentage -lt 30 ] && [ "${is_charger_connected}" -ne 1 ] ; then
         notify-send -u critical -t 30000 "Battery critically low!"
-        echo -n "%{F#FFFF3361}$battery_percentage%% %{F-}%{B-}"
+        printf "%s" "%{F#FFFF3361}$battery_percentage% %{F-}"
     else
-        echo -n "%{F#FFFF0000}$battery_percentage%% %{F-}%{B-}"
+        printf "%s" "%{F#FFFF0000}$battery_percentage% %{F-}"
     fi
     if [ "${ac_on}" -ne 0 ]; then
         if [ "${power_now}" -ne 0 ] ; then
@@ -206,15 +223,19 @@ battery() {
             remaining_time="?"
         fi
     fi
-    echo -n "%{F#FF9D10A4}$remaining_time mins"
+    printf "%s" "%{F#FF9D10A4}$remaining_time mins %{F-}"
+
 }
 
 ram(){
+
     used_ram="$(free | awk '/Mem:/ {print int($3/$2 * 100.0)}')%"
-    echo -n "%{F#B443F3}RAM:%{F-}%{F#B89C6C}$used_ram%%{F-}"
+    printf "%s" "%{F#B443F3}RAM:%{F-}%{F#B89C6C}$used_ram%%{F-}"
+
 }
 
 volume(){
+
     current_volume="$(pamixer --get-volume)"
     is_muted="$(pamixer --get-volume-human)"
     if [ "${is_muted}" = "muted" ] ; then
@@ -223,7 +244,8 @@ volume(){
         vol="$current_volume"
     fi
 
-    echo -n "%{A:pamixer -t:}%{A4:pamixer --allow-boost -i 10:}%{A5:pamixer --allow-boost -d 10:}%{F#5E81AC}Vol:%{F-}%{F#FF8916}$vol%{F-}%{A}%{A}%{A}"
+    printf "%s" "%{A:pamixer -t:}%{A4:pamixer --allow-boost -i 10:}%{A5:pamixer --allow-boost -d 10:}%{F#5E81AC}Vol:%{F-}%{F#FF8916}$vol%{F-}%{A}%{A}%{A}"
+
 }
 
 all_info() {
