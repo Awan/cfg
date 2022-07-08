@@ -49,11 +49,11 @@ say for reverse
 
 _ignore="^($ignore)( |\$)"
 
-input=$(perl -E "$perl" "$hist" | dmenu -l 7 -p "$prompt")
+input=$(perl -E "$perl" "$hist" | dmenu -fn DejaVu -l 7 -p "$prompt")
 
 if [[ "$input" ]]; then
 	if ! [[ "$input" =~ $_ignore ]]; then
 		echo "$(date +%s) $input" >> "$hist"
 	fi
-	echo "$input" | ${SHELL:-/bin/sh} &
+	echo "$input" | ${SHELL:-/bin/zsh} &
 fi

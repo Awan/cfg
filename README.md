@@ -70,16 +70,18 @@ It will symlink vim. If you wanna use this configurations for root user, use `-t
 
 **Note:** stow will only create a symlink if a config file doesn't already exist. You must delete/backup if there is a default config for a program. 
 
+# Lemonbar
+
+Lemonbar is a lightweight bar entirely based on XCB. Provides full UTF-8 
+support, basic formatting, RandR and Xinerama support and EWMH compliance 
+without wasting your precious memory. You can compile it from [Source Code](https://github.com/LemonBoy/bar).
+In Arch Linux there is a [PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=lemonbar).
 
 # Polybar
 
-Polybar is a stylish status bar. You have to compile it from [source](https://github.com/polybar/polybar.git).
-
-In [AUR](https://aur.archlinux.org), you can find a [PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=polybar).
-
-Here are the dependencies you must have to use polybar with customized stylish icons.
-
-- [Font Awesome 4](https://aur.archlinux.org/ttf-font-awesome-4)
+Polybar is a stylish status bar. You have to compile it from [source](https://github.com/polybar/polybar.git) for some distributions.
+It's now available in Arch Linux official repositories. As a dependency, you can 
+install Font Awesome, which is available in official repositories in Arch Linux.
 
 
 
