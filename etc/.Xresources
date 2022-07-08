@@ -44,20 +44,22 @@
 ! if remote host is having problems with rxvt-unicode, copy
 ! /usr/share/terminfo/r/rxvt-unicode at hosts ~/.terminfo/r/rxvt-unicode
 
-!urxvt*font: xft:mononoki:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:size=17
-!urxvt*boldFont: xft:mononoki:Bold:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:Bold:size=17
-!urxvt*bolditalicFont: xft:mononoki:Bold:Italic:size=17,xft:DejaVu\ Sans\ Mono\ for\ Powerline:Bold:Italic:size=17
+URxvt*font                 :xft:mononoki\ Nerd\ Font:regular:size=17,\
+xft:DejaVuSansMono\ Nerd\ Font:size=15
+URxvt*ItalicFont           :xft:mononoki\ Nerd\ Font:italic:size=17,\
+xft:DejaVuSansMono\ Nerd\ Font:italic:size=15
+URxvt*boldFont             :xft:mononoki\ Nerd\ Font:bold:size=17,\
+xft:DejaVuSansMono\ Nerd\ Font:bold:size=15
+URxvt*boldItalicFont       :xft:mononoki\ Nerd\ Font:bold:italic:size=17,\
+xft:DejaVuSansMono\ Nerd\ Font:bold:italic:size=15
 !urxvt*font: -misc-tamsyn-bold-r-normal--20-145-100-100-c-100-iso8859-1
-!urxvt*font: xft:Terminus:size=17
-!urxvt*boldFont: xft:Terminus:Bold:size=17
-!urxvt*bolditalicFont: xft:Terminus:Bold:Italic:size=17
-URxvt*font                 : xft:GohuFont\ Nerd\ Font:size=17, \
-xft:DejaVuSansMono\ Nerd\ Font:size=17
-!xft:FontAwesome\ 6\ Brands\ Regular:size=17
-URxvt*boldFont             : xft:GohuFont\ Nerd\ Font:Bold:size=17, \
-xft:DejaVuSansMono\ Nerd\ Font:Bold:size=17
-URxvt*bolditalicFont       : xft:GohuFont\ Nerd\ Font:Bold:Italic:size=17, \
-xft:DejaVuSansMono\ Nerd\ Font:Bold:Italic:size=17
+!URxvt*font                 : xft:Terminus:size=17
+!URxvt*boldFont             : xft:Terminus:Bold:pixelsize=17
+!URxvt*italicFont           : xft:Terminus:Italic:pixelsize=17
+!URxvt*boldItalicFont       : xft:Terminus:Bold:Italic:pixelsize=17
+!URxvt*font                 : xft:DejaVuSansMono\ Nerd\ Font:size=17
+!URxvt*boldFont             : xft:DejaVuSansMono\ Nerd\ Font:Bold:size=17
+!URxvt*boldItalicFont       : xft:DejaVuSansMono\ Nerd\ Font:Bold:Italic:size=17
 URxvt*letterSpace          : -1
 URxvt*utf                  : 1
 URxvt*locale               : 1
