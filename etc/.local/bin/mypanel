@@ -244,7 +244,8 @@ volume(){
         vol="$current_volume"
     fi
 
-    printf "%s" "%{A:pamixer -t:}%{A4:pamixer --allow-boost -i 10:}%{A5:pamixer --allow-boost -d 10:}%{F#5E81AC}Vol:%{F-}%{F#FF8916}$vol%{F-}%{A}%{A}%{A}"
+    printf "%s" "%{A:pamixer -t:}%{A4:pamixer --allow-boost --set-limit 300 -i 10:}%{A5:pamixer --allow-boost --set-limit 300 -d 10:}%{F#5E81AC}Vol:%{F-}%{F#FF8916}$vol%{F-}%{A}%{A}%{A}"
+
 
 }
 
