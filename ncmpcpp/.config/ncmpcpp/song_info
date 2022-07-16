@@ -4,4 +4,4 @@
 
 current_song=$(mpc current)
 
-notify-send "$current_song"
+notify-send -i ~/.local/share/icons/drops/music.png "$current_song"
