@@ -129,11 +129,12 @@ autocmd! bufwritepost $HOME/.Xresources !xrdb -load $HOME/.Xresources
 autocmd! bufwritepost $HOME/.zshrc      !source $HOME/.zshrc
 autocmd! bufwritepost $HOME/.config/sxhkd/sxhkdrc       !pkill -USR1 -x sxhkd
 autocmd! bufwritepost $HOME/cfg/sxhkd/.config/sxhkd/sxhkdrc     !pkill -USR1 -x sxhkd
-autocmd! bufwritepost $HOME/cfg/zsh/.zsh/custom-alias !source $HOME/.zsh/custom-alias
+autocmd! bufwritepost $HOME/cfg/zsh/.zsh/custom-alias !source $HOME/cfg/zsh/.zsh/custom-alias'
 autocmd! bufwritepost $HOME/cfg/polybar/.config/polybar/*.{conf,ini} !bspc wm -r >/dev/null 2>&1
 autocmd! bufwritepost $HOME/cfg/bspwm/.config/bspwm/bspwmrc !bspc wm -r >/dev/null 2>&1
 autocmd! bufwritepost $HOME/cfg/etc/.local/bin/mypanel !pkill mypanel && $HOME/.local/bin/mypanel & disown
 autocmd! bufwritepost $HOME/cfg/sway/.config/sway/config !swaymsg reload
+autocmd! bufwritepost $HOME/cfg/herbstluftwm/.config/herbstluftwm/autostart !herbstclient reload
 set nocp
 filetype on
 au BufNewFile,BufRead *Pkgfile set filetype=sh

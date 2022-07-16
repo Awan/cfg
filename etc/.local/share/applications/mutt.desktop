@@ -2,7 +2,7 @@
 Categories=Office;Network;Email;
 Comment=Simple text-based Mail User Agent
 Comment[de]=Einfaches, Text-basiertes Mailprogramm
-Exec=alacritty -e mutt
+Exec=mutt
 Icon=mutt
 Name=mutt
 Name[de]=Mutt
