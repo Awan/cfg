@@ -80,3 +80,10 @@ zstyle ':completion:*' list-dirs-first true
 zstyle :compinstall filename '~/.zshrc'
 
 autoload -Uz compinit && compinit
+
+# Terraform completion
+
+#if [ -f /usr/bin/terraform ]; then
+#    autoload -U +X bashcompinit && bashcompinit
+#    complete -o nospace -C /usr/bin/terraform terraform
+#fi
