@@ -39,7 +39,7 @@ call plug#begin('~/.vim/plugged')
 "
 "" Plugins
 "
-Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs' | Plug 'dkarter/bullets.vim'
+Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs' | Plug 'dkarter/bullets.vim' | Plug 'fannheyward/coc-pyright'
 "
 "" Initialize vim-plug
 "
@@ -137,7 +137,7 @@ autocmd! bufwritepost $HOME/cfg/sway/.config/sway/config !swaymsg reload
 set nocp
 filetype on
 au BufNewFile,BufRead *Pkgfile set filetype=sh
-set textwidth=80
+set textwidth=120
 if !&scrolloff
   set scrolloff=3
 endif
@@ -223,6 +223,8 @@ set viminfo='10,\"100,:20,%,n~/.viminfo
 autocmd BufWritePre *.c,*.cpp,*.cc,*.h,*.sh,*.hpp,*.py,*.m,*.mm :%s/\s\+$//e
 set modeline
 set nobackup
+set cmdheight=2
+set updatetime=300
 set showcmd
 set whichwrap=b,s,<,>,[,]
 set splitbelow splitright
@@ -287,6 +289,15 @@ nnoremap q :q
 nnoremap qq :q!<CR>
 nnoremap Q q
 inoremap # #
+nnoremap <silent> K :call ShowDocumentation()<CR>
+
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
 autocmd BufEnter *.md exe 'noremap <F5> :!google-chrome-stable %:p<CR>'
 au BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
 au BufNewFile,BufRead /dev/shm/pass.* setlocal noswapfile nobackup noundofile
@@ -416,11 +427,6 @@ set nottimeout
 "let g:python_host_prog = "/usr/bin/python2.7"
 let g:python3_host_prog = "/usr/bin/python3"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
 inoremap <silent><expr> <Tab>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<Tab>" :
@@ -437,7 +443,7 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-let g:coc_snippet_next = '<tab>'
+"let g:coc_snippet_next = '<tab>'
 
 
 if has("autocmd")
@@ -510,6 +516,16 @@ vnoremap < <gv
 vnoremap > >gv
 nmap <leader>s :%s//g<Left><Left>
 set wildignore+=*.opus,*.flac,*.pdf,*.jpg,*.png,*.so,*.swp,*.zip,*.gzip,*.bz2,*.tar,*.xz,*.lrzip,*.lrz,*.mp3,*.ogg,*.mp4,*.gif,*.jpeg,*.webm
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
 
 
 " vim: set ft=vim :
