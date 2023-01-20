@@ -149,7 +149,7 @@ cmus_music() {
 
 wifi() {
 
-    ssid="$(iw dev wlan0 link | awk -F: '/SSID/ {print $NF}')"
+    ssid="$(iw dev wlp3s0 link | awk -F: '/SSID/ {print $NF}')"
     if [ -z "${ssid}" ]; then
         # Do nothing
         :
