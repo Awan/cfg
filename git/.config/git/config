@@ -14,9 +14,9 @@
 ############################################################### 
 
 [user]
-	name = Abdullah
-	email = abdullah@abdullah.today
-	signingkey = 0xFC5978915CBC7BC7
+	name = "Muhammad Abdullah Khabir"
+	email = abdullah@abdullah.solutions
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJ5A7S9JFVJhnm+NWJeDwAAOlw/vOa0buocCnTQmCEA abdullah@abdullah.solutions
 	username = Abdullah
 [push]
         default = current
@@ -57,6 +57,7 @@
         cmd = icdiff --line-numbers $LOCAL $REMOTE
 [gpg]
 	program = gpg
+	format = ssh
 [core]
 	autocrlf = input
 	safecrlf = true
@@ -109,6 +110,7 @@
         followTags = true
 [tag]
         sort = version:refname
+	gpgSign = true
 [pull]
         rebase = true
 [status]
@@ -139,4 +141,6 @@
 
 # vim: set ft=gitconfig :
 [init]
-	defaultBranch = master
+	defaultBranch = main
+[gpg "ssh"]
+	allowedSignersFile = /home/ak/.config/git/allowed_signers
