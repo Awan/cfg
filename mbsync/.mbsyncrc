@@ -1,23 +1,75 @@
-IMAPAccount abdullah
-Host imap.yandex.com
-User abdullah@abdullah.today
-PassCmd "gpg -dq ~/.local/share/misc/abdullah.gpg"
-# PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.mailpass.gpg"
+IMAPStore gmail-remote
+Host imap.gmail.com
+Port 993
+UserCmd "age -i ~/.ssh/id_ed25519 -d ~/nix/secrets/google_user.age"
+PassCmd "age -i ~/.ssh/id_ed25519 -d ~/nix/secrets/msmtp_gmail.age"
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
-IMAPStore abdullah-remote
-Account abdullah
+MaildirStore gmail-local
+#Subfolders Verbatim
+Path ~/.local/share/email/x1c/
+INBOX ~/.local/share/email/x1c/INBOX
+Flatten .
 
-MaildirStore abdullah-local
-Subfolders Verbatim
-Path ~/.mail/
-Inbox ~/.mail/Inbox
-
-Channel abdullah
-Far :abdullah-remote:
-Near :abdullah-local:
-Patterns *
-CopyArrivalDate yes
-Create Both
+Channel gmail-default
+Far :gmail-remote:
+Near :gmail-local:
+Create near
+#Patterns INBOX Drafts Sent Trash Important
+Patterns * ![Gmail]* !Drafts !Sent !Trash !Archive
+Sync All
 SyncState *
+Create Near
+Expunge Both
+#MaxMessages 0
+
+Channel gmail-drafts
+Far :gmail-remote:"[Gmail]/Drafts"
+Create Near
+Near :gmail-local:Drafts
+Sync All
+Expunge Both
+SyncState *
+
+Channel gmail-sent
+Far :gmail-remote:"[Gmail]/Sent Mail"
+Create Near
+Near :gmail-local:Sent
+Sync All
+Expunge Both
+SyncState *
+
+#Channel gmail-trash
+#Far :gmail-remote:"[Gmail]/Trash"
+#Create Near
+#Near :gmail-local:Trash
+#Sync All
+#Expunge Both
+#SyncState *
+
+Channel gmail-spam
+Far :gmail-remote:"[Gmail]/Spam"
+Create Near
+Near :gmail-local:Spam
+Sync All
+Expunge Both
+SyncState *
+
+Channel gmail-archive
+Far :gmail-remote:"[Gmail]/All Mail"
+Create Near
+Near :gmail-local:Archive
+Sync All
+SyncState *
+
+Group gmail
+Channel gmail-default
+Channel gmail-drafts
+Channel gmail-sent
+#Channel gmail-trash
+Channel gmail-archive
+Channel gmail-spam
+
+
+# vim: ft=mbsyncrc

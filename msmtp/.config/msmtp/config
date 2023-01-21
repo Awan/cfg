@@ -6,11 +6,11 @@ tls_trust_file	/etc/ssl/certs/ca-certificates.crt
 logfile	~/.msmtp.log
 
 account ak
-host smtp.yandex.com
+host smtp.gmail.com
 port 587
-user abdullah@abdullah.today
-from abdullah@abdullah.today
-passwordeval "echo $(gpg --batch -q --decrypt ~/.local/share/misc/abdullah.gpg)"
+eval "echo user $(age -i ~/.ssh/id_ed25519 -d ~/cfg/secrets/google_user.age)"
+from Muhammad Abdullah Khabir
+passwordeval "echo $(age -i ~/.ssh/id_ed25519 -d ~/cfg/secrets/msmtp_gmail.age)"
 
 account default: ak
 # vim:ft=msmtp

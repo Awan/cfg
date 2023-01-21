@@ -1,12 +1,12 @@
 text/html                ; $(which elinks) %s ; nametemplate=%s.html text/html; $(which elinks)  -dump %s; nametemplate=%s.html; copiousoutput
 #text/html;               /usr/bin/qutebrowser -dump -T text/html %s; needsterminal; copiousoutput
-application/pdf          ; /usr/bin/mupdf %U %s                             ; copiousoutput
-image/jpeg               ; /usr/bin/feh %s                              ; copiousoutput
-image/jpg               ; /usr/bin/feh %s                              ; copiousoutput
-image/png               ; /usr/bin/feh %s                              ; copiousoutput
-image/gif                ; /usr/bin/sxiv -a %s
-audio/*                  ; /usr/bin/mpv %s                             ; copiousoutput
-video/*                  ; /usr/bin/mpv %s                             ; copiousoutput
+application/pdf          ; zathura %U %s                             ; copiousoutput
+image/jpeg               ; feh %s                              ; copiousoutput
+image/jpg               ; feh %s                              ; copiousoutput
+image/png               ; feh %s                              ; copiousoutput
+image/gif                ; sxiv -a %s
+audio/*                  ; mpv %s                             ; copiousoutput
+video/*                  ; mpv %s                             ; copiousoutput
 
 #text/html;                      /usr/bin/qutebrowser %s
 text/plain;                     alacritty -e vim -f %s;

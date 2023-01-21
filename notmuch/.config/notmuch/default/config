@@ -11,7 +11,7 @@
 # configured here named ".notmuch".
 #
 [database]
-path=.mail
+path=.local/share/email/x1c
 
 # User configuration
 #
@@ -29,8 +29,9 @@ path=.mail
 # address to which the original email was addressed.
 #
 [user]
-name=Abdullah
-primary_email=abdullah@abdullah.today
+name=Muhammad Abdullah Khabir
+primary_email=abdullah@abdullah.solutions
+other_email=abdullah@abdullah.today
 
 # Configuration for "notmuch new"
 #
@@ -48,7 +49,7 @@ primary_email=abdullah@abdullah.today
 #
 [new]
 tags=unread;inbox;
-ignore=
+ignore=.mbsyncstate;.uidvalidity
 
 # Search configuration
 #

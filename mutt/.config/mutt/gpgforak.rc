@@ -37,13 +37,13 @@
 # Unless your key does not have encryption capability, uncomment this
 # line and replace the keyid with your own.
 #
-#set pgp_default_key=""
+#set pgp_default_key="0xE5C7904B";
 
 # If you have a separate signing key, or your key _only_ has signing
 # capability, uncomment this line and replace the keyid with your
 # signing keyid.
 #
-set pgp_sign_as="0x5CBC7BC7"
+set pgp_sign_as="0x2A591F93"
 
 
 # Section B: Commands
