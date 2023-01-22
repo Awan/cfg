@@ -367,16 +367,15 @@ gct()
 endot ()
 {
   cd ~/cfg
-  tar czf encrypted.tar.gz etc/.local/share/misc misc
-  gpg -er 5CBC7BC7 encrypted.tar.gz
-  rm encrypted.tar.gz
+  [[ -f ~/cfg/encrypted.tar.gz.age ]] && rm ~/cfg/encrypted.tar.gz.age
+  tar cz etc/.local/share/misc misc | age -R ~/.ssh/id_ed25519.pub > encrypted.tar.gz.age
 }
 
 dedot ()
 {
   cd ~/cfg
-  gpg -do encrypted.tar.gz encrypted.tar.gz.gpg
-  tar xvf encrypted.tar.gz
+  age -i ~/.ssh/id_ed25519 -d -o encrypted.tar.gz encrypted.tar.gz.age
+  tar xf encrypted.tar.gz
   rm encrypted.tar.gz
   stow etc
 }
@@ -1086,4 +1085,11 @@ geometry() {
     else
         echo "Please install slop first..."
     fi
+}
+
+encme() {
+	# encrypt files to myself with age
+	recipient="$HOME/.ssh/id_ed25519.pub"
+	files="$1"
+	age -R $recipient $files > $files.age
 }
