@@ -84,8 +84,8 @@ fi
 
 
 
-export GPG_TTY=$(tty)
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+#export GPG_TTY=$(tty)
+#export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 #gpg-connect-agent updatestartuptty /bye >/dev/null
 export PYENV_ROOT="$HOME/.pyenv"
 export _JAVA_AWT_WM_NONREPARENTING=1
