@@ -19,15 +19,15 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Install vim-plug 
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-endif
+"if empty(glob('~/.vim/autoload/plug.vim'))
+"  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+"    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"endif
 "
 "" Run PlugInstall if there are missing plugins
-autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-  \| PlugInstall --sync | source $MYVIMRC
-\| endif
+"autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+"  \| PlugInstall --sync | source $MYVIMRC
+"\| endif
 "
 "" sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 "
@@ -35,15 +35,15 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 "
 "" Directory to save plugins
 "
-call plug#begin('~/.vim/plugged')
+"call plug#begin('~/.vim/plugged')
 "
 "" Plugins
 "
-Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs' | Plug 'dkarter/bullets.vim' | Plug 'fannheyward/coc-pyright'
+"Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs' | Plug 'dkarter/bullets.vim' | Plug 'fannheyward/coc-pyright'
 "
 "" Initialize vim-plug
 "
-call plug#end()
+"call plug#end()
 "
 " Use vim settings rather than vi
 if &compatible
@@ -290,15 +290,15 @@ nnoremap q :q
 nnoremap qq :q!<CR>
 nnoremap Q q
 inoremap # #
-nnoremap <silent> K :call ShowDocumentation()<CR>
+"nnoremap <silent> K :call ShowDocumentation()<CR>
 
-function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
-endfunction
+"function! ShowDocumentation()
+"  if CocAction('hasProvider', 'hover')
+"    call CocActionAsync('doHover')
+"  else
+"    call feedkeys('K', 'in')
+"  endif
+"endfunction
 autocmd BufEnter *.md exe 'noremap <F5> :!google-chrome-stable %:p<CR>'
 au BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
 au BufNewFile,BufRead /dev/shm/pass.* setlocal noswapfile nobackup noundofile
@@ -428,16 +428,16 @@ set nottimeout
 "let g:python_host_prog = "/usr/bin/python2.7"
 let g:python3_host_prog = "/usr/bin/python3"
 
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
+"inoremap <silent><expr> <Tab>
+"      \ pumvisible() ? "\<C-n>" :
+"      \ <SID>check_back_space() ? "\<Tab>" :
+"      \ coc#refresh()
 
-noremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+"noremap <silent><expr> <TAB>
+"      \ pumvisible() ? coc#_select_confirm() :
+"      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"      \ <SID>check_back_space() ? "\<TAB>" :
+"      \ coc#refresh()
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -519,14 +519,14 @@ nmap <leader>s :%s//g<Left><Left>
 set wildignore+=*.opus,*.flac,*.pdf,*.jpg,*.png,*.so,*.swp,*.zip,*.gzip,*.bz2,*.tar,*.xz,*.lrzip,*.lrz,*.mp3,*.ogg,*.mp4,*.gif,*.jpeg,*.webm
 
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+"autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
+"nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+"xmap <leader>f  <Plug>(coc-format-selected)
+"nmap <leader>f  <Plug>(coc-format-selected)
 
 
 " vim: set ft=vim :
