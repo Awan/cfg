@@ -42,9 +42,12 @@ num_mon=$(bspc query -M | wc -l)
 PANEL_FIFO=/tmp/panel-fifo
 PANEL_HEIGHT=24
 #PANEL_GEOMETRY="1867x18+52+0"
-#PANEL_FONT="-bitstream-terminal-medium-r-normal--18-140-100-100-c-110-iso8859-1"
-PANEL_FONT="-xos4-terminus-bold-r-normal--18-180-72-72-c-100-iso10646-1"
-# PANEL_FONT="TerminusBold-17"
+# PANEL_FONT="-bitstream-terminal-medium-r-normal--18-140-100-100-c-110-iso8859-1"
+# PANEL_FONT="-xos4-terminus-bold-r-normal--18-180-72-72-c-100-iso10646-1"
+#PANEL_FONT="-misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso8859-1"
+# PANEL_FONT="-misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso8859-1"
+#PANEL_FONT="Terminus-17"
+PANEL_FONT="TerminusBold-17"
 # PANEL_FONT="TamzenForPowerline-17"
 # PANEL_FONT="SourceCodePro-15"
 #PANEL_FONT="UbuntuMonoNerdFont-15"
@@ -175,7 +178,7 @@ cpu() {
 
 mails() {
 
-    count=$(find $HOME/.mail/Inbox/new -type f -print | wc -l)
+    count=$(find $HOME/.local/share/email/x1c/INBOX/new -type f -print | wc -l)
     if [ $count -ne 0 ]; then
         printf "%s" "%{F#FFFF0000}Mails:%{F-}%{F#FFF4C430}$count%{F-}"
     fi
