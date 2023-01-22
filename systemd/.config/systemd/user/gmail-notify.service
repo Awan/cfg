@@ -4,7 +4,7 @@ Description=Execute scripts on IMAP mailbox changes(new/deleted updated messages
 [Service]
 Type=simple
 Environment=DISPLAY=:0
-ExecStart=/usr/bin/goimapnotify -conf %h/.config/goimapnotify.conf
+ExecStart=/usr/bin/goimapnotify -conf %h/.config/goimapnotify/goimapnotify.conf
 Restart=always
 RestartSec=30
 
