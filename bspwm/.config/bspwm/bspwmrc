@@ -189,5 +189,5 @@ bspc config pointer_action3 resize_side
 bspc config pointer_action3 resize_corner
 bspc config pointer_action1 move
 sleep 1
-urxvtc -g 70x20 -title 'scratchpad'
-# alacritty -t 'scratchpad' &
+# urxvtc -g 70x20 -title 'scratchpad'
+alacritty -t 'scratchpad' &
