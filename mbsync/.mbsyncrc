@@ -1,8 +1,8 @@
 IMAPStore gmail-remote
 Host imap.gmail.com
 Port 993
-UserCmd "age -i ~/.ssh/id_ed25519 -d ~/nix/secrets/google_user.age"
-PassCmd "age -i ~/.ssh/id_ed25519 -d ~/nix/secrets/msmtp_gmail.age"
+UserCmd "age -i ~/.ssh/id_ed25519 -d ~/cfg/secrets/google_user.age"
+PassCmd "age -i ~/.ssh/id_ed25519 -d ~/cfg/secrets/msmtp_gmail.age"
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
