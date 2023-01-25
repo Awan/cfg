@@ -1,4 +1,5 @@
 alias lsa='ls -lah'
+alias pass='passage'
 alias rami='shred -fzuv $@'
 alias li='ls -li'
 alias r='ranger $@'
