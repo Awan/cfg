@@ -157,9 +157,9 @@ pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 
 # [ -z "$TMUX" ] && tmux new-session -s "$USER" -d 
 
-# Set brightness to 30 at boot
+# Set brightness to 10 at boot
 
-run light -S 90
+run light -S 10
 
 # Configure multihead.
 
