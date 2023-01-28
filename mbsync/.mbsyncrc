@@ -7,7 +7,7 @@ SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 MaildirStore gmail-local
-#Subfolders Verbatim
+Subfolders Verbatim
 Path ~/.local/share/email/x1c/
 INBOX ~/.local/share/email/x1c/INBOX
 Flatten .
