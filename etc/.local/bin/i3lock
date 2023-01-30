@@ -14,11 +14,21 @@ In the name of Allah, the most Gracious, the most Merciful.
 ░▀▀▀░▀▀░░▀▀▀░▀▀▀░▀▀▀░▀░▀
 '
 
+# random image from walls dir
+walls_dir="$HOME/pix/wall/cuties"
+random_wall="$(ls "$walls_dir" | shuf -n 1)"
+
+# convert image to png format because i3lock only supports png format
+# delete old image
+rm /tmp/lock.png
+convert "$walls_dir/$random_wall" -resize 1920x1080! /tmp/lock.png
+
+
 revert() {
     xset dpms 0 0 0
 }
 
 trap revert HUP INT TERM
 xset +dpms dpms 5 5 5
-/usr/bin/i3lock -enfc 000070
+/usr/bin/i3lock -enfi /tmp/lock.png && rm /tmp/lock.png
 revert
