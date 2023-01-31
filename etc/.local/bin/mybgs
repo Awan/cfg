@@ -1,0 +1,26 @@
+#!/bin/sh
+# shellcheck disable=2034
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░░░░░░░░░░
+
+
+'
+# install some pics to my wallpapers collection
+# depends on imagemagick
+
+filename="$(basename "$1")"
+info="$(convert "$1" -format "%[fx:int(mean*100)]" info:)"
+
+if [ "${info}" -lt 45 ]; then
+    destination=dark
+else
+    destination=light
+fi
+
+install -Dvm644 "$1" "$HOME/pix/wall/cuties/$destination/$filename"
