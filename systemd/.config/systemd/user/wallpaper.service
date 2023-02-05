@@ -3,7 +3,7 @@ Description=Set random wallpaper
 
 [Service]
 Type=oneshot
-Environment="walls_dir=%h/pix/wall/cuties/dark"
+Environment="walls_dir=%h/pix/wall/collection/dark"
 ExecStart=/bin/sh -c '/usr/bin/feh --randomize --recursive --bg-scale "$walls_dir"'
 
 [Install]
