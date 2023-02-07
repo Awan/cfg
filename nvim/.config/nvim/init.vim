@@ -19,69 +19,100 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Install vim-plug 
-
-" sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-" Call vim-plug
-
-" Directory to save plugins
-
-"call plug#begin('~/.local/share/nvim/plugged')
-
-" Plugins
-
-"Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs'
-
-" Initialize vim-plug
-
+"if empty(glob('~/.vim/autoload/plug.vim'))
+"  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+"    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"endif
+"
+"" Run PlugInstall if there are missing plugins
+"autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+"  \| PlugInstall --sync | source $MYVIMRC
+"\| endif
+"
+"" sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+"
+"" Call vim-plug
+"
+"" Directory to save plugins
+"
+"call plug#begin('~/.vim/plugged')
+"
+"" Plugins
+"
+"Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs' | Plug 'dkarter/bullets.vim' | Plug 'fannheyward/coc-pyright'
+"
+"" Initialize vim-plug
+"
 "call plug#end()
+"
+" Use vim settings rather than vi
+if &compatible
+    set nocompatible
+endif
+
+" vim bullets for .md, .txt, and gitcommit
+let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'mail']
 
 " Show relative numbers
 set rnu nu
-" w!! to write file as sudo
-set fo+=w
-cmap w!! %!sudo tee > /dev/null %
-
+" Set colorscheme
+color molokai
+" Set status line
+set laststatus=2
+set statusline=
+" Show file path
+set statusline+=%#Question#
+set statusline+=%f
+" Show current mode
+let g:currentmode={
+       \ 'n'  : 'NORMAL ',
+       \ 'v'  : 'VISUAL ',
+       \ 'V'  : 'V·Line ',
+       \ '' : 'V·Block ',
+       \ 'i'  : 'INSERT ',
+       \ 'R'  : 'R ',
+       \ 'Rv' : 'V·Replace ',
+       \ 'c'  : 'Command ',
+       \}
+set statusline+=%#LineNr#
+set statusline+=\ %{toupper(g:currentmode[mode()])}
+set statusline+=%{&paste?'[paste]':''}
+set statusline+=\ %m
+set statusline+=%#MoreMsg#
+set statusline+=%r
+set statusline+=%#StatusLine#
+set statusline+=%=
+set statusline+=%#CursorColumn#
+set statusline+=%#Constant#
+set statusline+=\ %y
+set statusline+=%#PreProc#
+set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
+set statusline+=%#Tag#
+set statusline+=\ [%{&fileformat}\]
+set statusline+=%#Debug#
+set statusline+=\ %p%%
+set statusline+=%#Number#
+set statusline+=\ %l:%c
 function! SaveIfUnsaved()
     if &modified
         :silent! w
     endif
 endfunction
+
+" w!! to write file as root
+cmap w!! %!sudo tee > /dev/null %
+" No comments with o
+set formatoptions-=o
 " au FocusLost,BufLeave * :call SaveIfUnsaved()
 au FocusGained,BufEnter * :silent! !
 
 set ruler
-
-" Colors
-
-if &term == "linux"
-    set bg=dark
-endif
-
-if has("gui_running")
-    "configure in gvimrc
-elseif &t_Co == 256
-    silent! color monokai
-else
-    silent! color slate
-endif
 
 if &diff
     highlight! link DiffText MatchParen
 else
 "    setup for non-diff mode
 endif
-
-if has("termguicolors")
-        if &term == "tmux-256color"
-                let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-                let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-        endif
-        if &term =~ "^(tmux|xterm)-256color"
-                set termguicolors
-        endif
-endif
-
 
 " Sessions management
 " No help windows
@@ -90,17 +121,24 @@ set sessionoptions-=curdir
 
 silent! set numberwidth=4
 
-set hlsearch
+if &t_Co > 2 || has("gui_running")
+    set hlsearch
+endif
+
 autocmd! bufwritepost $HOME/.Xresources !xrdb -load $HOME/.Xresources 
 autocmd! bufwritepost $HOME/.zshrc      !source $HOME/.zshrc
 autocmd! bufwritepost $HOME/.config/sxhkd/sxhkdrc       !pkill -USR1 -x sxhkd
 autocmd! bufwritepost $HOME/cfg/sxhkd/.config/sxhkd/sxhkdrc     !pkill -USR1 -x sxhkd
-autocmd! bufwritepost $HOME/cfg/zsh/.zsh/custom-alias !source $HOME/.zsh/custom-alias
-autocmd! bufwritepost $HOME/cfg/polybar/.config/polybar/*.conf !bspc wm -r >/dev/null 2>&1 
+autocmd! bufwritepost $HOME/cfg/zsh/.zsh/custom-alias !source $HOME/cfg/zsh/.zsh/custom-alias'
+autocmd! bufwritepost $HOME/cfg/polybar/.config/polybar/*.{conf,ini} !bspc wm -r >/dev/null 2>&1
+autocmd! bufwritepost $HOME/cfg/bspwm/.config/bspwm/bspwmrc !bspc wm -r >/dev/null 2>&1
+autocmd! bufwritepost $HOME/cfg/etc/.local/bin/mypanel !pkill mypanel && $HOME/.local/bin/mypanel & disown
+autocmd! bufwritepost $HOME/cfg/sway/.config/sway/config !swaymsg reload
+autocmd! bufwritepost $HOME/cfg/herbstluftwm/.config/herbstluftwm/autostart !herbstclient reload
 set nocp
 filetype on
 au BufNewFile,BufRead *Pkgfile set filetype=sh
-set textwidth=80
+set textwidth=120
 if !&scrolloff
   set scrolloff=3
 endif
@@ -115,14 +153,20 @@ set showmode
 set fo+=w
 set ai
 set sc
-set incsearch
+if has('reltime')
+    set incsearch
+endif
+"set nrformats=octal
+set nrformats=bin,hex,unsigned
 set completeopt=menuone
 set ignorecase
+set wrapscan
+set magic
 set gdefault
 com! -complete=file -bang -nargs=? W :w<bang> <args>
 set smartcase
 set cursorcolumn
-set colorcolumn=+1
+"set colorcolumn=+1
 set cursorline
 hi ColorColumn guifg=#232526 guibg=#F92672
 hi CursorColumn guifg=white guibg=#2b3f4a
@@ -137,9 +181,8 @@ let mapleader=" "
 set hidden
 set autoread
 set history=10000
-filetype indent on
-filetype plugin on
-set linebreak 
+filetype plugin indent on
+set linebreak
 set display+=lastline
 set display+=truncate
 set display+=uhex
@@ -176,14 +219,15 @@ if has("unix")
         silent! set undofile
     endif
 endif
-set noshowmode 
+set noshowmode
 set viminfo='10,\"100,:20,%,n~/.viminfo
 autocmd BufWritePre *.c,*.cpp,*.cc,*.h,*.sh,*.hpp,*.py,*.m,*.mm :%s/\s\+$//e
 set modeline
 set nobackup
+set cmdheight=2
+set updatetime=300
 set showcmd
 set whichwrap=b,s,<,>,[,]
-set laststatus=2
 set splitbelow splitright
 set tabpagemax=20
 if &t_Co > 16
@@ -198,7 +242,7 @@ hi CursorLine guifg=white guibg=#2b3f4a
 let g:instant_markdown_browser = "/usr/bin/google-chrome-stable --new-window"
 let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
 let g:instant_markdown_port = 47479
-"let g:powerline_pycmd = 'py3'
+let g:powerline_pycmd = 'py3'
 "let g:ycm_autoclose_preview_window_after_completion = 1
 "map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
@@ -208,12 +252,12 @@ let g:ale_sign_error = '●'
 let g:ale_sign_warning = '.'
 let g:airline#extensions#tabline#formatter = 'default'
 let g:airline_powerline_fonts = 1
-
+"
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
-
-" unicode symbols
+"
+"" unicode symbols
 let g:airline_left_sep = '»'
 let g:airline_left_sep = '▶'
 let g:airline_right_sep = '«'
@@ -226,7 +270,7 @@ let g:airline_symbols.paste = 'ρ'
 let g:airline_symbols.paste = 'Þ'
 let g:airline_symbols.paste = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
-" airline symbols
+"" airline symbols
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
 let g:airline_right_sep = ''
@@ -237,7 +281,7 @@ let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
 noremap <leader>u :w \| startinsert \| term urlview %<CR>
-" map <leader>n :CocCommand explorer<CR>
+map <leader>n :CocCommand explorer<CR>
 " comment out current line
 map <leader>c 0i# <ESC>
 nnoremap ; :
@@ -246,13 +290,27 @@ nnoremap q :q
 nnoremap qq :q!<CR>
 nnoremap Q q
 inoremap # #
+"nnoremap <silent> K :call ShowDocumentation()<CR>
+
+"function! ShowDocumentation()
+"  if CocAction('hasProvider', 'hover')
+"    call CocActionAsync('doHover')
+"  else
+"    call feedkeys('K', 'in')
+"  endif
+"endfunction
 autocmd BufEnter *.md exe 'noremap <F5> :!google-chrome-stable %:p<CR>'
 au BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
 au BufNewFile,BufRead /dev/shm/pass.* setlocal noswapfile nobackup noundofile
+"autocmd BufReadPost *
+"     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+"     \   exe "normal! g`\"" |
+"     \ endif
 autocmd BufReadPost *
-     \ if line("'\"") > 0 && line("'\"") <= line("$") |
-     \   exe "normal! g`\"" |
-     \ endif
+            \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~#'commit'
+            \ | exe "normal! g`\""
+            \ | endif
+
 function! ResCur()
   if line("'\"") <= line("$")
     normal! g`"
@@ -298,9 +356,9 @@ if !exists(":DiffOrig")
         \ wincmd p | diffthis
 endif
 
-"if &t_Co == 8 && $TERM !~# '^linux\|^Eterm|^screen-*'
-"  set t_Co=16
-"endif
+if $TERM !~# '^linux\|^Eterm|^screen-*|^tmux-*'
+  set t_Co=8
+endif
 
 if has("nvim")
     silent! set guicursor=
@@ -368,30 +426,25 @@ if !has("nvim")
 endif
 set nottimeout
 "let g:python_host_prog = "/usr/bin/python2.7"
-let g:python3_host_prog = "/usr/bin/python3.9"
+let g:python3_host_prog = "/usr/bin/python3"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
+"inoremap <silent><expr> <Tab>
+"      \ pumvisible() ? "\<C-n>" :
+"      \ <SID>check_back_space() ? "\<Tab>" :
+"      \ coc#refresh()
 
-" inoremap <silent><expr> <Tab>
-"       \ pumvisible() ? "\<C-n>" :
-"       \ <SID>check_back_space() ? "\<Tab>" :
-"       \ coc#refresh()
-
-" noremap <silent><expr> <TAB>
-"       \ pumvisible() ? coc#_select_confirm() :
-"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-"       \ <SID>check_back_space() ? "\<TAB>" :
-"       \ coc#refresh()
+"noremap <silent><expr> <TAB>
+"      \ pumvisible() ? coc#_select_confirm() :
+"      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"      \ <SID>check_back_space() ? "\<TAB>" :
+"      \ coc#refresh()
 
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" let g:coc_snippet_next = '<tab>'
+"let g:coc_snippet_next = '<tab>'
 
 
 if has("autocmd")
@@ -452,8 +505,28 @@ if has("multi_byte")
     setglobal fileencoding=utf-8
 endif
 
-" Highlight comments italic
-highlight Comment cterm = italic
+" Highlight comments italic 
+highlight Comment cterm=italic
+
+if has('syntax') && has('eval')
+    packadd! matchit
+endif
+
+vmap rot :!tr A-Za-z N-ZA-Mn-za-m<CR>
+vnoremap < <gv
+vnoremap > >gv
+nmap <leader>s :%s//g<Left><Left>
+set wildignore+=*.opus,*.flac,*.pdf,*.jpg,*.png,*.so,*.swp,*.zip,*.gzip,*.bz2,*.tar,*.xz,*.lrzip,*.lrz,*.mp3,*.ogg,*.mp4,*.gif,*.jpeg,*.webm
+
+" Highlight the symbol and its references when holding the cursor.
+"autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+"nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+"xmap <leader>f  <Plug>(coc-format-selected)
+"nmap <leader>f  <Plug>(coc-format-selected)
 
 
 " vim: set ft=vim :
