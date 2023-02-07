@@ -1,0 +1,280 @@
+#!/bin/sh
+
+# This is the example configuration file for river.
+#
+# If you wish to edit this, you will probably want to copy it to
+# $XDG_CONFIG_HOME/river/init or $HOME/.config/river/init first.
+#
+# See the river(1), riverctl(1), and rivertile(1) man pages for complete
+# documentation.
+
+# Note: the "Super" modifier is also known as Logo, GUI, Windows, Mod4, etc.
+
+# Systemd integration
+
+systemctl --user import-environment
+systemctl --user restart river-session.target
+
+# Super+Shift+Return to start an instance of foot (https://codeberg.org/dnkl/foot)
+
+#foot -s &
+mod="Mod4"
+alt="Alt"
+TERMINAL="alacritty"
+BROWSER="google-chrome-stable"
+
+
+riverctl map normal $mod Return spawn $TERMINAL
+#riverctl map normal Super Shift Return spawn $TERMINAL
+
+riverctl map normal $mod W spawn $BROWSER
+
+# Music
+riverctl map normal $alt B spawn ~/.local/bin/music
+riverctl map normal $alt V spwan `cmus-remote -u || if ( (tmux has-session -t $USER) ); then tmux new-window cmus; else tmux new-session -d -s $USER cmus fi`
+riverctl map normal $alt Bracketleft spawn "music_seek -10"
+riverctl map normal $alt Bracketright spawn "music_seek +10"
+riverctl map normal $alt+Shift Bracketleft spawn "music_seek -100"
+riverctl map normal $alt+Shift Bracketright spawn "music_seek +100"
+
+
+riverctl map normal $mod apostrophe spawn 'cycle-focused-tags next'
+riverctl map normal $mod semicolon spawn 'cycle-focused-tags previous'
+
+# Super+Q to close the focused view
+riverctl map normal Super Q close
+
+# Launch google-chrome
+riverctl map normal $mod D spawn `which $BROWSER`
+# Super+Shift+E to exit river
+# riverctl map normal Super+Shift E exit
+riverctl map normal Alt+Shift Q exit
+
+# Scratchpad
+
+scratch_tag=$((1 << 9))
+riverctl map normal $mod I toggle-focused-tags ${scratch_tag}
+riverctl map normal $mod+Shift I set-view-tags ${scratch_tag}
+all_but_scratch_tag=$(( ((1 << 9) -1) ^ $scratch_tag ))
+riverctl spawn-tagmask ${all_but_scratch_tag}
+
+# Sticky Windows
+
+all_tags=$(((1 << 9) - 1))
+sticky_tag=$((1 << 8))
+all_but_sticky_tag=$(( $all_tags ^ $sticky_tag ))
+
+riverctl map normal $mod S toggle-view-tags $sticky_tag
+riverctl spawn-tagmask ${all_but_sticky_tag}
+# modify the normal keybind to always select the sticky tag
+for i in $(seq 1 9)
+do
+    tags=$((1 << ($i - 1)))
+    # Super+[1-8] to focus tag [0-7]
+    riverctl map normal $mod $i set-focused-tags $(($sticky_tag + $tags))
+done
+
+# Setup touchpad
+touchpad=2:7:SynPS/2_Synaptics_TouchPad
+riverctl input $touchpad tap enabled
+riverctl input $touchpad disable-while-typing enabled
+riverctl input $touchpad accel-profile adaptive
+#riverctl input $touchpad clickfinger
+riverctl input $touchpad drag enabled
+#riverctl input $touchpad drag-lock disabled
+#riverctl input $touchpad events disabled-on-external-mouse enabled
+riverctl input $touchpad middle-emulation enabled
+riverctl input $touchpad natural-scroll disabled
+riverctl input $touchpad scroll-method two-finger
+riverctl input $touchpad tap-button-map left-right-middle
+
+
+# Lock the session
+
+riverctl map normal $mod X spawn "~/.local/bin/waywall lock"
+
+# Change the wallpaper
+
+riverctl map normal $alt W spawn "~/.local/bin/waywall wall"
+riverctl map normal $alt+Shift W spawn "~/.local/bin/waywall uwall"
+
+
+# Attach mode
+riverctl attach-mode top
+
+
+
+riverctl map normal $mod D spawn "wofi --insensitive --show run"
+
+# Super+J and Super+K to focus the next/previous view in the layout stack
+riverctl map normal Super J focus-view next
+riverctl map normal Super K focus-view previous
+
+# Super+Shift+J and Super+Shift+K to swap the focused view with the next/previous
+# view in the layout stack
+riverctl map normal Super+Shift J swap next
+riverctl map normal Super+Shift K swap previous
+
+# Super+Period and Super+Comma to focus the next/previous output
+riverctl map normal Super Period focus-output next
+riverctl map normal Super Comma focus-output previous
+
+# Super+Shift+{Period,Comma} to send the focused view to the next/previous output
+riverctl map normal Super+Shift Period send-to-output next
+riverctl map normal Super+Shift Comma send-to-output previous
+
+### Tiled manipulation
+
+# Super+O to bump the focused view to the top of the layout stack. If focused one is already topmost, next visible one will be on top and focused...
+riverctl map normal $mod O zoom
+
+# Super+H and Super+L to decrease/increase the main ratio of rivertile(1)
+riverctl map normal $mod H send-layout-cmd stacktile "primary_ratio -0.05"
+riverctl map normal $mod L send-layout-cmd stacktile "primary_ratio +0.05"
+
+# Super+Shift+H and Super+Shift+L to increment/decrement the main count of rivertile(1)
+riverctl map normal $mod+Shift H send-layout-cmd stacktile "secondary_ratio -0.05"
+riverctl map normal $mod+Shift L send-layout-cmd stacktile "secondary_ratio +0.05"
+
+# Super+Alt+{H,J,K,L} to move views
+riverctl map normal Super+Alt H move left 100
+riverctl map normal Super+Alt J move down 100
+riverctl map normal Super+Alt K move up 100
+riverctl map normal Super+Alt L move right 100
+
+# Super+Alt+Control+{H,J,K,L} to snap views to screen edges
+riverctl map normal Super+Alt+Control H snap left
+riverctl map normal Super+Alt+Control J snap down
+riverctl map normal Super+Alt+Control K snap up
+riverctl map normal Super+Alt+Control L snap right
+
+# Super+Alt+Shift+{H,J,K,L} to resize views
+#riverctl map normal Super+Alt+Shift H resize horizontal -100
+#riverctl map normal Super+Alt+Shift J resize vertical 100
+#riverctl map normal Super+Alt+Shift K resize vertical -100
+#riverctl map normal Super+Alt+Shift L resize horizontal 100
+
+riverctl map normal Alt H resize horizontal -100
+riverctl map normal Alt J resize vertical 100
+riverctl map normal Alt K resize vertical -100
+riverctl map normal Alt L resize horizontal 100
+
+
+
+# Super + Left Mouse Button to move views
+riverctl map-pointer normal Super BTN_LEFT move-view
+
+# Super + Right Mouse Button to resize views
+riverctl map-pointer normal Super BTN_RIGHT resize-view
+
+# Focus with mouse
+riverctl focus-follows-cursor normal
+
+for i in $(seq 1 9)
+do
+    tags=$((1 << ($i - 1)))
+
+    # Super+[1-7] to focus tag [0-6]
+    riverctl map normal Super $i set-focused-tags $tags
+
+    # Super+Shift+[1-9] to tag focused view with tag [0-8]
+    riverctl map normal Super+Shift $i set-view-tags $tags
+
+    # Super+Ctrl+[1-9] to toggle focus of tag [0-8]
+    riverctl map normal Super+Control $i toggle-focused-tags $tags
+
+    # Super+Shift+Ctrl+[1-9] to toggle tag [0-8] of focused view
+    riverctl map normal Super+Shift+Control $i toggle-view-tags $tags
+done
+
+# Super+0 to focus all tags
+# Super+Shift+0 to tag focused view with all tags
+all_tags=$(((1 << 9) - 1))
+riverctl map normal Super 0 set-focused-tags $all_tags
+riverctl map normal Super+Shift 0 set-view-tags $all_tags
+
+# Super+Space to toggle float
+riverctl map normal Super Space toggle-float
+
+# Super+F to toggle fullscreen
+riverctl map normal Super F toggle-fullscreen
+
+# Super+{Up,Right,Down,Left} to change layout orientation
+riverctl map normal Super Up    send-layout-cmd rivertile "main-location top"
+riverctl map normal Super Right send-layout-cmd rivertile "main-location right"
+riverctl map normal Super Down  send-layout-cmd rivertile "main-location bottom"
+riverctl map normal Super Left  send-layout-cmd rivertile "main-location left"
+
+# Declare a passthrough mode. This mode has only a single mapping to return to
+# normal mode. This makes it useful for testing a nested wayland compositor
+riverctl declare-mode passthrough
+
+# Super+F11 to enter passthrough mode
+riverctl map normal Super F11 enter-mode passthrough
+
+# Super+F11 to return to normal mode
+riverctl map passthrough Super F11 enter-mode normal
+
+# Various media key mapping examples for both normal and locked mode which do
+# not have a modifier
+for mode in normal locked
+do
+    # Eject the optical drive (well if you still have one that is)
+    riverctl map $mode None XF86Eject spawn 'eject -T'
+
+    # Control pulse audio volume with pamixer (https://github.com/cdemoulins/pamixer)
+    riverctl map $mode None XF86AudioRaiseVolume  spawn 'pamixer --allow-boost -i 5'
+    riverctl map $mode None XF86AudioLowerVolume  spawn 'pamixer --allow-boost -d 5'
+    riverctl map $mode None XF86AudioMute         spawn 'pamixer --toggle-mute'
+
+    # Control MPRIS aware media players with playerctl (https://github.com/altdesktop/playerctl)
+    riverctl map $mode None XF86AudioMedia spawn 'playerctl play-pause'
+    riverctl map $mode None XF86AudioPlay  spawn 'playerctl play-pause'
+    riverctl map $mode None XF86AudioPrev  spawn 'playerctl previous'
+    riverctl map $mode None XF86AudioNext  spawn 'playerctl next'
+
+    # Control screen backlight brightness with light (https://github.com/haikarainen/light)
+    riverctl map $mode None XF86MonBrightnessUp   spawn 'light -A 5'
+    riverctl map $mode None XF86MonBrightnessDown spawn 'light -U 5'
+
+    # Scrot
+    riverctl map $mode None Print spawn 'wayshot -f /tmp/foo.png; wl-copy -t image/png < /tmp/foo.png'
+    # TODO: want to bind push scrots to internet. riverctl $alt+Print spawn '/.local/bin/imgur
+done
+
+# Set background and border color
+#riverctl background-color 0x2aa198
+riverctl border-color-focused 0xff6600
+riverctl border-color-unfocused 0x44444480
+riverctl border-width 2
+
+# Set keyboard repeat rate
+riverctl set-repeat 50 300
+
+# Make certain views start floating
+riverctl float-filter-add app-id float
+riverctl float-filter-add app-id "mpv"
+riverctl float-filter-add app-id "pavucontrol"
+riverctl float-filter-add app-id "mplayer"
+riverctl float-filter-add app-id "feh"
+riverctl float-filter-add app-id "sxiv"
+riverctl float-filter-add title "popup title with spaces"
+
+# Hide the cursor on inactivity
+riverctl hide-cursor timeout 1000
+
+# Set app-ids and titles of views which should use client side decorations
+riverctl csd-filter-add app-id "gedit"
+riverctl csd-filter-add app-id "pavucontrol"
+
+# Set the default layout generator to be rivertile and start it.
+# River will send the process group of the init executable SIGTERM on exit.
+#riverctl default-layout rivertile
+#rivertile -view-padding 6 -outer-padding 6
+riverctl default-layout stacktile
+exec stacktile --per-tag-config \
+    --inner-padding 5 \
+    --outer-padding 5 \
+    --primary-ratio 0.5 \
+    --secondary-count 1 \
+    --secondary-ratio 0.6
