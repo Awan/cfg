@@ -105,7 +105,7 @@ run unclutter --ignore-scrolling --fork --timeout 1
 
 # Set cursor
 
-xsetroot -cursor_shape ul_angle
+#xsetroot -cursor_shape ul_angle
 
 # DPMS and lock screen
 
