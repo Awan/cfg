@@ -15,7 +15,7 @@ In the name of Allah, the most Gracious, the most Merciful.
 '
 
 # random image from walls dir
-walls_dir="$HOME/pix/wall/cuties"
+walls_dir="$HOME/pix/wall/collection/dark"
 random_wall="$(ls "$walls_dir" | shuf -n 1)"
 
 # convert image to png format because i3lock only supports png format
