@@ -1,0 +1,93 @@
+@define-color highlight #726E97;
+
+window#waybar {
+  background: #1e1e1e;
+  border-radius: 13px;
+  padding: 9px;
+  opacity: 0.9;
+  border: 3px solid transparent;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "Meslo LGM for Powerline";
+}
+
+#custom-dwl_layout {
+    color: #EC5800
+}
+
+#custom-dwl_title {
+    color: #017AFF
+}
+
+#custom-dwl_tag {
+    color: #875F00
+}
+
+#custom-dwl_tag.selected {
+    color: #017AFF
+}
+
+#custom-dwl_tag.urgent {
+    background-color: #FF0000
+}
+
+#custom-dwl_tag.active {
+    border-top: 1px solid #EC5800
+}
+
+#tray.needs-attention {
+  color: #ff0000;
+}
+
+#custom-mailsnow {
+  color: #ff0000;
+}
+
+#temperature.critical {
+  color: #ff0000;
+}
+
+#battery, #network, #clock, #cpu, #memory, #temperature, #custom-mailsnow, #tray {
+  margin: 0 10px;
+  padding: 0 2px;
+}
+
+#battery.critical {
+  color: #ff0000;
+  font-weight: bold;
+}
+
+#battery.warning {
+  color: #ff334a;
+}
+
+#tags button.occupied {
+  color: #b22222;
+}
+
+#tags button.urgent {
+  color: #de3163;
+}
+
+#tags button.focused {
+  background: @highlight;
+}
+
+#tags button {
+  padding: 0px 7px;
+  border-radius: 7px;
+  font-weight: bold;
+}
+
+#workspaces button {
+  padding: 0px 7px;
+  border-radius: 7px;
+}
+
+#workspaces button.active {
+  background: @highlight;
+}
+
+#workspaces button.urgent {
+  color: #de3163;
+}

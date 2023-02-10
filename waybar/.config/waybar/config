@@ -1,0 +1,269 @@
+[
+  {
+    "backlight": {
+      "format": "<span color=\"#C75000\">{icon}</span><span color=\"#0EF1F1\">{percent}%</span>",
+      "format-icons": [
+        " ",
+        " "
+      ],
+      "interval": 5,
+      "on-scroll-down": "light -U 5",
+      "on-scroll-up": "light -A 5"
+    },
+    "battery": {
+      "adapter": "AC",
+      "bat": "BAT0",
+      "format": "<span color=\"#FA9500\">{icon}</span> <span color=\"#724CF9\">{capacity:2}%</span>",
+      "format-charging": "<span color=\"#758BFD\">{icon}</span> <span color=\"#FCBF49\">{capacity:2}% </span>",
+      "format-icons": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "format-plugged": "<span color=\"#3772FF\">{icon}</span> <span color=\"#585123\">{capacity:2}% </span>",
+      "full-at": 100,
+      "interval": 60,
+      "states": {
+        "critical": 40,
+        "good": 75,
+        "warning": 60
+      }
+    },
+    "clock": {
+      "format": "<span color=\"#00FF00\">{:%a %d/%m %H:%M:%S}</span>",
+      "interval": 1,
+      "timezone": "Asia/Karachi",
+      "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "cpu": {
+      "format": "<span color=\"#22577A\"> </span><span color=\"#0FF384\">{usage:1}%</span>",
+      "interval": 1
+    },
+    "custom/cmus": {
+      "escape": true,
+      "exec": "cmus-status",
+      "exec-if": "pgrep -x cmus",
+      "format": "<span color=\"#D93EAA\"> ♪</span> <span color=\"#00FFFF\">{}</span>",
+      "interval": 1,
+      "on-click": "cmus-remote -u"
+    },
+    "custom/mailsnow": {
+      "exec": "/nix/store/inzk695smpcagpgxmh9lkn8wk5l1mdfq-mailsnow",
+      "format": " {}",
+      "interval": 15
+    },
+    "height": 30,
+    "idle_inhibitor": {
+      "format": "{icon}",
+      "format-icons": {
+        "activated": "<span color=\"#E76F51\"> </span> ",
+        "deactivated": "<span color=\"#023E8A\"> </span> "
+      }
+    },
+    "layer": "top",
+    "modules-center": [],
+    "modules-left": [
+      "custom/dwl_tag#0",
+      "custom/dwl_tag#1",
+      "custom/dwl_tag#2",
+      "custom/dwl_tag#3",
+      "custom/dwl_tag#4",
+      "custom/dwl_tag#5",
+      "custom/dwl_tag#6",
+      "custom/dwl_tag#7",
+      "custom/dwl_tag#8",
+      "custom/dwl_tag#9",
+      "custom/dwl_layout",
+      "custom/dwl_title",
+      "mpd"
+    ],
+    "modules-right": [
+      "idle_inhibitor",
+      "pulseaudio",
+      "backlight",
+      "network",
+      "temperature",
+      "cpu",
+      "battery",
+      "clock",
+      "tray"
+    ],
+    "mpd": {
+      "consume-icons": {
+        "on": " "
+      },
+      "format": "  {stateIcon}<span color=\"#013A63\">{artist}</span> <span color=\"#D645D8\"></span> <span color=\"#3A5A40\">{title}</span> <span color=\"#89023A\">{elapsedTime:%M:%S}/{totalTime:%M:%S}</span>",
+      "format-disconnected": " ",
+      "format-paused": "  {stateIcon}",
+      "format-stopped": " ",
+      "interval": 1,
+      "random-icons": {
+        "off": "<span color=\"#f53c3c\"></span> ",
+        "on": " "
+      },
+      "repeat-icons": {
+        "on": " "
+      },
+      "single-icons": {
+        "on": "  1 "
+      },
+      "state-icons": {
+        "paused": "<span color=\"#945600\"> </span>",
+        "playing": "<span color=\"#945600\"> </span>"
+      }
+    },
+    "network": {
+      "format-disconnected": "<span color=\"#3A86FF\"></span>",
+      "format-wifi": "<span color=\"#832161\"> </span><span color=\"#B110EA\">{essid}</span><span color=\"#0FF35F\">({signalStrength}%)</span>",
+      "interface": "wl*",
+      "interval": 10,
+      "tooltip-format-wifi": "{essid} {ipaddr} "
+    },
+    "position": "top",
+    "pulseaudio": {
+      "default": [
+        "",
+        ""
+      ],
+      "format": "<span color=\"#7209B7\">{icon}</span> <span color=\"#004E98\">{volume}%</span>  ",
+      "format-icons": [
+        "",
+        "",
+        "",
+        ""
+      ],
+      "format-muted": "  ",
+      "on-click": "pavucontrol",
+      "on-scroll-down": "pamixer --allow-boost -d 10",
+      "on-scroll-up": "pamixer --allow-boost -i 10",
+      "scroll-step": 1
+    },
+    "river/tags": {
+      "num-tags": 9,
+      "tag-labels": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    "sway/workspaces": {
+      "all-outputs": true,
+      "format": "{name} {icon}",
+      "format-icons": {
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": "",
+        "5": "",
+        "6": "",
+        "7": "",
+        "8": "",
+        "9": "",
+        "default": "",
+        "focused": "",
+        "urgent": ""
+      }
+    },
+    "temperature": {
+      "critical-threshold": 70,
+      "format": "<span color=\"#3A5A40\"> {temperatureC}°C</span>",
+      "format-critical": " {temperatureC}°C",
+      "thermal-zone": 1
+    },
+    "tray": {
+      "icon-size": 15,
+      "reverse-direction": true,
+      "spacing": 5
+    },
+    "width": 1880,
+    "custom/dwl_tag#0": {
+        "exec": "waybar-dwl '' 0",
+        "format": "{}",
+        "return-type": "json"
+    },
+    "custom/dwl_tag#1": {
+        "exec": "waybar-dwl '' 1",
+        "format": "{}",
+        "return-type": "json"
+    },
+    "custom/dwl_tag#2": {
+        "exec": "waybar-dwl '' 2",
+        "format": "{}",
+        "return-type": "json"
+    },
+    "custom/dwl_tag#3": {
+        "exec": "waybar-dwl '' 3",
+        "format": "{}",
+        "return-type": "json"
+    },
+    "custom/dwl_tag#4": {
+        "exec": "waybar-dwl '' 4",
+        "format": "{}",
+        "return-type": "json"
+    },
+    "custom/dwl_tag#5": {
+        "exec": "waybar-dwl '' 5",
+        "format": "{}",
+        "return-type": "json"
+    },
+    "custom/dwl_tag#6": {
+        "exec": "waybar-dwl '' 6",
+        "format": "{}",
+        "return-type": "json"
+    },
+    "custom/dwl_tag#7": {
+        "exec": "waybar-dwl '' 7",
+        "format": "{}",
+        "return-type": "json"
+    },
+    "custom/dwl_tag#8": {
+        "exec": "waybar-dwl '' 8",
+        "format": "{}",
+        "return-type": "json"
+    },
+    "custom/dwl_tag#9": {
+        "exec": "waybar-dwl '' 9",
+        "format": "{}",
+        "return-type": "json"
+    },
+    "custom/dwl_layout": {
+        "exec": "waybar-dwl '' layout",
+        "format": "{}",
+        "return-type": "json"
+    },
+    "custom/dwl_title": {
+        "exec": "waybar-dwl '' title",
+        "format": "{}",
+        "escape": true,
+        "return-type": "json"
+    },
+    "wlr/workspaces": {
+      "all-outputs": true,
+      "format": "{icon}",
+      "format-icons": {
+        "1": "",
+        "10": "",
+        "2": "",
+        "3": "",
+        "4": "",
+        "5": "",
+        "6": "",
+        "7": "",
+        "8": "",
+        "9": "",
+        "default": "",
+        "focused": ""
+      },
+      "on-click": "activate",
+      "sort-by-name": true
+    }
+  }
+]
