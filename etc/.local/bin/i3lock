@@ -19,9 +19,6 @@ walls_dir="$HOME/pix/wall/collection/dark"
 random_wall="$(ls "$walls_dir" | shuf -n 1)"
 
 # convert image to png format because i3lock only supports png format
-# delete old image
-rm /tmp/lock.png
-convert "$walls_dir/$random_wall" -resize 1920x1080! /tmp/lock.png
 
 
 revert() {
@@ -30,5 +27,5 @@ revert() {
 
 trap revert HUP INT TERM
 xset +dpms dpms 5 5 5
-/usr/bin/i3lock -enfi /tmp/lock.png && rm /tmp/lock.png
+/usr/bin/i3lock -enfi $walls_dir/$random_wall
 revert
