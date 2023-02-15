@@ -123,7 +123,8 @@ mp3tomp4 ()
 
 pl ()
 {
-  mpc searchplay $1
+    # search and play some song based on filename.
+  mpc searchplay filename $1
 }
 
 mergeaudio ()
