@@ -35,7 +35,7 @@ case $class in
     ;;
 [Mm]pv|gl)
     echo "state = floating"
-    echo "sticky = on"
+    #echo "sticky = on"
     echo "focus = on"
     echo "manage = on"
     echo "rectangle = 890x451+0+628"
