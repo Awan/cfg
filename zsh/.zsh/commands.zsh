@@ -16,6 +16,11 @@ if [[ $commands[pacman] ]]; then
   alias pacman='sudo pacman'
 fi
 
+if [[ $commands[apt] ]]; then
+  alias apt='sudo apt'
+fi
+
+
 if [[ $commands[colorls] ]]; then
   alias ls='colorls --almost-all --git-status --group-directories-first'
 else
