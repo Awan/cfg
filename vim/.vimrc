@@ -50,6 +50,9 @@ if &compatible
     set nocompatible
 endif
 
+" No backup for encrypted files
+set backupskip+=*.gpg,*.age
+
 " vim bullets for .md, .txt, and gitcommit
 let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'mail']
 
