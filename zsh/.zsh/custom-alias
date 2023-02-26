@@ -1,4 +1,6 @@
 alias lsa='ls -lah'
+alias zk='zk -W ~/cyb/note/'
+alias note='cd ~/cyb/notes/'
 alias pass='passage'
 alias rami='shred -fzuv $@'
 alias li='ls -li'
