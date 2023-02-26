@@ -50,6 +50,9 @@ if &compatible
     set nocompatible
 endif
 
+" No backup for encrypted files
+set backupskip+=*.gpg,*.age
+
 " vim bullets for .md, .txt, and gitcommit
 let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'mail']
 
@@ -220,7 +223,7 @@ if has("unix")
     endif
 endif
 set noshowmode
-set viminfo='10,\"100,:20,%,n~/.viminfo
+set viminfo='10,\"100,:20,%,n~/.viminfo'
 autocmd BufWritePre *.c,*.cpp,*.cc,*.h,*.sh,*.hpp,*.py,*.m,*.mm :%s/\s\+$//e
 set modeline
 set nobackup
