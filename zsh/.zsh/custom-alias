@@ -1,7 +1,6 @@
 alias lsa='ls -lah'
 alias zk='zk -W ~/cyb/note/'
-alias pandoc='pandoc --template ~/.local/share/pandoc/template.html -s -f markdown -t html -V mainfont="Chakra Petch" -V 
-fontsize=25px --metadata-file ~/.local/share/pandoc/metadata.yaml'
+alias pandoc='pandoc --template ~/.local/share/pandoc/template.html -s -f markdown -t html -V mainfont="Chakra Petch" -V fontsize=25px --metadata-file ~/.local/share/pandoc/metadata.yaml'
 alias note='cd ~/cyb/notes/'
 alias pass='passage'
 alias rami='shred -fzuv $@'
