@@ -80,9 +80,9 @@ run sxhkd
 
 run picom -b --config "$HOME"/.config/picom/picom.conf 
 
-# Restore the last wallpaper
+# Wallpaper
 
-"$HOME"/.fehbg 
+"$HOME"/.local/bin/walls ~/pix/wall/cuties/dark 30 &
 
 # Set cursor shape
 

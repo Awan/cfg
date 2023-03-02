@@ -138,6 +138,10 @@ autocmd! bufwritepost $HOME/cfg/bspwm/.config/bspwm/bspwmrc !bspc wm -r >/dev/nu
 autocmd! bufwritepost $HOME/cfg/etc/.local/bin/mypanel !pkill mypanel && $HOME/.local/bin/mypanel & disown
 autocmd! bufwritepost $HOME/cfg/sway/.config/sway/config !swaymsg reload
 autocmd! bufwritepost $HOME/cfg/herbstluftwm/.config/herbstluftwm/autostart !herbstclient reload
+autocmd! bufwritepost *.md !pandoc -o /tmp/index.html --template $HOME/.local/share/pandoc/template.html -s -f markdown -t html -V mainfont="Chakra Petch" -V fontsize=25px --metadata-file $HOME/.local/share/pandoc/metadata.yaml --toc %:p 
+
+" mmm abbreviated as my mail address
+iabbrev mmm abdullah@abdullah.solutions
 set nocp
 filetype on
 au BufNewFile,BufRead *Pkgfile set filetype=sh

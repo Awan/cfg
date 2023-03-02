@@ -1,0 +1,58 @@
+#!/bin/sh
+# shellcheck disable=2034
+coded_by='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah Khabir <https://abdullah.solutions>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░░░░░░░░░░
+
+░█░█░█▀█░█░░░█░░░█▀▀
+░█▄█░█▀█░█░░░█░░░▀▀█
+░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀
+'
+
+# Give me some directory with pictures, time in seconds and I'll set it some random picture as wallpaper and change it 
+# after the duration you specified...
+#
+# example:
+# walls ~/pix/walls/cuties/dark 10
+# will change every 10 seconds
+
+walls_dir="$1"
+walls_duration="$2"
+
+if [ -z "$walls_dir" ]
+then
+    walls_dir="$HOME/pix/wall/cuties/dark"
+fi
+
+if [ -z "$walls_duration" ]
+then
+    walls_duration="60"
+fi
+
+
+hd_wall() {
+    # convert images to 1920x1080 and set it as wallpaper
+    convert "$random_wall" -gravity Center -resize 1920 -crop 1920x1080+0+0 png:- | feh --bg-scale -
+}
+
+
+if [ -d "$walls_dir" ]
+then
+    while true
+    do
+        random_wall="$(shuf -en1 "$walls_dir"/*)"
+        res="$(identify -format "%wx%h" "$random_wall" | cut -f 1)"
+        if [ "$res" = "1920x1080" ]
+        then
+            feh --no-fehbg --bg-scale "$random_wall"
+        else
+            hd_wall
+        fi
+        sleep "$walls_duration"s
+    done
+fi
