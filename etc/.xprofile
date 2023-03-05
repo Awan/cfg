@@ -126,19 +126,19 @@ run dunst -c "$HOME"/.config/dunst/dunstrc
 
 # Get wireless network connectivity/disconnectivity
 
-#wifi_info() {
-#    for iface in /var/run/wpa_supplicant/* ;
-#    do
-#        iface="${iface##*/}"
-#        if [ -d "/sys/class/net/${iface}/phy80211" ]; then
-#                wpa_cli -p /var/run/wpa_supplicant -i "${iface}" -a "${HOME}/.local/bin/wpa_notify"
-#        fi
-#    done
-#}
+wifi_info() {
+    for iface in /var/run/wpa_supplicant/* ;
+    do
+        iface="${iface##*/}"
+        if [ -d "/sys/class/net/${iface}/phy80211" ]; then
+                wpa_cli -p /var/run/wpa_supplicant -i "${iface}" -a "${HOME}/.local/bin/wpa_notify"
+        fi
+    done
+}
 
-# run wifi_info
+run wifi_info
 
-# wpa_cli -p /var/run/wpa_supplicant -i wlan0 -B "$HOME/.local/bin/wpa_notify"
+wpa_cli -p /var/run/wpa_supplicant -i wlp3s0 -B "$HOME/.local/bin/wpa_notify"
 
 # Mute the mic
 
