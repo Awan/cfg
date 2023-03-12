@@ -145,7 +145,7 @@ iabbrev mmm abdullah@abdullah.solutions
 set nocp
 filetype on
 au BufNewFile,BufRead *Pkgfile set filetype=sh
-set textwidth=120
+set textwidth=80
 if !&scrolloff
   set scrolloff=3
 endif
@@ -155,6 +155,7 @@ endif
 set foldlevel=4
 set foldmethod=marker
 set foldmarker=<<<,>>>
+set nofoldenable
 filetype plugin indent on
 set showmode
 set fo+=w
