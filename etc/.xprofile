@@ -82,11 +82,11 @@ run picom -b --config "$HOME"/.config/picom/picom.conf
 
 # Wallpaper
 
-"$HOME"/.local/bin/walls ~/pix/wall/cuties/dark 30 &
+"$HOME"/.local/bin/walls ~/pix/wall/collection/dark 30 &
 
 # Set cursor shape
 
-xsetroot -cursor_name ul_angle 
+xsetroot -cursor_name heart
 
 #xcompmgr -c -f D 5 
 
@@ -98,6 +98,13 @@ xset +fp /usr/share/fonts/ && xset fp rehash &
 # Start urxvt in daemon mode
 
 # run urxvtd -q -o -f 
+
+# Touchpad speed
+
+xinput --set-prop 13 312 0.5 &
+
+# same thing for mouse
+xinput --set-prop 10 312 0.5 &
 
 # No mouse when idle
 
@@ -178,6 +185,6 @@ fi
 # alacritty --dimensions 55 15 --position 550 175 -t 'scratchpad' &
 #sleep 1
 #termite -t scratchpad
-#xfce4-terminal -T scratchpad --font='Fantasque Sans Mono Italic 16'
+# xfce4-terminal -T scratchpad --font='Fantasque Sans Mono Italic 16' --geometry 60x18 &
 
 # vim:ft=sh
