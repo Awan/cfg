@@ -109,3 +109,6 @@ setopt glob_complete
 #
 #echo -ne '\e[3 q' # Use beam shape cursor on startup.
 #preexec() { echo -ne '\e[3 q' ;} #
+
+# Enable completion in hidden directories and files
+setopt globdots
