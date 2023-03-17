@@ -195,7 +195,8 @@ set display+=lastline
 set display+=truncate
 set display+=uhex
 silent! set listchars=eol:¬,tab:→.,extends:»,precedes:«,trail:•
-set list
+"silent! set listchars=eol:$,tab:\[SPACE]\[SPACE]
+set nolist
 set wrap
 set tabstop=8
 set smarttab copyindent preserveindent
