@@ -29,6 +29,8 @@ if [ -d ~/.perl5 ]; then
   export PERL_MM_OPT="INSTALL_BASE=~/.perl5"
 fi
 
+export npm_config_prefix="$HOME/.local"
+
 # Set editor
 
 set_editor() {
