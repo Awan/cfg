@@ -368,3 +368,40 @@ Xft.hinting                 : 1
 Xft.antialias               : 1
 Xft.rgba                    : rgb
 Xft.dpi                     : 96
+
+*Dialog.font:		        -xos4-terminus-medium-r-normal--32-320-72-72-c-160-iso10646-1
+*?.foreground:			rgb:d0/d0/d0
+*?.background:			rgb:50/50/50
+*topShadowColor:		rgb:90/90/90
+*bottomShadowColor:		rgb:00/00/00
+*borderColor:			rgb:a0/a0/a0
+*shadowThickness:		2
+*borderWidth:			1
+*horizontalSpacing:		5
+*verticalSpacing:		5
+
+*Button.font:		        -xos4-terminus-medium-r-normal--32-320-72-72-c-160-iso10646-1
+*Button.shadowThickness:	5
+*Button.borderWidth:		2
+*Button.horizontalSpacing:	4
+*Button.verticalSpacing:	4
+
+*Indicator.foreground:		rgb:70/80/90
+*Indicator.background:		rgb:50/50/50
+*Indicator.shadowThickness:	1
+*Indicator.borderWidth:		0
+*Indicator.height:		24
+*Indicator.width:		13
+*Indicator.horizontalSpacing:	8
+*Indicator.verticalSpacing:	5
+*Indicator.minimumCount:	8
+*Indicator.maximumCount:	74
+*defaultXResolution:		100/in
+*defaultYResolution:		100/in
+*xResolutionFuzz:		50/in
+*yResolutionFuzz:		50/in
+*inputTimeout:			0
+*Dialog.title:			OpenSSH Authentication Passphrase Request
+*Dialog.label:			Please enter your authentication passphrase:
+*okButton.label:		OK
+*cancelButton.label:		Cancel
