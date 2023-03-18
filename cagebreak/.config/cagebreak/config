@@ -1,0 +1,111 @@
+# Copyright 2020 - 2023, project-repo and the cagebreak contributors
+# SPDX -License-Identifier: MIT
+######################
+# General settings an key bindings
+######################
+
+exec alacritty
+
+workspaces 6
+background 0.25 0.21 0.2
+
+escape C-t
+
+bind s hsplit
+bind S vsplit
+bind Q only
+bind D quit
+bind Tab focus
+bind A-Tab focusprev
+bind n next
+bind p prev
+bind w exec firefox
+bind R setmode resize
+bind N nextscreen
+bind P prevscreen
+bind a time
+bind C-n movetonextscreen
+bind C-p movetoprevscreen
+bind H exchangeleft
+bind J exchangedown
+bind K exchangeup
+bind L exchangeright
+bind h focusleft
+bind j focusdown
+bind k focusup
+bind l focusright
+bind t exec xterm
+bind C-k close
+#bind m message Hello World!
+definekey resize h resizeleft
+definekey resize l resizeright
+definekey resize j resizedown
+definekey resize k resizeup
+definekey resize Escape setmode top
+
+#unhide cursor (default)
+cursor enable
+
+######################
+#Workspaces
+######################
+bind 1 screen 1
+bind 2 screen 2
+bind 3 screen 3
+bind 4 screen 4
+bind 5 screen 5
+bind 6 screen 6
+
+bind A-1 movetoscreen 1
+bind A-2 movetoscreen 2
+bind A-3 movetoscreen 3
+bind A-4 movetoscreen 4
+bind A-5 movetoscreen 5
+bind A-6 movetoscreen 6
+
+definekey top A-1 workspace 1
+definekey top A-2 workspace 2
+definekey top A-3 workspace 3
+definekey top A-4 workspace 4
+definekey top A-5 workspace 5
+definekey top A-6 workspace 6
+
+definekey top C-1 movetoworkspace 1
+definekey top C-2 movetoworkspace 2
+definekey top C-3 movetoworkspace 3
+definekey top C-4 movetoworkspace 4
+definekey top C-5 movetoworkspace 5
+definekey top C-6 movetoworkspace 6
+
+definekey top XF86_Switch_VT_1 switchvt 1
+definekey top XF86_Switch_VT_2 switchvt 2
+definekey top XF86_Switch_VT_3 switchvt 3
+definekey top XF86_Switch_VT_4 switchvt 4
+definekey top XF86_Switch_VT_5 switchvt 5
+definekey top XF86_Switch_VT_6 switchvt 6
+
+######################
+#Bind Function keys
+######################
+definekey top XF86AudioMute exec pactl set-sink-mute 0 toggle
+definekey top XF86AudioLowerVolume exec pactl set-sink-mute 0 off&&amixer set Master 1%-
+definekey top XF86AudioRaiseVolume exec pactl set-sink-mute 0 off&&amixer set Master 1%+
+definekey top XF86MonBrightnessDown exec xbacklight -dec 1
+definekey top XF86MonBrightnessUp exec xbacklight -inc 1
+
+######################
+#Output configuration
+######################
+#output eDP-1 pos 0 0 res 1366x768 rate 60
+#output eDP-1 disable
+#output eDP-1 enable
+#output eDP-1 prio 1
+#output eDP-2 pos 0 0 res 1366x768 rate 60 scale 2.0
+
+#####################
+#Input configuration
+#####################
+
+#input 1234:0:Device_Ident click_method clickfinger
+#input type:pointer scroll_method two_finger
+#input * calibration_matrix 1 2 3 4 5 6
