@@ -74,7 +74,7 @@ super + w
 # change wallpaper
 
 alt + w
-    convert $(shuf -en1 ~/pix/wall/collection/{light,dark}/*) -gravity Center resize 1920 -crop 1920x1080+0+0 png:- | feh --bg-scale -
+   "$HOME"/.local/bin/gowall  "$HOME"/pix/wall/cuties
 
 # Launch Browser(opera).
 
