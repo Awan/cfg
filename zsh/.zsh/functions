@@ -143,28 +143,6 @@ mergeaudiotovideo ()
 }
 
 
-# Jobs mail
-
-apply ()
-{
-
-  gpg -dq $HOME/bin/misc/job.gpg | mutt -s "Applying for Job"  $1
-}
-
-# Encrypt a file to myself
-
-ei ()
-{
-  gpg -er 5CBC7BC7 $1
-}
-
-# Decrypt a file
-
-di ()
-{
-  gpg -do $1 $2
-}
-
 # Bakchod
 
 bakchod ()
@@ -1088,9 +1066,46 @@ geometry() {
     fi
 }
 
-encme() {
-	# encrypt files to myself with age
-	recipient="$HOME/.ssh/id_ed25519.pub"
-	files="$1"
-	age -R $recipient $files > $files.age
+encme () {
+    # encrypt files/directories to myself
+    if [ $# -eq 0 ]; then
+    echo "Usage: encme <file1> [<file2> ...]"
+    return 1
+    fi
+
+    recipient="age1teq3zep9z3l9ea5s3x2t6859pskkj4nz74w2cy8kxh7jgnyvdcpq0xm9gg"
+    
+    for file in "$@"; do
+      if [ -f "$file" ]; then
+        age -r "$recipient" -o "$file.age" "$file"
+      elif [ -d "$file" ]; then
+        tar -czf - "$file" | age -r "$recipient" -o "$file.tar.gz.age"
+      else
+        echo "$file is not a file or directory or does not exist"
+      fi
+    done
+}
+
+decme() {
+    # Decrypt files, encrypted to myself
+    
+    identity_file="$HOME/.ak.txt"
+
+    if [ ! -f "$identity_file" ]; then
+        echo "Error: Identity file '$identity_file' not found. Please add it first..."
+        return 1
+    fi
+
+    if [ $# -eq 0 ]; then
+        echo "Usage: decrypt_files file1.age file2.age ..."
+        return 1
+    fi
+    
+    for file in "$@"; do
+      if [ -f "$file" ]; then
+        age --decrypt --identity "$identity_file" -o "${file%.age}" "$file"
+      else
+        echo "$file is not a file or does not exist"
+      fi
+    done
 }
