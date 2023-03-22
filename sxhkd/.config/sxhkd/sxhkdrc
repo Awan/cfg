@@ -75,7 +75,7 @@ super + w
 # change wallpaper
 
 alt + w
-   "$HOME"/.local/bin/gowall  "$HOME"/pix/wall/cuties
+   "$HOME"/.local/bin/gowall  "$HOME"/pix/wall/collection/dark
 
 # Launch Browser(opera).
 
