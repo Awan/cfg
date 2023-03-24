@@ -82,7 +82,7 @@ run picom -b --config "$HOME"/.config/picom/picom.conf
 
 # Wallpaper
 
-"$HOME"/.local/bin/gowall ~/pix/wall/collection 600 &
+#"$HOME"/.local/bin/gowall ~/pix/wall/collection 600 &
 
 # Set cursor shape
 
