@@ -57,7 +57,8 @@ PANEL_FONT="-misc-tamsyn-bold-r-normal--20-145-100-100-c-100-iso8859-1"
 # ICONS_FONT="-misc-font awesome 6 free regular-medium-r-normal--0-0-0-0-p-0-iso10646-1"
 # ICONS_FONT="-misc-font awesome 6 free solid-black-r-normal--0-0-0-0-p-0-iso10646-1"
 ICONS_FONT="PowerlineSymbols-20"
-ICONS_FONT_2="FontAwesome-20"
+# ICONS_FONT_2="FontAwesome-20"
+ICONS_FONT_2="Font Awesome"
 PANEL_WM_NAME=bspwm_panel
 left_corner="%{F#FF28DECB}"
 right_corner="%{F#FF28DECB}"
@@ -77,7 +78,7 @@ modules_fg="F#FF000000"
 
 datetime() {
 
-    printf "%s" "%{F#B443F3}$(date "+%a %-d %b %H:%M:%S")"
+    printf "%s" "%{F#B443F3}$(date "+%a %-d %b %H:%M")"
 
 }
 
@@ -87,70 +88,70 @@ brightness() {
 
 }
 
-mpd_music() {
+#mpd_music() {
+#
+#    # Only check other things if mpd is up and ready...
+#    stat=$(mpc | awk 'NR==2{print $1}')
+#    if [ -z $stat ] || [ $stat = '[paused]' ]; then
+#        # do nothing
+#        :
+#    elif [ $stat = '[playing]' ]; then
+#        # I don't want to pollute all the bar with tags
+#        # If they are lenghty, make them short
+#        position=$(mpc | awk 'NR==2{print $3}')
+#        info=$(mpc --format='[[%artist% - ]%title%]|[%file%]' current)
+#        if [ "${#info}" -le 25 ]; then
+#            :
+#        else
+#            info="$(mpc --format='[[%artist% - ]%title%]|[%file%]' current \
+#                | head -c 32)"
+#        fi
+#
+#        printf "%s" "%{A:mpc prev>/dev/null 2>&1:}%{F#FF00FFFF}$info%{F-}%{A} %{A:mpc next>/dev/null 2>&1:}%{F#FFDAA520}$position%{F-}%{A}"
+#    fi
+#
+#}
 
-    # Only check other things if mpd is up and ready...
-    stat=$(mpc | awk 'NR==2{print $1}')
-    if [ -z $stat ] || [ $stat = '[paused]' ]; then
-        # do nothing
-        :
-    elif [ $stat = '[playing]' ]; then
-        # I don't want to pollute all the bar with tags
-        # If they are lenghty, make them short
-        position=$(mpc | awk 'NR==2{print $3}')
-        info=$(mpc --format='[[%artist% - ]%title%]|[%file%]' current)
-        if [ "${#info}" -le 25 ]; then
-            :
-        else
-            info="$(mpc --format='[[%artist% - ]%title%]|[%file%]' current \
-                | head -c 32)"
-        fi
-
-        printf "%s" "%{A:mpc prev>/dev/null 2>&1:}%{F#FF00FFFF}$info%{F-}%{A} %{A:mpc next>/dev/null 2>&1:}%{F#FFDAA520}$position%{F-}%{A}"
-    fi
-
-}
-
-cmus_music() {
-
-    stat=$(cmus-remote -Q 2>/dev/null | awk '/status/{print $2}')
-    if [ -z $stat ]; then
-        # do nothing
-        :
-    elif [ $stat = 'paused' ]; then
-        # do nothing
-        :
-    elif [ $stat = 'playing' ]; then
-        artist=$(cmus-remote -C status | grep 'tag\ artist' | cut -d ' ' -f 3-)
-        if [ ${#artist} -le 16 ]; then
-            :
-        else
-            artist=$(cmus-remote -C status | grep 'tag\ artist' | cut -d ' ' -f\
-                3- | head -c 16)
-        fi
-        title=$(cmus-remote -C status | grep 'tag\ title' | cut -d ' ' -f 3-)
-        if [ ${#title} -le 16 ]; then
-            :
-        else
-            title=$(cmus-remote -C status | grep 'tag\ title' | cut -d ' ' -f\
-                3- | head -c 16)
-        fi
-
-
-        full_time=$(cmus-remote -C status | awk '/duration/{print $2}')
-        now_time=$(cmus-remote -C status | awk '/position/{print $2}')
-        hours=$(($full_time / 3600))
-        now_hours=$(($now_time / 3600))
-        minutes=$(($full_time % 3600))
-        now_minutes=$(($now_time % 3600))
-        test $hours -gt 0 && dur="$hours:"
-        test $now_hours -gt 0 && now_dur="$now_hours:"
-        duration="$dur$(printf '%02d:%02d' $(($minutes / 60)) $(($minutes % 60)))"
-        position="$now_dur$(printf '%02d:%02d' $(($now_minutes / 60)) $(($now_minutes % 60)))"
-        printf "%s" "%{A:cmus-remote --prev 2>/dev/null:}%{F#FF00FFFF}$artist - %{F#FFDAA520}$title%{A} %{A:cmus-remote --next 2>/dev/null:}%{F#FFFF00DD}$position/$duration%{A}"
-    fi
-
-}
+#cmus_music() {
+#
+#    stat=$(cmus-remote -Q 2>/dev/null | awk '/status/{print $2}')
+#    if [ -z $stat ]; then
+#        # do nothing
+#        :
+#    elif [ $stat = 'paused' ]; then
+#        # do nothing
+#        :
+#    elif [ $stat = 'playing' ]; then
+#        artist=$(cmus-remote -C status | grep 'tag\ artist' | cut -d ' ' -f 3-)
+#        if [ ${#artist} -le 16 ]; then
+#            :
+#        else
+#            artist=$(cmus-remote -C status | grep 'tag\ artist' | cut -d ' ' -f\
+#                3- | head -c 16)
+#        fi
+#        title=$(cmus-remote -C status | grep 'tag\ title' | cut -d ' ' -f 3-)
+#        if [ ${#title} -le 16 ]; then
+#            :
+#        else
+#            title=$(cmus-remote -C status | grep 'tag\ title' | cut -d ' ' -f\
+#                3- | head -c 16)
+#        fi
+#
+#
+#        full_time=$(cmus-remote -C status | awk '/duration/{print $2}')
+#        now_time=$(cmus-remote -C status | awk '/position/{print $2}')
+#        hours=$(($full_time / 3600))
+#        now_hours=$(($now_time / 3600))
+#        minutes=$(($full_time % 3600))
+#        now_minutes=$(($now_time % 3600))
+#        test $hours -gt 0 && dur="$hours:"
+#        test $now_hours -gt 0 && now_dur="$now_hours:"
+#        duration="$dur$(printf '%02d:%02d' $(($minutes / 60)) $(($minutes % 60)))"
+#        position="$now_dur$(printf '%02d:%02d' $(($now_minutes / 60)) $(($now_minutes % 60)))"
+#        printf "%s" "%{A:cmus-remote --prev 2>/dev/null:}%{F#FF00FFFF}$artist - %{F#FFDAA520}$title%{A} %{A:cmus-remote --next 2>/dev/null:}%{F#FFFF00DD}$position/$duration%{A}"
+#    fi
+#
+#}
 
 wifi() {
 
@@ -257,8 +258,8 @@ all_info() {
     while : ; do
         echo "H" "$(datetime)"
         echo "C" "$(brightness)"
-        echo "P" "$(mpd_music)"
-        echo "Z" "$(cmus_music)"
+#        echo "P" "$(mpd_music)"
+#        echo "Z" "$(cmus_music)"
         echo "G" "$(wifi)"
         echo "Y" "$(cpu)"
         echo "M" "$(mails)"
@@ -303,12 +304,12 @@ my_panel() {
             V*)
                 volume="${line#?}"
                 ;;
-            S*)
-                spotify_music="${line#?}"
-                ;;
-            P*)
-                mpd_music="${line#?}"
-                ;;
+#            S*)
+#                spotify_music="${line#?}"
+#                ;;
+#            P*)
+#                mpd_music="${line#?}"
+#                ;;
 	    W*)
 	       # bspwm's state
 			wm=
@@ -407,12 +408,12 @@ my_panel() {
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${left_corner}${wm}${mpd_music}${spotify_music}${music} %{r}${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date}${right_corner}"
+	printf "%s\n" "%{l}${left_corner}${wm} %{r}${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date}${right_corner}"
 done
 }
 
 my_panel < "$PANEL_FIFO" | lemonbar -a 37 -u 2 -n "$PANEL_WM_NAME" -g \
-    x$PANEL_HEIGHT -f "$PANEL_FONT" -F "$COLOR_DEFAULT_FG" -B \
+    x$PANEL_HEIGHT -f "$PANEL_FONT" -f "$ICONS_FONT_2" -f "$ICONS_FONT" -F "$COLOR_DEFAULT_FG" -B \
     "$COLOR_DEFAULT_BG" | sh &
 
 wid=$(xdo id -m -a "$PANEL_WM_NAME")
