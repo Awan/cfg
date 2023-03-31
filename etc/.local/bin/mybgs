@@ -23,4 +23,4 @@ else
     destination=light
 fi
 
-install -Dvm644 "$1" "$HOME/pix/wall/cuties/$destination/$filename"
+install -Dvm644 "$1" "$HOME/pix/wall/cyb/$destination/$filename"

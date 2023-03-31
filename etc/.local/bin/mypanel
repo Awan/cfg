@@ -78,7 +78,7 @@ modules_fg="F#FF000000"
 
 datetime() {
 
-    printf "%s" "%{F#B443F3}$(date "+%a %-d %b %H:%M")"
+    printf "%s" "%{F#B443F3}$(date "+%a %-d %b %H:%M:%S")"
 
 }
 

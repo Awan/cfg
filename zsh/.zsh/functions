@@ -800,7 +800,7 @@ BEGIN {
 ' PKGBUILD > PKGBUILD.new && mv PKGBUILD{.new,}
 }
 
-pacaur() {
+aurpkgs() {
   comm -23 <(pacman -Qqm | sort) <(curl https://aur.archlinux.org/packages.gz | gzip -cd | sort)
 }
 
