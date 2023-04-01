@@ -17,7 +17,7 @@ Far :gmail-remote:
 Near :gmail-local:
 Create near
 #Patterns INBOX Drafts Sent Trash Important
-Patterns * ![Gmail]* !Drafts !Sent !Trash !Archive
+Patterns * ![Gmail]* !Drafts !Sent !Trash !Archive !Spam
 Sync All
 SyncState *
 Create Near
