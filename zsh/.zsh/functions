@@ -1109,3 +1109,8 @@ decme() {
       fi
     done
 }
+
+ghsubdomains_takeover() {
+    name=$1
+    http -b GET http://$name | grep -F -q "<strong>There isn't a GitHub Pages site here.</strong>" && echo "Subdomain takeover may be possible" || echo "Subdomain takeover is not possible"
+}
