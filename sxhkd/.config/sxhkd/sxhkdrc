@@ -240,12 +240,12 @@ XF86MonBrightness{Down,Up}
 # Soft print combo for Screenshot
 
 Print
-    import -quality 100 -window root -resize 75% /tmp/foo.png; < /tmp/foo.png xclip -selection clipboard -t image/png
+    import -quality 100 -window root -resize 75% /tmp/foo.jpg; < /tmp/foo.png xclip -selection clipboard -t image/jpg
 
 # Print and push to imgur, get URL in clipboard
 
 alt + Print
-    import -quality 100 -window root /tmp/foo.png && curl -F'file=@/tmp/foo.png' \
+    import -quality 100 -window root /tmp/foo.jpg && curl -F'file=@/tmp/foo.jpg' \
     http://0x0.st | tee /tmp/foo.txt | xclip && notify-send -t 3500 -i \
     "$HOME"/.local/share/icons/drops/imgur.png "Screenshot posted: $(cat /tmp/foo.txt)"
 
