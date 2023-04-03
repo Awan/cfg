@@ -59,7 +59,7 @@ let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'mail']
 " Show relative numbers
 set rnu nu
 " Set colorscheme
-color molokai
+color splinter_dark
 " Set status line
 set laststatus=2
 set statusline=

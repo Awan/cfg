@@ -1,7 +1,7 @@
 ! In the name of Allah, the most Gracious, the most Merciful.
 ! 
 !  ▓▓▓▓▓▓▓▓▓▓
-! ░▓ Author ▓ Abdullah <https://abdullah.today>
+! ░▓ Author ▓ Abdullah Khabir <https://abdullah.solutions>
 ! ░▓▓▓▓▓▓▓▓▓▓
 ! ░░░░░░░░░░
 ! 
@@ -10,34 +10,35 @@
 ! ░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀
 
 
-*.cursorColor:  #f8f8f2
-*background:  #575757
-*foreground:  #dcdccc
-
-!black
-*color0:      #666666
-*color8:      #888888
-!red
-*color1:      #ff8278
-*color9:      #ff8278
-!green
-*color2:      #bde077
-*color10:     #bde077
-!yellow
-*color3:      #eadc84
-*color11:     #eadc84
-!blue
-*color4:      #77bee0
-*color12:     #77bee0
-!magenta
-*color5:      #dd91f3
-*color13:     #dd91f3
-!cyan
-*color6:      #ffc178
-*color14:     #ffc178
-!white
-*color7:      #dddddd
-*color15:     #cccccc
+#include ".urxvt/colors/wombat"
+!*.cursorColor:  #f8f8f2
+!*background:  #575757
+!*foreground:  #dcdccc
+!
+!!black
+!*color0:      #666666
+!*color8:      #888888
+!!red
+!*color1:      #ff8278
+!*color9:      #ff8278
+!!green
+!*color2:      #bde077
+!*color10:     #bde077
+!!yellow
+!*color3:      #eadc84
+!*color11:     #eadc84
+!!blue
+!*color4:      #77bee0
+!*color12:     #77bee0
+!!magenta
+!*color5:      #dd91f3
+!*color13:     #dd91f3
+!!cyan
+!*color6:      #ffc178
+!*color14:     #ffc178
+!!white
+!*color7:      #dddddd
+!*color15:     #cccccc
 
 ! URxvt 
 
@@ -138,6 +139,20 @@ URxvt.keysym.C-S-Down: font-size:decglobal
 
 *visualBell          : true
 
+
+URxvt.termName:         rxvt-256color
+URxvt.cursorBlink:      true
+URxvt.scrollBar:        false
+URxvt.internalBorder:   8
+
+!URxvt.font: -misc-tamsyn-medium-r-normal-*-15-108-100-100-c-80-iso8859-1
+!URxvt.boldFont: -misc-tamsyn-medium-r-normal-*-15-108-100-100-c-80-iso8859-1
+
+!URxvt.font:             xft:Hack:size=10, Hack Regular:style=Regular
+!URxvt.boldFont:         xft:Hack:size=10, Hack:style=Bold
+
+Xft.antialias:          1
+!Xft.dpi:                96
 
 
 ! Polybar
@@ -359,49 +374,3 @@ XLock.random.fullrandom     : True
 *VT100.colorBDMode          : True
 *VT100.colorULMode          : True
 *VT100.veryBoldColors       : 6
-
-! xft
-Xft.autohint                : 0
-Xft.lcdfilter               : lcddefault
-Xft.hintstyle               : hintslight
-Xft.hinting                 : 1
-Xft.antialias               : 1
-Xft.rgba                    : rgb
-Xft.dpi                     : 96
-
-*Dialog.font:		        -xos4-terminus-medium-r-normal--32-320-72-72-c-160-iso10646-1
-*?.foreground:			rgb:d0/d0/d0
-*?.background:			rgb:50/50/50
-*topShadowColor:		rgb:90/90/90
-*bottomShadowColor:		rgb:00/00/00
-*borderColor:			rgb:a0/a0/a0
-*shadowThickness:		2
-*borderWidth:			1
-*horizontalSpacing:		5
-*verticalSpacing:		5
-
-*Button.font:		        -xos4-terminus-medium-r-normal--32-320-72-72-c-160-iso10646-1
-*Button.shadowThickness:	5
-*Button.borderWidth:		2
-*Button.horizontalSpacing:	4
-*Button.verticalSpacing:	4
-
-*Indicator.foreground:		rgb:70/80/90
-*Indicator.background:		rgb:50/50/50
-*Indicator.shadowThickness:	1
-*Indicator.borderWidth:		0
-*Indicator.height:		24
-*Indicator.width:		13
-*Indicator.horizontalSpacing:	8
-*Indicator.verticalSpacing:	5
-*Indicator.minimumCount:	8
-*Indicator.maximumCount:	74
-*defaultXResolution:		100/in
-*defaultYResolution:		100/in
-*xResolutionFuzz:		50/in
-*yResolutionFuzz:		50/in
-*inputTimeout:			0
-*Dialog.title:			OpenSSH Authentication Passphrase Request
-*Dialog.label:			Please enter your authentication passphrase:
-*okButton.label:		OK
-*cancelButton.label:		Cancel
