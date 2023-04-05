@@ -6,7 +6,7 @@ coded_by='
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.solutions>
 ░▓▓▓▓▓▓▓▓▓▓
 ░░░░░░░░░░
 
@@ -165,6 +165,7 @@ up_maroon="#7b1113"
 awesome="#B443F3"
 pink="#F10CF1"
 sky_blue="#28DECB"
+greenish_yellow="#A7C080"
 
 # Feedback color of preselection
 
@@ -172,7 +173,7 @@ bspc config presel_feedback_color   $baby_blue
 
 # Focused Border color
 
-bspc config focused_border_color    $maroon
+bspc config focused_border_color    $greenish_yellow
 
 # Active border color 
 
