@@ -1,12 +1,12 @@
 #!/bin/sh
 # shellcheck disable=2034
-coded_by='
+bismillah='
 
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
-░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.solutions>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/@AbdullahSolutions>
 ░░░░░░░░░░
 
 ░█▀█░█░█░░░░░█▀▄░█▀█░█▀▄
@@ -52,6 +52,7 @@ PANEL_FONT="-misc-tamsyn-bold-r-normal--20-145-100-100-c-100-iso8859-1"
 # PANEL_FONT="TerminusBold-17"
 # PANEL_FONT="TamzenForPowerline-17"
 # PANEL_FONT="SourceCodePro-15"
+# PANEL_FONT="TerminusBold-13"
 # PANEL_FONT="UbuntuMonoNerdFont-15"
 # PANEL_FONT="-bitstream-charter-medium-r-normal--19-140-100-100-p-106-iso8859-1"
 # ICONS_FONT="-misc-font awesome 6 free regular-medium-r-normal--0-0-0-0-p-0-iso10646-1"
@@ -88,29 +89,29 @@ brightness() {
 
 }
 
-#mpd_music() {
-#
-#    # Only check other things if mpd is up and ready...
-#    stat=$(mpc | awk 'NR==2{print $1}')
-#    if [ -z $stat ] || [ $stat = '[paused]' ]; then
-#        # do nothing
-#        :
-#    elif [ $stat = '[playing]' ]; then
-#        # I don't want to pollute all the bar with tags
-#        # If they are lenghty, make them short
-#        position=$(mpc | awk 'NR==2{print $3}')
-#        info=$(mpc --format='[[%artist% - ]%title%]|[%file%]' current)
-#        if [ "${#info}" -le 25 ]; then
-#            :
-#        else
-#            info="$(mpc --format='[[%artist% - ]%title%]|[%file%]' current \
-#                | head -c 32)"
-#        fi
-#
-#        printf "%s" "%{A:mpc prev>/dev/null 2>&1:}%{F#FF00FFFF}$info%{F-}%{A} %{A:mpc next>/dev/null 2>&1:}%{F#FFDAA520}$position%{F-}%{A}"
-#    fi
-#
-#}
+mpd_music() {
+
+    # Only check other things if mpd is up and ready...
+    stat=$(mpc | awk 'NR==2{print $1}')
+    if [ -z $stat ] || [ $stat = '[paused]' ]; then
+        # do nothing
+        :
+    elif [ $stat = '[playing]' ]; then
+        # I don't want to pollute all the bar with tags
+        # If they are lenghty, make them short
+        position=$(mpc | awk 'NR==2{print $3}')
+        info=$(mpc --format='[[%artist% - ]%title%]|[%file%]' current)
+        if [ "${#info}" -le 25 ]; then
+            :
+        else
+            info="$(mpc --format='[[%artist% - ]%title%]|[%file%]' current \
+                | head -c 32)"
+        fi
+
+        printf "%s" "%{A:mpc prev>/dev/null 2>&1:}%{F#FF00FFFF}$info%{F-}%{A} %{A:mpc next>/dev/null 2>&1:}%{F#FFDAA520}$position%{F-}%{A}"
+    fi
+
+}
 
 #cmus_music() {
 #
@@ -258,7 +259,7 @@ all_info() {
     while : ; do
         echo "H" "$(datetime)"
         echo "C" "$(brightness)"
-#        echo "P" "$(mpd_music)"
+        echo "P" "$(mpd_music)"
 #        echo "Z" "$(cmus_music)"
         echo "G" "$(wifi)"
         echo "Y" "$(cpu)"
@@ -307,9 +308,9 @@ my_panel() {
 #            S*)
 #                spotify_music="${line#?}"
 #                ;;
-#            P*)
-#                mpd_music="${line#?}"
-#                ;;
+            P*)
+                mpd_music="${line#?}"
+                ;;
 	    W*)
 	       # bspwm's state
 			wm=
@@ -408,7 +409,7 @@ my_panel() {
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${left_corner}${wm} %{r}${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date}${right_corner}"
+	printf "%s\n" "%{l}${left_corner}${wm}${mpd_music} %{r}${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date}${right_corner}"
 done
 }
 
