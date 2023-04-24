@@ -1,5 +1,13 @@
 #!/usr/bin/env zsh
 
+# use doas instead of sudo
+
+if type "doas" >&/dev/null; then
+    zero="doas"
+else
+    zero="sudo"
+fi
+
 if [[ $commands[notmuch] ]]; then
   alias vimail="vim -c NotMuch"
 fi
@@ -13,11 +21,11 @@ if [[ $commands[pydf] ]]; then
 fi
 
 if [[ $commands[pacman] ]]; then
-  alias pacman='sudo pacman'
+  alias pacman="$zero pacman"
 fi
 
 if [[ $commands[apt] ]]; then
-  alias apt='sudo apt'
+  alias apt="$zero apt"
 fi
 
 
@@ -43,11 +51,11 @@ if [[ $commands[systemctl] ]]; then
  alias scens='systemctl --user enable --now'
  alias scds='systemctl --user disable'
  alias scdsn='systemctl --user disable --now'
- alias sscdr='sudo systemctl daemon-reload'
- alias sscst='sudo systemctl status'
- alias sscrs='sudo systemctl restart'
- alias sscsr='sudo systemctl start'
- alias sscens='sudo systemctl enable --now'
- alias sscds='sudo systemctl disable'
- alias sscdsn='sudo systemctl disable --now'
+ alias sscdr="$zero systemctl daemon-reload"
+ alias sscst="$zero systemctl status"
+ alias sscrs="$zero systemctl restart"
+ alias sscsr="$zero systemctl start"
+ alias sscens="$zero systemctl enable --now"
+ alias sscds="$zero systemctl disable"
+ alias sscdsn="$zero systemctl disable --now"
 fi
