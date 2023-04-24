@@ -6,12 +6,12 @@ This script will get some files from a directory and saves them back
 but with file size decreased.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.solutions>
 ░▓▓▓▓▓▓▓▓▓▓
 ░░░░░░░░░░
 
 The MIT License (MIT)
-Copyright (c) 2019 Abdullah <abdullah@abdullah.today>
+Copyright (c) 2019 Abdullah Khabir <abdullah@abdullah.solutions>
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
