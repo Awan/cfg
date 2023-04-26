@@ -146,6 +146,10 @@ super + Tab
 super + semicolon
     bspc desktop next.occupied -f
 
+# Focus the prev occupied desktop
+
+super + apostrophe
+    bspc desktop prev.occupied -f
 
 # Focus the older or newer node in the focus history
 
