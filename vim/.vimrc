@@ -295,7 +295,7 @@ map <leader>n :CocCommand explorer<CR>
 map <leader>c 0i# <ESC>
 nnoremap ; :
 nnoremap K <nop>
-nnoremap q :q
+"nnoremap q :q
 nnoremap qq :q!<CR>
 nnoremap Q q
 inoremap # #
