@@ -1114,3 +1114,9 @@ ghsubdomains_takeover() {
     name=$1
     http -b GET http://$name | grep -F -q "<strong>There isn't a GitHub Pages site here.</strong>" && echo "Subdomain takeover may be possible" || echo "Subdomain takeover is not possible"
 }
+
+func bills() {
+    for i in ~/cfg/secrets/ak*.age;
+        do $BROWSER "https://bill.pitc.com.pk/iescobill/general?refno=`age -d -i ~/.ak.txt $i`";
+        done
+    }
