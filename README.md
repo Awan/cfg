@@ -83,6 +83,15 @@ Polybar is a stylish status bar. You have to compile it from [source](https://gi
 It's now available in Arch Linux official repositories. As a dependency, you can 
 install Font Awesome, which is available in official repositories in Arch Linux.
 
+# Installed Packages
+
+This [encrypted file](installed_packages) contains packages name which I 
+currently have installed on my Arch Linux host. Encrypted to myself using `age`:
+
+```bash
+pacman -Qq | age -e -a -r age1teq3zep9z3l9ea5s3x2t6859pskkj4nz74w2cy8kxh7jgnyvdcpq0xm9gg > installed_packages
+```
+
 
 
 [![Stargazers over time](https://starchart.cc/Awan/cfg.svg)](https://starchart.cc/Awan/cfg)
