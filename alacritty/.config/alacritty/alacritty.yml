@@ -84,21 +84,24 @@ font:
   normal:
     #     family: Source Code Pro For Powerline
     #family: "Need For"
-    family: Camingo Code
+    #     family: Camingo Code
+    family: JetBrains Mono
     # The `style` can be specified to pick a specific face.
     style: Light
 
   # Italic font face
   bold:
     #     family: Source Code Pro For Powerline
-    family: Camingo Code
+    #     family: Camingo Code
+    family: JetBrains Mono
     # The `style` can be specified to pick a specific face.
     style: Regular
 
   # Italic font face
   italic:
     #     family: Source Code Pro For Powerline
-    family: Camingo Code
+    #     family: Camingo Code
+    family: JetBrains Mono
     # The `style` can be specified to pick a specific face.
     style: Italic
 
