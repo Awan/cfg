@@ -13,15 +13,17 @@ In the name of Allah, the most Gracious, the most Merciful.
 '
 # Toggles touchpad
 
-device_name="$(xinput list | grep -Eio '(touchpad|glidepoint)\s*id\=[0-9]{1,2}'\
-    | grep -Eo '[0-9]{1,2}')"
-is_enabled="$(xinput list-props $device_name | grep 'Device Enabled' | \
-    awk '{print $4}')"
+# device_name="$(xinput list | grep -Eio '(touchpad|glidepoint)\s*id\=[0-9]{1,2}'\
+#     | grep -Eo '[0-9]{1,2}')"
+# is_enabled="$(xinput list-props $device_name | grep 'Device Enabled' | \
+#     awk '{print $4}')"
 
-if [ ${is_enabled} -eq 1 ]; then
-    xinput disable $device_name
-    notify-send -u critical -t 1200 'Touchpad disabled'
-else
-    xinput enable $device_name
-    notify-send 'Touchpad enabled'
-fi
+# if [ ${is_enabled} -eq 1 ]; then
+#     xinput disable $device_name
+#     notify-send -u critical -t 1200 'Touchpad disabled'
+# else
+#     xinput enable $device_name
+#     notify-send 'Touchpad enabled'
+# fi
+
+doas modprobe -r psmouse && doas modprobe psmouse
