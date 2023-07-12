@@ -1119,4 +1119,12 @@ func bills() {
     for i in ~/cfg/secrets/ak*.age;
         do $BROWSER "https://bill.pitc.com.pk/iescobill/general?refno=`age -d -i ~/.ak.txt $i`";
         done
-    }
+}
+
+apply () {
+    subject="$1"
+    destination="$2"
+    age -i ~/.ak.txt -d -o /tmp/Abdullah-Khabir-Resume.pdf ~/.local/share/misc/Abdullah-Khabir-Resume.pdf.age
+    age -i ~/.ak.txt -d ~/.local/share/misc/job.age | mutt -s $subject $destination -a /tmp/Abdullah-Khabir-Resume.pdf 
+    rm /tmp/Abdullah-Khabir-Resume.pdf
+}
