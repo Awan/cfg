@@ -70,7 +70,7 @@ alt + {_, shift + } {h,j,k,l}
 # Launch Browser(chrome). 
 
 super + w
-    if pgrep chrome; then bspc desktop -f 2 ; else $BROWSER ; fi
+    bspc desktop -f 2 ; $BROWSER 
 
 # change wallpaper
 
