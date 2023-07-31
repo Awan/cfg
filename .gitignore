@@ -40,3 +40,6 @@ cmus/.config/cmus/playlists/
 cmus/.config/cmus/queue.pl
 cmus/.config/cmus/autosave
 polybar/.config/polybar/scripts/
+etc/.local/share/icons/hicolor/
+etc/.local/share/applications/chrome*
+etc/.android
