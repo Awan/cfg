@@ -1128,3 +1128,11 @@ apply () {
     age -i ~/.ak.txt -d ~/.local/share/misc/job.age | mutt -s $subject $destination -a /tmp/Abdullah-Khabir-Resume.pdf 
     rm /tmp/Abdullah-Khabir-Resume.pdf
 }
+
+3gp () {
+    # create 3gp videos for smaller screens
+    input_file="$1"
+    output_file="$2"
+    ffmpeg -i "$input_file" -r 20 -s 352x288 -vb 400k -acodec aac -strict experimental -ac 1 -ar 8000 -ab 24k "$output_file"
+    
+}
