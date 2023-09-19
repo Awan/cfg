@@ -1147,7 +1147,7 @@ chromeupdate () {
     # me to update it
     chrome_repo_path="$HOME/git/chrome"
     current_chrome_version_installed="$(google-chrome-stable --version | awk '{print $3}')"
-    latest_chrome_version="$(curl -sSf https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages | grep -A1 "Package: google-chrome-stable" | awk '/Version/{print $2}' | cut -d '-' -f1)"
+    latest_chrome_version="$(curl -sSf https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages | awk -F ': ' '/^Package: google-chrome-stable$/{getline; if ($1 == "Version") { split($2, v, "-"); print v[1]; exit; } }')"
     
     if [[ "$current_chrome_version_installed" = "$latest_chrome_version" ]]; then
         echo "Your Chrome is up to date (Version $current_chrome_version_installed)"
