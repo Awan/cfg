@@ -28,7 +28,7 @@ set spoolfile = "~/.local/share/email/x1c/INBOX"
 mailboxes $HOME/.local/share/email/x1c/INBOX $HOME/.local/share/email/x1c/Archive $HOME/.local/share/email/x1c/Sent $HOME/.local/share/email/x1c/Drafts $HOME/.local/share/email/x1c/Spam
 
 unset record # gmail saves Sent mail
-set from                         = abdullahx1c@gmail.com
+set from                         = `age -i ~/.ssh/id_ed25519 -d ~/cfg/secrets/google_user.age`
 set realname                     = "Muhammad Abdullah Khabir"
 set use_from                     = yes
 set envelope_from                = yes
@@ -101,9 +101,9 @@ set ssl_force_tls                = yes
 set ssl_starttls                 = yes
 set timeout                      = 3
 set quit
-set visual                                                                                               = $EDITOR
-set wait_key                                                                                             = no
-set status_format                                                                                        = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
+set visual                       = $EDITOR
+set wait_key                     = no
+set status_format                = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
 set sort_re
 set edit_headers
 unset confirmappend
