@@ -1141,3 +1141,30 @@ apply () {
     ffmpeg -i "$input_file" -r 20 -s 352x288 -vb 400k -acodec aac -strict experimental -ac 1 -ar 8000 -ab 24k "$output_file"
     
 }
+
+chromeupdate () {
+    # checks if google chrome is updated or not, if its not updated, it will ask 
+    # me to update it
+    chrome_repo_path="$HOME/git/chrome"
+    current_chrome_version_installed="$(google-chrome-stable --version | awk '{print $3}')"
+    latest_chrome_version="$(curl -sSf https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages | grep -A1 "Package: google-chrome-stable" | awk '/Version/{print $2}' | cut -d '-' -f1)"
+    
+    if [[ "$current_chrome_version_installed" = "$latest_chrome_version" ]]; then
+        echo "Your Chrome is up to date (Version $current_chrome_version_installed)"
+    else
+        echo "Your Chrome is outdated (Installed version: $current_chrome_version_installed, Latest version: $latest_chrome_version)"
+
+        read -p "Do you want to update Chrome? (y/n): " choice
+
+        case "$choice" in 
+            [Yy]*)
+                echo "Updating Chrome..."
+                cd "$chrome_repo_path"
+                git pull && makepkg -sirc --noconfirm && notify-send "Chrome is updated successfully!"
+                ;;
+            *)
+                echo "No update performed!"
+                ;;
+        esac
+    fi
+}
