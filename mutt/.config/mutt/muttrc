@@ -9,7 +9,7 @@
 
 source $HOME/.config/mutt/colorrc
 source $HOME/.config/mutt/gpgforak.rc
-source ~/.config/mutt/aliases
+source $HOME/.config/mutt/aliases
 
 
 set header_cache = ~/.cache/mutt
@@ -28,7 +28,7 @@ set spoolfile = "~/.local/share/email/x1c/INBOX"
 mailboxes $HOME/.local/share/email/x1c/INBOX $HOME/.local/share/email/x1c/Archive $HOME/.local/share/email/x1c/Sent $HOME/.local/share/email/x1c/Drafts $HOME/.local/share/email/x1c/Spam
 
 unset record # gmail saves Sent mail
-set from                         = abdullah@abdullah.solutions
+set from                         = abdullahx1c@gmail.com
 set realname                     = "Muhammad Abdullah Khabir"
 set use_from                     = yes
 set envelope_from                = yes
