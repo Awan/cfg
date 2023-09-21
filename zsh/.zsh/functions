@@ -1154,7 +1154,9 @@ chromeupdate () {
     else
         echo "Your Chrome is outdated (Installed version: $current_chrome_version_installed, Latest version: $latest_chrome_version)"
 
-        read -p "Do you want to update Chrome? (y/n): " choice
+        print -n "Do you want to update Chrome? (y/n): "
+
+        read choice
 
         case "$choice" in 
             [Yy]*)
