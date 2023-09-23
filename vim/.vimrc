@@ -103,7 +103,7 @@ function! SaveIfUnsaved()
 endfunction
 
 " w!! to write file as root
-cmap w!! %!sudo tee > /dev/null %
+cmap w!! %!doas tee > /dev/null %
 " No comments with o
 set formatoptions-=o
 " au FocusLost,BufLeave * :call SaveIfUnsaved()

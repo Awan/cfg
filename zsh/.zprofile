@@ -15,6 +15,6 @@ if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
   exec sx
   logout
 elif [[ $(tty) != /dev/tty1 ]]; then
-  sudo loadkeys $HOME/.loadkeysrc
+  doas loadkeys $HOME/.loadkeysrc
   tmux has-session -t $USER || tmux new-session -t $USER && tmux attach-session -t $USER
 fi

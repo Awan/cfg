@@ -280,15 +280,15 @@ weather() {
 }
 
 cnsp () {
-  sudo /etc/rc.d/crond stop
+    doas /etc/rc.d/crond stop
   sleep 1
-  sudo /etc/rc.d/crond status
+    doas /etc/rc.d/crond status
 }
 
 cnst () {
-  sudo /etc/rc.d/crond start
+    doas /etc/rc.d/crond start
   sleep 1
-  sudo /etc/rc.d/crond status
+    doas /etc/rc.d/crond status
 }
 
 ko () { 
@@ -331,7 +331,7 @@ pg()
 
 ap()
 {
-  sudo apt update && sudo apt full-upgrade -V
+    doas apt update && doas apt full-upgrade -V
 }
 
 
@@ -361,17 +361,17 @@ dedot ()
 
 sne ()
 {
-  sudo systemctl --now enable $1
+    doas systemctl --now enable $1
 }
 
 snd ()
 {
-  sudo systemctl stop $1
+    doas systemctl stop $1
 }
 
 gadd ()
 {
-  sudo gpasswd -a "$USER" "$1"
+    doas gpasswd -a "$USER" "$1"
 }
 
 ed ()
@@ -518,20 +518,20 @@ apkun ()
 lightmin ()
 # Set brightness to minimum
 {
-  echo 100 | sudo tee /sys/class/backlight/intel_backlight/brightness
+  echo 100 | doas tee /sys/class/backlight/intel_backlight/brightness
 }
 
 lightmax ()
 # Set brightness to maximum
 {
-  echo 852 | sudo tee /sys/class/backlight/intel_backlight/brightness
+  echo 852 | doas tee /sys/class/backlight/intel_backlight/brightness
 }
 
 #light ()
 # Set brightness as first argument
 #{
 #  new_brightness="$1"
-#  echo $new_brightness | sudo tee
+#  echo $new_brightness | doas tee
 #  /sys/class/backlight/intel_backlight/#brightness
 #}
 
@@ -606,7 +606,7 @@ gfc ()
 
 ports ()
 {
-  sudo lsof -nPi | grep -i listen | awk '{print substr($1, 1, 7), substr($3, 1, 7), $5, $8, $9}' | sort | uniq | tr ' ' '\t'
+    doas lsof -nPi | grep -i listen | awk '{print substr($1, 1, 7), substr($3, 1, 7), $5, $8, $9}' | sort | uniq | tr ' ' '\t'
 }
 
 listcon ()
@@ -762,7 +762,7 @@ mkuser () {
   # audio, video and wheel group 
 
   username="$1"
-  sudo useradd -m -G wheel,input,audio,video -s `which zsh` "$username" && sudo passwd "$username"
+    doas useradd -m -G wheel,input,audio,video -s `which zsh` "$username" && doas passwd "$username"
 
 }
 
