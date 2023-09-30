@@ -827,16 +827,16 @@ vers() {
 
 getscr() {
   # Sometimes needed to cp scrot to ~/pix/scrots
-  scrot_file="/tmp/foo.png"
+  scrot_file="/tmp/foo.jpg"
   scrot_dir="$HOME/pix/scrots/"
   new_scrot_file="$1"
   [ -z $new_scrot_file ] && new_scrot_file="scrot-$(date +%d-%m-%Y-%H-%M-%S)"
-  cp $scrot_file $scrot_dir$new_scrot_file.png && \
-    echo $scrot_dir$new_scrot_file.png && \
+  cp $scrot_file $scrot_dir$new_scrot_file.jpg && \
+    echo $scrot_dir$new_scrot_file.jpg && \
     notify-send -t 3500 -i \
     $HOME/.local/share/icons/drops/imgur.png \
-    "Screenshot saved: $new_scrot_file.png" 
-  feh $scrot_dir$new_scrot_file.png
+    "Screenshot saved: $new_scrot_file.jpg" 
+  feh $scrot_dir$new_scrot_file.jpg
 }
 
 srm () {
