@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# GitHub repository details
+GITHUB_REPO_OWNER="awan"
+GITHUB_REPO_NAME="man"
+FILE_PATH="data"
+
+# Personal Access Token (PAT)
+GITHUB_TOKEN="$(passage github/tokens/man-app_repo_full_access)"
+
+# Check if the GITHUB_TOKEN command had an error
+if [ $? -ne 0 ]; then
+  echo "Error: There is no such token."
+  exit 1
+fi
+
+# Base URL for GitHub API
+BASE_URL="https://api.github.com/repos/$GITHUB_REPO_OWNER/$GITHUB_REPO_NAME/contents/$FILE_PATH"
+
+# Function to get the content of the data file from GitHub
+get_data_file_content() {
+  local data_file_content_response=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$BASE_URL")
+  echo "$data_file_content_response" | jq -r .content | base64 -d
+}
+
+# Function to update a file
+update_file() {
+  local commit_message="$1"
+  local new_content="$2"
+
+  # Encode the new content in base64
+  local encoded_content=$(echo -n "$new_content" | base64)
+
+  # Get the current file content using curl and check the exit status
+  local current_content_response=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$BASE_URL")
+  local curl_exit_status=$?
+
+  if [ $curl_exit_status -eq 0 ]; then
+    local current_sha=$(echo "$current_content_response" | jq -r .sha)
+    local current_content=$(echo "$current_content_response" | jq -r .content | base64 -d)
+
+    # Check if the new content is different from the current content
+    if [ "$new_content" != "$current_content" ]; then
+      # Create a JSON payload for updating the file
+      local update_payload=$(cat <<EOF
+      {
+        "message": "$commit_message",
+        "content": "$encoded_content",
+        "sha": "$current_sha"
+      }
+EOF
+      )
+
+      # Make a PUT request to update the file and hide curl output
+      curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" -d "$update_payload" "$BASE_URL" > /dev/null
+      echo "$new_content"  # Print script output
+    else
+      echo "Output is the same: $new_content"
+    fi
+  else
+    echo "Sorry, connection down: Here is the $new_content"
+  fi
+}
+
+# Run your script and capture its output
+script_output="$($HOME/.local/bin/man.py)"
+
+# Get the current content of the data file
+current_data_file_content="$(get_data_file_content)"
+
+# Update the data file only if it's different from the script output
+update_file "Update data file" "$script_output"
+
