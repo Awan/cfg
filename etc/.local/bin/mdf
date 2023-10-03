@@ -25,7 +25,7 @@ get_data_file_content() {
 
 # Function to update a file
 update_file() {
-  local commit_message="$1"
+  local commit_message="پھول یوں ہی نہیں کھلتے؛ بیج کو دفن کرنا پڑتا ہے"
   local new_content="$2"
 
   # Encode the new content in base64
