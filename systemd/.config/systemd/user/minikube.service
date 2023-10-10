@@ -1,0 +1,10 @@
+[Unit]
+Description=Minikube Kubernetes Cluster
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/minikube start 
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
