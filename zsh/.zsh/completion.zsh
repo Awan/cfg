@@ -87,3 +87,9 @@ autoload -Uz compinit && compinit
 #    autoload -U +X bashcompinit && bashcompinit
 #    complete -o nospace -C /usr/bin/terraform terraform
 #fi
+
+# aws completion
+
+if [ -f /usr/bin/aws_zsh_completer.sh ]; then
+    source /usr/bin/aws_zsh_completer.sh
+fi
