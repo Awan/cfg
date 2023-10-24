@@ -151,6 +151,4 @@ video/x-ogm=mpv.desktop;
 video/x-ogm+ogg=mpv.desktop;
 video/x-theora=mplayer.desktop;mpv.desktop;
 video/x-theora+ogg=mpv.desktop;
-x-scheme-handler/irc=weechat.desktop;
-x-scheme-handler/ircs=weechat.desktop;
 x-scheme-handler/mailto=mutt.desktop;
