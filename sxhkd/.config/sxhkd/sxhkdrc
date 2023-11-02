@@ -19,6 +19,12 @@ for_bspwm='
 ░█▀▄░▀▀█░█▀▀░█▄█░█░█
 ░▀▀░░▀▀▀░▀░░░▀░▀░▀░▀
 '
+
+# Launch Quran
+
+alt + r 
+    "$HOME/.local/bin/Quran"
+
 # Exit/restart bspwm
 
 alt + shift + {q,r}

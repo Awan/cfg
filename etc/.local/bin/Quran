@@ -1,0 +1,20 @@
+#!/bin/sh
+# shellcheck disable=2034
+Bismillah='
+
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah Khabir <https://abdullah.solutions>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
+░░░░░░░░░░
+
+░▄▀▄░█░█░█▀▄░█▀█░█▀█
+░█\█░█░█░█▀▄░█▀█░█░█
+░░▀\░▀▀▀░▀░▀░▀░▀░▀░▀
+'
+
+/usr/bin/zathura -P 3 ~/doc/Quran.pdf 
+
+
+
