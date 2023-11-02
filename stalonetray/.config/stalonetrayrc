@@ -48,7 +48,7 @@ grow_gravity SW
 icon_gravity SW
 
 # icon_size <int>            # specifies dimensions of typical icon slot
-icon_size 24
+icon_size 16
 
 # log_level <level>          # controls the amount of logging output, level can
                              # be err (default), info, or trace (enabled only
