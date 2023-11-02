@@ -59,7 +59,7 @@
 	program = gpg
 	format = ssh
 [core]
-	autocrlf = input
+	autocrlf = false
 	safecrlf = true
 	editor = $EDITOR
         #pager = vimpager
