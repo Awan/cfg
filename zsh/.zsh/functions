@@ -1170,3 +1170,13 @@ chromeupdate () {
         esac
     fi
 }
+
+slowvid () {
+    video_to_edit="$1"
+    #slow_version="$2"
+    local base=$(basename $video_to_edit)
+    local ext="${base##*.}"
+    local base="${base%.*}"
+    ffmpeg -i "$video_to_edit" -vf "setpts=2.0*PTS" -acodec copy "$base-slow.$ext"
+
+}
