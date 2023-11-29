@@ -85,8 +85,8 @@ font:
     #     family: Source Code Pro For Powerline
     #family: "Need For"
     #     family: Camingo Code
-    #     family: JetBrains Mono
-    family: Mononoki
+    family: JetBrains Mono
+    #     family: Mononoki
     # The `style` can be specified to pick a specific face.
     style: Light
 
@@ -94,8 +94,8 @@ font:
   bold:
     #     family: Source Code Pro For Powerline
     #     family: Camingo Code
-    #     family: JetBrains Mono
-    family: Mononoki
+    family: JetBrains Mono
+    #     family: Mononoki
     # The `style` can be specified to pick a specific face.
     style: Regular
 
@@ -103,8 +103,8 @@ font:
   italic:
     #     family: Source Code Pro For Powerline
     #     family: Camingo Code
-    #     family: JetBrains Mono
-    family: Mononoki
+    family: JetBrains Mono
+    #     family: Mononoki
     # The `style` can be specified to pick a specific face.
     style: Italic
 
