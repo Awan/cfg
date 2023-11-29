@@ -123,11 +123,11 @@
         autoStash = true
         instructionFormat = %s [%an]
 [sequence]
-        editor = interactive-rebase-tool
+        editor = $EDITOR
 [merge]
-        tool = $(EDITOR)
+        tool = $EDITOR
         conflictstyle = diff3
-[mergetool "($EDITOR)"]
+[mergetool "$EDITOR"]
         prompt = false
 [github]
 	user = Awan
