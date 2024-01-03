@@ -22,8 +22,8 @@ for_bspwm='
 
 # Launch Quran
 
-alt + r 
-    "$HOME/.local/bin/Quran"
+# alt + r 
+#     "$HOME/.local/bin/Quran"
 
 # Exit/restart bspwm
 
