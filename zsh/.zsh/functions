@@ -1180,3 +1180,10 @@ slowvid () {
     ffmpeg -i "$video_to_edit" -vf "setpts=2.0*PTS" -acodec copy "$base-slow.$ext"
 
 }
+
+imagetovideo () {
+    image_file="$1"
+    audio_file="$2"
+    output_file="$3"
+    ffmpeg -loop 1 -i "$image_file" -i "$audio_file" -c:v libx264 -pix_fmt yuv420p -c:a aac -strict experimental -b:a 192k -shortest -movflags +faststart "$output_file"
+}
