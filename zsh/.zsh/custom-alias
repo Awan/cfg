@@ -227,3 +227,4 @@ alias scrot='import png:- | xclip -selection c -t image/png'
 
 # zsh global functions
 alias -g null="2>&1 >/dev/null"
+alias xclip="xclip -selection clipboard"
