@@ -96,6 +96,7 @@ set statusline+=%#Debug#
 set statusline+=\ %p%%
 set statusline+=%#Number#
 set statusline+=\ %l:%c
+highlight StatusLine ctermbg=NONE guibg=NONE
 function! SaveIfUnsaved()
     if &modified
         :silent! w
