@@ -96,6 +96,7 @@ set statusline+=%#Debug#
 set statusline+=\ %p%%
 set statusline+=%#Number#
 set statusline+=\ %l:%c
+highlight StatusLine ctermbg=NONE guibg=NONE
 function! SaveIfUnsaved()
     if &modified
         :silent! w
@@ -138,6 +139,10 @@ autocmd! bufwritepost $HOME/cfg/bspwm/.config/bspwm/bspwmrc !bspc wm -r >/dev/nu
 autocmd! bufwritepost $HOME/cfg/etc/.local/bin/mypanel !pkill mypanel && $HOME/.local/bin/mypanel & disown
 autocmd! bufwritepost $HOME/cfg/sway/.config/sway/config !swaymsg reload
 autocmd! bufwritepost $HOME/cfg/herbstluftwm/.config/herbstluftwm/autostart !herbstclient reload
+" autocmd TermEnter *
+" set guicursor=a:hor20
+autocmd! TermLeave *
+set guicursor&
 set nocp
 filetype on
 au BufNewFile,BufRead *Pkgfile set filetype=sh
@@ -179,7 +184,7 @@ if has("syntax")
     syntax on
     syntax sync minlines=200
 endif
-if has('mouse') | set mouse=a | endif 
+if has('mouse') | set mouse=a | endif
 let mapleader=" "
 set hidden
 set autoread
@@ -189,8 +194,8 @@ set linebreak
 set display+=lastline
 set display+=truncate
 set display+=uhex
-silent! set listchars=eol:¬,tab:→.,extends:»,precedes:«,trail:•
-set list
+silent set listchars=eol:¬,tab:→.,extends:»,precedes:«,trail:•
+set nolist
 set wrap
 set tabstop=8
 set smarttab copyindent preserveindent
