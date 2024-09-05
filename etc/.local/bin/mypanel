@@ -255,6 +255,32 @@ volume(){
 
 }
 
+tasktime() {
+    provided_date="2024-08-27 04:00:00"
+    current_date=$(date "+%Y-%m-%d %H:%M:%S")
+    provided_epoch=$(date -d "$provided_date" +%s)
+    current_epoch=$(date -d "$current_date" +%s)
+    diff_seconds=$((current_epoch - provided_epoch))
+    years=$((diff_seconds / 31536000))
+    diff_seconds=$((diff_seconds % 31536000))
+    months=$((diff_seconds / 2592000))
+    diff_seconds=$((diff_seconds % 2592000))
+    days=$((diff_seconds / 86400))
+    diff_seconds=$((diff_seconds % 86400))
+    hours=$((diff_seconds / 3600))
+    diff_seconds=$((diff_seconds % 3600))
+    minutes=$((diff_seconds / 60))
+    seconds=$((diff_seconds % 60))
+    output=""
+    [ "$years" -gt 0 ] && output="${output}%{F#FF6F61}${years}Y %{F-}"
+    [ "$months" -gt 0 ] && output="${output}%{F#FFBF00}${months}M %{F-}"
+    [ "$days" -gt 0 ] && output="${output}%{F#8C9BCA}${days}D %{F-}"
+    [ "$hours" -gt 0 ] && output="${output}%{F#81C784}$(printf "%02d" $hours)H %{F-}"
+    [ "$minutes" -gt 0 ] && output="${output}%{F#64B5F6}$(printf "%02d" $minutes)M %{F-}"
+    output="${output}%{F#E57373}$(printf "%02d" $seconds)S%{F-}"
+    printf "%s\n" "$output"
+}
+
 all_info() {
     while : ; do
         echo "H" "$(datetime)"
@@ -267,6 +293,7 @@ all_info() {
         echo "B" "$(battery)"
         echo "R" "$(ram)"
         echo "V" "$(volume)"
+        echo "D" "$(tasktime)"
         sleep 1
     done
 }
@@ -310,6 +337,9 @@ my_panel() {
 #                ;;
             P*)
                 mpd_music="${line#?}"
+                ;;
+            D*)
+                tasktime="${line#?}"
                 ;;
 	    W*)
 	       # bspwm's state
@@ -409,7 +439,7 @@ my_panel() {
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${left_corner}${wm}${mpd_music} %{r}${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date}${right_corner}"
+	printf "%s\n" "%{l}${left_corner}${wm}${mpd_music} %{r}${tasktime} ${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date}${right_corner}"
 done
 }
 
