@@ -507,7 +507,7 @@ autocmd FileType text setlocal textwidth=78
 " UTF-8 support
 if has("multi_byte")
     if &termencoding == ""
-        let &termencoding = "utf-8"
+"        let &termencoding = "utf-8"
     endif
     set encoding=utf-8
     setglobal fileencoding=utf-8

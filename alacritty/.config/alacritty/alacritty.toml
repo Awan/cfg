@@ -1,7 +1,3 @@
-# custom_cursor_colors = false
-# dynamic_title = true
-# hide_cursor_when_typing = false
-live_config_reload = true
 # render_timer = false
 # tabspaces = 4
 
@@ -629,3 +625,9 @@ semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 
 [window]
 opacity = 0.8
+
+[general]
+# custom_cursor_colors = false
+# dynamic_title = true
+# hide_cursor_when_typing = false
+live_config_reload = true

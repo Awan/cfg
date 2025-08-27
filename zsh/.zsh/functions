@@ -1194,3 +1194,7 @@ andwifi() {
     operation="$1"
     adb shell svc wifi $operation
 }
+
+andlock() {
+    adb shell input keyevent 26
+}
