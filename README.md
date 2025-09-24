@@ -92,6 +92,24 @@ currently have installed on my Arch Linux host. Encrypted to myself using `age`:
 pacman -Qq | age -e -a -r age1teq3zep9z3l9ea5s3x2t6859pskkj4nz74w2cy8kxh7jgnyvdcpq0xm9gg > installed_packages
 ```
 
+# Mail
+
+I use `mbsync + notmuch + mutt + msmtp` for email. I have enabled syncing with 
+my mail account using `systemd timers`. Just copy those two files `isync.timer` 
+and `isync.service` in `~/.config/systemd/user/` and enable timer:
+
+```bash
+systemctl --user --now enable isync.timer
+```
+
+# MPD
+
+Enable `mpd.socket` as user:
+
+```bash
+systemctl --user --now enable mpd.socket
+```
+
 
 
 [![Stargazers over time](https://starchart.cc/Awan/cfg.svg)](https://starchart.cc/Awan/cfg)
