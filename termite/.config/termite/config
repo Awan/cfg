@@ -14,17 +14,17 @@
 
 [options]
 
-#font                  =          FiraMono NerdFont 17
-#boldfont              =          FiraMono NerdFont Bold 17
-#bolditalicfont        =          FiraMono Nerd Font Bold Italic 17
-# font                  =         Jet Brains Mono 17
-# boldfont              =         Jte Brains Mono Bold 17
-# bolditalicfont        =         Jet Brains Mono Bold Italic 17
+# font                  =          FiraMono NerdFont 17
+# boldfont              =          FiraMono NerdFont Bold 17
+# bolditalicfont        =          FiraMono Nerd Font Bold Italic 17
+font                  =         Jet Brains Mono 15
+boldfont              =         Jet Brains Mono Bold 15
+bolditalicfont        =         Jet Brains Mono Bold Italic 15
 #font                  =         Ubuntu Mono derivative Powerline Italic 17
 #boldfont              =         Ubuntu Mono derivative Powerline Bold Italic 17
-font                  =         Mononoki Nerd Font Mono 17
-boldfont              =         Mononoki Nerd Font Mono Bold 17
-bolditalcfont         =         Mononoki Nerd Font Mono Bold Italic 17
+# font                  =         Mononoki Nerd Font Mono 17
+# boldfont              =         Mononoki Nerd Font Mono Bold 17
+# bolditalcfont         =         Mononoki Nerd Font Mono Bold Italic 17
 word_chars            =         " " '"'&()*,;<=>?@[]^{|}\"()*,<>[]{}|''"\
 allow_bold            =         true
 bold_is_bright        =         true
@@ -55,43 +55,52 @@ urgent_on_bell        =         true
 
 [colors]
 
+[colors]
+
+# A soft light background for outdoor readability
 background =   #000000
-foreground =   #d0d0d0
+foreground =   #00cc77
 
-cursorColor =  #d0d0d0
+cursorColor =  #202020
 
-colorBD   =   #3579a8
-colorUL   =   #4eb4fa
+colorBD   =   #005faf
+colorUL   =   #0087d7
+
+# Black / Bright Black
+color0    =   #202020
+color8    =   #4e4e4e
+
+# Red / Bright Red
+color1    =   #af0000
+color9    =   #ff0000
+
+# Green / Bright Green
+color2    =   #008700
+color10   =   #5fd700
+
+# Yellow / Bright Yellow
+color3    =   #af8700
+color11   =   #ffd700
+
+# Blue / Bright Blue
+color4    =   #005faf
+color12   =   #0087d7
+
+# Magenta / Bright Magenta
+color5    =   #8700af
+color13   =   #af5fff
+
+# Cyan / Bright Cyan
+color6    =   #008787
+color14   =   #00d7d7
+
+# White / Bright White
+color7    =   #d0d0d0
+color15   =   #ffffff
 
 
-color0    =   #000000
-color8    =   #1c1c1c
 
 
-color1    =   #960050
-color9    =   #ff0090
-
-
-color2    =   #66aa11
-color10   =   #80ff00
-
-color3    =   #c47f2c
-color11   =   #ffba68
-
-
-color4    =   #30309b
-color12   =   #5f5fee
-
-color5    =   #7e40a5
-color13   =   #bb88dd
-
-
-color6    =   #3579a8
-color14   =   #4eb4fa
-
-
-color7    =   #5f5f5f
-color15   =   #d0d0d0
 
 [hints]
 
