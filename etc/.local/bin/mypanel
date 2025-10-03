@@ -44,22 +44,22 @@ PANEL_HEIGHT=24
 #PANEL_GEOMETRY="1867x18+52+0"
 # PANEL_FONT="-bitstream-terminal-medium-r-normal--18-140-100-100-c-110-iso8859-1"
 # PANEL_FONT="-xos4-terminus-bold-r-normal--18-180-72-72-c-100-iso10646-1"
-PANEL_FONT="-misc-tamsyn-bold-r-normal--20-145-100-100-c-100-iso8859-1"
+# PANEL_FONT="-misc-tamsyn-bold-r-normal--20-145-100-100-c-100-iso8859-1"
+# PANEL_FONT="JetBrains Mono:size=10"
+PANEL_FONT="Terminus-12"
 # PANEL_FONT="Monospace-20"
 # PANEL_FONT="-misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso8859-1"
 # PANEL_FONT="-misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso8859-1"
 # PANEL_FONT="Terminus-17"
-# PANEL_FONT="TerminusBold-17"
 # PANEL_FONT="TamzenForPowerline-17"
 # PANEL_FONT="SourceCodePro-15"
-# PANEL_FONT="TerminusBold-13"
 # PANEL_FONT="UbuntuMonoNerdFont-15"
 # PANEL_FONT="-bitstream-charter-medium-r-normal--19-140-100-100-p-106-iso8859-1"
 # ICONS_FONT="-misc-font awesome 6 free regular-medium-r-normal--0-0-0-0-p-0-iso10646-1"
 # ICONS_FONT="-misc-font awesome 6 free solid-black-r-normal--0-0-0-0-p-0-iso10646-1"
-ICONS_FONT="PowerlineSymbols-20"
+#ICONS_FONT="PowerlineSymbols-20"
 # ICONS_FONT_2="FontAwesome-20"
-ICONS_FONT_2="Font Awesome"
+#ICONS_FONT_2="Font Awesome"
 PANEL_WM_NAME=bspwm_panel
 left_corner="%{F#FF28DECB}"
 right_corner="%{F#FF28DECB}"
@@ -155,8 +155,8 @@ mpd_music() {
 #}
 
 wifi() {
-
-    ssid="$(iw dev wlp3s0 link | awk -F: '/SSID/ {print $NF}')"
+    interface="wlp59s0"
+    ssid="$(iw dev ${interface} link | awk -F: '/SSID/ {print $NF}')"
     if [ -z "${ssid}" ]; then
         # Do nothing
         :
@@ -255,31 +255,31 @@ volume(){
 
 }
 
-tasktime() {
-    provided_date="2025-08-27 17:41:00"
-    current_date=$(date "+%Y-%m-%d %H:%M:%S")
-    provided_epoch=$(date -d "$provided_date" +%s)
-    current_epoch=$(date -d "$current_date" +%s)
-    diff_seconds=$((current_epoch - provided_epoch))
-    years=$((diff_seconds / 31536000))
-    diff_seconds=$((diff_seconds % 31536000))
-    months=$((diff_seconds / 2592000))
-    diff_seconds=$((diff_seconds % 2592000))
-    days=$((diff_seconds / 86400))
-    diff_seconds=$((diff_seconds % 86400))
-    hours=$((diff_seconds / 3600))
-    diff_seconds=$((diff_seconds % 3600))
-    minutes=$((diff_seconds / 60))
-    seconds=$((diff_seconds % 60))
-    output=""
-    [ "$years" -gt 0 ] && output="${output}%{F#FF6F61}${years}Y %{F-}"
-    [ "$months" -gt 0 ] && output="${output}%{F#FFBF00}${months}M %{F-}"
-    [ "$days" -gt 0 ] && output="${output}%{F#8C9BCA}${days}D %{F-}"
-    [ "$hours" -gt 0 ] && output="${output}%{F#81C784}$(printf "%02d" $hours)H %{F-}"
-    [ "$minutes" -gt 0 ] && output="${output}%{F#64B5F6}$(printf "%02d" $minutes)M %{F-}"
-    output="${output}%{F#E57373}$(printf "%02d" $seconds)S%{F-}"
-    printf "%s\n" "$output"
-}
+#tasktime() {
+#    provided_date="2025-08-27 17:41:00"
+#    current_date=$(date "+%Y-%m-%d %H:%M:%S")
+#    provided_epoch=$(date -d "$provided_date" +%s)
+#    current_epoch=$(date -d "$current_date" +%s)
+#    diff_seconds=$((current_epoch - provided_epoch))
+#    years=$((diff_seconds / 31536000))
+#    diff_seconds=$((diff_seconds % 31536000))
+#    months=$((diff_seconds / 2592000))
+#    diff_seconds=$((diff_seconds % 2592000))
+#    days=$((diff_seconds / 86400))
+#    diff_seconds=$((diff_seconds % 86400))
+#    hours=$((diff_seconds / 3600))
+#    diff_seconds=$((diff_seconds % 3600))
+#    minutes=$((diff_seconds / 60))
+#    seconds=$((diff_seconds % 60))
+#    output=""
+#    [ "$years" -gt 0 ] && output="${output}%{F#FF6F61}${years}Y %{F-}"
+#    [ "$months" -gt 0 ] && output="${output}%{F#FFBF00}${months}M %{F-}"
+#    [ "$days" -gt 0 ] && output="${output}%{F#8C9BCA}${days}D %{F-}"
+#    [ "$hours" -gt 0 ] && output="${output}%{F#81C784}$(printf "%02d" $hours)H %{F-}"
+#    [ "$minutes" -gt 0 ] && output="${output}%{F#64B5F6}$(printf "%02d" $minutes)M %{F-}"
+#    output="${output}%{F#E57373}$(printf "%02d" $seconds)S%{F-}"
+#    printf "%s\n" "$output"
+#}
 
 all_info() {
     while : ; do
@@ -293,7 +293,7 @@ all_info() {
         echo "B" "$(battery)"
         echo "R" "$(ram)"
         echo "V" "$(volume)"
-        echo "D" "$(tasktime)"
+#        echo "D" "$(tasktime)"
         sleep 1
     done
 }
@@ -338,9 +338,9 @@ my_panel() {
             P*)
                 mpd_music="${line#?}"
                 ;;
-            D*)
-                tasktime="${line#?}"
-                ;;
+#            D*)
+#                tasktime="${line#?}"
+#                ;;
 	    W*)
 	       # bspwm's state
 			wm=
@@ -439,7 +439,7 @@ my_panel() {
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${left_corner}${wm}${mpd_music} %{r}${tasktime} ${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date}${right_corner}"
+	printf "%s\n" "%{l}${left_corner}${wm}${mpd_music} %{r}${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date}${right_corner}"
 done
 }
 
