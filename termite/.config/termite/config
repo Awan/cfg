@@ -17,9 +17,9 @@
 # font                  =          FiraMono NerdFont 17
 # boldfont              =          FiraMono NerdFont Bold 17
 # bolditalicfont        =          FiraMono Nerd Font Bold Italic 17
-font                  =         Jet Brains Mono 15
-boldfont              =         Jet Brains Mono Bold 15
-bolditalicfont        =         Jet Brains Mono Bold Italic 15
+font                  =         Jet Brains Mono 17
+boldfont              =         Jet Brains Mono Bold 17
+bolditalicfont        =         Jet Brains Mono Bold Italic 17
 #font                  =         Ubuntu Mono derivative Powerline Italic 17
 #boldfont              =         Ubuntu Mono derivative Powerline Bold Italic 17
 # font                  =         Mononoki Nerd Font Mono 17
