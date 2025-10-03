@@ -202,14 +202,15 @@ useful_programs_which_can_be_used_in_any_window_manager='
 # make sure to set $TERMINAL env
 
 super {_,shift} + Return
-    {$TERMINAL,loc=$(slop -f "%x %y %w %h %g %i") || exit 1;\ 
+#     {$TERMINAL,loc=$(slop -f "%x %y %w %h %g %i") || exit 1;\ 
+     {termite,loc=$(slop -f "%x %y %w %h %g %i") || exit 1;\ 
        read -r x y w h g id < <(echo $loc);\
        bspc rule -a \* -o state=floating rectangle=$w"x"$h"+"$x"+"$y && $TERMINAL}
 
 # Termite
 
 alt {_, shift } + Return
-    {kitty,xterm}
+    {termite,xterm}
 
 # Launch dmenu
 
@@ -295,7 +296,7 @@ XF86AudioMute
  
 # Mute/Unmute mic
 
-ctrl + XF86AudioMute
+XF86AudioMicMute
     ponymix --input toggle && notify-send -i \
     $HOME/.local/share/icons/drops/muted.png -u low -t 1500 -a ponymix "volume" \
     "input $(ponymix --input is-muted || echo 'un')muted"
