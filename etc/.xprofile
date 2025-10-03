@@ -80,7 +80,13 @@ run sxhkd
 
 # Load keymaps
 
-[ -f "$user_keymaps" ] && xmodmap "$user_keymaps"
+# [ -f "$user_keymaps" ] && xmodmap "$user_keymaps"
+
+# Caps Lock as Super; if pressed with other keys, it will be simulated as 
+# Super_L, else it will be simulated as Escape. Requires xcape
+
+setxkbmap -option caps:super
+xcape -e 'Super_L=Escape'
 
 # Run compositor
 
