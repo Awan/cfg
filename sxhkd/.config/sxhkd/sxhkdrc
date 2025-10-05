@@ -301,6 +301,6 @@ XF86AudioMicMute
     $HOME/.local/share/icons/drops/muted.png -u low -t 1500 -a ponymix "volume" \
     "input $(ponymix --input is-muted || echo 'un')muted"
 
-XF86Display
-    systemctl suspend
+# XF86Display
+#     systemctl suspend
 # vim: ft=sh
