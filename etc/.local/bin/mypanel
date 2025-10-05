@@ -100,11 +100,11 @@ mpd_music() {
         # I don't want to pollute all the bar with tags
         # If they are lenghty, make them short
         position=$(mpc | awk 'NR==2{print $3}')
-        info=$(mpc --format='[[%artist% - ]%title%]|[%file%]' current)
+        info=$(mpc --format='[[%title% - ]%artist%]|[%file%]' current)
         if [ "${#info}" -le 25 ]; then
             :
         else
-            info="$(mpc --format='[[%artist% - ]%title%]|[%file%]' current \
+            info="$(mpc --format='[[%title% - ]%artist%]|[%file%]' current \
                 | head -c 32)"
         fi
 
