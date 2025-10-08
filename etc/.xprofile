@@ -157,7 +157,7 @@ wifi_info() {
 
 run wifi_info
 
-wpa_cli -p /var/run/wpa_supplicant -i wlp3s0 -B "$HOME/.local/bin/wpa_notify"
+wpa_cli -p /var/run/wpa_supplicant -i wlp59s0 -B "$HOME/.local/bin/wpa_notify"
 
 # Mute the mic
 
