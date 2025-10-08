@@ -70,12 +70,11 @@ It will symlink vim. If you wanna use this configurations for root user, use `-t
 
 **Note:** stow will only create a symlink if a config file doesn't already exist. You must delete/backup if there is a default config for a program. 
 
-# Lemonbar
+# Lemonbar XFT
 
 Lemonbar is a lightweight bar entirely based on XCB. Provides full UTF-8 
 support, basic formatting, RandR and Xinerama support and EWMH compliance 
-without wasting your precious memory. You can compile it from [Source Code](https://github.com/LemonBoy/bar).
-In Arch Linux there is a [PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=lemonbar).
+without wasting your precious memory. In Arch Linux its available at  [lemonbar-xft](https://aur.archlinux.org/packages/lemonbar-xft-git).
 
 # Polybar
 
