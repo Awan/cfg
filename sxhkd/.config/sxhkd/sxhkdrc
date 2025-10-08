@@ -202,8 +202,7 @@ useful_programs_which_can_be_used_in_any_window_manager='
 # make sure to set $TERMINAL env
 
 super {_,shift} + Return
-#     {$TERMINAL,loc=$(slop -f "%x %y %w %h %g %i") || exit 1;\ 
-     {termite,loc=$(slop -f "%x %y %w %h %g %i") || exit 1;\ 
+     {$TERMINAL,loc=$(slop -f "%x %y %w %h %g %i") || exit 1;\ 
        read -r x y w h g id < <(echo $loc);\
        bspc rule -a \* -o state=floating rectangle=$w"x"$h"+"$x"+"$y && $TERMINAL}
 
