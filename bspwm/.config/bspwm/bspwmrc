@@ -150,22 +150,23 @@ bspc config automatic_scheme        longest_side
 
 # Colors
 
-dark_moderate_blue="#5e81ac"
-mint_cream="#EFF8F5"
-baby_blue="#58FAF4"
-black="#000000"
-white="#FFFFFF"
-pink_flamingo="#FA58F4"
-pure_cyan="#00FFFF"
-pure_magenta="#FF00FF"
-vivid_red="#ff3232"
-hot_pink="#ff69b4"
-maroon="#800000"
-up_maroon="#7b1113"
-awesome="#B443F3"
-pink="#F10CF1"
-sky_blue="#28DECB"
-greenish_yellow="#A7C080"
+# Catppuccin Mocha mapped to your existing variable names
+dark_moderate_blue="#89b4fa"   # accent blue (mapped)
+mint_cream="#cdd6f4"           # foreground
+baby_blue="#94e2d5"            # soft teal (used for presel feedback previously)
+black="#1e1e2e"                # background
+white="#ffffff"                # white
+pink_flamingo="#f5c2e7"        # pinkish accent
+pure_cyan="#89b4fa"            # primary accent (same as dark_moderate_blue)
+pure_magenta="#f2cdcd"         # muted magenta
+vivid_red="#f38ba8"            # error/red accent
+hot_pink="#f5c2e7"             # hot pink (similar)
+maroon="#7c6f64"               # muted
+up_maroon="#594b4b"            # darker muted
+awesome="#cba6f7"              # purple-ish accent
+pink="#f5c2e7"                 # pink duplicate mapped
+sky_blue="#89b4fa"             # using accent blue from Catppuccin
+greenish_yellow="#a6e3a1"      # success green
 
 # Feedback color of preselection
 
@@ -192,3 +193,4 @@ bspc config pointer_action1 move
 sleep 1
 # urxvtc -g 70x20 -title 'scratchpad'
 alacritty -t 'scratchpad' &
+
