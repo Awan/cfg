@@ -68,7 +68,7 @@
 #         fsmonitor = some program to find last changed file since given time. (try find)
 	whitespace = trailing-space,-space-before-tab,indent-with-non-tab,cr-at-eol
 # 	bigFileThreshold = 
-	commentchar = auto
+	commentChar = ★
 	preloadindex = true
 	notesRef = refs/notes/commits
 	quotepath = true

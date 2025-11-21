@@ -1198,3 +1198,13 @@ andwifi() {
 andlock() {
     adb shell input keyevent 26
 }
+
+mip() {
+    # Print only specific interface IP
+    if [ -n "$1" ]; then
+        ip -o -4 addr show "$1" 2>/dev/null | awk '{print $4}'
+    else
+    # Show all available interfaces IPs
+        ip -o -4 addr show | awk '{printf "%-10s %s\n", $2, $4}'
+    fi
+}
