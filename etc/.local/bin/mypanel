@@ -111,7 +111,7 @@ mpd_music() {
                 | head -c 32)"
         fi
 
-        printf "%s" "%{A:mpc prev>/dev/null 2>&1:}%{F#FF00FFFF}$info%{F-}%{A} %{A:mpc next>/dev/null 2>&1:}%{F#FFDAA520}$position%{F-}%{A}"
+        printf "%s" "%{A5:mpc volume -5>/dev/null 2>&1:}%{A4:mpc volume +5>/dev/null 2>&1:}%{F#FF00FFFF}$info%{F-}%{A} %{F#FFDAA520}$position%{F-}%{A}"
     fi
 
 }
