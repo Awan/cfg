@@ -1,0 +1,152 @@
+# ======================
+# Environment
+# ======================
+[env]
+TERM = "xterm-256color"
+
+# ======================
+# Window
+# ======================
+[window]
+opacity = 0.8
+decorations = "full"
+
+[window.dimensions]
+columns = 80
+lines = 24
+
+[window.padding]
+x = 2
+y = 2
+
+# ======================
+# Scrolling
+# ======================
+[scrolling]
+history = 10000            # large scrollback for tmux/mosh
+multiplier = 3
+
+# ======================
+# Font
+# ======================
+[font]
+size = 13.0
+
+[font.normal]
+family = "JetBrains Mono"
+style = "Regular"
+
+[font.bold]
+family = "JetBrains Mono"
+style = "Bold"
+
+[font.italic]
+family = "JetBrains Mono"
+style = "Italic"
+
+[font.offset]
+x = 1
+y = 0
+
+[font.glyph_offset]
+x = 0
+y = 0
+
+# ======================
+# Cursor
+# ======================
+[cursor]
+unfocused_hollow = false
+
+[cursor.style]
+shape = "Block"           # better for tmux/mosh
+blinking = "Off"
+
+# ======================
+# Selection
+# ======================
+[selection]
+semantic_escape_chars = ",│`|:\"' ()[]{}<>"
+save_to_clipboard = true   # copy selection to clipboard for tmux
+
+# ======================
+# Mouse
+# ======================
+[mouse]
+hide_when_typing = false
+
+[[mouse.bindings]]
+mouse = "Middle"
+action = "PasteSelection"
+
+# ======================
+# General
+# ======================
+[general]
+live_config_reload = true
+
+# ======================
+# Colors (Catppuccin Mocha)
+# ======================
+[colors.primary]
+background = "0x1E1E2E"
+foreground = "0xD9E0EE"
+dim_foreground = "0xA6ADC8"
+bright_foreground = "0xF5E0DC"
+
+[colors.cursor]
+text = "0x1E1E2E"
+cursor = "0xF5E0DC"
+
+[colors.normal]
+black   = "0x1E1E2E"
+red     = "0xF38BA8"
+green   = "0xA6E3A1"
+yellow  = "0xF9E2AF"
+blue    = "0x89B4FA"
+magenta = "0xF5C2E7"
+cyan    = "0x94E2D5"
+white   = "0xBAC2DE"
+
+[colors.bright]
+black   = "0x6E6C7E"
+red     = "0xF38BA8"
+green   = "0xA6E3A1"
+yellow  = "0xF9E2AF"
+blue    = "0x89B4FA"
+magenta = "0xF5C2E7"
+cyan    = "0x94E2D5"
+white   = "0xF5E0DC"
+
+# ======================
+# Keyboard bindings
+# ======================
+[[keyboard.bindings]]
+key = "V"
+mods = "Command"
+action = "Paste"
+
+[[keyboard.bindings]]
+key = "C"
+mods = "Command"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "Q"
+mods = "Command"
+action = "Quit"
+
+[[keyboard.bindings]]
+key = "Equals"
+mods = "Command"
+action = "IncreaseFontSize"
+
+[[keyboard.bindings]]
+key = "Minus"
+mods = "Command"
+action = "DecreaseFontSize"
+
+[[keyboard.bindings]]
+key = "Key0"
+mods = "Command"
+action = "ResetFontSize"
