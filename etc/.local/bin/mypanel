@@ -108,7 +108,7 @@ mpd_music() {
             :
         else
             info="$(mpc --format='[[%title% - ]%artist%]|[%file%]' current \
-                | head -c 32)"
+                | head -c 28)"
         fi
 
         printf "%s" "%{A5:mpc volume -5>/dev/null 2>&1:}%{A4:mpc volume +5>/dev/null 2>&1:}%{F#FF00FFFF}$info%{F-}%{A} %{F#FFDAA520}$position%{F-}%{A}"
