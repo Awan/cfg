@@ -1,0 +1,22 @@
+name: ShellCheck Linting
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  shellcheck:
+    name: Scan Shell Scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          # Scans the entire repository directory for scripts
+          scandir: '.'
+        env:
+          # -x allows shellcheck to follow 'source' lines to other files
+          SHELLCHECK_OPTS: -x
