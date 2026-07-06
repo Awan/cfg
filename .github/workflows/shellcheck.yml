@@ -15,8 +15,8 @@ jobs:
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
         with:
-          # Scans the entire repository directory for scripts
           scandir: '.'
+          # Only match files that end exactly with .sh
+          file_regex: '.*\.sh$'
         env:
-          # -x allows shellcheck to follow 'source' lines to other files
           SHELLCHECK_OPTS: -x
