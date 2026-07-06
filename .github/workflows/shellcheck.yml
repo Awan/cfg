@@ -16,7 +16,7 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: '.'
-          # Only match files that end exactly with .sh
-          file_regex: '.*\.sh$'
+          # Explicitly ignore any files ending in .zsh
+          ignore_names: '*.zsh'
         env:
           SHELLCHECK_OPTS: -x
