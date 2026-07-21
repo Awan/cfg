@@ -20,27 +20,58 @@ In the name of Allah, the most Gracious, the most Merciful.
 # It will dim the screen's brightness with a fade after 30 seconds inactivity,
 # locks the screen after 60 seconds and turn the screen off.
 
+# Save current brightness state
+
 light -O
+
+# Function to restore original brightness
 
 brighten() {
         light -I
 }
 
+# Function to fade screen out smoothly down to level 1
+
 fade() {
-    i=$(light -G | cut -d "." -f 1)
-    if [ "$i" -eq 0 ]; then
+    # Get integer brightness value
+    local current_brightness
+    current_brightness=$(light -G | cut -d "." -f 1)
+
+    # Don't Dim the screen if brightness is 1 or 0
+    if [ "$current_brightness" -le 1 ]; then
         return
-    else
-        until [ "$((i-=1))" -eq 0 ]; do
-            light -S "$i"
-            sleep 0.01
-        done
     fi
+
+    # Fade down loop (stops at brightness level 1)
+    while [ "$current_brightness" -gt 1 ]; do
+        current_brightness=$((current_brightness - 1))
+        light -S "$current_brightness"
+        sleep 0.005
+    done
 }
 
-fade
+
+# Clean cleanup on signal/exit
+
+cleanup() {
+    # Kill background sleep if it's still running
+    if [ -n "$sleep_pid" ] && kill -0 "$sleep_pid" 2>/dev/null; then
+        kill "$sleep_pid" 2>/dev/null
+    fi
+    brighten
+}
+
+# Traps for clean exit
+
+trap cleanup EXIT
 trap 'exit 0' TERM INT
-trap "brighten; kill %%" EXIT
+
+# Run dimming effect
+
 fade
+
+# Keep script running until killed by xss-lock on user activity
+
 sleep 2147483647 &
-wait
+sleep_pid=$!
+wait "$sleep_pid"
