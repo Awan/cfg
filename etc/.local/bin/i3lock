@@ -18,7 +18,16 @@ In the name of Allah, the most Gracious, the most Merciful.
 # convert image to png format because i3lock only supports png format
 
 walls_dir="$HOME/pix/wall/collection/dark"
-random_wall="$(shuf -en 1 $walls_dir/*)"
+
+# Check if wallpapers directory exists and isn't empty
+
+if [ -d "$walls_dir" ]; then
+    # select a random wallpaper safely handling spaces
+    random_wall=$(find "$walls_dir" -type f -iname "*.png" | shuf -n 1)
+else
+    echo "Directory $walls_dir does not exist." >&2
+    exit 1
+fi
 
 revert() {
     xset dpms 0 0 0
