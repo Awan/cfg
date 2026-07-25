@@ -1210,3 +1210,13 @@ mip() {
         ip -o -4 addr show | awk '{printf "%-10s %s\n", $2, $4}'
     fi
 }
+
+btn() {
+    # Use android bluetooth tethering
+    # First of all, pair and trust android phone using bluetoothctl.
+    # Then get the path using `busctl tree org.bluez | grep dev_`
+    # finally use this function replacing phone's MAC address from busctl's output
+    dbus-send --system --type=method_call --print-reply \
+        --dest=org.bluez /org/bluez/hci0/dev_AC_C4_BD_45_20_F0 \
+        org.bluez.Network1.Connect string:'nap'
+}

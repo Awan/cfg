@@ -1,0 +1,14 @@
+[Unit]
+Description=Auto-trigger Bluetooth Tethering
+# Wait until bluetooth.target is active before running
+After=bluetooth.target
+Wants=bluetooth.target
+
+[Service]
+Type=oneshot
+# pair and trust android phone, run `busctl tree org.bluez | grep dev_`, replace 
+# /org/bluez/hci0*** with busctl's output for your phone's MAC address
+ExecStart=/usr/bin/dbus-send --system --type=method_call --dest=org.bluez /org/bluez/hci0/dev_AC_C4_BD_45_20_F0 org.bluez.Network1.Connect string:'nap'
+
+[Install]
+WantedBy=bluetooth.target
