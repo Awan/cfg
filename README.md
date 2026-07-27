@@ -108,7 +108,3 @@ Enable `mpd.socket` as user:
 ```bash
 systemctl --user --now enable mpd.socket
 ```
-
-
-
-[![Stargazers over time](https://starchart.cc/Awan/cfg.svg)](https://starchart.cc/Awan/cfg)
