@@ -1,24 +1,31 @@
 #!/bin/sh
 
-coded_by='
+: << 'COMMENT'
 
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
 ░▓▓▓▓▓▓▓▓▓▓
 ░░░░░░░░░░
 
 ░█░█░█▀█░█░░░█░░░█▀█
 ░█▄█░█▀█░█░░░█░░░█▀▀
 ░▀░▀░▀░▀░▀▀▀░▀▀▀░▀░░
-'
+COMMENT
 
 # A simple shell script to set wallpaper.
 
-
+WALLPAPER_DIR="$HOME/pix/wall/collection"
 
 while true; do
-  feh --bg-scale "$(shuf -n1 -e ~/pix/wall/collection/*)"
-  sleep 300
+    # Expand the file list unquoted so shuf gets each path as an argument
+    img=$(shuf -n1 -e "$WALLPAPER_DIR"/* 2>/dev/null)
+
+    # Only run feh if a file was actually found
+    if [ -f "$img" ]; then
+        feh --bg-scale "$img"
+    fi
+
+    sleep 60
 done

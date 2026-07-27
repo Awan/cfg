@@ -1,17 +1,17 @@
 #!/bin/sh
-bismillah='
+: << 'COMMENT'
 
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.solutions>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
 ░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/@AbdullahSolutions>
 ░░░░░░░░░░
 
 ░█░█░█▀█░█▀▄░█▀█░█▀▀░▀█▀░█░░░█▀▀
 ░▄▀▄░█▀▀░█▀▄░█░█░█▀▀░░█░░█░░░█▀▀
 ░▀░▀░▀░░░▀░▀░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀
-'
+COMMENT
 
 
 # Xresources file
@@ -94,7 +94,7 @@ run picom -b --config "$HOME"/.config/picom/picom.conf
 
 # Wallpaper
 
-#"$HOME"/.local/bin/gowall ~/pix/wall/collection 600 &
+run "$HOME"/.local/bin/wallp
 
 # Set cursor shape
 
