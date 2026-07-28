@@ -3,7 +3,7 @@
 # In the name of Allah, the most Gracious, the most Merciful. #
 #                                                             #
 #  ▓▓▓▓▓▓▓▓▓▓                                                 #
-# ░▓ Author ▓ Abdullah <https://abdullah.today>               #
+# ░▓ Author ▓ Abdullah Khabir <https://abdullah.support>               #
 # ░▓▓▓▓▓▓▓▓▓▓                                                 #
 # ░░░░░░░░░░                                                  #
 #                                                             # 
@@ -16,7 +16,7 @@
 [user]
 	name = "Muhammad Abdullah Khabir"
 	email = abdullahx1c@gmail.com
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJ5A7S9JFVJhnm+NWJeDwAAOlw/vOa0buocCnTQmCEA abdullah@abdullah.solutions
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJ5A7S9JFVJhnm+NWJeDwAAOlw/vOa0buocCnTQmCEA abdullah@abdullah.support
 	username = Abdullah
 [push]
         default = current
@@ -96,6 +96,7 @@
 	d = diff
 	dc = diff --cached
 	s = status
+	psm = submodule update --remote --recursive
 [credential]
 	helper = cache
 [help]
