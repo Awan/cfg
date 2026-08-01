@@ -1,16 +1,17 @@
-#!/bin/sh -x
-# shellcheck disable=2034
-coded_by='
+#!/bin/sh 
+
+: << 'COMMENT'
 
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
 ░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
 ░░░░░░░░░░
 
+COMMENT
 
-'
+
 # Toggles touchpad
 
 # device_name="$(xinput list | grep -Eio '(touchpad|glidepoint)\s*id\=[0-9]{1,2}'\

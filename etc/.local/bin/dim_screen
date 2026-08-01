@@ -1,18 +1,17 @@
 #!/bin/bash
-# shellcheck disable=2034
-coded_by='
 
+: << 'COMMENT'
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
 ░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
 ░░░░░░░░░░
 
 ░█▀▄░▀█▀░█▄█░░░░░█▀▀░█▀▀░█▀▄░█▀▀░█▀▀░█▀█
 ░█░█░░█░░█░█░░░░░▀▀█░█░░░█▀▄░█▀▀░█▀▀░█░█
 ░▀▀░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀░▀
-'
+COMMENT
 
 # A shell script which dims the screen. Its a part of my BSPWM setup which uses
 # xss-lock, i3lock and this script. Example to append in ~/.xprofile

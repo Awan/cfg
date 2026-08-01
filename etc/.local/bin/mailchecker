@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓ Author ▓ Abdullah Khabir <https://abdullah.support/> 
 # ░▓▓▓▓▓▓▓▓▓▓ 
 # ░░░░░░░░░░ 
 
@@ -26,7 +26,7 @@ Example for slstatus:
 # sp.os.makedirs('/tmp/newmails', exist_ok=True)
 
 def update(msgs_were):
-    user = 'abdullah@abdullah.today'
+    user = 'abdullah@abdullah.support'
     completed_process = sp.run(['gpg', '-dq', '/home/ak/.local/share/misc/abdullah.gpg'], check=True, stdout=sp.PIPE, stderr=sp.PIPE, encoding='utf-8')
     password = completed_process.stdout[:-1]
     local_new_messages = len(sp.os.listdir(Path.home()/'.mail/INBOX/new'))

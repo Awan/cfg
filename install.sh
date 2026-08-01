@@ -1,14 +1,13 @@
 #!/bin/sh
-coded_by='
 
+: << 'COMMENT'
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
 ░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
 ░░░░░░░░░░
-
-'
+COMMENT
 
 # Install my configuration files for some programs I can't live without.
 
@@ -48,7 +47,7 @@ if ! command -v stow >/dev/null 2>&1; then
         sudo pacman -S --noconfirm stow git
     fi
 fi
-    
+
 git clone https://gitlab.com/Abdullah/cfg.git ~/cfg
 
 cd ~/cfg || exit

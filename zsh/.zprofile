@@ -1,5 +1,5 @@
 #  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
+# ░▓ Author ▓ Abdullah Khabir <https://abdullah.support/> 
 # ░▓▓▓▓▓▓▓▓▓▓ 
 # ░░░░░░░░░░ 
 

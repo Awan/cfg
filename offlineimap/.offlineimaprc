@@ -15,7 +15,7 @@ quick = 10
 [Repository abdullah-remote]
 auth_mechanisms = LOGIN
 type = IMAP
-remoteuser = abdullah@abdullah.today
+remoteuser = abdullahx1c@gmail.com
 remotepasseval = mailpasswd("abdullah")
 remotehost = imap.yandex.com
 remoteport = 993

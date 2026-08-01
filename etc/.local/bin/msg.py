@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # coding: utf-8
-#  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah <https://abdullah.today/> 
-# ░▓▓▓▓▓▓▓▓▓▓ 
-# ░░░░░░░░░░ 
+#  ▓▓▓▓▓▓▓▓▓▓
+# ░▓ Author ▓ Abdullah <https://abdullah.support/>
+# ░▓▓▓▓▓▓▓▓▓▓
+# ░░░░░░░░░░
 
 # A simple program which sends messages to phone using twilio API
 
@@ -19,7 +19,7 @@ get_sid, get_token, get_twilio_number, get_local_number = subprocess.run(['gpg',
     '/home/ak/.local/share/misc/twilio_number.gpg'], check=True,
     stderr=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf-8'), subprocess.run(['gpg', '-dq',
     '/home/ak/.local/share/misc/local_number.gpg'], check=True,
-    stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8') 
+    stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
 
 sid, token, twilio_number, local_number = get_sid.stdout[:-1], get_token.stdout[:-1], get_twilio_number.stdout[:-1], get_local_number.stdout[:-1]
 

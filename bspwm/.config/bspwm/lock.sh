@@ -1,18 +1,17 @@
 #!/bin/sh
 
-coded_by='
-
+: << 'COMMENT'
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
 ░▓▓▓▓▓▓▓▓▓▓
 ░░░░░░░░░░
 
 ░█▀▀░█▀▀░█▀▄░█▀▀░█▀▀░█▀█░░░█░░░█▀█░█▀▀░█░█░█▀▀░█▀▄
 ░▀▀█░█░░░█▀▄░█▀▀░█▀▀░█░█░░░█░░░█░█░█░░░█▀▄░█▀▀░█▀▄
 ░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀░▀
-'
+COMMENT
 
 notify_delay=10
 icon_path=$HOME/.local/share/icons/drops/xautolock.png

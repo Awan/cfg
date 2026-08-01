@@ -103,7 +103,7 @@
 	autocorrect = 1
 [sendemail]
         smtpEncryption = tls
-        smtpServer = mail.abdullah.today
+        smtpServer = mail.abdullah.support
         smtpUser = abdullah
 [log]
         abbrevCommit = true

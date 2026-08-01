@@ -6,7 +6,7 @@ This script will get some files from a directory and saves them back
 but with file size decreased.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.solutions>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
 ░▓▓▓▓▓▓▓▓▓▓
 ░░░░░░░░░░
 

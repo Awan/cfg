@@ -3,7 +3,7 @@
 # In the name of Allah, the most Gracious, the most Merciful.
 #
 #  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah <https://abdullah.today> 
+# ░▓ Author ▓ Abdullah Khabir <https://abdullah.support> 
 # ░▓▓▓▓▓▓▓▓▓▓ 
 # ░░░░░░░░░░ 
 
@@ -735,7 +735,7 @@ dua() {
 sitemap() {
   # submit sitemap to google 
   # For simplicity, add sitemap to robots.txt and then use this function to 
-  # update it in Google like this: sitemap https://abdullah.today/robots.txt
+  # update it in Google like this: sitemap https://abdullah.support/robots.txt
   google_url="https://www.google.com/webmasters/sitemaps/ping?sitemap="
   path=$1
   /usr/bin/curl $google_url$path
@@ -860,7 +860,7 @@ dep ()
   # deploy changes to website after you have pushed the master repo with same
   # commit message
   # fetch latest commit message
-  site_url="https://abdullah.today"
+  site_url="https://abdullah.support"
   source_dir="$HOME/git/mysite/"
   rendered_dir="$HOME/git/mysite/public/"
   cd "$source_dir"
@@ -979,7 +979,7 @@ ryt()
 {
 # record a youtube video from my screen
     today="$HOME/you/yt-"$(date +%F_%T)
-    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :1 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.solutions':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv
+    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :1 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.support':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv
 
  }
 
@@ -987,7 +987,7 @@ rtty()
 {
     # record my tty for youtube
     today="$HOME/you/yt-"$(date +%F_%T)
-    ffmpeg -f pulse -ac 2 -i default -f fbdev -r 30 -i /dev/fb0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.solutions':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv 
+    ffmpeg -f pulse -ac 2 -i default -f fbdev -r 30 -i /dev/fb0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.support':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv 
 }
 
 rarea()

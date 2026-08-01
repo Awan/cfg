@@ -1,19 +1,18 @@
 #!/bin/sh
 
 
-coded_by='
-
+: << 'COMMENT'
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
 ░▓▓▓▓▓▓▓▓▓▓
 ░░░░░░░░░░
 
 ░█░█░▀█▀░█▀█░█▀▄░█▀█░█░█░█▀▀░░░█▄█░█▀█░█░█░█▀▀░█▄█░█▀▀░█▀█░▀█▀
 ░█▄█░░█░░█░█░█░█░█░█░█▄█░▀▀█░░░█░█░█░█░▀▄▀░█▀▀░█░█░█▀▀░█░█░░█░
 ░▀░▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀░▀░▀▀▀░░░▀░▀░▀▀▀░░▀░░▀▀▀░▀░▀░▀▀▀░▀░▀░░▀░
-'
+COMMENT
 
 
 [ "$#" -eq 1 ] || { echo "Pass only one argument: north,east,south,west"; exit 1; }

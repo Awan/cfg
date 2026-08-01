@@ -6,7 +6,7 @@
 """     In the name of Allah, the most Gracious, the most Merciful. """
 """                                                                 """
 """      ▓▓▓▓▓▓▓▓▓▓                                                 """
-"""     ░▓ Author ▓ Abdullah <https://abdullah.today>               """
+"""     ░▓ Author ▓ Abdullah Khabir <https://abdullah.support>      """
 """     ░▓▓▓▓▓▓▓▓▓▓                                                 """
 """     ░░░░░░░░░░                                                  """
 """                                                                 """
@@ -142,7 +142,7 @@ autocmd! bufwritepost $HOME/cfg/herbstluftwm/.config/herbstluftwm/autostart !her
 "autocmd! bufwritepost *.md !pandoc -o /tmp/index.html --template $HOME/.local/share/pandoc/template.html -s -f markdown -t html -V mainfont="Chakra Petch" -V fontsize=25px --metadata-file $HOME/.local/share/pandoc/metadata.yaml --toc %:p 
 
 " mmm abbreviated as my mail address
-iabbrev mmm abdullah@abdullah.solutions
+iabbrev mmm abdullah@abdullah.support
 set nocp
 filetype on
 au BufNewFile,BufRead *Pkgfile set filetype=sh

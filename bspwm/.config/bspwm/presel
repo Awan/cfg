@@ -1,17 +1,17 @@
 #!/bin/sh     
-coded_by='
 
+: << 'COMMENT'
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
 ░▓▓▓▓▓▓▓▓▓▓
 ░░░░░░░░░░
 
 ░█▀█░█▀▄░█▀▀░█▀▀░█▀▀░█░░░█▀▀░█▀▀░▀█▀░▀█▀░█▀█░█▀█░█▀▀
 ░█▀▀░█▀▄░█▀▀░▀▀█░█▀▀░█░░░█▀▀░█░░░░█░░░█░░█░█░█░█░▀▀█
 ░▀░░░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀▀▀
-'
+COMMENT
 
 bspc node -p \~$*
 exit

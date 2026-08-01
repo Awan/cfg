@@ -4,7 +4,7 @@
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
 ░▓▓▓▓▓▓▓▓▓▓
 ░░░░░░░░░░
 
@@ -62,7 +62,7 @@ except:
 
 
 def is_connected():
-    conn = httplib.HTTPConnection('mail.abdullah.today', timeout=3)
+    conn = httplib.HTTPConnection('mail.abdullah.support', timeout=3)
     try:
         conn.request('HEAD', '/')
         conn.close()

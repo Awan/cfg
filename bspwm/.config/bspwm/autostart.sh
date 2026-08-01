@@ -1,10 +1,10 @@
 #!/bin/sh
 # In the name of Allah, the most Gracious, the most Merciful.
 #
-#  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah <https://abdullah.today> 
-# ░▓▓▓▓▓▓▓▓▓▓ 
-# ░░░░░░░░░░ 
+#  ▓▓▓▓▓▓▓▓▓▓
+# ░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
+# ░▓▓▓▓▓▓▓▓▓▓
+# ░░░░░░░░░░
 
 
 # Xresources file
@@ -15,7 +15,7 @@ user_keymaps=$HOME/.Xmodmap
 user_fonts_dir=$HOME/.local/share/fonts
 # Inactivity timeout
 inactivity_timeout=180
-# Time before exectuing lock 
+# Time before exectuing lock
 notify_time=10
 
 # For some java apps
@@ -54,11 +54,11 @@ tabular() {
   xrandr --output HDMI-2 --mode 1280x1024 --pos 1920x0 "$@"
 }
 
-# Start sxhkd 
+# Start sxhkd
 
 sxhkd &
 
-# Load Xresources 
+# Load Xresources
 
 [ -f $user_resources ] && xrdb -merge "$user_resources"
 
@@ -82,7 +82,7 @@ xsetroot -cursor_name ul_angle &
 
 # Add fonts directories
 
-xset +fp "$user_fonts_dir" && xset fp rehash 
+xset +fp "$user_fonts_dir" && xset fp rehash
 
 # Start urxvt in daemon mode
 
@@ -111,7 +111,7 @@ pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 
 # Start tmux if not already running
 
-[ -z $TMUX ] && tmux new-session -s $USER -d 
+[ -z $TMUX ] && tmux new-session -s $USER -d
 
 # Set brightness to 30 at boot
 
@@ -128,7 +128,7 @@ fi
 # Start a scratchpad
 
 #sleep 1
-#urxvtc -T 'scratchpad' -geometry 65x20 & 
+#urxvtc -T 'scratchpad' -geometry 65x20 &
 termite -t scratchpad &
 
 # vim:ft=sh

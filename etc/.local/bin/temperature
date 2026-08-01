@@ -1,18 +1,18 @@
 #!/bin/sh
-# shellcheck disable=2034
-coded_by='
 
+: << 'COMMENT'
 In the name of Allah, the most Gracious, the most Merciful.
 
  ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.today>
+░▓ Author ▓ Abdullah <https://abdullah.support>
 ░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
 ░░░░░░░░░░
 
 ░▀█▀░█▀▀░█▄█░█▀█░█▀▀░█▀▄░█▀█░▀█▀░█░█░█▀▄░█▀▀
 ░░█░░█▀▀░█░█░█▀▀░█▀▀░█▀▄░█▀█░░█░░█░█░█▀▄░█▀▀
 ░░▀░░▀▀▀░▀░▀░▀░░░▀▀▀░▀░▀░▀░▀░░▀░░▀▀▀░▀░▀░▀▀▀
-'
+COMMENT
+
 # Get system temperature
 
 TEMP=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))C

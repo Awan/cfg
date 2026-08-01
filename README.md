@@ -12,9 +12,9 @@
 ```
   ▓▓▓▓▓▓▓▓▓▓
  ░▓ About  ▓ linux configuration files
- ░▓ Author ▓ Abdullah <abdullah@abdullah.today>
+ ░▓ Author ▓ Abdullah Khabir <abdullah@abdullah.support>
  ░▓ Code   ▓ https://gitlab.com/Abdullah/cfg.git
- ░▓ Mirror ▓ https://abdullah.today
+ ░▓ Mirror ▓ https://abdullah.support
  ░▓▓▓▓▓▓▓▓▓▓
  ░░░░░░░░░░
 
