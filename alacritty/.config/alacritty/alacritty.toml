@@ -46,25 +46,53 @@ decorations = "full"
 #x = 2
 #y = 2
 
-[font]
-# scale_with_dpi = true
-size = 13.0
+#[font]
+## scale_with_dpi = true
+#size = 13.0
+#
+#[font.bold]
+#family = "JetBrains Mono"
+#style = "Regular"
+#
+#
+#[font.italic]
+#family = "JetBrains Mono"
+#style = "Italic"
+#
+#[font.normal]
+#family = "JetBrains Mono"
+#style = "Light"
 
-[font.bold]
-family = "JetBrains Mono"
-style = "Regular"
+[font]
+size = 13.0
 
 [font.glyph_offset]
 x = 0
 y = 0
 
+[font.normal]
+family = "CaskaydiaCove Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "CaskaydiaCove Nerd Font"
+style = "Bold"
+
 [font.italic]
-family = "JetBrains Mono"
+family = "CaskaydiaCove Nerd Font"
 style = "Italic"
 
-[font.normal]
-family = "JetBrains Mono"
-style = "Light"
+#[font.normal]
+#family = "IBM Plex Mono"
+#style = "Regular"
+#
+#[font.bold]
+#family = "IBM Plex Mono"
+#style = "Bold"
+#
+#[font.italic]
+#family = "IBM Plex Mono"
+#style = "Italic"
 
 [font.offset]
 x = 1
