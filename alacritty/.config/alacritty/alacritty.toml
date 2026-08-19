@@ -95,7 +95,7 @@ style = "Italic"
 #style = "Italic"
 
 [font.offset]
-x = 1
+x = 0
 y = 0
 
 #[hints.launcher]
