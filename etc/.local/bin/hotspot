@@ -1,0 +1,158 @@
+#!/bin/sh
+
+# ==============================================================================
+# Script Name   : hotspot.sh
+# Author        : Abdullah Khabir <https://abdullah.support>
+# Description   : Automates creating a Wi-Fi Access Point (Hotspot) on Arch Linux
+#                 sharing internet from a single wireless interface via NAT.
+#                 Automatically syncs AP radio channel with upstream Wi-Fi.
+# ==============================================================================
+#
+# 1. DEPENDENCIES
+# ---------------
+# Ensure the following packages are installed on your Arch Linux system:
+#
+#   sudo pacman -S hostapd dnsmasq iptables iw rfkill
+#
+#
+# 2. REQUIRED PRE-CONFIGURATION
+# -----------------------------
+# A. Identify Wireless Interfaces & Settings:
+#    - Find your physical Wi-Fi interface name:
+#        iw dev
+#      (Replace 'wlp59s0' in this script if yours differs).
+#
+# B. Configure hostapd (/etc/hostapd/hostapd.conf):
+#    - Open or create the file using Vim:
+#        sudo vim /etc/hostapd/hostapd.conf
+#
+#    - Paste and save the following template:
+#        interface=uap0
+#        driver=nl80211
+#        ssid=YourHotspotName
+#        hw_mode=g
+#        channel=6
+#        ieee80211n=1
+#        wpa=2
+#        wpa_passphrase=YourStrongPassword
+#        wpa_key_mgmt=WPA-PSK
+#        rsn_pairwise=CCMP
+#
+# C. Configure dnsmasq (/etc/dnsmasq.conf):
+#    - Open the configuration file using Vim:
+#        sudo vim /etc/dnsmasq.conf
+#
+#    - Append or configure these lines to serve IPs to connected clients:
+#        interface=uap0
+#        bind-interfaces
+#        dhcp-range=192.168.150.10,192.168.150.100,12h
+#        dhcp-option=option:router,192.168.150.1
+#        dhcp-option=option:dns-server,1.1.1.1,8.8.8.8
+#
+#
+# 3. VARIABLES TO MODIFY IN THIS SCRIPT
+# ------------------------------------
+#   INTERFACE_PHY : Name of your physical wireless card (e.g., wlp59s0)
+#   INTERFACE_AP  : Name of virtual access point interface (e.g., uap0)
+#   HOSTAPD_CONF  : Path to hostapd configuration file (/etc/hostapd/hostapd.conf)
+#   SUBNET        : Gateway IP for the virtual hotspot network (e.g., 192.168.150.1/24)
+#
+#
+# 4. HOW TO RUN
+# -------------
+#   Start Hotspot:
+#     ./hotspot.sh start
+#
+#   Stop Hotspot:
+#     ./hotspot.sh stop
+#
+# ==============================================================================
+
+INTERFACE_PHY="wlp59s0"
+INTERFACE_AP="uap0"
+HOSTAPD_CONF="/etc/hostapd/hostapd.conf"
+SUBNET="192.168.150.1/24"
+
+get_channel() {
+    # Extract frequency from iw link and map to 2.4GHz channel
+    FREQ=$(iw dev "$INTERFACE_PHY" link | awk '/freq:/ {print $2}' | cut -d. -f1)
+    if [ -n "$FREQ" ]; then
+        # Channel calculation for 2.4GHz (2412MHz = Ch 1)
+        CHANNEL=$(( (FREQ - 2407) / 5 ))
+        echo "$CHANNEL"
+    else
+        # Default fallback channel if not connected
+        echo "6"
+    fi
+}
+
+start_hotspot() {
+    echo "Starting Hotspot..."
+
+    # Dynamically match channel of main interface
+    CURR_CHAN=$(get_channel)
+    echo "Syncing hostapd to Channel $CURR_CHAN..."
+    sudo sed -i "s/^channel=.*/channel=$CURR_CHAN/" "$HOSTAPD_CONF"
+
+    # Enable IP forwarding
+    sudo sysctl -w net.ipv4.ip_forward=1 >/dev/null
+
+    # Unblock RFKILL
+    sudo rfkill unblock wlan 2>/dev/null
+
+    # Cleanup old interface if present
+    sudo ip link set "$INTERFACE_AP" down 2>/dev/null
+    sudo iw dev "$INTERFACE_AP" del 2>/dev/null
+
+    # Create virtual AP interface
+    sudo iw dev "$INTERFACE_PHY" interface add "$INTERFACE_AP" type __ap
+
+    # Bring up the interface
+    sudo ip link set "$INTERFACE_AP" up
+
+    # Assign IP address
+    sudo ip addr flush dev "$INTERFACE_AP"
+    sudo ip addr add "$SUBNET" dev "$INTERFACE_AP"
+
+    # Start hostapd
+    if ! sudo hostapd -B "$HOSTAPD_CONF"; then
+        echo "Error: hostapd failed to start."
+        stop_hotspot
+        exit 1
+    fi
+
+    # Apply iptables NAT rules
+    sudo iptables -t nat -F
+    sudo iptables -F
+    sudo iptables -t nat -A POSTROUTING -o "$INTERFACE_PHY" -j MASQUERADE
+    sudo iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+    sudo iptables -A FORWARD -i "$INTERFACE_AP" -o "$INTERFACE_PHY" -j ACCEPT
+
+    # Restart DHCP/DNS server
+    sudo systemctl restart dnsmasq
+    echo "Hotspot started successfully on Channel $CURR_CHAN."
+}
+
+stop_hotspot() {
+    echo "Stopping Hotspot..."
+    sudo killall hostapd 2>/dev/null
+    sudo ip link set "$INTERFACE_AP" down 2>/dev/null
+    sudo iw dev "$INTERFACE_AP" del 2>/dev/null
+    sudo systemctl stop dnsmasq 2>/dev/null
+    sudo iptables -t nat -F
+    sudo iptables -F
+    echo "Hotspot stopped."
+}
+
+case "$1" in
+    start)
+        start_hotspot
+        ;;
+    stop)
+        stop_hotspot
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
