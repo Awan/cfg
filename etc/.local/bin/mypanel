@@ -61,8 +61,8 @@ PANEL_FONT="Fira Code:size=10"
 # PANEL_FONT="-bitstream-charter-medium-r-normal--19-140-100-100-p-106-iso8859-1"
 # ICONS_FONT="-misc-font awesome 6 free regular-medium-r-normal--0-0-0-0-p-0-iso10646-1"
 # ICONS_FONT="-misc-font awesome 6 free solid-black-r-normal--0-0-0-0-p-0-iso10646-1"
-#ICONS_FONT="PowerlineSymbols-20"
-# ICONS_FONT_2="FontAwesome-20"
+# ICONS_FONT="Font Awesome 7 Free:style=Regular:size=10"
+# ICONS_FONT_2="Font Awesome 7 Brands:style=Regular:size=10"
 #ICONS_FONT_2="Font Awesome"
 PANEL_WM_NAME=bspwm_panel
 left_corner="%{F#FF28DECB}"
@@ -245,19 +245,30 @@ ram(){
 
 }
 
+
 volume(){
 
     current_volume="$(pamixer --get-volume)"
     is_muted="$(pamixer --get-volume-human)"
     if [ "${is_muted}" = "muted" ] ; then
-        vol="muted"
+        vol="Muted"
     else
         vol="$current_volume"
     fi
 
-    printf "%s" "%{A:pamixer -t:}%{A4:pamixer --allow-boost --set-limit 300 -i 10:}%{A5:pamixer --allow-boost --set-limit 300 -d 10:}%{F#5E81AC}Vol:%{F-}%{F#FF8916}$vol%{F-}%{A}%{A}%{A}"
+    default_sink="$(pactl get-default-sink 2>/dev/null)"
+    sink_info="$(pactl list sinks 2>/dev/null | grep -A 15 "Name: ${default_sink}")"
+
+    if echo "$sink_info" | grep -iqE "bluez|headphone|headset"; then
+        label="BT:"
+    else
+        label="SP:"
+    fi
+
+    printf "%s" "%{A:pamixer -t:}%{A4:pamixer --allow-boost --set-limit 300 -i 10:}%{A5:pamixer --allow-boost --set-limit 300 -d 10:}%{F#5E81AC}${label}%{F-}%{F#FF8916}$vol%{F-}%{A}%{A}%{A}"
 
 }
+
 
 #tasktime() {
 #    provided_date="2025-08-27 17:41:00"
