@@ -17,74 +17,218 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+" Plugin-free by design: everything below is native Vim/Neovim, no
+" plugin manager, no network fetch required. Drop it on any box you
+" SSH into and it works immediately.
 
-" Install vim-plug 
-"if empty(glob('~/.vim/autoload/plug.vim'))
-"  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-"    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"endif
-"
-"" Run PlugInstall if there are missing plugins
-"autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-"  \| PlugInstall --sync | source $MYVIMRC
-"\| endif
-"
-"" sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-"
-"" Call vim-plug
-"
-"" Directory to save plugins
-"
-"call plug#begin('~/.vim/plugged')
-"
-"" Plugins
-"
-"Plug 'ryanoasis/vim-devicons' | Plug 'neoclide/coc.nvim', { 'branch': 'release' } | Plug 'honza/vim-snippets' | Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes' | Plug 'neoclide/coc-snippets' | Plug 'dylanaraps/wal' | Plug 'jiangmiao/auto-pairs' | Plug 'dkarter/bullets.vim' | Plug 'fannheyward/coc-pyright'
-"
-"" Initialize vim-plug
-"
-"call plug#end()
-"
-" Use vim settings rather than vi
+" ---------------------------------------------------------------------
+" Core
+" ---------------------------------------------------------------------
 if &compatible
     set nocompatible
 endif
+filetype plugin indent on
+if has('syntax')
+    syntax on
+    syntax sync minlines=200
+endif
+
+if has("multi_byte")
+    if &termencoding == ""
+        let &termencoding = "utf-8"
+    endif
+    set encoding=utf-8
+    setglobal fileencoding=utf-8
+endif
+
+let mapleader = " "
+set hidden
+set autoread
+set history=10000
+set nottimeout
 
 " No backup for encrypted files
 set backupskip+=*.gpg,*.age
 
-" vim bullets for .md, .txt, and gitcommit
-let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'mail']
+" ---------------------------------------------------------------------
+" Indentation & wrapping
+" ---------------------------------------------------------------------
+" Spaces by default; Makefiles override this below (make requires
+" real tabs for recipe lines, not spaces).
+set expandtab
+set smarttab copyindent preserveindent
+set tabstop=8
+set shiftwidth=4
+set softtabstop=4
+set autoindent
+set smartindent
+set nocindent
+set cinkeys=0{,0},0),:,!,o,O,e
+set backspace=indent,eol,start
 
-" Show relative numbers
+" textwidth is kept only as a *reference* (drives colorcolumn and the
+" manual gq reformat) -- nothing auto hard-wraps while you type, for
+" ANY filetype. That's the direct fix for a sentence getting split
+" into several physical lines mid-word and then looking broken when
+" the file is opened in something other than Vim.
+set textwidth=80
+set colorcolumn=+1
+set formatoptions=rqnjw
+" r = continue comment leader after <Enter>
+" q = allow `gq` to manually reformat when you actually want a hard wrap
+" n = recognise numbered/bulleted lists when formatting
+" j = remove comment leader when joining lines
+" w = trailing whitespace marks a paragraph as continuing
+" (deliberately no 't' or 'c' -- see the filetype_settings augroup
+" below for why this needs enforcing again after filetype plugins load)
+
+set wrap
+set linebreak
+set display+=lastline
+set display+=truncate
+set display+=uhex
+silent! set listchars=eol:¬,tab:→.,extends:»,precedes:«,trail:•
+set nolist
+
+" ---------------------------------------------------------------------
+" Search
+" ---------------------------------------------------------------------
+set ignorecase
+set smartcase
+set wrapscan
+set magic
+set gdefault
+if has('reltime')
+    set incsearch
+endif
+if &t_Co > 2 || has("gui_running")
+    set hlsearch
+endif
+
+" ---------------------------------------------------------------------
+" UI
+" ---------------------------------------------------------------------
 set rnu nu
-" Set colorscheme
-color afterglow
-" Set status line
+silent! set numberwidth=4
+set ruler
+set showcmd
+set noshowmode
+set cmdheight=2
+set scrolloff=3
+set sidescrolloff=5
+set wildmenu
+silent! set wildignorecase
+set wildignore+=*.opus,*.flac,*.pdf,*.jpg,*.png,*.so,*.swp,*.zip,*.gzip,*.bz2,*.tar,*.xz,*.lrzip,*.lrz,*.mp3,*.ogg,*.mp4,*.gif,*.jpeg,*.webm
+set whichwrap=b,s,<,>,[,]
+set splitbelow splitright
+set tabpagemax=20
+set noerrorbells visualbell t_vb=
+set shortmess+=I
+set lazyredraw
+set noshowmatch
+set mouse=a
+if $TERM !~# '^linux\|^Eterm|^screen-*|^tmux-*'
+    set t_Co=8
+endif
+set ttyfast
+
+" Cursor line/column, cursorline only active in the focused window
+set cursorline
+set cursorcolumn
+hi CursorLine guifg=white guibg=#2b3f4a
+hi CursorColumn guifg=white guibg=#2b3f4a
+hi ColorColumn guifg=#232526 guibg=#F92672
+if &t_Co > 16
+    au WinEnter * setl cursorline
+    au WinLeave * setl nocursorline
+    au FocusGained * setl cursorline
+    au FocusLost * setl nocursorline
+endif
+hi CursorLineNr cterm=NONE
+
+" Colorscheme, with a safe fallback if 'nord' isn't present on
+" this particular machine (it's not a Vim builtin -- if you always
+" drop it in ~/.vim/colors/ manually alongside this file, it'll be
+" picked up as before; otherwise this won't error, it'll just fall
+" back cleanly).
+silent! colorscheme nord
+if !exists('g:colors_name') || g:colors_name !=# 'nord'
+    colorscheme slate
+endif
+highlight StatusLine ctermbg=NONE guibg=NONE
+highlight Comment cterm=italic
+
+if has("nvim")
+    silent! set guicursor=
+endif
+" (Vim 8.1) with Num Lock off, Num5 is parsed as individual commands
+if !has("nvim")
+    map! <Esc>OE <Nop>
+endif
+
+" ---------------------------------------------------------------------
+" Status line (native -- no airline/lightline)
+" ---------------------------------------------------------------------
+let g:currentmode = {
+      \ 'n'  : 'NORMAL ',
+      \ 'v'  : 'VISUAL ',
+      \ 'V'  : 'V·Line ',
+      \ "\<C-v>" : 'V·Block ',
+      \ 'i'  : 'INSERT ',
+      \ 'R'  : 'R ',
+      \ 'Rv' : 'V·Replace ',
+      \ 'c'  : 'Command ',
+      \}
+
+" Git branch, cached per-buffer so the statusline doesn't spawn a
+" `git` process on every redraw -- only on buffer switch/save/refocus.
+function! s:UpdateGitBranch()
+    if !executable('git')
+        let b:git_branch = ''
+        return
+    endif
+    let l:branch = system('git rev-parse --abbrev-ref HEAD 2>/dev/null')
+    let b:git_branch = substitute(l:branch, '\n', '', '')
+endfunction
+augroup git_branch_status
+    autocmd!
+    autocmd BufEnter,BufWritePost,FocusGained * call s:UpdateGitBranch()
+augroup END
+
+function! StatusGitBranch()
+    if exists('b:git_branch') && b:git_branch !=# ''
+        return '  ' . b:git_branch . ' '
+    endif
+    return ''
+endfunction
+
+" Live word count, shown only for prose filetypes so it doesn't
+" clutter code files -- this is the actual "word count" ask: a quick,
+" always-current sanity check on a paragraph while you write it.
+function! StatusWordCount()
+    if &filetype =~# '^\%(markdown\|text\|gitcommit\|mail\)$'
+        return ' ' . wordcount().words . 'w '
+    endif
+    return ''
+endfunction
+
 set laststatus=2
 set statusline=
-" Show file path
 set statusline+=%#Question#
 set statusline+=%f
-" Show current mode
-let g:currentmode={
-       \ 'n'  : 'NORMAL ',
-       \ 'v'  : 'VISUAL ',
-       \ 'V'  : 'V·Line ',
-       \ '' : 'V·Block ',
-       \ 'i'  : 'INSERT ',
-       \ 'R'  : 'R ',
-       \ 'Rv' : 'V·Replace ',
-       \ 'c'  : 'Command ',
-       \}
 set statusline+=%#LineNr#
 set statusline+=\ %{toupper(g:currentmode[mode()])}
 set statusline+=%{&paste?'[paste]':''}
 set statusline+=\ %m
 set statusline+=%#MoreMsg#
 set statusline+=%r
-set statusline+=%#StatusLine#
+set statusline+=%#Directory#
+set statusline+=%{StatusGitBranch()}
+"set statusline+=%#StatusLine#
 set statusline+=%=
+set statusline+=%#Todo#
+set statusline+=%{StatusWordCount()}
 set statusline+=%#CursorColumn#
 set statusline+=%#Constant#
 set statusline+=\ %y
@@ -95,288 +239,206 @@ set statusline+=\ [%{&fileformat}\]
 set statusline+=%#Debug#
 set statusline+=\ %p%%
 set statusline+=%#Number#
-set statusline+=\ %l:%c
-highlight StatusLine ctermbg=NONE guibg=NONE
-function! SaveIfUnsaved()
-    if &modified
-        :silent! w
+set statusline+=\ %l:%c/%L
+
+" ---------------------------------------------------------------------
+" Filetype-specific settings
+" ---------------------------------------------------------------------
+augroup filetype_settings
+    autocmd!
+
+    " Whatever a filetype plugin sets, force auto hard-wrap back off
+    " by default for every filetype -- specific, deliberate exceptions
+    " (gitcommit) are added back further down. This also finally makes
+    " the old "no comment-continue on o/O" intent reliable, since a
+    " bare `set` in vimrc runs once at startup, before any filetype
+    " plugin has had a chance to re-add these flags per-file.
+    autocmd FileType * setlocal formatoptions-=t formatoptions-=c formatoptions-=o
+
+    " Prose: markdown, plain text, git commits, mail
+    autocmd FileType markdown,text setlocal textwidth=80 spell spelllang=en
+    autocmd FileType gitcommit setlocal spell spelllang=en
+    autocmd FileType mail setlocal spell spelllang=en
+    autocmd BufNewFile,BufRead *Pkgfile set filetype=sh
+
+    " Git commit bodies are the one deliberate exception to "never
+    " auto hard-wrap": every git tool expects a 72-char-wrapped body,
+    " so hard-wrapping here is the convention, not a bug, and won't
+    " look broken anywhere else. Delete this line if you'd rather it
+    " behave exactly like everything else.
+    autocmd FileType gitcommit setlocal textwidth=72 formatoptions+=t
+
+    " Shell scripts
+    autocmd FileType sh let g:is_bash = 1
+    autocmd FileType sh setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
+    autocmd FileType sh setlocal makeprg=shellcheck\ -f\ gcc\ %
+    autocmd FileType sh setlocal errorformat=%f:%l:%c:\ %trror:\ %m,%f:%l:%c:\ %tarning:\ %m,%f:%l:%c:\ %tote:\ %m
+
+    " YAML (Ansible, Kubernetes, CI configs, docker-compose)
+    autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+    autocmd FileType yaml setlocal indentkeys-=0# indentkeys-=<:>
+    autocmd FileType yaml setlocal makeprg=yamllint\ -f\ parsable\ %
+    " YAML forbids literal tabs for indentation -- flag them loudly
+    " rather than let a stray tab silently break a playbook/manifest.
+    autocmd FileType yaml match ErrorMsg /\t/
+
+    " Terraform / HCL
+    autocmd BufNewFile,BufRead *.tf,*.tfvars,*.tfstate setlocal filetype=terraform
+    autocmd FileType terraform setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+    autocmd FileType terraform setlocal commentstring=#\ %s
+
+    " Dockerfiles
+    autocmd BufNewFile,BufRead Dockerfile,Dockerfile.*,*.dockerfile setlocal filetype=dockerfile
+    autocmd FileType dockerfile setlocal commentstring=#\ %s
+
+    " Makefiles -- these REQUIRE literal tabs for recipe lines, so this
+    " has to override the global expandtab or `make` breaks with
+    " "missing separator".
+    autocmd BufNewFile,BufRead *.mk setlocal filetype=make
+    autocmd FileType make setlocal noexpandtab
+
+    " Python
+    autocmd FileType python setlocal breakindentopt=shift:4
+
+    " JSON with // comments (JSONC-style files)
+    autocmd FileType json syntax match Comment +\/\/.\+$+
+
+    " SSH-related config files
+    autocmd BufNewFile,BufRead authorized_keys*,known_hosts,id_*.pub
+          \ setlocal filetype=conf wrap nolinebreak
+    autocmd BufNewFile,BufRead /etc/motd setlocal expandtab
+
+    " Don't let modelines run in things you didn't author yourself
+    autocmd BufNewFile,BufRead COMMIT_EDITMSG,git-rebase-todo setlocal nomodeline
+
+    " Markdown preview in Chrome, scoped to markdown buffers only
+    " (the old version used a global noremap re-applied on every
+    " BufEnter, so F5 would still try to open Chrome even after you
+    " switched to an unrelated buffer -- <buffer> fixes that).
+    autocmd FileType markdown nnoremap <buffer> <F5> :!google-chrome-stable %:p<CR>
+    "autocmd! bufwritepost *.md !pandoc -o /tmp/index.html --template $HOME/.local/share/pandoc/template.html -s -f markdown -t html -V mainfont="Chakra Petch" -V fontsize=25px --metadata-file $HOME/.local/share/pandoc/metadata.yaml --toc %:p
+
+    if has("nvim")
+        " Neovim 0.2.1+: terminal buffers now have line numbers
+        autocmd TermOpen * setlocal nonumber norelativenumber
     endif
-endfunction
+augroup END
 
-" w!! to write file as root
-cmap w!! %!doas tee > /dev/null %
-" No comments with o
-set formatoptions-=o
-" au FocusLost,BufLeave * :call SaveIfUnsaved()
-au FocusGained,BufEnter * :silent! !
+" Strip trailing whitespace on save for code plus the DevOps filetypes
+" above. Only trims *trailing* whitespace, so it's safe for Makefiles'
+" leading recipe tabs.
+augroup strip_trailing_whitespace
+    autocmd!
+    autocmd BufWritePre *.c,*.cpp,*.cc,*.h,*.sh,*.hpp,*.py,*.m,*.mm,
+          \*.yml,*.yaml,*.tf,*.tfvars,Dockerfile,*.dockerfile,Makefile,*.mk
+          \ :%s/\s\+$//e
+augroup END
 
-set ruler
-
-if &diff
-    highlight! link DiffText MatchParen
-else
-"    setup for non-diff mode
-endif
-
-" Sessions management
-" No help windows
-set sessionoptions-=help
-set sessionoptions-=curdir
-
-silent! set numberwidth=4
-
-if &t_Co > 2 || has("gui_running")
-    set hlsearch
-endif
-
-autocmd! bufwritepost $HOME/.Xresources !xrdb -load $HOME/.Xresources 
-autocmd! bufwritepost $HOME/.zshrc      !source $HOME/.zshrc
-autocmd! bufwritepost $HOME/.config/sxhkd/sxhkdrc       !pkill -USR1 -x sxhkd
-autocmd! bufwritepost $HOME/cfg/sxhkd/.config/sxhkd/sxhkdrc     !pkill -USR1 -x sxhkd
-autocmd! bufwritepost $HOME/cfg/zsh/.zsh/custom-alias !source $HOME/cfg/zsh/.zsh/custom-alias'
-autocmd! bufwritepost $HOME/cfg/polybar/.config/polybar/*.{conf,ini} !bspc wm -r >/dev/null 2>&1
-autocmd! bufwritepost $HOME/cfg/bspwm/.config/bspwm/bspwmrc !bspc wm -r >/dev/null 2>&1
-autocmd! bufwritepost $HOME/cfg/etc/.local/bin/mypanel !pkill mypanel && $HOME/.local/bin/mypanel & disown
-autocmd! bufwritepost $HOME/cfg/sway/.config/sway/config !swaymsg reload
-autocmd! bufwritepost $HOME/cfg/herbstluftwm/.config/herbstluftwm/autostart !herbstclient reload
-"autocmd! bufwritepost *.md !pandoc -o /tmp/index.html --template $HOME/.local/share/pandoc/template.html -s -f markdown -t html -V mainfont="Chakra Petch" -V fontsize=25px --metadata-file $HOME/.local/share/pandoc/metadata.yaml --toc %:p 
-
-" mmm abbreviated as my mail address
-iabbrev mmm abdullah@abdullah.support
-set nocp
-filetype on
-au BufNewFile,BufRead *Pkgfile set filetype=sh
-set textwidth=80
-if !&scrolloff
-  set scrolloff=3
-endif
-if !&sidescrolloff
-  set sidescrolloff=5
-endif
+" ---------------------------------------------------------------------
+" Folding
+" ---------------------------------------------------------------------
 set foldlevel=4
 set foldmethod=marker
 set foldmarker=<<<,>>>
 set nofoldenable
-filetype plugin indent on
-set showmode
-set fo+=w
-set ai
-set sc
-if has('reltime')
-    set incsearch
-endif
-"set nrformats=octal
-set nrformats=bin,hex,unsigned
-set completeopt=menuone
-set ignorecase
-set wrapscan
-set magic
-set gdefault
-com! -complete=file -bang -nargs=? W :w<bang> <args>
-set smartcase
-set cursorcolumn
-"set colorcolumn=+1
-set cursorline
-hi ColorColumn guifg=#232526 guibg=#F92672
-hi CursorColumn guifg=white guibg=#2b3f4a
-set noexpandtab
-set backspace=indent,eol,start
-if has("syntax")
-    syntax on
-    syntax sync minlines=200
-endif
-if has('mouse') | set mouse=a | endif 
-let mapleader=" "
-set hidden
-set autoread
-set history=10000
-filetype plugin indent on
-set linebreak
-set display+=lastline
-set display+=truncate
-set display+=uhex
-silent! set listchars=eol:¬,tab:→.,extends:»,precedes:«,trail:•
-"silent! set listchars=eol:$,tab:\[SPACE]\[SPACE]
-set nolist
-set wrap
-set tabstop=8
-set smarttab copyindent preserveindent
-set shiftwidth=4
-set softtabstop=4
-set expandtab
-retab
-set clipboard=unnamed,unnamedplus
-set ttyfast
-set smartindent
-set wildmenu
-silent! set wildignorecase
-set noerrorbells visualbell t_vb=
-set shortmess+=I
-set autoindent
-set nocindent
-set cinkeys=0{,0},0),:,!,o,O,e
-set formatoptions=tcrqnjw
-set comments-=:%
-set comments-=:XCOMM
-set lazyredraw
-set noshowmatch
+
+" ---------------------------------------------------------------------
+" Sessions
+" ---------------------------------------------------------------------
+set sessionoptions-=help
+set sessionoptions-=curdir
+
+" ---------------------------------------------------------------------
+" Backup / swap / undo
+" ---------------------------------------------------------------------
+set nobackup
+set modeline
+set viminfo='10,\"100,:20,%,n~/.viminfo
 
 if has("unix")
     if has("nvim")
         set undofile
     else
+        if !isdirectory(expand('~/.vim/undodir'))
+            call mkdir(expand('~/.vim/undodir'), 'p')
+        endif
         silent! set undodir=~/.vim/undodir//
         silent! set undofile
     endif
 endif
-set noshowmode
-set viminfo='10,\"100,:20,%,n~/.viminfo
-autocmd BufWritePre *.c,*.cpp,*.cc,*.h,*.sh,*.hpp,*.py,*.m,*.mm :%s/\s\+$//e
-set modeline
-set nobackup
-set cmdheight=2
+
+augroup no_swap_for_secrets
+    autocmd!
+    autocmd BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
+    autocmd BufNewFile,BufRead /dev/shm/pass.* setlocal noswapfile nobackup noundofile
+augroup END
+
+augroup restore_cursor_position
+    autocmd!
+    autocmd BufReadPost *
+          \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+          \ | exe "normal! g`\""
+          \ | endif
+augroup END
+
+" ---------------------------------------------------------------------
+" Completion / diff / misc editing
+" ---------------------------------------------------------------------
+set completeopt=menuone
+set nrformats=bin,hex,unsigned
+set clipboard=unnamed,unnamedplus
 set updatetime=300
-set showcmd
-set whichwrap=b,s,<,>,[,]
-set splitbelow splitright
-set tabpagemax=20
-if &t_Co > 16
-        setl cursorline
-        au WinEnter * setl cursorline
-        au WinLeave * setl nocursorline
-        au FocusGained * setl cursorline
-        au FocusLost * setl nocursorline
+
+if &diff
+    highlight! link DiffText MatchParen
 endif
-hi CursorLine guifg=white guibg=#2b3f4a
 
-let g:instant_markdown_browser = "/usr/bin/google-chrome-stable --new-window"
-let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
-let g:instant_markdown_port = 47479
-let g:powerline_pycmd = 'py3'
-"let g:ycm_autoclose_preview_window_after_completion = 1
-"map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
-
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#ale#enabled = 1
-let g:ale_sign_error = '●'
-let g:ale_sign_warning = '.'
-let g:airline#extensions#tabline#formatter = 'default'
-let g:airline_powerline_fonts = 1
-"
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
+if has('syntax') && has('eval')
+    packadd! matchit
 endif
-"
-"" unicode symbols
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '␊'
-let g:airline_symbols.linenr = '␤'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.whitespace = 'Ξ'
-"" airline symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:ale_fix_on_save = 1
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ''
 
-noremap <leader>u :w \| startinsert \| term urlview %<CR>
-map <leader>n :CocCommand explorer<CR>
-" comment out current line
-map <leader>c 0i# <ESC>
-nnoremap ; :
-nnoremap K <nop>
-"nnoremap q :q
-nnoremap qq :q!<CR>
-nnoremap Q q
-inoremap # #
-"nnoremap <silent> K :call ShowDocumentation()<CR>
-
-"function! ShowDocumentation()
-"  if CocAction('hasProvider', 'hover')
-"    call CocActionAsync('doHover')
-"  else
-"    call feedkeys('K', 'in')
-"  endif
-"endfunction
-autocmd BufEnter *.md exe 'noremap <F5> :!google-chrome-stable %:p<CR>'
-au BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
-au BufNewFile,BufRead /dev/shm/pass.* setlocal noswapfile nobackup noundofile
-"autocmd BufReadPost *
-"     \ if line("'\"") > 0 && line("'\"") <= line("$") |
-"     \   exe "normal! g`\"" |
-"     \ endif
-autocmd BufReadPost *
-            \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~#'commit'
-            \ | exe "normal! g`\""
-            \ | endif
-
-function! ResCur()
-  if line("'\"") <= line("$")
-    normal! g`"
-    return 1
-  endif
+" ---------------------------------------------------------------------
+" Functions & commands
+" ---------------------------------------------------------------------
+function! SaveIfUnsaved()
+    if &modified
+        :silent! w
+    endif
 endfunction
-
-function! DeleteFunctionUnderCursor()
-  let line = getline('.')
-  normal diwxml
-  let i = 1
-  let c = 1
-  while i <= strlen(line)
-      let char = getline('.')[col('.') - 1]
-      if (char == '(')
-          let c += 1
-      elseif (char == ')')
-          let c -= 1
-      endif
-      if (c == 0)
-          normal x`l
-          break
-      endif
-      normal l
-      let i += 1
-  endwhile
-endfunc
-
-command! -range=% DeleteFunctionUnderCursor <line1>,<line2>call DeleteFunctionUnderCursor()
+" au FocusLost,BufLeave * :call SaveIfUnsaved()
 
 function! ToggleNumber()
-    if(&relativenumber == 1)
+    if &relativenumber
         set norelativenumber
         set number
     else
-       set relativenumber
+        set relativenumber
     endif
-endfunc
+endfunction
 command! ToggleNumber call ToggleNumber()
 
-if !exists(":DiffOrig")
-  command DiffOrig vert new | set bt=nofile | r ++edit | 0d_ | diffthis 
-        \ wincmd p | diffthis
-endif
+function! DeleteFunctionUnderCursor()
+    let line = getline('.')
+    normal diwxml
+    let i = 1
+    let c = 1
+    while i <= strlen(line)
+        let char = getline('.')[col('.') - 1]
+        if (char == '(')
+            let c += 1
+        elseif (char == ')')
+            let c -= 1
+        endif
+        if (c == 0)
+            normal x`l
+            break
+        endif
+        normal l
+        let i += 1
+    endwhile
+endfunction
+command! -range=% DeleteFunctionUnderCursor <line1>,<line2>call DeleteFunctionUnderCursor()
 
-if $TERM !~# '^linux\|^Eterm|^screen-*|^tmux-*'
-  set t_Co=8
-endif
-
-if has("nvim")
-    silent! set guicursor=
-endif
-
-hi CursorLineNr cterm=NONE
-
-" duplicate lines
 function! HighlightRepeats() range
     let lineCounts = {}
     let lineNum = a:firstline
@@ -395,9 +457,31 @@ function! HighlightRepeats() range
     endfor
 endfunction
 command! -range=% HighlightRepeats <line1>,<line2>call HighlightRepeats()
-autocmd FileType python set breakindentopt=shift:4
 
-" comfortable navigation
+if !exists(":DiffOrig")
+    command DiffOrig vert new | set bt=nofile | r ++edit | 0d_ | diffthis
+          \ | wincmd p | diffthis
+endif
+
+" w!! to write file as root
+cmap w!! %!doas tee > /dev/null %
+com! -complete=file -bang -nargs=? W :w<bang> <args>
+
+" mmm abbreviated as my mail address
+iabbrev mmm abdullah@abdullah.support
+
+let g:python3_host_prog = "/usr/bin/python3"
+
+" ---------------------------------------------------------------------
+" Mappings
+" ---------------------------------------------------------------------
+nnoremap ; :
+nnoremap K <nop>
+nnoremap qq :q!<CR>
+nnoremap Q q
+inoremap # #
+
+" comfortable navigation (wrapped lines move visually, not logically)
 nnoremap k gk
 nnoremap j gj
 nnoremap <Up> gk
@@ -409,134 +493,79 @@ nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
 
-
 if has("nvim") || has("terminal")
-        tnoremap <Esc> <C-\><C-n>
+    tnoremap <Esc> <C-\><C-n>
 endif
 
+vnoremap < <gv
+vnoremap > >gv
 
-nnoremap <Leader>l :ls<CR>:b<Space>
-nnoremap <Leader>b :bd<CR>
-nnoremap <Leader>h :nohlsearch<CR>
-nnoremap <Leader>t :terminal<CR>
-nnoremap <Leader>rw :%s/\<<C-r><C-w>\>/
+" comment out current line
+map <leader>c 0i# <ESC>
+" native file explorer (used to be a coc.nvim mapping)
+nnoremap <leader>n :Lexplore<CR>
+nnoremap <leader>u :w \| startinsert \| term urlview %<CR>
+nnoremap <leader>l :ls<CR>:b<Space>
+nnoremap <leader>b :bd<CR>
+nnoremap <leader>h :nohlsearch<CR>
+nnoremap <leader>t :terminal<CR>
+nnoremap <leader>rw :%s/\<<C-r><C-w>\>/
 " sort CSS properties
-nnoremap <Leader>S ?{<CR>jV/^\s*\}?$<CR>k:sort<CR>:noh<CR>
+nnoremap <leader>S ?{<CR>jV/^\s*\}?$<CR>k:sort<CR>:noh<CR>
 " reselect pasted text
-nnoremap <Leader>v `[V`]
-" rewrap current paragraph
-nnoremap <Leader>w gq}
+nnoremap <leader>v `[V`]
+" rewrap current paragraph on demand (auto-wrap is off by default now)
+nnoremap <leader>w gq}
 " strip trailing whitespace
-nnoremap <Leader>W :%s/\s\+$//<CR>:let @/=""<CR>
+nnoremap <leader>W :%s/\s\+$//<CR>:let @/=""<CR>
+nnoremap <leader>s :%s//g<Left><Left>
 
-" fix application-numpad mode
-if !has("nvim")
-        " (Vim 8.1) with Num Lock off, Num5 is parsed as individual commands
-        map! <Esc>OE <Nop>
-endif
-set nottimeout
-"let g:python_host_prog = "/usr/bin/python2.7"
-let g:python3_host_prog = "/usr/bin/python3"
+" Run python code without exiting vim
+nnoremap <silent> <leader>m :w<CR>:!clear && python % > /tmp/vim-py.out && cat /tmp/vim-py.out && rm -f /tmp/vim-py.out<CR>
+" Run bash code without exiting vim
+nnoremap <silent> <leader>o :w<CR>:!clear && sh -x % > /tmp/vim-bash.out && cat /tmp/vim-bash.out && rm -f /tmp/vim-bash.out<CR>
+" Lint the current file (shellcheck for .sh, yamllint for .yml/.yaml,
+" via makeprg above) and open the results in the quickfix window
+nnoremap <silent> <leader>k :w<CR>:make<CR>:copen<CR>
 
-"inoremap <silent><expr> <Tab>
-"      \ pumvisible() ? "\<C-n>" :
-"      \ <SID>check_back_space() ? "\<Tab>" :
-"      \ coc#refresh()
+vmap rot :!tr A-Za-z N-ZA-Mn-za-m<CR>
 
-"noremap <silent><expr> <TAB>
-"      \ pumvisible() ? coc#_select_confirm() :
-"      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-"      \ <SID>check_back_space() ? "\<TAB>" :
-"      \ coc#refresh()
+" ---------------------------------------------------------------------
+" Environment-reload hooks (personal desktop)
+" ---------------------------------------------------------------------
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+augroup env_reload
+    autocmd!
+    autocmd bufwritepost $HOME/.Xresources !xrdb -load $HOME/.Xresources 
+    autocmd bufwritepost $HOME/.zshrc      !source $HOME/.zshrc
+    autocmd bufwritepost $HOME/.config/sxhkd/sxhkdrc       !pkill -USR1 -x sxhkd
+    autocmd bufwritepost $HOME/cfg/sxhkd/.config/sxhkd/sxhkdrc     !pkill -USR1 -x sxhkd
+    autocmd bufwritepost $HOME/cfg/zsh/.zsh/custom-alias !source $HOME/cfg/zsh/.zsh/custom-alias
+    autocmd bufwritepost $HOME/.vimrc source $MYVIMRC
+    autocmd bufwritepost $HOME/cfg/polybar/.config/polybar/*.{conf,ini} !bspc wm -r >/dev/null 2>&1
+    autocmd bufwritepost $HOME/cfg/bspwm/.config/bspwm/bspwmrc !bspc wm -r >/dev/null 2>&1
+    autocmd bufwritepost $HOME/cfg/etc/.local/bin/mypanel !pkill mypanel && $HOME/.local/bin/mypanel & disown
+    autocmd bufwritepost $HOME/cfg/sway/.config/sway/config !swaymsg reload
+    autocmd bufwritepost $HOME/cfg/herbstluftwm/.config/herbstluftwm/autostart !herbstclient reload
+augroup END
 
-"let g:coc_snippet_next = '<tab>'
+augroup misc_autocmds
+    autocmd!
+    autocmd FocusGained,BufEnter * :silent! !
+augroup END
 
-
-if has("autocmd")
-        au BufNewFile,BufRead COMMIT_EDITMSG,git-rebase-todo
-        \ setl nomodeline
-
-        au BufNewFile,BufRead /etc/motd
-        \ setl et
-
-        au BufNewFile,BufRead authorized_keys*,known_hosts,id_*.pub
-        \ setl ft=conf wrap nolinebreak
-
-        au! BufNewFile */_posts/2*.html
-        \ 0r %:h/_template.html
-
-        if has("nvim")
-                " Neovim 0.2.1: terminal buffers now have line numbers
-                au! TermOpen * setl nonumber norelativenumber
-        endif
-endif
-
-
-" some pastebins commands
-" for GUI apps like browsers, paste the URL with CTRL+v
-command! -range=% CL  <line1>,<line2>w !curl -F 'clbin=<-' https://clbin.com | tr -d '\n' | xclip -i -selection clipboard
-
-" Another good pastebin same as CTRL+v paste.
-command! -range=% VP  <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net | tr -d '\n' | xclip -i -selection clipboard
-
-" pastebin ptpb is now down but is the best pastebin ever
-command! -range=% PB  <line1>,<line2>w !curl -F 'c=@-' https://ptpb.pw/ | sed -n 's/^url: //p' | xclip
-
-command! -range=% TB  <line1>,<line2>w !fb
-
+" ---------------------------------------------------------------------
+" Pastebins (personal -- untouched)
+" ---------------------------------------------------------------------
+command! -range=% CL <line1>,<line2>w !curl -F 'clbin=<-' https://clbin.com | tr -d '\n' | xclip -i -selection clipboard
+command! -range=% VP <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net | tr -d '\n' | xclip -i -selection clipboard
+command! -range=% PB <line1>,<line2>w !curl -F 'c=@-' https://ptpb.pw/ | sed -n 's/^url: //p' | xclip
+command! -range=% TB <line1>,<line2>w !fb
 command! -range=% GT <line1>,<line2>w !gist -c -p -f %
-
 
 map <F3> :! ( urxvt & ) &>/dev/null &<CR><CR>
 
-" Run python code without exiting vim
-nmap <silent> <Leader>m :w<CR>:!clear && python % > /tmp/vim-py.out && cat /tmp/vim-py.out && rm -f /tmp/vim-py.out<CR>
-
-" Run bash code without exiting vim
-nmap <silent> <Leader>o :w<CR>:!clear && sh -x % > /tmp/vim-bash.out && cat /tmp/vim-bash.out && rm -f /tmp/vim-bash.out<CR>
-"
-" Json highlight comments
-autocmd FileType json syntax match Comment +\/\/.\+$+
-
-" For all text files, set textwidth to 78
-autocmd FileType text setlocal textwidth=78
-
-" UTF-8 support
-if has("multi_byte")
-    if &termencoding == ""
-        let &termencoding = "utf-8"
-    endif
-    set encoding=utf-8
-    setglobal fileencoding=utf-8
-endif
-
-" Highlight comments italic 
-highlight Comment cterm=italic
-
-if has('syntax') && has('eval')
-    packadd! matchit
-endif
-
-vmap rot :!tr A-Za-z N-ZA-Mn-za-m<CR>
-vnoremap < <gv
-vnoremap > >gv
-nmap <leader>s :%s//g<Left><Left>
-set wildignore+=*.opus,*.flac,*.pdf,*.jpg,*.png,*.so,*.swp,*.zip,*.gzip,*.bz2,*.tar,*.xz,*.lrzip,*.lrz,*.mp3,*.ogg,*.mp4,*.gif,*.jpeg,*.webm
-
-" Highlight the symbol and its references when holding the cursor.
-"autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Symbol renaming.
-"nmap <leader>rn <Plug>(coc-rename)
-
-" Formatting selected code.
-"xmap <leader>f  <Plug>(coc-format-selected)
-"nmap <leader>f  <Plug>(coc-format-selected)
-
+" Wrap current WORD (includes $) in double quotes with <Leader>"
+nnoremap <Leader>" viWc"<C-r>""<Esc>
 
 " vim: set ft=vim :
