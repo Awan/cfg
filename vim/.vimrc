@@ -107,6 +107,13 @@ if &t_Co > 2 || has("gui_running")
 endif
 
 " ---------------------------------------------------------------------
+" Spelling (used by markdown/text/gitcommit/mail in filetype_settings)
+" ---------------------------------------------------------------------
+" `zg` adds the word under the cursor here instead of flagging every
+" DevOps term (kubectl, terraform, ansible, ...) as a typo forever.
+set spellfile=~/.vim/spell/en.utf-8.add
+
+" ---------------------------------------------------------------------
 " UI
 " ---------------------------------------------------------------------
 set rnu nu
@@ -118,6 +125,7 @@ set cmdheight=2
 set scrolloff=3
 set sidescrolloff=5
 set wildmenu
+set wildmode=longest:full,full
 silent! set wildignorecase
 set wildignore+=*.opus,*.flac,*.pdf,*.jpg,*.png,*.so,*.swp,*.zip,*.gzip,*.bz2,*.tar,*.xz,*.lrzip,*.lrz,*.mp3,*.ogg,*.mp4,*.gif,*.jpeg,*.webm
 set whichwrap=b,s,<,>,[,]
@@ -297,8 +305,11 @@ augroup filetype_settings
     autocmd BufNewFile,BufRead *.mk setlocal filetype=make
     autocmd FileType make setlocal noexpandtab
 
-    " Python
+    " Python -- ruff is assumed since it's the fast, modern default;
+    " if you're on flake8/pylint instead, swap the command below (same
+    " %f:%l:%c: %m-ish shape, so the default errorformat still applies).
     autocmd FileType python setlocal breakindentopt=shift:4
+    autocmd FileType python setlocal makeprg=ruff\ check\ %
 
     " JSON with // comments (JSONC-style files)
     autocmd FileType json syntax match Comment +\/\/.\+$+
@@ -332,6 +343,27 @@ augroup strip_trailing_whitespace
     autocmd BufWritePre *.c,*.cpp,*.cc,*.h,*.sh,*.hpp,*.py,*.m,*.mm,
           \*.yml,*.yaml,*.tf,*.tfvars,Dockerfile,*.dockerfile,Makefile,*.mk
           \ :%s/\s\+$//e
+augroup END
+
+" ---------------------------------------------------------------------
+" New-file templates -- only fires on genuinely new files (BufNewFile),
+" never on anything that already exists, and drops the cursor where
+" you'd actually start typing.
+" ---------------------------------------------------------------------
+function! s:NewFileTemplate(lines)
+    call setline(1, a:lines)
+    normal! G$
+    startinsert!
+endfunction
+
+augroup file_templates
+    autocmd!
+    autocmd BufNewFile *.sh call s:NewFileTemplate(['#!/usr/bin/env bash', '', 'set -euo pipefail', ''])
+    autocmd BufNewFile *.py call s:NewFileTemplate(['#!/usr/bin/env python3', ''])
+    autocmd BufNewFile Dockerfile,Dockerfile.*,*.dockerfile call s:NewFileTemplate(['# syntax=docker/dockerfile:1', 'FROM '])
+    autocmd BufNewFile Makefile call s:NewFileTemplate(['.PHONY: all', '', 'all:', "\t"])
+    autocmd BufNewFile *.yml,*.yaml call s:NewFileTemplate(['---', ''])
+    autocmd BufNewFile *.md call s:NewFileTemplate(['# '])
 augroup END
 
 " ---------------------------------------------------------------------
@@ -463,6 +495,49 @@ if !exists(":DiffOrig")
           \ | wincmd p | diffthis
 endif
 
+" A .yml file can't be reliably told apart from a K8s manifest or a
+" docker-compose file, so this is a deliberate manual switch rather
+" than an autocmd guess: run this in a buffer you know is a playbook,
+" then :make / <leader>k lints it with ansible-lint instead of yamllint.
+command! AnsibleLintMode setlocal makeprg=ansible-lint\ % errorformat=%f:%l:\ %m
+
+" Quick reference for everything above -- <leader>? or :Cheatsheet
+function! s:ShowCheatSheet()
+    let l:lines = [
+          \ 'leader = <Space>', '',
+          \ '  c    comment out current line',
+          \ '  n    file explorer (netrw)',
+          \ '  u    open URL under cursor',
+          \ '  l    list buffers / switch',
+          \ '  b    delete (close) buffer',
+          \ '  h    clear search highlight',
+          \ '  t    open terminal',
+          \ '  rw   search/replace word under cursor',
+          \ '  S    sort CSS-like properties in a block',
+          \ '  v    reselect last-pasted text',
+          \ '  w    rewrap current paragraph (gq)',
+          \ '  W    strip trailing whitespace',
+          \ '  s    substitute template (%s//)',
+          \ '  m    run current Python file',
+          \ '  o    run current shell script',
+          \ '  k    lint current file, open quickfix',
+          \ '  "    wrap WORD under cursor in quotes',
+          \ '  ?    this cheat sheet', '',
+          \ 'not on leader:', '',
+          \ '  w!!          write file as root (doas)',
+          \ '  :DiffOrig    diff buffer against saved file',
+          \ '  :AnsibleLintMode   switch this buffer to ansible-lint',
+          \ '', 'q to close',
+          \ ]
+    new
+    setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile filetype=
+    call setline(1, l:lines)
+    setlocal nomodifiable readonly
+    nnoremap <buffer> q :q<CR>
+    resize 20
+endfunction
+command! Cheatsheet call s:ShowCheatSheet()
+
 " w!! to write file as root
 cmap w!! %!doas tee > /dev/null %
 com! -complete=file -bang -nargs=? W :w<bang> <args>
@@ -471,6 +546,12 @@ com! -complete=file -bang -nargs=? W :w<bang> <args>
 iabbrev mmm abdullah@abdullah.support
 
 let g:python3_host_prog = "/usr/bin/python3"
+
+" Native file explorer (<leader>n / :Lexplore) -- no banner, tree
+" style, fixed-width sidebar instead of taking over the whole window.
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_winsize = 25
 
 " ---------------------------------------------------------------------
 " Mappings
@@ -525,8 +606,10 @@ nnoremap <silent> <leader>m :w<CR>:!clear && python % > /tmp/vim-py.out && cat /
 " Run bash code without exiting vim
 nnoremap <silent> <leader>o :w<CR>:!clear && sh -x % > /tmp/vim-bash.out && cat /tmp/vim-bash.out && rm -f /tmp/vim-bash.out<CR>
 " Lint the current file (shellcheck for .sh, yamllint for .yml/.yaml,
-" via makeprg above) and open the results in the quickfix window
+" ruff for .py, via makeprg above) and open the results in quickfix
 nnoremap <silent> <leader>k :w<CR>:make<CR>:copen<CR>
+" Quick reference for every leader mapping in this file
+nnoremap <silent> <leader>? :Cheatsheet<CR>
 
 vmap rot :!tr A-Za-z N-ZA-Mn-za-m<CR>
 

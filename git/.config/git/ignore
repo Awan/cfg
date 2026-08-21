@@ -151,3 +151,6 @@ systemd/.config/systemd/user/sockets.target.wants/*
 
 # iPython
 ipython/.ipython/profile_default/db/
+
+# Ignore Vim compiled spell files
+*.spl
