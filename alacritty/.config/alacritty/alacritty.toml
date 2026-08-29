@@ -64,7 +64,7 @@ decorations = "full"
 #style = "Light"
 
 [font]
-size = 13.0
+size = 15.0
 
 [font.glyph_offset]
 x = 0
