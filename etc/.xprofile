@@ -113,10 +113,10 @@ xset +fp /usr/share/fonts/ && xset fp rehash &
 
 # Touchpad speed
 
-xinput --set-prop 13 312 0.5 &
+xinput --set-prop "Synaptics TM3381-002" "libinput Accel Speed" 0.5 &
 
 # same thing for mouse
-xinput --set-prop 10 312 0.5 &
+# xinput --set-prop 10 312 0.5 &
 
 # No mouse when idle
 
@@ -145,19 +145,24 @@ run dunst -c "$HOME"/.config/dunst/dunstrc
 
 # Get wireless network connectivity/disconnectivity
 
-wifi_info() {
-    for iface in /var/run/wpa_supplicant/* ;
-    do
-        iface="${iface##*/}"
-        if [ -d "/sys/class/net/${iface}/phy80211" ]; then
-                wpa_cli -p /var/run/wpa_supplicant -i "${iface}" -a "${HOME}/.local/bin/wpa_notify"
-        fi
-    done
-}
+#wifi_info() {
+#    for iface in /var/run/wpa_supplicant/* ;
+#    do
+#        iface="${iface##*/}"
+#        if [ -d "/sys/class/net/${iface}/phy80211" ]; then
+#                wpa_cli -p /var/run/wpa_supplicant -i "${iface}" -a "${HOME}/.local/bin/wpa_notify"
+#        fi
+#    done
+#}
 
-run wifi_info
 
-wpa_cli -p /var/run/wpa_supplicant -i wlp59s0 -B "$HOME/.local/bin/wpa_notify"
+# run wifi_info
+
+#wpa_cli -p /var/run/wpa_supplicant -i wlp59s0 -B "$HOME/.local/bin/wpa_notify"
+
+# IWD connection status notification
+
+run "$HOME/.local/bin/iwd_notify"
 
 # Mute the mic
 
