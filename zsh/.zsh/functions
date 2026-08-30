@@ -1220,3 +1220,7 @@ btn() {
         --dest=org.bluez /org/bluez/hci0/dev_AC_C4_BD_45_20_F0 \
         org.bluez.Network1.Connect string:'nap'
 }
+
+psearch() {
+    expac -Ss $'%e\t\e[1;32m%n\e[0m \e[1;33m%v\e[0m\n\t%d\n' "$@"
+}
