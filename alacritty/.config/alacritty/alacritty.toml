@@ -15,6 +15,11 @@
 #################################################################
 #################################################################
 
+
+[colors]
+draw_bold_text_with_bright_colors = false
+
+
 [general]
 import = ["~/.config/alacritty/catppuccin-mocha.toml"]
 live_config_reload = true
@@ -24,7 +29,12 @@ TERM = "xterm-256color"
 
 [window]
 decorations = "None"
-opacity = 0.9
+
+# 0.88  → beautiful but too transparent for long work
+# 0.94  → very readable, still transparent
+# 0.96  → getting close to opaque
+# 1.00  → completely opaque
+opacity = 0.97
 padding = { x = 10, y = 10 }
 dynamic_padding = true
 dynamic_title = true
@@ -35,6 +45,10 @@ multiplier = 3
 
 [font]
 size = 14
+
+#[font.offset]
+#x = -1
+#y = 0
 #[font.normal]
 # family = "VictorMono Nerd Font"
 # family = "CaskaydiaCove Nerd Font"
@@ -49,10 +63,17 @@ size = 14
 #bold = { family = "VictorMono Nerd Font", style = "Bold" }
 #italic = { family = "VictorMono Nerd Font", style = "Italic" }
 #bold_italic = { family = "VictorMono Nerd Font", style = "Bold Italic" }
-normal = { family = "BlexMono Nerd Font", style = "Regular" }
-bold = { family = "BlexMono Nerd Font", style = "Bold" }
-italic = { family = "BlexMono Nerd Font", style = "Italic" }
-bold_italic = { family = "BlexMono Nerd Font", style = "Bold Italic" }
+# normal = { family = "BlexMono Nerd Font", style = "Regular" }
+# bold = { family = "BlexMono Nerd Font", style = "Bold" }
+# italic = { family = "BlexMono Nerd Font", style = "Italic" }
+# bold_italic = { family = "BlexMono Nerd Font", style = "Bold Italic" }
+
+
+normal = { family = "Terminess Nerd Font", style = "Regular" }
+bold = { family = "Terminess Nerd Font", style = "Bold" }
+italic = { family = "Terminess Nerd Font", style = "Italic" }
+bold_italic = { family = "Terminess Nerd Font", style = "Bold Italic" }
+# normal = { family = "GoMono Nerd Font", style = "Regular" }
 
 #[font.normal]
 #family = "VictorMono Nerd Font"
@@ -77,3 +98,5 @@ unfocused_hollow = false
 [selection]
 save_to_clipboard = false
 semantic_escape_chars = ",│`|:\"' ()[]{}<>"
+
+
