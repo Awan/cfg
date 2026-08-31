@@ -1,0 +1,63 @@
+[font]
+size = 13
+
+#[font.offset]
+#x = -1
+#y = 0
+#[font.normal]
+# family = "VictorMono Nerd Font"
+# family = "CaskaydiaCove Nerd Font"
+# family = "Iosevka Nerd Font"
+# normal = { family = "BlexMono Nerd Font", style = "Regular" }
+# normal = { family = "Iosevka Nerd Font", style = "Regular" }
+# normal = { family = "BlexMono Nerd Font", style = "Regular" }
+# normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+# normal = { family = "IosevkaTermNerdFont", style = "Regular" }
+# normal = { family = "CaskaydiaCove Nerd Font", style = "Regular" }
+#normal = { family = "VictorMono Nerd Font", style = "Regular" }
+#bold = { family = "VictorMono Nerd Font", style = "Bold" }
+#italic = { family = "VictorMono Nerd Font", style = "Italic" }
+#bold_italic = { family = "VictorMono Nerd Font", style = "Bold Italic" }
+# normal = { family = "BlexMono Nerd Font", style = "Regular" }
+# bold = { family = "BlexMono Nerd Font", style = "Bold" }
+# italic = { family = "BlexMono Nerd Font", style = "Italic" }
+# bold_italic = { family = "BlexMono Nerd Font", style = "Bold Italic" }
+
+
+#normal = { family = "Terminess Nerd Font", style = "Regular" }
+#bold = { family = "Terminess Nerd Font", style = "Bold" }
+#italic = { family = "Terminess Nerd Font", style = "Italic" }
+#bold_italic = { family = "Terminess Nerd Font", style = "Bold Italic" }
+# normal = { family = "GoMono Nerd Font", style = "Regular" }
+
+#[font.normal]
+#family = "VictorMono Nerd Font"
+#style = "Regular"
+#
+#[font.bold]
+#family = "VictorMono Nerd Font"
+#style = "Bold"
+#
+#[font.italic]
+#family = "VictorMono Nerd Font"
+#style = "Italic"
+#
+#[font.bold_italic]
+#family = "VictorMono Nerd Font"
+#style = "Bold Italic"
+
+
+#normal = { family = "MesloLGM Nerd Font Mono", style = "Regular" }
+#bold = { family = "MesloLGM Nerd Font Mono", style = "Bold" }
+#italic = { family = "MesloLGM Nerd Font Mono", style = "Italic" }
+#bold_italic = { family = "MesloLGM Nerd Font Mono", style = "Bold Italic" }
+
+#normal = { family = "Iosevka Nerd Font Mono", style = "Medium" }
+#bold = { family = "Iosevka Nerd Font Mono", style = "Bold" }
+#italic = { family = "Iosevka Nerd Font Mono", style = "Italic" }
+#bold_italic = { family = "Iosevka Nerd Font Mono", style = "Bold Italic" }
+
+normal = { family = "BlexMono Nerd Font Mono", style = "Regular" }
+bold = { family = "BlexMono Nerd Font Mono", style = "Bold" }
+italic = { family = "BlexMono Nerd Font Mono", style = "Italic" }
+bold_italic = { family = "BlexMono Nerd Font Mono", style = "Bold Italic" }

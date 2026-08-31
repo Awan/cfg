@@ -1,0 +1,21 @@
+[env]
+TERM = "xterm-256color"
+
+[window]
+decorations = "None"
+opacity = 0.96
+padding = { x = 10, y = 10 }
+dynamic_padding = true
+dynamic_title = true
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[cursor]
+style = "Underline"
+unfocused_hollow = false
+
+[selection]
+save_to_clipboard = false
+semantic_escape_chars = ",│`|:\"' ()[]{}<>"
