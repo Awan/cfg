@@ -155,17 +155,29 @@ if &t_Co > 16
 endif
 hi CursorLineNr cterm=NONE
 
-" Colorscheme, with a safe fallback if 'nord' isn't present on
+
+" Colorscheme, with a safe fallback if 'catppuccin_mocha' isn't present on
 " this particular machine (it's not a Vim builtin -- if you always
 " drop it in ~/.vim/colors/ manually alongside this file, it'll be
 " picked up as before; otherwise this won't error, it'll just fall
 " back cleanly).
-silent! colorscheme nord
-if !exists('g:colors_name') || g:colors_name !=# 'nord'
+set termguicolors
+silent! colorscheme catppuccin_mocha
+if !exists('g:colors_name') || g:colors_name !=# 'catppuccin_mocha'
     colorscheme slate
 endif
+
+" let the terminal's own background show through
+highlight Normal guibg=NONE ctermbg=NONE
+highlight NonText guibg=NONE ctermbg=NONE
+highlight LineNr guibg=NONE ctermbg=NONE
+highlight SignColumn guibg=NONE ctermbg=NONE
+highlight EndOfBuffer guibg=NONE ctermbg=NONE
+
 highlight StatusLine ctermbg=NONE guibg=NONE
 highlight Comment cterm=italic
+
+
 
 if has("nvim")
     silent! set guicursor=
