@@ -200,44 +200,51 @@ battery() {
     sysfs="/sys/class/power_supply"
     _battery="BAT0"
     mains="AC"
-    power_now="$(cat $sysfs/$_battery/power_now)"
-    energy_now="$(cat $sysfs/$_battery/energy_now)"
-    energy_full="$(cat $sysfs/$_battery/energy_full)"
-    ac_on="$(cat $sysfs/$mains/online)"
-    is_charger_connected="$(cat /sys/class/power_supply/AC/online)"
-    if [ $is_charger_connected = 0 ]; then
-        printf "%s" "%{F#FFFF0000}Discharging:%{F-}"
-    elif [ $is_charger_connected = 1 ]; then
-        printf "%s" "%{F#FF00FF00}Charging:%{F-}"
+
+    power_now="$(cat "$sysfs/$_battery/power_now")"
+    energy_now="$(cat "$sysfs/$_battery/energy_now")"
+    energy_full="$(cat "$sysfs/$_battery/energy_full")"
+    ac_on="$(cat "$sysfs/$mains/online")"
+    is_charger_connected="$(cat "$sysfs/$mains/online")"
+    battery_percentage="$(cat "$sysfs/$_battery/capacity")"
+
+    # Charging / discharging icon
+    if [ "$is_charger_connected" -eq 1 ]; then
+        battery_icon=""
+    elif [ "$battery_percentage" -lt 30 ]; then
+        battery_icon="%{F#FFFF3361}%{F-}"
     else
-        printf "%s" "%{F#FF0000FF}AC:%{F-}"
+        battery_icon=""
     fi
-    battery_percentage="$(cat /sys/class/power_supply/BAT0/capacity)"
-    if [ $battery_percentage -gt 60 ]; then
-        printf "%s" "%{F#FF00FF00}$battery_percentage% %{F-}"
-    elif [ $battery_percentage -gt 30 ]; then
-        printf "%s" "%{F#FFFFFF00}$battery_percentage% %{F-}"
-    elif [ $battery_percentage -lt 30 ] && [ "${is_charger_connected}" -ne 1 ] ; then
+
+    # Percentage color
+    if [ "$battery_percentage" -gt 60 ]; then
+        percentage_color="#FF00FF00"
+    elif [ "$battery_percentage" -gt 30 ]; then
+        percentage_color="#FFFFFF00"
+    elif [ "$battery_percentage" -lt 30 ] && [ "$is_charger_connected" -ne 1 ]; then
         notify-send -u critical -t 30000 "Battery critically low!"
-        printf "%s" "%{F#FFFF3361}$battery_percentage% %{F-}"
+        percentage_color="#FFFF3361"
     else
-        printf "%s" "%{F#FFFF0000}$battery_percentage% %{F-}"
+        percentage_color="#FFFF0000"
     fi
-    if [ "${ac_on}" -ne 0 ]; then
-        if [ "${power_now}" -ne 0 ] ; then
+
+    # Remaining / charging time
+    if [ "$ac_on" -ne 0 ]; then
+        if [ "$power_now" -ne 0 ]; then
             remaining_time=$(( (energy_full - energy_now) * 60 / power_now ))
         else
             remaining_time="?"
         fi
     else
-        if [ "${power_now}" -ne 0 ] ; then
-            remaining_time="$(( energy_now * 60 / power_now ))"
+        if [ "$power_now" -ne 0 ]; then
+            remaining_time=$(( energy_now * 60 / power_now ))
         else
             remaining_time="?"
         fi
     fi
-    printf "%s" "%{F#FF9D10A4}$remaining_time mins %{F-}"
 
+    printf "%s" "%{F#FF5E81AC}${battery_icon}%{F-} %{F${percentage_color}}${battery_percentage}%{F-} %{F#FF9D10A4}${remaining_time} mins %{F-}"
 }
 
 ram(){
