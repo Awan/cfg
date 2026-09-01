@@ -88,9 +88,7 @@ datetime() {
 }
 
 brightness() {
-
-    printf "%s%%" "%{A4:light -A 10:}%{A5:light -U 10:}%{F#FFFA58F4}BR:%{F-}%{F#FF28DECB}$(light -G | cut -d . -f 1)%{A}%{A}"
-
+    printf "%s%%" "%{A4:light -A 10:}%{A5:light -U 10:}%{F#FFFA58F4} %{F-}%{F#FF28DECB}$(light -G | cut -d . -f 1)%{A}%{A}"
 }
 
 mpd_music() {
