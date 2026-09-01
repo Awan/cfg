@@ -165,7 +165,12 @@ wifi() {
         # Do nothing
         :
     else
-        printf "%s" "%{F#D1FF50}$ssid%{F-}"
+        printf "%s" "%{F#5E81AC}%{F-} %{F#A89984}$ssid%{F-}"
+#         printf "%s" "%{F#D1FF50} $ssid%{F-}"
+#         printf "%s\n" "%{F#5E81AC}%{F-} %{F#D1FF50}MyWiFi%{F-}"
+#          printf "%s\n" "%{F#5E81AC}%{F-} %{F#D1FF50}MyWiFi%{F-}"
+#        printf "%s\n" "%{F#88C0D0}%{F-} %{F#D1FF50}MyWiFi%{F-}"
+#         printf "%s\n" "%{F#D8DEE9}%{F-} %{F#D1FF50}MyWiFi%{F-}"
     fi
 }
 
@@ -178,7 +183,7 @@ cpu() {
     else
         temperature="%{F#00FFFF}$temp°c%{F-}"
     fi
-    printf "%s" "%{F#FFF042} %{F-}%{F#9181E7}$cpu $temperature"
+    printf "%s" "%{F#A89984} %{F-}%{F#9181E7}$cpu $temperature"
 }
 
 mails() {
@@ -214,7 +219,7 @@ battery() {
 
     # Percentage color
     if [ "$battery_percentage" -gt 60 ]; then
-        percentage_color="#FF00FF00"
+        percentage_color="#D5C4A1"
     elif [ "$battery_percentage" -gt 30 ]; then
         percentage_color="#FFFFFF00"
     elif [ "$battery_percentage" -lt 30 ] && [ "$is_charger_connected" -ne 1 ]; then
@@ -333,7 +338,7 @@ volume(){
         vol="$current_volume"
     fi
 
-    printf "%s" "%{A:pamixer -t:}%{A4:pamixer --allow-boost --set-limit 300 -i 10:}%{A5:pamixer --allow-boost --set-limit 300 -d 10:}%{F#5E81AC}${label}%{F-}%{F#FF8916}$vol%{F-}%{A}%{A}%{A}"
+    printf "%s" "%{A:pamixer -t:}%{A4:pamixer --allow-boost --set-limit 300 -i 10:}%{A5:pamixer --allow-boost --set-limit 300 -d 10:}%{F#5E81AC}${label}%{F-}%{F#BDAE93}$vol%{F-}%{A}%{A}%{A}"
 }
 
 #tasktime() {
