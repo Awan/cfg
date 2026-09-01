@@ -61,3 +61,4 @@ normal = { family = "BlexMono Nerd Font Mono", style = "Regular" }
 bold = { family = "BlexMono Nerd Font Mono", style = "Bold" }
 italic = { family = "BlexMono Nerd Font Mono", style = "Italic" }
 bold_italic = { family = "BlexMono Nerd Font Mono", style = "Bold Italic" }
+
