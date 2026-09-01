@@ -164,11 +164,6 @@ wifi() {
         :
     else
         printf "%s" "%{F#5E81AC}%{F-} %{F#A89984}$ssid%{F-}"
-#         printf "%s" "%{F#D1FF50} $ssid%{F-}"
-#         printf "%s\n" "%{F#5E81AC}%{F-} %{F#D1FF50}MyWiFi%{F-}"
-#          printf "%s\n" "%{F#5E81AC}%{F-} %{F#D1FF50}MyWiFi%{F-}"
-#        printf "%s\n" "%{F#88C0D0}%{F-} %{F#D1FF50}MyWiFi%{F-}"
-#         printf "%s\n" "%{F#D8DEE9}%{F-} %{F#D1FF50}MyWiFi%{F-}"
     fi
 }
 
@@ -185,12 +180,10 @@ cpu() {
 }
 
 mails() {
-
     count=$(find $HOME/.local/share/email/x1c/INBOX/new -type f -print | wc -l)
     if [ $count -ne 0 ]; then
-        printf "%s" "%{F#FFFF0000}Mails:%{F-}%{F#FFF4C430}$count%{F-}"
+        printf "%s" "%{F#689D6A}%{F-} %{F#D3869B}$count%{F-}"
     fi
-
 }
 
 battery() {
@@ -252,66 +245,7 @@ ram(){
 
 }
 
-
-# old function
-
-#volume(){
-#
-#    current_volume="$(pamixer --get-volume)"
-#    is_muted="$(pamixer --get-volume-human)"
-#    if [ "${is_muted}" = "muted" ] ; then
-#        vol="Muted"
-#    else
-#        vol="$current_volume"
-#    fi
-#
-#    default_sink="$(pactl get-default-sink 2>/dev/null)"
-#    sink_info="$(pactl list sinks 2>/dev/null | grep -A 15 "Name: ${default_sink}")"
-#
-#    if echo "$sink_info" | grep -iqE "bluez|headphone|headset"; then
-#        label="BT:"
-#    else
-#        label="SP:"
-#    fi
-#
-#    printf "%s" "%{A:pamixer -t:}%{A4:pamixer --allow-boost --set-limit 300 -i 10:}%{A5:pamixer --allow-boost --set-limit 300 -d 10:}%{F#5E81AC}${label}%{F-}%{F#FF8916}$vol%{F-}%{A}%{A}%{A}"
-#
-#}
-
-
-# new function before compiling lemonbar
-#volume(){
-#
-#    current_volume="$(pamixer --get-volume)"
-#    is_muted="$(pamixer --get-volume-human)"
-#    default_sink="$(pactl get-default-sink 2>/dev/null)"
-#
-#    if printf '%s\n' "$default_sink" | grep -q '^bluez_sink\.'; then
-#        if [ "${is_muted}" = "muted" ]; then
-#            label=" "
-#        else
-#            label=" "
-#        fi
-#    else
-#        if [ "${is_muted}" = "muted" ]; then
-#            label=" "
-#        else
-#            label=" "
-#        fi
-#    fi
-#
-#    if [ "${is_muted}" = "muted" ]; then
-#        vol="Muted"
-#    else
-#        vol="$current_volume"
-#    fi
-#
-#    printf "%s" "%{A:pamixer -t:}%{A4:pamixer --allow-boost --set-limit 300 -i 10:}%{A5:pamixer --allow-boost --set-limit 300 -d 10:}%{F#5E81AC}${label}%{F-}%{F#FF8916}$vol%{F-}%{A}%{A}%{A}"
-#}
-#
-
 volume(){
-
     current_volume="$(pamixer --get-volume)"
     is_muted="$(pamixer --get-volume-human)"
     default_sink="$(pactl get-default-sink 2>/dev/null)"
