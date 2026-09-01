@@ -9,7 +9,7 @@ ipython/.ipython/profile_default/startup/
 etc/.local/share/zathura/
 etc/.local/share/virtualenvs/
 etc/.local/share/misc/
-etc/.local/bin
+# etc/.local/bin
 etc/.local/etc
 etc/.local/share/ranger
 elinks/

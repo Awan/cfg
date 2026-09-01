@@ -169,11 +169,9 @@ wifi() {
     else
         printf "%s" "%{F#D1FF50}$ssid%{F-}"
     fi
-
 }
 
 cpu() {
-
     cpu=$(ps -eo pcpu | awk 'BEGIN {sum=0.0f} {sum+=$1} END {print sum}')
     temp=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))
     if [ $temp -ge 60 ];
@@ -182,8 +180,7 @@ cpu() {
     else
         temperature="%{F#00FFFF}$temp°c%{F-}"
     fi
-    printf "%s" "%{F#FFF042}CPU:%{F-}%{F#9181E7}$cpu $temperature"
-
+    printf "%s" "%{F#FFF042} %{F-}%{F#9181E7}$cpu $temperature"
 }
 
 mails() {
