@@ -54,7 +54,7 @@ visualizer_data_source = "/tmp/mpd.fifo"
 
 # Visualizer name
 
-visualizer_output_name = "my_fifo"
+visualizer_output_name = "toggle_visualizer"
 
 # If stereo visualizer enabled
 
