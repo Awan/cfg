@@ -191,6 +191,7 @@ battery() {
     sysfs="/sys/class/power_supply"
     _battery="BAT0"
     mains="AC"
+    state_file="${XDG_RUNTIME_DIR:-/tmp}/mypanel-battery-low"
 
     power_now="$(cat "$sysfs/$_battery/power_now")"
     energy_now="$(cat "$sysfs/$_battery/energy_now")"
@@ -214,10 +215,18 @@ battery() {
     elif [ "$battery_percentage" -gt 30 ]; then
         percentage_color="#FFFFFF00"
     elif [ "$battery_percentage" -lt 30 ] && [ "$is_charger_connected" -ne 1 ]; then
-        notify-send -u critical -t 30000 "Battery critically low!"
+        if [ ! -e "$state_file" ]; then
+            notify-send -u critical "Battery critically low!"
+            : > "$state_file"
+        fi
         percentage_color="#FFFF3361"
     else
         percentage_color="#FFFF0000"
+    fi
+
+    # Reset low-battery notification state
+    if [ "$is_charger_connected" -eq 1 ] || [ "$battery_percentage" -ge 30 ]; then
+        rm -f "$state_file"
     fi
 
     # Remaining / charging time
