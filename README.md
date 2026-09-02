@@ -66,16 +66,19 @@ Once stow is installed, just cd into this repository and create symlinks using s
 
 It will symlink vim. If you wanna use this configurations for root user, use `-t` argument,
 
-- `stow -t /root vim`
+- `doas stow -t /root vim`
 
 
 **Note:** stow will only create a symlink if a config file doesn't already exist. You must delete/backup if there is a default config for a program. 
 
-# Lemonbar XFT
+# Lemonbar NG
 
-Lemonbar is a lightweight bar entirely based on XCB. Provides full UTF-8 
-support, basic formatting, RandR and Xinerama support and EWMH compliance 
-without wasting your precious memory. In Arch Linux its available at  [lemonbar-xft](https://aur.archlinux.org/packages/lemonbar-xft-git).
+Lemonbar NG is my maintained fork of Lemonbar XFT, focused on improved Unicode and Nerd Font support while preserving the lightweight design and XCB-based architecture of the original project.
+
+It provides XFT rendering, full UTF-8/32-bit Unicode support, Nerd Font compatibility, basic formatting, RandR and Xinerama support, and EWMH compliance without wasting precious memory. 
+
+The source code is available on [GitHub](https://github.com/Awan/lemonbar-ng.git) and an AUR package is available [here](https://aur.archlinux.org/packages/lemonbar-ng) for archlinux.
+
 
 # Polybar
 
