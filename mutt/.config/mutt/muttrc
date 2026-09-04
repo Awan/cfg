@@ -28,7 +28,7 @@ set spoolfile = "~/.local/share/email/x1c/INBOX"
 mailboxes $HOME/.local/share/email/x1c/INBOX $HOME/.local/share/email/x1c/Archive $HOME/.local/share/email/x1c/Sent $HOME/.local/share/email/x1c/Drafts $HOME/.local/share/email/x1c/Spam
 
 unset record # gmail saves Sent mail
-set from                         = `age -i ~/.ssh/id_ed25519 -d ~/cfg/secrets/google_user.age`
+set from                         = `age -i ~/.passage/identities -d ~/cfg/secrets/google_user.age`
 set realname                     = "Muhammad Abdullah Khabir"
 set use_from                     = yes
 set envelope_from                = yes

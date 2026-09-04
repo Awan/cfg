@@ -343,22 +343,6 @@ gct()
   git remote add origin git@github.com:Awan/$1.git
 }
 
-endot ()
-{
-  cd ~/cfg
-  [[ -f ~/cfg/encrypted.tar.gz.age ]] && rm ~/cfg/encrypted.tar.gz.age
-  tar cz etc/.local/share/misc misc | age -R ~/.ssh/id_ed25519.pub > encrypted.tar.gz.age
-}
-
-dedot ()
-{
-  cd ~/cfg
-  age -i ~/.ssh/id_ed25519 -d -o encrypted.tar.gz encrypted.tar.gz.age
-  tar xf encrypted.tar.gz
-  rm encrypted.tar.gz
-  stow etc
-}
-
 sne ()
 {
     doas systemctl --now enable $1
@@ -1078,11 +1062,11 @@ encme () {
     return 1
     fi
 
-    recipient="age1teq3zep9z3l9ea5s3x2t6859pskkj4nz74w2cy8kxh7jgnyvdcpq0xm9gg"
+    recipient_file="$HOME/.passage/store/.age-recipients"
     
     for file in "$@"; do
       if [ -f "$file" ]; then
-        age -r "$recipient" -o "$file.age" "$file"
+        age -R "$recipient_file" -o "$file.age" "$file"
       elif [ -d "$file" ]; then
         tar -czf - "$file" | age -r "$recipient" -o "$file.tar.gz.age"
       else
@@ -1094,7 +1078,7 @@ encme () {
 decme() {
     # Decrypt files, encrypted to myself
     
-    identity_file="$HOME/.ak.txt"
+    identity_file="$HOME/.passage/identities"
 
     if [ ! -f "$identity_file" ]; then
         echo "Error: Identity file '$identity_file' not found. Please add it first..."
@@ -1120,19 +1104,6 @@ ghsubdomains_takeover() {
     http -b GET http://$name | grep -F -q "<strong>There isn't a GitHub Pages site here.</strong>" && echo "Subdomain takeover may be possible" || echo "Subdomain takeover is not possible"
 }
 
-func bills() {
-    for i in ~/cfg/secrets/ak*.age;
-        do $BROWSER "https://bill.pitc.com.pk/iescobill/general?refno=`age -d -i ~/.ak.txt $i`";
-        done
-}
-
-apply () {
-    subject="$1"
-    destination="$2"
-    age -i ~/.ak.txt -d -o /tmp/Abdullah-Khabir-Resume.pdf ~/.local/share/misc/Abdullah-Khabir-Resume.pdf.age
-    age -i ~/.ak.txt -d ~/.local/share/misc/job.age | mutt -s $subject $destination -a /tmp/Abdullah-Khabir-Resume.pdf 
-    rm /tmp/Abdullah-Khabir-Resume.pdf
-}
 
 3gp () {
     # create 3gp videos for smaller screens
