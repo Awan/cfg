@@ -25,3 +25,6 @@ muttrc
 conf
 Ed25519
 utf
+feat
+iwd
+dunst

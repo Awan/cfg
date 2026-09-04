@@ -26,10 +26,10 @@ while read -r line; do
             "connected")
                 # Get current connected SSID using iwctl
                 ssid=$(iwctl station wlan0 show | awk -F'State' '{print $1}' | grep -i 'Connected network' | xargs | cut -d' ' -f3-)
-                dunstify -t 3000 -i network-wireless-connected "Wi-Fi Connected" "Connected to ${ssid:-network}"
+                dunstify -t 3000 -i network-wireless-connected-100 "Wi-Fi Connected" "Connected to ${ssid:-network}"
                 ;;
             "disconnected")
-                dunstify -u critical -t 8000 -i network-wireless-disconnected "Wi-Fi Disconnected" 
+                dunstify -u critical -t 3000 -i network-wireless-disconnected "Wi-Fi Disconnected" 
                 ;;
         esac
     fi
