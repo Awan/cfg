@@ -6,7 +6,7 @@
 
 # Start keychain for ssh keys
 
-eval $(keychain --eval --quiet id_ed25519)
+eval "$(keychain add --eval --systemd --quiet id_ed25519)"
 
 # Start X at login    
     
