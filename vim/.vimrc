@@ -415,6 +415,9 @@ augroup no_swap_for_secrets
     autocmd!
     autocmd BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile
     autocmd BufNewFile,BufRead /dev/shm/pass.* setlocal noswapfile nobackup noundofile
+    autocmd BufNewFile,BufRead ~/.ssh/id_ed25519 setlocal noswapfile nobackup noundofile
+    autocmd BufNewFile,BufRead ~/.passage/identities setlocal noswapfile nobackup noundofile
+    autocmd BufNewFile,BufRead ~/.passage/store/.age-recipients setlocal noswapfile nobackup noundofile
 augroup END
 
 augroup restore_cursor_position
