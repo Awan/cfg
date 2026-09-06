@@ -149,7 +149,6 @@ alias sv='doas $EDITOR'
 alias rf='source $HOME/.bashrc'
 alias a='cd $HOME/.config'
 alias sk='autoscript'
-alias alis='$EDITOR ~/.zsh/custom-alias'
 alias yt='cd $HOME/mus/ && youtube-viewer && cd -'
 alias v3='$EDITOR $HOME/.config/i3/config'
 # Install the package only if its not updated/already installed
@@ -230,3 +229,4 @@ alias -g null="2>&1 >/dev/null"
 alias xclip="xclip -selection clipboard"
 alias capslock="setxkbmap -option caps:super && xcape -e 'Super_L=Escape'"
 alias vzh='$EDITOR $HISTFILE'
+alias cz='chezmoi'
