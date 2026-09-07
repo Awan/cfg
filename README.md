@@ -6,10 +6,6 @@
 ![mypanel](https://user-images.githubusercontent.com/42554663/177259504-4afb0440-a7f5-4b0c-bc98-f95a51ff7303.png)
 ![mypanel](https://github.com/user-attachments/assets/3b64cf0d-e8c3-4ac3-95ac-76002116855b)
 
-
-
-
-
 ```
   ▓▓▓▓▓▓▓▓▓▓
  ░▓ About  ▓ linux configuration files
@@ -39,57 +35,106 @@
  mpv        > media player (mplayer also available)
  ```
 
-
 # Installation
-I manage my dotfiles with [gnu stow](http://www.gnu.org/software/stow/), a symlink farm manager. It's available in most linux distributions.
 
-- `sudo apt install stow`
-- `sudo dnf install stow`
-- `sudo yum install stow`
-- `sudo pacman install stow`
-- `brew install stow`
+I manage my dotfiles with [chezmoi](https://www.chezmoi.io/), a configuration management tool designed to manage personal configuration files across machines.
 
-or 
+Install chezmoi using the package manager available on your system. For example:
+
+- `sudo apt install chezmoi`
+- `sudo dnf install chezmoi`
+- `sudo pacman -S chezmoi`
+- `brew install chezmoi`
+
+Alternatively, follow the [official chezmoi installation instructions](https://www.chezmoi.io/install/).
+
+Once chezmoi is installed, initialize this repository and apply the configuration:
 
 ```bash
-$ curl https://git.io/JILE5 | sh
+chezmoi init --apply git@github.com:Awan/cfg.git
 ```
 
-or clone it [from source](https://savannah.gnu.org/git/?group=stow) and [build it](http://git.savannah.gnu.org/cgit/stow.git/tree/INSTALL.md) yourself.
+The chezmoi source directory is stored at:
 
-Once stow is installed, just cd into this repository and create symlinks using stow like this:
+```text
+~/.local/share/chezmoi
+```
 
-- `cd ~`
-- ` git clone https://gitlab.com/Abdullah/cfg.git`
-- `cd cfg`
-- `stow vim`
+To inspect the configuration before applying it:
 
-It will symlink vim. If you wanna use this configurations for root user, use `-t` argument,
+```bash
+chezmoi diff
+```
 
-- `doas stow -t /root vim`
+To apply changes from the source repository to your home directory:
 
+```bash
+chezmoi apply
+```
 
-**Note:** stow will only create a symlink if a config file doesn't already exist. You must delete/backup if there is a default config for a program. 
+To check whether the live configuration differs from the chezmoi source:
+
+```bash
+chezmoi status
+```
+
+The chezmoi source directory is also a Git repository, so configuration changes can be reviewed, committed, and pushed using the normal Git workflow.
+
+For example:
+
+```bash
+cd ~/.local/share/chezmoi
+
+git status
+git diff
+git add <file>
+git commit -m "Describe the configuration change"
+git push
+```
+
+When making changes, edit the files in the chezmoi source directory rather than modifying the managed files in your home directory directly.
+
+For example, to edit the Vim configuration:
+
+```bash
+chezmoi edit ~/.vimrc
+```
+
+or edit the corresponding source file directly:
+
+```bash
+vim ~/.local/share/chezmoi/dot_vimrc
+```
+
+After making changes, review them with:
+
+```bash
+chezmoi diff
+```
+
+and apply them with:
+
+```bash
+chezmoi apply
+```
 
 # Lemonbar NG
 
 Lemonbar NG is my maintained fork of Lemonbar XFT, focused on improved Unicode and Nerd Font support while preserving the lightweight design and XCB-based architecture of the original project.
 
-It provides XFT rendering, full UTF-8/32-bit Unicode support, Nerd Font compatibility, basic formatting, RandR and Xinerama support, and EWMH compliance without wasting precious memory. 
+It provides XFT rendering, full UTF-8/32-bit Unicode support, Nerd Font compatibility, basic formatting, RandR and Xinerama support, and EWMH compliance without wasting precious memory.
 
-The source code is available on [GitHub](https://github.com/Awan/lemonbar-ng.git) and an AUR package is available [here](https://aur.archlinux.org/packages/lemonbar-ng) for archlinux.
-
+The source code is available on [GitHub](https://github.com/Awan/lemonbar-ng.git) and an AUR package is available [here](https://aur.archlinux.org/packages/lemonbar-ng) for Arch Linux.
 
 # Polybar
 
 Polybar is a stylish status bar. You have to compile it from [source](https://github.com/polybar/polybar.git) for some distributions.
-It's now available in Arch Linux official repositories. As a dependency, you can 
-install Font Awesome, which is available in official repositories in Arch Linux.
+
+It's now available in Arch Linux official repositories. As a dependency, you can install Font Awesome, which is available in the official Arch Linux repositories.
 
 # Installed Packages
 
-This [encrypted file](installed_packages) contains packages name which I 
-currently have installed on my Arch Linux host. Encrypted to myself using `age`:
+This [encrypted file](installed_packages) contains packages currently installed on my Arch Linux host. It is encrypted to myself using `age`:
 
 ```bash
 pacman -Qq | age -e -a -r age1teq3zep9z3l9ea5s3x2t6859pskkj4nz74w2cy8kxh7jgnyvdcpq0xm9gg > installed_packages
@@ -97,9 +142,7 @@ pacman -Qq | age -e -a -r age1teq3zep9z3l9ea5s3x2t6859pskkj4nz74w2cy8kxh7jgnyvdc
 
 # Mail
 
-I use `mbsync + notmuch + mutt + msmtp` for email. I have enabled syncing with 
-my mail account using `systemd timers`. Just copy those two files `isync.timer` 
-and `isync.service` in `~/.config/systemd/user/` and enable timer:
+I use `mbsync + notmuch + mutt + msmtp` for email. I have enabled syncing with my mail account using `systemd timers`. Just copy those two files, `isync.timer` and `isync.service`, to `~/.config/systemd/user/` and enable the timer:
 
 ```bash
 systemctl --user --now enable isync.timer
@@ -107,7 +150,7 @@ systemctl --user --now enable isync.timer
 
 # MPD
 
-Enable `mpd.socket` as user:
+Enable `mpd.socket` as a user service:
 
 ```bash
 systemctl --user --now enable mpd.socket
