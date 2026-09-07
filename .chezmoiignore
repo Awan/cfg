@@ -1,0 +1,10 @@
+.gitignore
+.gitmodules
+.chezmoiignore
+README.md
+LICENSE
+INSTALL.sh
+install.sh
+installed_packages
+kernel/
+secrets/

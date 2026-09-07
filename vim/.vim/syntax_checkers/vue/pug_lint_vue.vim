@@ -1,1 +1,0 @@
-/usr/share/vim/addons/syntax_checkers/vue/pug_lint_vue.vim

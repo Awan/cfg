@@ -1,1 +1,0 @@
-/usr/share/vim/addons/syntax_checkers/racket/code-ayatollah.vim
