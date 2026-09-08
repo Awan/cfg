@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Remove
+Type = Package
+Target = *
+
+[Action]
+When = PostTransaction
+Exec = /usr/bin/bash -c '/usr/bin/pacman -Qq > /home/ak/.config/pacman/installed_packages'
+
+
