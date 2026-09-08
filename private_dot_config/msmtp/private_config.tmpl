@@ -8,9 +8,9 @@ logfile	~/.msmtp.log
 account ak
 host smtp.gmail.com
 port 587
-eval "echo user $(age -i ~/.passage/identities -d ~/cfg/secrets/google_user.age)"
+user "{{ pass "isync/user" }}"
+password "{{ pass "isync/pass" }}"
 from Muhammad Abdullah Khabir
-passwordeval "echo $(age -i ~/.passage/identities -d ~/cfg/secrets/msmtp_gmail.age)"
 
 account default: ak
 # vim:ft=msmtp
