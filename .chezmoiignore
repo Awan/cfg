@@ -8,3 +8,6 @@ install.sh
 installed_packages
 kernel/
 secrets/
+*.swp
+*~
+.DS_Store
