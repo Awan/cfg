@@ -1,130 +1,20 @@
 Host *
-    ForwardAgent yes
-    ControlPath ~/.ssh/%r@%h:%p
-    ControlMaster auto
-    ControlPersist 30m
-    ServerAliveInterval 60
-    ServerAliveCountMax 10
-    TCPKeepAlive    no
-    HostKeyAlgorithms ssh-ed25519,ecdsa-sha2-nistp256,ssh-rsa
-    AddKeysToAgent yes
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_ed25519
+    PubkeyAuthentication yes
+    AddKeysToAgent  yes
+    HashKnownHosts  yes
+    VisualHostKey   yes
+    CheckHostIP yes
+    UpdateHostKeys  yes
+    ForwardAgent    no
+    PasswordAuthentication  no
+    Ciphers -*cbc*,-arcfour*
+    KexAlgorithms   -diffie-hellman-group1-sha1,-diffie-hellman-group14-sha1,-diffie-hellman-group-exchange-sha1
+    MACs -hmac-md5*,-hmac-sha1,-*-96
+
 
 Host aur.archlinux.org
     User aur
 
 
-# Phone (Termux SSH server)
-Host phone
-    HostName 10.46.245.32
-    User u0_a573
-    Port 8022
-
-# Proxmox VM via Phone (jump host style)
-Host vm1
-    HostName 192.168.135.152
-    User ak
-    ProxyJump phone
-    #     LocalForward 8080 192.168.135.143:80
-Host vm2
-    HostName 192.168.135.153
-    User ak
-    ProxyJump phone
-Host vm3
-    HostName 192.168.135.154
-    User ak
-    ProxyJump phone
-
-Host vms
-    HostName 192.168.135.168
-    User ak
-    ProxyJump phone
-    LocalForward 8080 192.168.135.168:80
-    LocalForward 9999 192.168.135.168:9999
-Host deb
-    HostName 192.168.135.249
-    User root
-    ProxyJump phone
-    #IdentityFile ~/dal/openstack/id_ed25519
-
-Host s1
-    HostName 192.168.135.147
-    User ak
-    ProxyJump phone
-Host s2
-    HostName 192.168.135.148
-    User ak
-    ProxyJump phone
-Host s3
-    HostName 192.168.135.149
-    User ak
-    ProxyJump phone
-
-Host t1
-    HostName 192.168.135.165
-    User ak
-    ProxyJump bastion
-Host t2
-    HostName 192.168.135.166
-    User ak
-    ProxyJump bastion
-Host t3
-    HostName 192.168.135.167
-    User ak
-    ProxyJump bastion
-
-Host bastion
-    HostName 192.168.135.100
-    Port 8022
-
-Host mail
-    HostName 192.168.135.160
-    User ak
-    ProxyJump bastion
-
-Host n1
-    HostName 192.168.135.162
-    User ak
-    ProxyJump bastion
-Host n2
-    HostName 192.168.135.163
-    User ak
-    ProxyJump bastion
-Host n3
-    HostName 192.168.135.164
-    User ak
-    ProxyJump bastion
-
-Host npm
-    HostName 192.168.135.175
-    User ak
-    ProxyJump bastion
-
-Host ntb
-    HostName 192.168.135.174
-    User ak
-    ProxyJump bastion
-
-Host zabbix
-    HostName 192.168.135.177
-    User ak
-    ProxyJump bastion
-
-Host zimbra
-    HostName 192.168.135.180
-    User ak
-    ProxyJump bastion
-
-Host m1
-    HostName 192.168.135.201
-    User ak
-    ProxyJump bastion
-
-Host m2
-    HostName 192.168.135.202
-    User ak
-    ProxyJump bastion
-
-Host m3
-    HostName 192.168.135.203
-    User ak
-    ProxyJump bastion
