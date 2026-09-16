@@ -82,6 +82,18 @@ mkfifo "$PANEL_FIFO"
 modules_bg="B#AAFFFFFF"
 modules_fg="F#FF000000"
 
+get_tray_padding() {
+    # List processes that use the tray
+    local active_apps
+    active_apps=$(pgrep -cx -f "volumeicon|cbatticon|udiskie|nm-applet|pasystray")
+
+    # If apps are running, return 3-4 spaces per app; otherwise return nothing
+    if [ "$active_apps" -gt 0 ]; then
+        local pad_count=$((active_apps * 4))
+        printf '%*s' "$pad_count" ''
+    fi
+}
+
 
 datetime() {
     printf "%s" "%{F#B443F3} $(date "+%a %-d %b %H:%M:%S")"
@@ -466,7 +478,7 @@ my_panel() {
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${left_corner}${wm}${mpd_music} %{r}${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date}${right_corner}"
+	printf "%s\n" "%{l}${left_corner}${wm}${mpd_music} %{r}${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date} $(get_tray_padding) ${right_corner}"
 done
 }
 
