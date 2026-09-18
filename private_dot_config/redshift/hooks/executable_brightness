@@ -1,25 +1,42 @@
 #!/bin/sh
 
-# Set brightness via xbrightness when redshift status changes
+# Set brightness via light when redshift status changes
 
 # Set brightness values for each status.
 # Range from 1 to 100 is valid
 brightness_day=20
 brightness_transition=50
 brightness_night=10
-# Set fade time for changes to one minute
-fade_time=60000
+
+# Fade brightness toward the target using the same mechanism as dim_screen.
+fade() {
+	current_brightness=$(light -G | cut -d "." -f 1)
+
+	if [ "$current_brightness" -lt "$1" ]; then
+		while [ "$current_brightness" -lt "$1" ]; do
+			current_brightness=$((current_brightness + 1))
+			light -S "$current_brightness"
+			sleep 0.005
+		done
+	elif [ "$current_brightness" -gt "$1" ]; then
+		while [ "$current_brightness" -gt "$1" ]; do
+			current_brightness=$((current_brightness - 1))
+			light -S "$current_brightness"
+			sleep 0.005
+		done
+	fi
+}
 
 if [ "$1" = period-changed ]; then
 	case $3 in
 		night)
-			light -S $brightness_night
+			light -S "$brightness_night"
 			;;
 		transition)
-			xbacklight -set $brightness_transition -time $fade_time
+			fade "$brightness_transition"
 			;;
 		daytime)
-			light -S $brightness_day 
+			light -S "$brightness_day"
 			;;
 	esac
 fi
