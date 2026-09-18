@@ -36,6 +36,7 @@ zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX+$#SUFF
 #zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ":completion:*" matcher-list 'm:{A-Zöäüa-zÖÄÜ}={a-zÖÄÜA-Zöäü}'
 
+
 # for all completions: grouping / headline / ...
 zstyle ':completion:*:messages' format $'\e[01;35m -- %d -- \e[00;00m'
 zstyle ':completion:*:warnings' format $'\e[01;31m -- No Matches Found -- \e[00;00m'
@@ -52,12 +53,11 @@ zstyle ':completion:*' verbose yes
 bindkey -M menuselect '^@' accept-and-infer-next-history
 
 # case-insensitive -> partial-word (cs) -> substring completion:
-zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'  
+zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 # caching of completion stuff
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path "$ZSH_CACHE"
-
 
 # ~dirs: reorder output sorting: named dirs over userdirs
 zstyle ':completion::*:-tilde-:*:*' group-order named-directories users
@@ -79,7 +79,33 @@ zstyle ':completion:*' list-dirs-first true
 
 zstyle :compinstall filename '~/.zshrc'
 
-autoload -Uz compinit && compinit
+# compinit normally checks the completion function path against the
+# .zcompdump cache on startup. That check can add noticeable startup
+# latency, especially when fpath contains many completion functions.
+#
+# Rebuild the dump when it is more than 24 hours old. Otherwise use
+# `compinit -C` to load the existing dump without performing the
+# new-function check.
+#
+# This deliberately means that newly installed or changed completion
+# functions may not be detected immediately. If a newly installed package
+# provides a completion that you want to use right away, run `compinit`
+# manually in the current shell. A normal `compinit` performs its usual
+# completion-function check and updates the dump when necessary.
+#
+# The glob qualifier is evaluated through a normal array assignment.
+# Using the qualifier directly inside `[[ ... ]]` does not perform
+# filename generation, so it cannot be used there as the staleness test.
+autoload -Uz compinit
+() {
+    local zcompdump="${ZDOTDIR:-$HOME}/.zcompdump"
+    local -a stale=(${zcompdump}(N.mh+24))
+    if (( $#stale )); then
+        compinit -d "$zcompdump"
+    else
+        compinit -C -d "$zcompdump"
+    fi
+}
 
 # Terraform completion
 
