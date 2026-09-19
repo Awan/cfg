@@ -2,14 +2,8 @@
 setopt auto_remove_slash
 # resolve symlinks
 setopt chase_links
-# correct commands spellings
-setopt correct
-# complex pattern globbing
-setopt extended_glob
 # include dotfiles in globbing
 setopt glob_dots
-# no bell on error
-unsetopt beep
 # no lower prio for background jobs
 unsetopt bg_nice
 # must use >| to truncate existing files
@@ -25,4 +19,4 @@ unsetopt list_beep
 # ask for confirmation for `rm *' or `rm path/*'
 unsetopt rm_star_silent
 # dircolors
-eval "$(dircolors -b)"
+# eval "$(dircolors -b)"

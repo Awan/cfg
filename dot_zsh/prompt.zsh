@@ -19,4 +19,5 @@ fi
 # %(4~|.../%3~|%~): if the path has 4+ elements, show ".../" plus the last
 # 3; otherwise show it in full. A deep path inside a git repo can no
 # longer grow to eat the whole line the way a bare %~ could.
-PROMPT='%F{yellow}%(4~|.../%3~|%~)%f${GIT_PROMPT_INFO}${MAIL_PROMPT_INFO} '
+# PROMPT='%F{yellow}%(4~|.../%3~|%~)%f${GIT_PROMPT_INFO}${MAIL_PROMPT_INFO} '
+PROMPT='%F{yellow}%(4~|.../%3~|%~)%f${GIT_PROMPT_INFO}${MAIL_PROMPT_INFO}${STATUS_INFO}${DURATION_INFO} '

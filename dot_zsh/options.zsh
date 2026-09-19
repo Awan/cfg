@@ -53,7 +53,7 @@ setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
 
 # DON NOT Allow ‘>’ redirection to truncate existing files, and ‘>>’ to create files. Otherwise ‘>!’ or ‘>|’ must be used to truncate  a file, and ‘>>!’ or ‘>>|’ to create a file.
-setopt no_clobber
+# setopt no_clobber
 
 # **.c is equivalent to **/*.c
 setopt GLOBSTARSHORT
@@ -82,9 +82,6 @@ setopt auto_name_dirs
 # Put a slash for ~
 setopt auto_param_slash
 
-# allow completion from within a word/phrase
-setopt complete_in_word
-
 # Glob complete
 setopt glob_complete
 
@@ -109,6 +106,3 @@ setopt glob_complete
 #
 #echo -ne '\e[3 q' # Use beam shape cursor on startup.
 #preexec() { echo -ne '\e[3 q' ;} #
-
-# Enable completion in hidden directories and files
-setopt globdots
