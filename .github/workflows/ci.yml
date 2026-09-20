@@ -1,0 +1,32 @@
+name: Dotfiles CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  chezmoi:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/awan/cfg:latest
+      options: --user root
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Show chezmoi version
+        run: chezmoi --version
+
+      - name: Validate chezmoi source
+        run: |
+          mkdir -p /tmp/chezmoi-home
+          chezmoi --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home apply --dry-run --exclude=encrypted,templates
