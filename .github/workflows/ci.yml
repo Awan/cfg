@@ -37,3 +37,18 @@ jobs:
         run: |
           mkdir -p /tmp/chezmoi-home
           chezmoi --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home apply --dry-run --exclude=encrypted,templates
+
+      - name: Notify Slack
+        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }}
+          CI_STATUS: ${{ job.status }}
+          CI_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          [ -n "$SLACK_WEBHOOK_URL" ] || exit 0
+
+          payload=$(printf '{"text":"Dotfiles CI: %s\\n%s"}' "$CI_STATUS" "$CI_RUN_URL")
+          curl -fsS \
+            -H 'Content-Type: application/json' \
+            --data "$payload" \
+            "$SLACK_WEBHOOK_URL"
