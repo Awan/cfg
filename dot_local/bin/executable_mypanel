@@ -294,6 +294,15 @@ volume(){
     printf "%s" "%{A:pamixer -t:}%{A4:pamixer --allow-boost --set-limit 300 -i 10:}%{A5:pamixer --allow-boost --set-limit 300 -d 10:}%{F#5E81AC}${label}%{F-}%{F#BDAE93}$vol%{F-}%{A}%{A}%{A}"
 }
 
+#earbuds_battery() {
+#    battery_percentage="$(busctl get-property org.bluez /org/bluez/hci0/#dev_31_1E_8D_BF_E5_E5 org.bluez.Battery1 Percentage 2>/dev/null |
+#        awk '{print $2}')"
+#    if [ -n "$battery_percentage" ]; then
+#        printf "%s" "%{F#94E2D5}%{F-} %{F#BDAE93}${battery_percentage%}%{F-}"
+#
+#    fi
+#}
+
 #tasktime() {
 #    provided_date="2025-08-27 17:41:00"
 #    current_date=$(date "+%Y-%m-%d %H:%M:%S")
@@ -333,6 +342,7 @@ all_info() {
         echo "R" "$(ram)"
         echo "V" "$(volume)"
 #        echo "D" "$(tasktime)"
+#        echo "E" "$(earbuds_battery)"
         sleep 1
     done
 }
@@ -371,6 +381,9 @@ my_panel() {
             V*)
                 volume="${line#?}"
                 ;;
+#            E*)
+#                earbuds_battery_display="${line#?}"
+#                ;;
 #            S*)
 #                spotify_music="${line#?}"
 #                ;;
