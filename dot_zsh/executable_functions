@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/zsh
 
 # In the name of Allah, the most Gracious, the most Merciful.
 #
@@ -1199,4 +1199,44 @@ psearch() {
 alis() {
     $EDITOR ~/.zsh/custom-aliases
     source ~/.zsh/custom-aliases
+}
+
+# mpv helpers
+
+mpvnova() {
+  mpv --no-video "$@"
+}
+
+mpvshuf() {
+  mpvnova --shuffle --loop=inf "$@"
+}
+
+mpvp() {
+  mpvshuf --playlist <(cat "$@")
+}
+
+playcurrentdir() {
+  mpvshuf --playlist <(find "$PWD" -type f -follow \
+    -not -path '*/\.*' -not -path '*.m3u' -exec realpath -s {} \;)
+}
+
+pcd() {
+  playcurrentdir "$@"
+}
+
+playdir() {
+  if [[ $# == 0 ]]; then
+    echo "playdir requires one or more directories on input."
+  else
+    mpvshuf --playlist <(find "$@" -type f -follow \
+      -not -path '*/\.*' -exec realpath -s {} \;)
+  fi
+}
+
+pd() {
+  playdir "$@"
+}
+
+random-mpv() {
+  find . -type f | shuf | head -n 1 | xargs mpv
 }

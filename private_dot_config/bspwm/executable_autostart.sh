@@ -25,7 +25,7 @@ notify_time=10
 run() {
   if ! pgrep $1 ;
   then
-    $@&
+    "$@" &
   fi
 }
 
