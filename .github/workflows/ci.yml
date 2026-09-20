@@ -38,9 +38,6 @@ jobs:
           mkdir -p /tmp/chezmoi-home
           chezmoi --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home apply --dry-run --exclude=encrypted,templates
 
-      - name: Test Slack failure notification
-        run: exit 1
-
       - name: Notify Slack
         if: always()
         env:
