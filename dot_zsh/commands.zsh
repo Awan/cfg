@@ -20,15 +20,6 @@ if [[ $commands[pydf] ]]; then
   alias df='pydf'
 fi
 
-if [[ $commands[pacman] ]]; then
-  alias pacman="$zero pacman"
-fi
-
-if [[ $commands[apt] ]]; then
-  alias apt="$zero apt"
-fi
-
-
 if [[ $commands[colorls] ]]; then
   alias ls='colorls --almost-all --git-status --group-directories-first'
 else

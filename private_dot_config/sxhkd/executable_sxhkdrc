@@ -275,7 +275,7 @@ alt + shift + bracket{left,right}
 # Lock the screen
 
 super + x
-    ~/.local/bin/i3lock
+    xset s activate
 
 # Soft volume up/down buttons
 

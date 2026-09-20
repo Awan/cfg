@@ -11,3 +11,4 @@ secrets/
 *.swp
 *~
 .DS_Store
+Dockerfile
