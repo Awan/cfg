@@ -27,6 +27,9 @@ jobs:
       - name: Show chezmoi version
         run: chezmoi --version
 
+      - name: Validate Zsh syntax
+        run: find "$GITHUB_WORKSPACE" -type f -name "*.zsh" -print0 | xargs -0 -r zsh -n
+
       - name: Validate chezmoi source
         run: |
           mkdir -p /tmp/chezmoi-home
