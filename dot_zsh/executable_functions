@@ -1208,15 +1208,15 @@ mpvnova() {
 }
 
 mpvshuf() {
-  mpvnova --shuffle --loop=inf "$@"
+  mpvnova --shuffle --loop-playlist=inf "$@"
 }
 
 mpvp() {
-  mpvshuf --playlist <(cat "$@")
+  mpvshuf --playlist=<(cat "$@")
 }
 
 playcurrentdir() {
-  mpvshuf --playlist <(find "$PWD" -type f -follow \
+  mpvshuf --playlist=<(find "$PWD" -type f -follow \
     -not -path '*/\.*' -not -path '*.m3u' -exec realpath -s {} \;)
 }
 
@@ -1228,7 +1228,7 @@ playdir() {
   if [[ $# == 0 ]]; then
     echo "playdir requires one or more directories on input."
   else
-    mpvshuf --playlist <(find "$@" -type f -follow \
+    mpvshuf --playlist=<(find "$@" -type f -follow \
       -not -path '*/\.*' -exec realpath -s {} \;)
   fi
 }
