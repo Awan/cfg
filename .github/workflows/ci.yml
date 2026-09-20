@@ -30,6 +30,9 @@ jobs:
       - name: Validate Zsh syntax
         run: find "$GITHUB_WORKSPACE" -type f -name "*.zsh" -print0 | xargs -0 -r zsh -n
 
+      - name: Validate Shell scripts
+        run: find "$GITHUB_WORKSPACE" -type f -name "*.sh" -print0 | xargs -0 -r shellcheck -S error
+
       - name: Validate chezmoi source
         run: |
           mkdir -p /tmp/chezmoi-home
