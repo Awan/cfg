@@ -1,0 +1,6 @@
+[Unit]
+Description=Update Artwall wallpaper
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/artwall

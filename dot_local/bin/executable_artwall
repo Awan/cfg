@@ -1,0 +1,98 @@
+#!/bin/sh
+
+: << 'COMMENT'
+In the name of Allah, the most Gracious, the most Merciful.
+
+ ▓▓▓▓▓▓▓▓▓▓
+░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
+░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/@AbdullahToday>
+░░░░░░░░░░
+
+░█▀█░█▀▄░▀█▀░█░█░█▀█░█░░░█░░
+░█▀█░█▀▄░░█░░█▄█░█▀█░█░░░█░░
+░▀░▀░▀░▀░░▀░░▀░▀░▀░▀░▀▀▀░▀▀▀
+COMMENT
+
+art_dir_root="$HOME/pix/wall/art"
+query="${1:-}"
+
+if [ -n "$query" ]; then
+    dir_name="$(printf '%s' "$query" |
+        tr '[:upper:]' '[:lower:]' |
+        tr -cs '[:alnum:]' '-' |
+        sed 's/^-//; s/-$//')"
+
+    [ -n "$dir_name" ] || exit 1
+    art_dir="$art_dir_root/$dir_name"
+else
+    art_dir="$art_dir_root"
+fi
+
+mkdir -p "$art_dir"
+
+user_agent='AIC-User-Agent: abdullah-wallpaper/1.0 (abdullah@abdullah.support)'
+
+download_artwork() {
+    page=1
+
+    while :; do
+        if [ -n "$query" ]; then
+            response="$(
+                curl --globoff -G -fsS --connect-timeout 5 --max-time 15 \
+                    -H "$user_agent" \
+                    --data-urlencode "q=$query" \
+                    --data-urlencode "page=$page" \
+                    --data-urlencode 'limit=100' \
+                    --data-urlencode 'fields=id,image_id' \
+                    'https://api.artic.edu/api/v1/artworks/search'
+            )" || return 1
+        else
+            response="$(
+                curl --globoff -G -fsS --connect-timeout 5 --max-time 15 \
+                    -H "$user_agent" \
+                    --data-urlencode "page=$page" \
+                    --data-urlencode 'limit=100' \
+                    --data-urlencode 'fields=id,image_id' \
+                    'https://api.artic.edu/api/v1/artworks/search'
+            )" || return 1
+        fi
+
+        total_pages="$(printf '%s\n' "$response" | jq -r '.pagination.total_pages // 0')" || return 1
+
+        candidates="$(
+            printf '%s\n' "$response" |
+                jq -r '.data[] | select(.image_id != null) | "\(.id)|\(.image_id)"' |
+                shuf
+        )" || return 1
+
+        for candidate in $candidates; do
+            artwork_id="${candidate%%|*}"
+            image_id="${candidate#*|}"
+            image="$art_dir/$artwork_id.jpg"
+
+            [ -f "$image" ] && continue
+
+            if curl -fsS \
+                -H "$user_agent" \
+                "https://www.artic.edu/iiif/2/$image_id/full/843,/0/default.jpg" \
+                -o "$image"; then
+                return 0
+            fi
+
+            rm -f "$image"
+        done
+
+        [ "$page" -ge "$total_pages" ] && return 1
+
+        page=$((page + 1))
+        sleep 1
+    done
+}
+
+download_artwork 2>/dev/null || true
+
+artwork="$(find "$art_dir" -type f -name '*.jpg' -print | shuf -n 1)"
+
+[ -n "$artwork" ] || exit 1
+
+feh --bg-fill "$artwork"

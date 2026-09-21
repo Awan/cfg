@@ -94,7 +94,7 @@ run picom -b --config "$HOME"/.config/picom/picom.conf
 
 # Wallpaper
 
-run "$HOME"/.local/bin/wallp
+# run "$HOME"/.local/bin/wallp
 
 # Set cursor shape
 
