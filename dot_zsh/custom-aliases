@@ -234,6 +234,7 @@ if (( $+commands[chezmoi] )); then
     alias czs='chezmoi status'
     alias cza='chezmoi apply'
     alias cze='chezmoi edit'
+    alias czea='chezmoi edit --apply'
     alias czr='chezmoi re-add'
     alias czm='chezmoi managed'
     alias czp='chezmoi source-path'
