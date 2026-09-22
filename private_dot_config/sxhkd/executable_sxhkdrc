@@ -279,24 +279,21 @@ super + x
 
 # Soft volume up/down buttons
 
-XF86Audio{Lower,Raise}Volume
-    notify-send -i $HOME/.local/share/icons/drops/volume.png \
-    -u low -t 1500 -a ponymix "volume" "$(ponymix --max-volume \
-    300 {decrease,increase} 3)"
+XF86AudioLowerVolume
+    current=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '\{print $2\}'); new=$(awk -v v="$current" 'BEGIN \{ n=(v-0.03)*100; if (n < 0) n=0; printf "%.0f%%", n \}'); wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%-; notify-send -i /usr/share/icons/Papirus-Dark/24x24/panel/audio-volume-low.svg -u low -t 1500 -a "volume" "volume $new"
+
+XF86AudioRaiseVolume
+    current=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '\{print $2\}'); new=$(awk -v v="$current" 'BEGIN \{ n=(v+0.03)*100; printf "%.0f%%", n \}'); wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%+; notify-send -i /usr/share/icons/Papirus-Dark/24x24/panel/audio-volume-high.svg -u low -t 1500 -a "volume" "volume $new"
 
 # Soft mute button
 
 XF86AudioMute
-    ponymix --output toggle && notify-send -i \
-    $HOME/.local/share/icons/drops/muted.png -u low -t 1500 -a ponymix "volume" \
-    "output $(ponymix --output is-muted || echo 'un')muted"
+    wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && mute_state=$(wpctl get-volume @DEFAULT_AUDIO_SINK@) && case "$mute_state" in *'[MUTED]'*) state='muted' ;; *) state='unmuted' ;; esac; notify-send -i /usr/share/icons/Papirus-Dark/24x24/panel/audio-volume-muted.svg -u low -t 1500 -a "volume" "output $state"
  
 # Mute/Unmute mic
 
 XF86AudioMicMute
-    ponymix --input toggle && notify-send -i \
-    $HOME/.local/share/icons/drops/muted.png -u low -t 1500 -a ponymix "volume" \
-    "input $(ponymix --input is-muted || echo 'un')muted"
+    mute_state=$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@); case "$mute_state" in *'[MUTED]'*) message='input unmuted' ;; *) message='input muted' ;; esac; wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle; notify-send -i /usr/share/icons/Papirus-Dark/16x16/devices/audio-input-microphone.svg -u low -t 1500 -a "volume" "$message"
 
 # XF86Display
 #     systemctl suspend
