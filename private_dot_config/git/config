@@ -16,16 +16,17 @@
 [user]
 	name = "Muhammad Abdullah Khabir"
 	email = abdullah@abdullah.support
-	signingkey = /home/ak/.ssh/id_ed25519.pub
+	signingkey = ~/.ssh/id_ed25519.pub
 	username = Abdullah
 [push]
         default = current
+        followTags = true
 [commit]
 	gpgSign = true
 [tag]
 	forceSignAnnotated = true
-[protocol "keybase"]
-	allow = always
+	gpgSign = true
+        sort = version:refname
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true
@@ -56,7 +57,6 @@
 [difftool "icdiff"]
         cmd = icdiff --line-numbers $LOCAL $REMOTE
 [gpg]
-	program = gpg
 	format = ssh
 [core]
 	autocrlf = false
@@ -100,18 +100,13 @@
 [credential]
 	helper = cache
 [help]
-	autocorrect = 1
+	autocorrect = 0
 [sendemail]
         smtpEncryption = tls
         smtpServer = mail.abdullah.support
         smtpUser = abdullah
 [log]
         abbrevCommit = true
-[push]
-        followTags = true
-[tag]
-        sort = version:refname
-	gpgSign = true
 [pull]
         rebase = true
 [status]
@@ -140,8 +135,9 @@
 	addignoredfile = true
 	waitingForEditor = true
 
-# vim: set ft=gitconfig :
 [init]
 	defaultBranch = main
 [gpg "ssh"]
-	allowedSignersFile = /home/ak/.config/git/allowed_signers
+	allowedSignersFile = ~/.config/git/allowed_signers
+
+# vim: set ft=gitconfig :

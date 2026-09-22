@@ -1,3 +1,4 @@
+{{- $maildir := printf "%s/.local/share/email/x1c" .chezmoi.homeDir -}}
 IMAPStore gmail-remote
 Host imap.gmail.com
 Port 993
@@ -8,14 +9,23 @@ CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 MaildirStore gmail-local
 Subfolders Verbatim
-Path ~/.local/share/email/x1c/
-INBOX ~/.local/share/email/x1c/INBOX
+Path {{ $maildir }}/
+INBOX {{ $maildir }}/INBOX
 Flatten .
+
+# Gmail folder mapping:
+# - gmail-drafts handles [Gmail]/Drafts -> local Drafts
+# - gmail-sent handles [Gmail]/Sent Mail -> local Sent
+# - gmail-archive handles [Gmail]/All Mail -> local Archive
+# - gmail-spam handles [Gmail]/Spam -> local Spam
+# - Trash is intentionally not synchronized.
+#
+# Exclude Gmail system labels and folders handled by dedicated channels.
 
 Channel gmail-default
 Far :gmail-remote:
 Near :gmail-local:
-Create near
+#Create near
 #Patterns INBOX Drafts Sent Trash Important
 Patterns * ![Gmail]* !Drafts !Sent !Trash !Archive !Spam
 Sync All

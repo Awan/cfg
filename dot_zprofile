@@ -3,18 +3,21 @@
 # ░▓▓▓▓▓▓▓▓▓▓ 
 # ░░░░░░░░░░ 
 
-
-# Start keychain for ssh keys
-
+# Start keychain for SSH keys
 eval "$(keychain add --eval --systemd --quiet id_ed25519)"
 
-# Start X at login    
-    
+# Start X at login on tty1
+if [[ -o login && -z ${DISPLAY:-} && -z ${WAYLAND_DISPLAY:-} && ${TTY:-} == /dev/tty1 ]]; then
+    if [[ -r "$HOME/.loadkeysrc" && $+commands[loadkeys] ]]; then
+        doas loadkeys "$HOME/.loadkeysrc"
+    fi
+    exec sx
+fi
 
-if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-  exec sx
-  logout
-elif [[ $(tty) != /dev/tty1 ]]; then
-  doas loadkeys $HOME/.loadkeysrc
-  tmux has-session -t $USER || tmux new-session -t $USER && tmux attach-session -t $USER
+# Start/attach tmux for interactive local login shells
+if [[ -o interactive && -z ${SSH_CONNECTION:-} && -t 0 ]]; then
+    if ! tmux has-session -t "$USER" 2>/dev/null; then
+        tmux new-session -d -s "$USER"
+    fi
+    tmux attach-session -t "$USER"
 fi

@@ -1,3 +1,3 @@
 autoload -Uz add-zsh-hook
 
-for f in ~/.zsh/*(DN); do source $f; done
+for f in "$HOME"/.zsh/*.zsh(N-.); do source "$f"; done

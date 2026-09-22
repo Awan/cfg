@@ -49,7 +49,7 @@ alias tmux='tmux has-session -t $USER || tmux new-session -s $USER &&  tmux -2 a
 alias py='python3'
 alias cdw='cd ~/git/dwm; ls'
 #alias pyc='export _JAVA_AWT_WM_NONREPARENTING=1 ; $HOME/bin/pycharm/bin/pycharm.sh $1'
-alias cdc='cd $HOME/cfg'
+alias cdc='cd $HOME/.local/share/chezmoi'
 alias chkill="ps ux | grep '[C]hrome --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
 alias pak='cd $HOME/git/ports/ak'
 alias psgrep='ps aux | grep $(echo $1 | sed "s/^\(.\)/[\1]/g")'
@@ -80,7 +80,6 @@ alias xq='xbps-query'
 alias xi='$zero xbps-install'
 alias xr='$zero xbps-remove'
 alias vx='$EDITOR ~/.Xresources'
-if [ -f ~/.config/git/config ]; then alias vg="git config -e --global"; fi
 alias vmc='$EDITOR ~/.config/nvim/init.vim'
 alias fst='$zero $EDITOR /etc/fstab'
 #alias u="urxvt -pixmap '`find ~/pix/wall/ -name '*.jpg' | sort -R | head -n 1`;style=tiled' -T myKitten &" 
@@ -218,7 +217,6 @@ alias wars='telnet towel.blinkenlights.nl'
 alias moon='curl -sL http://wttr.in/moon | head -n-4'
 alias mount='mount | column -t'
 alias scrot='import png:- | xclip -selection c -t image/png'
-# alias v='$EDITOR'
 # alias vi='$EDITOR'
 
 # zsh global functions
@@ -227,20 +225,20 @@ alias xclip="xclip -selection clipboard"
 alias capslock="setxkbmap -option caps:super && xcape -e 'Super_L=Escape'"
 alias vzh='$EDITOR $HISTFILE'
 alias sv='$zero $EDITOR'
+alias cz='chezmoi'
+alias czd='chezmoi diff'
+alias czs='chezmoi status'
+alias cza='chezmoi apply'
+alias cze='chezmoi edit'
+alias czea='chezmoi edit --apply'
+alias czr='chezmoi re-add'
+alias czm='chezmoi managed'
+alias czp='chezmoi source-path'
+alias czv='chezmoi verify'
+alias v='$EDITOR'
+alias btc='bluetoothctl connect 31:1E:8D:BF:E5:E5'
+alias btd='bluetoothctl disconnect 31:1E:8D:BF:E5:E5'
 
-if (( $+commands[chezmoi] )); then
-    alias cz='chezmoi'
-    alias czd='chezmoi diff'
-    alias czs='chezmoi status'
-    alias cza='chezmoi apply'
-    alias cze='chezmoi edit'
-    alias czea='chezmoi edit --apply'
-    alias czr='chezmoi re-add'
-    alias czm='chezmoi managed'
-    alias czp='chezmoi source-path'
-    alias czv='chezmoi verify'
-    alias czc='cd ~/.local/share/chezmoi'
-fi
     
 
 # vim: ft=zsh

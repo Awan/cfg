@@ -1,20 +1,15 @@
 Host *
     IdentitiesOnly yes
     IdentityFile ~/.ssh/id_ed25519
+    ForwardAgent no
+    PasswordAuthentication no
+    KbdInteractiveAuthentication no
     PubkeyAuthentication yes
-    AddKeysToAgent  yes
-    HashKnownHosts  yes
-    VisualHostKey   yes
-    CheckHostIP yes
-    UpdateHostKeys  yes
-    ForwardAgent    no
-    PasswordAuthentication  no
-    Ciphers -*cbc*,-arcfour*
-    KexAlgorithms   -diffie-hellman-group1-sha1,-diffie-hellman-group14-sha1,-diffie-hellman-group-exchange-sha1
-    MACs -hmac-md5*,-hmac-sha1,-*-96
-
+    HashKnownHosts yes
+    VisualHostKey yes
+    UpdateHostKeys yes
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
 
 Host aur.archlinux.org
     User aur
-
-

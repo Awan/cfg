@@ -1,0 +1,1242 @@
+#!/usr/bin/zsh
+
+# In the name of Allah, the most Gracious, the most Merciful.
+#
+#  ▓▓▓▓▓▓▓▓▓▓ 
+# ░▓ Author ▓ Abdullah Khabir <https://abdullah.support> 
+# ░▓▓▓▓▓▓▓▓▓▓ 
+# ░░░░░░░░░░ 
+
+
+# ░█▀▀░█░█░█▀▀░█░░░█░░░░░█▀▀░█░█░█▀█░█▀▀░▀█▀░▀█▀░█▀█░█▀█░█▀▀
+# ░▀▀█░█▀█░█▀▀░█░░░█░░░░░█▀▀░█░█░█░█░█░░░░█░░░█░░█░█░█░█░▀▀█
+# ░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░░░▀░░░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀▀▀
+ 
+
+mkd ()
+{
+  mkdir -p "$@" && cd "$_";
+}
+
+# for webm videos to mp4
+
+webm2mp4 ()
+{
+  for file in *.webm
+  do 
+    ffmpeg -i "$file" "`basename "$file" .webm`.mp4"
+  done
+}
+
+# mp4 to mp3
+
+mp42mp3 ()
+{
+  CURRENTMP4HERE=$(ls *.mp4 | wc -l)
+  notify-send "Found $CURRENTMP4HERE mp4s, gonna convert them now, be patient"
+
+
+
+  for file in *.mp4
+  do
+    ffmpeg -y -i "$file" "`basename "$file" .mp4`.mp3"
+  done
+
+
+
+  notify-send "All $CURRENTMP4HERE mp4s have been converted to mp3s and now we are moving them to your music dir"
+  CURRENTMP3INMPD=$(ls $HOME/mus/*.mp3 | wc -l)
+
+
+
+  notify-send "You have $CURRENTMP3INMPD mp3s in your database"
+  mv *.mp3 ~/mus/ -v
+
+
+
+  notify-send "All mp3s have been moved to music dir."
+  TOTAL=$(($CURRENTMP3INMPD + $CURRENTMP4HERE))
+
+
+  notify-send "You have got $CURRENTMP4HERE new mp3s. Now you have $TOTAL songs in database. Enjoy your music"
+}
+
+# mp3 to aac
+
+mp3toaac () {
+  for file in *.mp3
+  do
+    ffmpeg -y -i "$file" "`basename "$file" .mp3`.aac"
+  done
+}
+
+
+
+speedup ()
+{
+  base=$(basename $1)
+  ext="${base##*.}"
+  base="${base%.*}"
+
+  ffmpeg -i $1 -filter:v "setpts=0.5*PTS"  $base'_speed.'$ext
+
+
+  notify-send "your video has got speed. Enjoy"
+}
+
+# aac + image = mp4
+
+aactomkv ()
+{
+  for files in *.aac
+  do
+    ffmpeg -y -loop 1 -framerate 1/25 -i image.jpg  -i "$file" -vf "scale='min(1280,iw)':-2, format=yuv420p" -c:v libx264 -preset veryslow -crf 0 -c:a copy  "`basename "$file" .aac`.mkv" 
+  done 
+}
+
+
+hdimg () {
+# converts images into HD wallpapers 1920x1080
+# Accepts globbing as first argument e.g. jpg as first argument will convert all
+# jpgs into HD images and saves them into new dir resized in same directory
+
+  ext="$1"
+  mkdir resized 2>/dev/null
+  
+  for file in *."$ext"
+  do
+    convert $file -resize 1920x1080! resized/`basename $file .$ext`.$ext
+  done
+
+}
+
+
+mp3tomp4 ()
+# Makes youtube compliant mp4 from a image( must be a .jpg and its size should be a multiple of 2. Use imagemagic's identify to measure it `identify image.jpg`
+# if not a multiple of 2, `convert image.jpg -resize 1024x512! imag2.jpg`
+# Usage:
+# mp3tomp4 image.jpg audio.mp3 output.mp4
+{
+  ffmpeg -loop 1 -r 1 -i $1 -i $2 -vcodec libx264 -acodec copy -shortest $3
+}
+
+
+pl ()
+{
+    # search and play some song based on filename.
+  mpc searchadd filename $1 && mpc searchplay filename $1
+}
+
+mergeaudio ()
+# Create a .txt file in same directory and add files to be merged there as "file file1 and on new line, file file2"
+# Usage:
+# mergeaudio files.txt output.mp3
+{
+  ffmpeg -f concat -safe 0 -i $1 -c copy $2
+}
+
+mergeaudiotovideo ()
+# maps audio with video, first arg should be video, second should be audio and
+# third should be the output
+{
+  ffmpeg -i $1 -i $2 -c copy -map 0:v:0 -map 1:a:0 $3
+}
+
+
+# Bakchod
+
+bakchod ()
+{
+  echo "$@" | tr a-zA-Z n-za-mN-ZA-M 
+}
+
+# mailto
+
+mailto ()
+{
+  $TERMINAL -e mutt "$@"
+}
+
+aa_256 () 
+{ 
+  local o= i= x=`tput op` cols=`tput cols` y= oo= yy=;
+  y=`printf %$(($cols-6))s`;
+  yy=${y// /=};
+  for i in {0..256};
+  do
+    o=00${i};
+    oo=`echo -en "setaf ${i}\nsetab ${i}\n"|tput -S`;
+    echo -e "${o:${#o}-3:3} ${oo}${yy}${x}";
+  done
+}
+
+ht() { 
+  a=$(cat); curl -X POST -s -d "$a" https://hastebin.com/documents | awk -F '"' '{print "https://hastebin.com/"$4}' | xclip ; 
+}
+
+fs() 
+{
+  if du -b /dev/null > /dev/null 2>&1; then
+    local arg=-sbh;
+  else
+    local arg=-sh;
+  fi
+  if [[ -n "$@" ]]; then
+    du $arg -- "$@";
+  else
+    du $arg .[^.]* ./*;
+    fi;
+  }
+
+dataurl() 
+{
+  local mimeType=$(file -b --mime-type "$1");
+  if [[ $mimeType == text/* ]]; then
+    mimeType="${mimeType};charset=utf-8";
+  fi
+  echo "data:${mimeType};base64,$(openssl base64 -in "$1" | tr -d '\n')";
+}
+
+escape() 
+{
+  printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u);
+  # print a newline unless we’re piping the output to another program
+  if [ -t 1 ]; then
+    echo ""; # newline
+    fi;
+  }
+
+# v() 
+# {
+#   if [ $# -eq 0 ]; then
+#     $EDITOR .;
+#   else
+#     $EDITOR "$@";
+#     fi;
+#   }
+# 
+o() 
+{
+  if [ $# -eq 0 ]; then
+    ranger .;
+  else
+    ranger "$@";
+    fi;
+  }
+
+tre() 
+{
+  tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
+}
+
+ix() {
+  local opts
+  local OPTIND
+  [ -f "$HOME/.netrc" ] && opts='-n'
+  while getopts ":hd:i:n:" x; do
+    case $x in
+      h) echo "ix [-d ID] [-i ID] [-n N] [opts]"; return;;
+      d) $echo curl $opts -X DELETE ix.io/$OPTARG; return;;
+      i) opts="$opts -X PUT"; local id="$OPTARG";;
+      n) opts="$opts -F read:1=$OPTARG";;
+    esac
+  done
+  shift $(($OPTIND - 1))
+  [ -t 0 ] && {
+    local filename="$1"
+      shift
+      [ "$filename" ] && {
+        curl $opts -F f:1=@"$filename" $* ix.io/$id
+              return
+            }
+          echo "^C to cancel, ^D to send."
+        }
+      curl $opts -F f:1='<-' $* ix.io/$id
+    }
+shebang() {
+    if i=$(which $1);
+    then
+        printf '#!/usr/bin/env %s\n\n' $1 > $2 && chmod 755 $2 && $EDITOR + $2 && chmod 755 $2;
+    else
+        echo "'which' could not find $1, is it in your \$PATH?";
+    fi;
+    # in case the new script is in path, this throw out the command hash table and
+    # start over  (man zshbuiltins)
+    rehash
+}
+webcam () {
+    mplayer -cache 128 -tv driver=v4l2:width=350:height=350 -vo xv tv:// -noborder -geometry "+1340+445" -ontop -quiet 2>/dev/null >/dev/null
+}
+
+psg () {
+  passage generate "$1"  --clip
+  cd ~/.passage/store
+  git push
+  cd -
+}
+
+weather() {
+    curl wttr.in/"$1"
+}
+
+cnsp () {
+    doas /etc/rc.d/crond stop
+  sleep 1
+    doas /etc/rc.d/crond status
+}
+
+cnst () {
+    doas /etc/rc.d/crond start
+  sleep 1
+    doas /etc/rc.d/crond status
+}
+
+ko () { 
+  a=$(cat)
+  curl -X POST -s -d "raw:$a" http://kopy.io/documents | awk -F '"' '{print "http://kopy.io/"$4}'
+}
+
+pb()
+{
+    local url='https://paste.c-net.org/'
+    if (( $# )); then
+        local file
+        for file; do
+            curl -s \
+                --data-binary @"$file" \
+                --header "X-FileName: ${file##*/}" \
+                "$url"
+        done
+    else
+        curl -s --data-binary @- "$url"
+    fi
+}
+
+pg()
+
+{
+    local url='https://paste.c-net.org/'
+    if (( $# )); then
+        local arg
+        for arg; do
+            curl -s "${url}${arg##*/}"
+        done
+    else
+        local arg
+        while read -r arg; do
+            curl -s "${url}${arg##*/}"
+        done
+    fi
+}
+
+ap()
+{
+    doas apt update && doas apt full-upgrade -V
+}
+
+
+gct()
+{
+  token=$(pass gist/github)
+  curl -u Awan:$token -X POST https://api.github.com/user/repos -d '{"name":"'$1'"}'
+  git init
+  git remote add origin git@github.com:Awan/$1.git
+}
+
+sne ()
+{
+    doas systemctl --now enable $1
+}
+
+snd ()
+{
+    doas systemctl stop $1
+}
+
+gadd ()
+{
+    doas gpasswd -a "$USER" "$1"
+}
+
+ed ()
+{
+  "$EDITOR" "$@"
+}
+
+mpgo ()
+{
+  mkdir /tmp/mpv -p
+  if [[ -n $1 ]]; then
+    clipboard=$1
+  else
+    clipboard=$(xsel -b)
+  fi
+  if [[ $clipboard =~ ^http ]] || [[ -f $clipboard ]]; then
+		echo "$clipboard" > /tmp/mpv/last_link
+		# ytdl messes up direct links for some reason (slow)
+		mpv --no-ytdl --screenshot-template="./%tY.%tm.%td_%tH:%tM:%tS" "$clipboard"
+	elif [[ $clipboard =~ ^magnet ]]; then
+		echo "$clipboard" > /tmp/mpv/last_link
+		 peerflix  "$clipboard" --mpv -- --no-ytdl \
+			--screenshot-template="./%tY.%tm.%td_%tH:%tM:%tS"
+	fi
+}
+
+mplast ()
+{
+  mpgo "$(< /tmp/mpv/last_link)"
+}
+
+arec ()
+{
+  if [[ $# -ne 1 ]]; then
+    return 1
+  fi
+  arecord -vv -f wav "$1"
+}
+
+ram () 
+{
+	local sum
+	local items
+	local app="$1"
+	if [ -z "$app" ]; then
+		echo "First argument - pattern to grep from processes"
+	else
+		sum=0
+		for i in `ps aux | grep -i "$app" | grep -v "grep" | awk '{print $6}'`; do
+		sum=$(($i + $sum))
+	done
+		sum=$(echo "scale=2; $sum / 1024.0" | bc)
+	if [[ $sum != "0" ]]; then
+		echo "${fg[blue]}${app}${reset_color} uses ${fg[green]}${sum}${reset_color} MBs of RAM."
+	else
+		echo "There are no processes with pattern '${fg[blue]}${app}${reset_color}' are running."
+	fi
+	fi
+}
+
+pdfmerge () 
+{
+	local tomerge
+	tomerge=""
+	for file in "$@"; do
+		tomerge="$tomerge $file"
+	done
+	pdftk "$tomerge" cat output mergd.pdf
+}
+
+bkmeup ()
+{
+  cp -riv $1 ${1}-$(date +%d-%m-%Y-%H:%M).bak
+}
+
+
+sprunge ()
+{
+  tail -n +1 -- "$@" | curl -F 'sprunge=<-' http://sprunge.us
+}
+
+removeaudio ()
+{
+  ffmpeg -i $1 -vcodec copy -an $2
+}
+
+
+apkname ()
+{
+  package="$1"
+  adb shell pm list packages | awk -F: -v pkg=$package 'index($0, pkg) {print $2}'
+}
+
+apkpath ()
+{
+  package="$1"
+  adb shell pm path $package | awk -F: -v pkg=$package 'index($0, pkg) {print $2}'
+}
+
+apkbkup ()
+{
+    # Create a backup for an android application
+    # Get application name using apkname function
+    # This backup can be restored later using `adb install application.apk; adb restore backup.adb`
+    backup_file="$1".adb
+    application="$2"
+    adb backup -f "$backup_file" -apk "$application"
+}
+
+playandroid ()
+# play music files on android. first argument should be the path and second should be the file format, like, audio/mp3, video/mp4
+{
+  music_file="$1"
+  format="$2"
+  adb shell am start -a android.intent.action.VIEW -d file://$music_file -t $format
+}
+
+imei ()
+# Get IMEI from connected android devices
+{
+  adb shell 'service call iphonesubinfo 1 | grep -o "[0-9a-f]\{8\} " | tail -n+3 | while read a; do echo -n "\u${a:4:4}\u${a:0:4}"; done'
+
+}
+
+apkrun ()
+# starts an apk which you give to it as first argument. You can get the name of
+# the package by using `adb shell pm list packages`
+{
+  package_name="$1"
+  adb shell monkey -p $package_name 1
+}
+
+apkstop ()
+{
+  package_name="$1"
+  adb shell am force-stop $package_name
+}
+
+apkun ()
+{
+  adb shell pm uninstall "$1"
+}
+
+lightmin ()
+# Set brightness to minimum
+{
+  echo 100 | doas tee /sys/class/backlight/intel_backlight/brightness
+}
+
+lightmax ()
+# Set brightness to maximum
+{
+  echo 852 | doas tee /sys/class/backlight/intel_backlight/brightness
+}
+
+#light ()
+# Set brightness as first argument
+#{
+#  new_brightness="$1"
+#  echo $new_brightness | doas tee
+#  /sys/class/backlight/intel_backlight/#brightness
+#}
+
+bulkrename ()
+# replace spaces with underscores, change upper to lower case, remove extra # underscores.
+{
+  find "$1" -depth | while read line; do
+  dir="$(dirname "$line")"
+  old="$(basename "$line")"
+  new="$(echo $old | tr ' ' '_' \
+    | tr -d '()[]{},?!' | tr -d "'" \
+    | tr '[[:upper:]]' '[[:lower:]]' \
+    | sed 's/__/_/g' | sed 's/_-_/-/g' )"
+  [[ "$old" != "$new" ]] && mv -iv "$dir/$old" "$dir/$new"
+done
+}
+
+tf ()
+{
+  string="$1"
+  toilet -f smmono12.tlf $string | lolcat
+}
+
+aur ()
+{
+  cd $HOME/git 
+  package_name="$1"
+  aur_url="https://aur.archlinux.org"
+  git clone $aur_url/$package_name
+  cd $package_name
+  $EDITOR PKGBUILD
+}
+
+#haq ()
+## Listen to Holy Quran's Ayah by numbers.
+#{
+#zero_pad(){
+#  # zero_pad <string> <length>
+#  [ ${#1} -lt $2 ] && printf "%0$(($2-${#1}))d" ''
+#  printf "%s\n" "$1"
+#}
+#which_surah="$1"
+#which_ayah="$2"
+#qari="$3"
+#shuraim_dir=$HOME/kit/verses/shuraim
+#sudais_dir=$HOME/kit/verses/sudais
+#surah=$(zero_pad $which_surah 3)
+#ayah=$(zero_pad $which_ayah 3)
+#
+#play_shuraim(){
+#   /usr/bin/mplayer $shuraim_dir/$surah$ayah.mp3
+#}
+#play_sudais(){
+#  /usr/bin/mplayer $sudais_dir/$surah$ayah.mp3
+#}
+#if [[ $qari == 'shuraim' ]]; then
+#  play_shuraim
+#fi
+#
+#if [[ $qari == 'sudais' ]]; then
+#  play_sudais
+#fi
+#}
+
+gfc ()
+# git initial commit
+{
+  arabic="بِسْمِ ٱللّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيم"
+  english='In the name of Allah SWT, the most Gracious, the most Merciful.'
+  git commit -m "$arabic - $english"
+}
+
+ports ()
+{
+    doas lsof -nPi | grep -i listen | awk '{print substr($1, 1, 7), substr($3, 1, 7), $5, $8, $9}' | sort | uniq | tr ' ' '\t'
+}
+
+listcon ()
+{
+  port=$1
+  host=$(uname)
+  netstat -atn | grep "$port" | sort -k5
+}
+
+replace_all() { ag "$1" -l | xargs sed -i -e "s/$1/$2/g" }
+
+aw ()
+# search arch wiki
+{
+  query="$1"
+  site="https://wiki.archlinux.org/index.php?search="
+  $BROWSER $site$query
+
+}
+
+purgegit () {
+  # Create a temporary branch and checkout
+  git checkout --orphan purge
+  # Add all the files and commit
+  git commit -am 'In the name of Allah, the most Gracious, the most Merciful'
+  # Delete the master branch
+  git branch -D master
+  # Rename the temporary branch to master
+  git branch -m master
+  # Push the changes forcefully
+  git push -uf origin master
+
+}
+
+wallpaper ()
+{
+  # Convert an image into wallpaper using imagemagick
+  # and then sets it as wallpapers using feh
+  convert "${1}" -gravity Center -resize 1920 -crop 1920x1080+0+0 png:- \
+    | feh --bg-scale -
+}
+
+gr()
+{
+  # Search recursively with grep
+  grep --color=auto -R "$*"
+}
+
+calc()
+# Start a calculator
+{
+  python -q
+}
+
+transfer() {
+
+    tmp_file=$(mktemp /tmp/transfer_XXXXXXXX)
+    trap 'rm ${tmp_file}' EXIT
+
+    # Help. In case no arguments specified
+    if [[ $# == 0 ]]; then
+        echo "No arguments specified. Usage:"
+        echo "$ transfer /tmp/test.md"
+        echo "$ cat /tmp/test.md | transfer test.md"
+        exit 1
+    fi
+
+    # Upload either from file or stdin
+    if tty -s; then
+        basefile=$(basename "${1}" | sed -e 's/[^a-zA-Z0-9._-]/-/g')
+        curl --progress-bar --upload-file "${1}" "https://transfer.sh/${basefile}" >> "${tmp_file}"
+    else
+        curl --progress-bar --upload-file "-" "https://transfer.sh/${1}" >> "${tmp_file}"
+    fi
+
+    # Print download link
+    cat "${tmp_file}"
+    echo
+}
+
+push() {
+  # http post files
+  file_to_be_pushed="$1"
+  type_of_file="$2"
+  if [ "$type_of_file" = "f" ] || [ -z "$type_of_file" ]; then
+    curl -F "file=@$file_to_be_pushed" http://0x0.st  | xclip
+  elif [ "$type_of_file" = "u" ]; then
+    curl -F "url=$file_to_be_pushed" http://0x0.st | xclip
+  elif [ "$type_of_file" = "s" ]; then
+    curl -F "shorten=$file_to_be_pushed" http://0x0.st | xclip
+  fi
+}
+
+
+m() {
+  local mpd_state
+  mpd_state="$(mpc | awk '/playing|paused/ {print $1}')"
+  local files="$*"
+  local state
+
+  if [ "$mpd_state" = '[playing]' ]; then
+    state=0
+  else
+    state=1
+  fi
+
+  play() {
+    if [ "$state" = 0 ]; then
+      mpc pause >/dev/null
+      /usr/bin/mpv "$files"
+      mpc play >/dev/null
+    else
+      /usr/bin/mpv "$files"
+    fi
+  }
+
+  play
+}
+
+
+dua() {
+  echo "بارك الله فيك وبارك لك ونفع بك حقق الله أمنياتك وأسعدك في الدنيا والآخرة" \
+  | xclip -selection clipboard
+}
+
+sitemap() {
+  # submit sitemap to google 
+  # For simplicity, add sitemap to robots.txt and then use this function to 
+  # update it in Google like this: sitemap https://abdullah.support/robots.txt
+  google_url="https://www.google.com/webmasters/sitemaps/ping?sitemap="
+  path=$1
+  /usr/bin/curl $google_url$path
+}
+
+baqara() {
+  /usr/bin/mpv --no-resume-playback ~/haq/shuraim/002{001..286}.mp3 
+}
+
+gifspeed() {
+  # reduce gif speed to half
+
+  mkdir -p gifs_with_speed
+
+  for file in *.gif
+  do
+    convert -delay 10x100 $file gifs_with_speed/`basename $file`
+  done
+}
+
+
+mkuser () {
+  # Create a new user with creating new homedir, zsh as shell, adding it to
+  # audio, video and wheel group 
+
+  username="$1"
+    doas useradd -m -G wheel,input,audio,video -s `which zsh` "$username" && doas passwd "$username"
+
+}
+
+Q () {
+  # listen to Holy Quran
+  Surah="$1"
+  Ayah="$2"
+  Qari="$3"
+  path="$HOME/haq/sudais/"
+  [ -z "$Qari" ] && path="$HOME/haq/shuraim/"
+ 
+  if [ -z "$Surah" ] || [ -z "$Ayah" ]; then
+    exit 1
+  fi
+    printf -v file '%03d%03d.mp3' "$Surah" "$Ayah" && \
+  /usr/bin/mpv --no-resume-playback "$path""$file"
+}
+
+Qt () {
+  # listen Holy Quran with Urdu translation
+  # Surah is a multipurpose Python script which feeds metadata into Verses.
+  _listen="$(Surah $1)"
+  surah=$(echo -n "${_listen//[[:space:]]/}.mp3")
+  Quran_path="$HOME/kit/mp3/urdu/"
+ /usr/bin/mpv --no-resume-playback $Quran_path$surah &
+}
+
+mg () {
+  awk -v newsums="$(makepkg -g)" '
+BEGIN {
+  if (!newsums) exit 1
+}
+
+/^[[:blank:]]*(md|sha)[[:digit:]]+sums=/,/\)[[:blank:]]*$/ {
+  if (!i) print newsums; i++
+  next
+}
+
+1
+' PKGBUILD > PKGBUILD.new && mv PKGBUILD{.new,}
+}
+
+aurpkgs() {
+  comm -23 <(pacman -Qqm | sort) <(curl https://aur.archlinux.org/packages.gz | gzip -cd | sort)
+}
+
+vers() {
+  output_file="$1"
+  surah="$2"
+  verses="$3"
+
+  if [ -z "$surah" ] || [ -z "$verses" ]; then
+    exit 1
+  fi
+
+  for i in $(seq 1 $verses);
+  do
+    printf -v file '%03d%03d.mp3' $surah $i; echo "## _Ayat $i :arrow_heading_down:_\n{{< audio mp3=https://gitlab.com/Abdullah/haq/-/raw/master/shuraim/$file >}}\n" >> $output_file;
+  done
+
+}
+
+getscr() {
+  # Sometimes needed to cp scrot to ~/pix/scrots
+  scrot_file="/tmp/foo.jpg"
+  scrot_dir="$HOME/pix/scrots/"
+  new_scrot_file="$1"
+  [ -z $new_scrot_file ] && new_scrot_file="scrot-$(date +%d-%m-%Y-%H-%M-%S)"
+  cp $scrot_file $scrot_dir$new_scrot_file.jpg && \
+    echo $scrot_dir$new_scrot_file.jpg && \
+    notify-send -t 3500 -i \
+    $HOME/.local/share/icons/drops/imgur.png \
+    "Screenshot saved: $new_scrot_file.jpg" 
+  feh $scrot_dir$new_scrot_file.jpg
+}
+
+srm () {
+# Shred and rm
+  files_to_be_operated_on="$@"
+  shred "$files_to_be_operated_on" && rm "$files_to_be_operated_on"
+}
+
+hg () {
+  # runs hugo in root dir of my website project
+  webdir="$HOME/git/mysite/"
+  echo "Current dir is $PWD"
+  echo "Building your website in $webdir"
+  cd "$webdir"
+  hugo --gc=true
+  cd public && echo "add your files and commit them!"
+}
+
+dep () 
+{
+  # deploy changes to website after you have pushed the master repo with same
+  # commit message
+  # fetch latest commit message
+  site_url="https://abdullah.support"
+  source_dir="$HOME/git/mysite/"
+  rendered_dir="$HOME/git/mysite/public/"
+  cd "$source_dir"
+  msg="$(git log -n1 --format='%B')"
+  hugo -D
+  cd "$rendered_dir"
+  git add .
+  echo "Run git status and commit now!"
+  git commit -am "$msg" && git push; cd "$source_dir"; git push
+  echo "$site_url is live now!" 
+}
+
+hgn ()
+{ 
+  arg="$@"
+  if [ -z $arg ]; then
+    echo "Please give me a name!"
+  fi
+
+  # Create new post and edit with $EDITOR
+  if [ -d ~/git/mysite/ ]; then
+    posts_dir="$HOME/git/mysite/content/posts"
+    cd "$HOME/git/mysite/"
+    hugo new $posts_dir/$arg --editor $EDITOR\
+      || $EDITOR $posts_dir/$arg
+  fi
+}
+
+gbi ()
+{
+  git branch --all --no-color |
+  sed -e 's/\*/ /' |
+  while read branch; do
+	  branch=${branch%% *}
+	  ref=$branch
+	case $ref in
+	  */HEAD)		continue;;
+	  remotes/*)	color='magenta'; branch=${branch#remotes/};;
+	  *)		color='yellow';;
+	esac
+	git log -1 --format=format:"%C($color)${branch}%C(reset) %s %C(blue)(%cr)%C(reset)" "$ref"
+done
+}
+
+isinstalled () {
+    prog=$1
+    if [[ $(command -v ${prog}) == "" ]]; then
+        echo -e "${prog} is not installed!"
+        return 1
+    fi
+    echo -e "${prog} is installed!"
+    return 0
+}
+
+newest () 
+{
+    /usr/bin/ls -Art $1* | tail -n 1
+}
+
+bbb ()
+{
+    base64 < "$1" | tr -d '\n' | xclip
+}
+
+man() {
+    LESS_TERMCAP_md=$'\e[01;31m' \
+    LESS_TERMCAP_me=$'\e[0m' \
+    LESS_TERMCAP_se=$'\e[0m' \
+    LESS_TERMCAP_so=$'\e[01;44;33m' \
+    LESS_TERMCAP_ue=$'\e[0m' \
+    LESS_TERMCAP_us=$'\e[01;32m' \
+    command man "$@"
+}
+
+andial() {
+# Make a phone call from connected android devices
+    phone_number="$1"
+    adb shell am start -a android.intent.action.CALL -d tel:$phone_number
+}
+
+macgen() {
+# mac generator
+dd if=/dev/random bs=2 count=3 2>/dev/null | perl -e '$hex = <>; $hex = unpack("H*", $hex) ; $hex =~ s/(..)(?!.?$)/$1:/g; print "$hex\n"'
+}
+
+kp() {
+# kill a process like opera, chrome
+local sum
+local items
+local app="$1"
+if [ -z "$app" ];
+then
+    echo "First argument - pattern to grep from processes"
+else
+    sum=0
+    for i in `ps aux | grep -i "$app" | grep -v "grep" | awk '{print $6}'`
+    do
+        sum=$(($i + $sum))
+    done
+    sum=$(echo "scale=2; $sum / 1024.0" | bc)
+    if [[ $sum != "0" ]]
+    then
+        echo "${fg[blue]}${app}${reset_color} is having ${fg[green]}${sum}${reset_color} MBs of RAM."
+    for i in `ps aux | grep -v 'grep' | grep -i "$app" | awk '{print $2}'`
+    do
+        notify-send -i ${app} -t 1500 "process ${i} is gone!"
+        kill -9 $i
+    done
+else
+    echo "There are no processes with pattern '${fg[blue]}${app}${reset_color}' are running."
+    fi
+fi
+}
+
+ryt()
+{
+# record a youtube video from my screen
+    today="$HOME/you/yt-"$(date +%F_%T)
+    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :1 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.support':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv
+
+ }
+
+rtty()
+{
+    # record my tty for youtube
+    today="$HOME/you/yt-"$(date +%F_%T)
+    ffmpeg -f pulse -ac 2 -i default -f fbdev -r 30 -i /dev/fb0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.support':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv 
+}
+
+rarea()
+{
+    # Record an area of the screen. Hacksaw is the dependency.
+    today="$HOME/you/yt-"$(date +%F_%T)
+    hacksaw -n | IFS=+x read -r w h x y
+    w=$((w + w % 2))
+    h=$((h + h % 2))
+    ffmpeg -v 16 -r 30 -f x11grab -s "${w}x${h}" -i ":0.0+$x,$y" -preset ultrafast -c:v h264 -pix_fmt yuv420p -crf 20 $today.mkv
+}
+
+rec4mobi()
+{
+    # Record videos for mobile devices
+    today="$HOME/you/mob-"$(date +%F_%T)
+    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :1 -acodec aac -b:a 320k -ar 48000 -vcodec libx264 -preset ultrafast -b:v 15M -threads 4 -pix_fmt yuv420p -cpu-used 0 $today.mp4
+
+}
+
+drd()
+{
+feh --bg-scale '/home/ak/pix/wall/collection/470768.jpg'
+}
+
+andvid()
+{
+    # convert video mobile friendly
+    # Don't foret to give output file with an extension
+    video_file="$1"
+    output_file="$2"
+    ffmpeg -i $video_file -vcodec h264 -s 1280x720 $output_file
+
+}
+
+draw()
+{
+    # floating window of $TERMINAL with specified geometry
+    # Get geometry
+    thickness=$(bspc config border_width)
+    color=$(bspc config focused_border_color)
+    hacksaw -ns $thickness -c $color | IFS=+x read -r w h x y
+    # Add a new rule
+    bspc rule -a \* -o state=floating rectangle="$((w - 2 * thickness))x$((h - 2 * thickness))+$x+$y"
+    # Execute $TERMINAL
+    $TERMINAL &
+}
+
+zal () {
+    curl -s https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.csv
+}
+
+nowall()
+{
+ awk '{print $4}' ~/.fehbg | xargs rm
+ systemctl --user restart wallpaper.service
+}
+
+doips()
+{
+    # docker containers IPs with IDs
+    for ID in $(docker ps -q | awk '{print $1}');
+    do
+        IP=$(docker inspect --format="{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" "$ID")
+        NAME=$(docker ps | grep "$ID" | awk '{print $NF}')
+        printf "%s %s\n" "$IP" "$NAME"
+    done
+}
+
+usbtr() {
+    # Open connected android devices USB Tethering settings
+    adb shell am start -n com.android.settings/.TetherSettings
+}
+
+geometry() {
+    # Get a geometry for panel and other apps to put their window there
+    if [ -x /usr/sbin/slop ]; then
+        slop -f "%xx%y+%w+%h"
+    else
+        echo "Please install slop first..."
+    fi
+}
+
+encme () {
+    # encrypt files/directories to myself
+    if [ $# -eq 0 ]; then
+    echo "Usage: encme <file1> [<file2> ...]"
+    return 1
+    fi
+
+    recipient_file="$HOME/.passage/store/.age-recipients"
+    
+    for file in "$@"; do
+      if [ -f "$file" ]; then
+        age -R "$recipient_file" -o "$file.age" "$file"
+      elif [ -d "$file" ]; then
+        tar -czf - "$file" | age -r "$recipient" -o "$file.tar.gz.age"
+      else
+        echo "$file is not a file or directory or does not exist"
+      fi
+    done
+}
+
+decme() {
+    # Decrypt files, encrypted to myself
+    
+    identity_file="$HOME/.passage/identities"
+
+    if [ ! -f "$identity_file" ]; then
+        echo "Error: Identity file '$identity_file' not found. Please add it first..."
+        return 1
+    fi
+
+    if [ $# -eq 0 ]; then
+        echo "Usage: decrypt_files file1.age file2.age ..."
+        return 1
+    fi
+    
+    for file in "$@"; do
+      if [ -f "$file" ]; then
+        age --decrypt --identity "$identity_file" -o "${file%.age}" "$file"
+      else
+        echo "$file is not a file or does not exist"
+      fi
+    done
+}
+
+ghsubdomains_takeover() {
+    name=$1
+    http -b GET http://$name | grep -F -q "<strong>There isn't a GitHub Pages site here.</strong>" && echo "Subdomain takeover may be possible" || echo "Subdomain takeover is not possible"
+}
+
+
+3gp () {
+    # create 3gp videos for smaller screens
+    input_file="$1"
+    output_file="$2"
+    ffmpeg -i "$input_file" -r 20 -s 352x288 -vb 400k -acodec aac -strict experimental -ac 1 -ar 8000 -ab 24k "$output_file"
+    
+}
+
+chromeupdate () {
+    # checks if google chrome is updated or not, if its not updated, it will ask 
+    # me to update it
+    chrome_repo_path="$HOME/git/chrome"
+    current_chrome_version_installed="$(google-chrome-stable --version | awk '{print $3}')"
+    #latest_chrome_version="$(curl -sSf https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages | awk -F ': ' '/^Package: google-chrome-stable$/{getline; if ($1 == "Version") { split($2, v, "-"); print v[1]; exit; } }')"
+    latest_chrome_version="$(curl -sSf https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages 2>/dev/null | awk -F ': ' '/^Package: google-chrome-stable$/{getline; if ($1 == "Version") { split($2, v, "-"); print v[1]; exit; } }')"
+
+    
+    if [[ "$current_chrome_version_installed" = "$latest_chrome_version" ]]; then
+        echo "Your Chrome is up to date (Version $current_chrome_version_installed)"
+    else
+        echo "Your Chrome is outdated (Installed version: $current_chrome_version_installed, Latest version: $latest_chrome_version)"
+
+        print -n "Do you want to update Chrome? (y/n): "
+
+        read choice
+
+        case "$choice" in 
+            [Yy]*)
+                echo "Updating Chrome..."
+                cd "$chrome_repo_path"
+                git pull && makepkg -sirc --noconfirm && notify-send "Chrome is updated successfully!"
+                ;;
+            *)
+                echo "No update performed!"
+                ;;
+        esac
+    fi
+}
+
+slowvid () {
+    video_to_edit="$1"
+    #slow_version="$2"
+    local base=$(basename $video_to_edit)
+    local ext="${base##*.}"
+    local base="${base%.*}"
+    ffmpeg -i "$video_to_edit" -vf "setpts=2.0*PTS" -acodec copy "$base-slow.$ext"
+
+}
+
+imagetovideo () {
+    image_file="$1"
+    audio_file="$2"
+    output_file="$3"
+    ffmpeg -loop 1 -i "$image_file" -i "$audio_file" -c:v libx264 -pix_fmt yuv420p -c:a aac -strict experimental -b:a 192k -shortest -movflags +faststart "$output_file"
+}
+
+andwifi() {
+    # enable or disable wifi on android connected using adb
+    # You can use it like: andwifi enable|disable
+    operation="$1"
+    adb shell svc wifi $operation
+}
+
+andlock() {
+    adb shell input keyevent 26
+}
+
+mip() {
+    # Print only specific interface IP
+    if [ -n "$1" ]; then
+        ip -o -4 addr show "$1" 2>/dev/null | awk '{print $4}'
+    else
+    # Show all available interfaces IPs
+        ip -o -4 addr show | awk '{printf "%-10s %s\n", $2, $4}'
+    fi
+}
+
+btn() {
+    # Use android bluetooth tethering
+    # First of all, pair and trust android phone using bluetoothctl.
+    # Then get the path using `busctl tree org.bluez | grep dev_`
+    # finally use this function replacing phone's MAC address from busctl's output
+    dbus-send --system --type=method_call --print-reply \
+        --dest=org.bluez /org/bluez/hci0/dev_AC_C4_BD_45_20_F0 \
+        org.bluez.Network1.Connect string:'nap'
+}
+
+psearch() {
+    expac -Ss $'%e\t\e[1;32m%n\e[0m \e[1;33m%v\e[0m\n\t%d\n' "$@"
+}
+
+alis() {
+    $EDITOR ~/.zsh/custom-aliases
+    source ~/.zsh/custom-aliases
+}
+
+# mpv helpers
+
+mpvnova() {
+  mpv --no-video "$@"
+}
+
+mpvshuf() {
+  mpvnova --shuffle --loop-playlist=inf "$@"
+}
+
+mpvp() {
+  mpvshuf --playlist=<(cat "$@")
+}
+
+playcurrentdir() {
+  mpvshuf --playlist=<(find "$PWD" -type f -follow \
+    -not -path '*/\.*' -not -path '*.m3u' -exec realpath -s {} \;)
+}
+
+pcd() {
+  playcurrentdir "$@"
+}
+
+playdir() {
+  if [[ $# == 0 ]]; then
+    echo "playdir requires one or more directories on input."
+  else
+    mpvshuf --playlist=<(find "$@" -type f -follow \
+      -not -path '*/\.*' -exec realpath -s {} \;)
+  fi
+}
+
+pd() {
+  playdir "$@"
+}
+
+random-mpv() {
+  find . -type f | shuf | head -n 1 | xargs mpv
+}
