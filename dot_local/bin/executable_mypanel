@@ -271,7 +271,7 @@ volume(){
     is_muted="$(pamixer --get-volume-human)"
     default_sink="$(pactl get-default-sink 2>/dev/null)"
 
-    if printf '%s\n' "$default_sink" | grep -q '^bluez_sink\.'; then
+    if printf '%s\n' "$default_sink" | grep -Eq '^bluez_(sink|output)\.'; then
         if [ "${is_muted}" = "muted" ]; then
             label=" "
         else
