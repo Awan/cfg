@@ -14,4 +14,7 @@ if [[ -d /run/user/$UID ]]; then
     export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$UID}"
 fi
 
+typeset -U path
+path=("$HOME/.local/bin" $path)
+
 # vim: set ft=zsh :

@@ -34,10 +34,10 @@ case $class in
     ;;
 [Mm]pv|gl)
     echo "state = floating"
-    #echo "sticky = on"
+    echo "sticky = on"
     echo "focus = on"
     echo "manage = on"
-    echo "rectangle = 890x451+0+628"
+    echo "rectangle = 633x321+0+446"
     ;;
 VirtualboxVM)
     echo "manage = off"
