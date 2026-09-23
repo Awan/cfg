@@ -10,11 +10,48 @@ In the name of Allah, the most Gracious, the most Merciful.
 
 ░█▀█░█▀▄░▀█▀░█░█░█▀█░█░░░█░░
 ░█▀█░█▀▄░░█░░█▄█░█▀█░█░░░█░░
-░▀░▀░▀░▀░░▀░░▀░▀░▀░▀░▀▀▀░▀▀▀
+░▀░▀░▀░▀░░▀░░▀░░▀░▀░▀▀▀░▀▀▀
 COMMENT
 
 art_dir_root="$HOME/pix/wall/art"
+rejected_file="$art_dir_root/.rejected"
+current_file="$art_dir_root/.current"
 query="${1:-}"
+
+reject_current() {
+    [ -s "$current_file" ] || {
+        printf '%s\n' 'No current artwall wallpaper recorded.' >&2
+        return 1
+    }
+
+    artwork="$(cat "$current_file")" || return 1
+
+    [ -f "$artwork" ] || {
+        rm -f "$current_file"
+        printf '%s\n' 'Current artwall wallpaper no longer exists.' >&2
+        return 1
+    }
+
+    filename="${artwork##*/}"
+    artwork_id="${filename%.jpg}"
+
+    mkdir -p "$art_dir_root" || return 1
+
+    if ! grep -Fqx "$artwork_id" "$rejected_file" 2>/dev/null; then
+        printf '%s\n' "$artwork_id" >> "$rejected_file" || return 1
+    fi
+
+    rm -f "$artwork" "$current_file"
+
+    printf 'Rejected artwork: %s\n' "$artwork_id"
+}
+
+case "$query" in
+    --reject)
+        reject_current
+        exit $?
+        ;;
+esac
 
 if [ -n "$query" ]; then
     dir_name="$(printf '%s' "$query" |
@@ -57,7 +94,8 @@ download_artwork() {
             )" || return 1
         fi
 
-        total_pages="$(printf '%s\n' "$response" | jq -r '.pagination.total_pages // 0')" || return 1
+        total_pages="$(printf '%s\n' "$response" | jq -r '.pagination.total_pages // 0')" ||
+            return 1
 
         candidates="$(
             printf '%s\n' "$response" |
@@ -69,6 +107,11 @@ download_artwork() {
             artwork_id="${candidate%%|*}"
             image_id="${candidate#*|}"
             image="$art_dir/$artwork_id.jpg"
+
+            if [ -f "$rejected_file" ] &&
+                grep -Fqx "$artwork_id" "$rejected_file"; then
+                continue
+            fi
 
             [ -f "$image" ] && continue
 
@@ -91,8 +134,24 @@ download_artwork() {
 
 download_artwork 2>/dev/null || true
 
-artwork="$(find "$art_dir" -type f -name '*.jpg' -print | shuf -n 1)"
+artwork="$(
+    find "$art_dir" -type f -name '*.jpg' -print |
+        while IFS= read -r image; do
+            filename="${image##*/}"
+            artwork_id="${filename%.jpg}"
+
+            if [ -f "$rejected_file" ] &&
+                grep -Fqx "$artwork_id" "$rejected_file"; then
+                continue
+            fi
+
+            printf '%s\n' "$image"
+        done |
+        shuf -n 1
+)"
 
 [ -n "$artwork" ] || exit 1
+
+printf '%s\n' "$artwork" > "$current_file" || exit 1
 
 feh --bg-fill "$artwork"
