@@ -21,17 +21,13 @@ query="${1:-}"
 mkdir -p "$art_dir_root" "$(dirname "$rejected_file")" || exit 1
 
 reject_current() {
-    [ -s "$current_file" ] || {
-        printf '%s\n' 'No current artwall wallpaper recorded.' >&2
-        return 1
-    }
+    [ -s "$current_file" ] || return 0
 
     artwork="$(cat "$current_file")" || return 1
 
     [ -f "$artwork" ] || {
         rm -f "$current_file"
-        printf '%s\n' 'Current artwall wallpaper no longer exists.' >&2
-        return 1
+        return 0
     }
 
     filename="${artwork##*/}"
@@ -48,8 +44,8 @@ reject_current() {
 
 case "$query" in
     --reject)
-        reject_current
-        exit $?
+        reject_current || exit $?
+        query=""
         ;;
 esac
 

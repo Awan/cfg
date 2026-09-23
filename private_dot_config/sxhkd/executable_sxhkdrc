@@ -78,8 +78,8 @@ super + w
 
 # change wallpaper
 
-alt + w
-   "$HOME"/.local/bin/artwall
+alt + {_,shift } + w
+    {artwall, artwall --reject}
 
 # Launch Browser(opera).
 
