@@ -14,9 +14,11 @@ In the name of Allah, the most Gracious, the most Merciful.
 COMMENT
 
 art_dir_root="$HOME/pix/wall/art"
-rejected_file="$art_dir_root/.rejected"
-current_file="$art_dir_root/.current"
+rejected_file="${XDG_DATA_HOME:-$HOME/.local/share}/artwall/rejected"
+current_file="${XDG_DATA_HOME:-$HOME/.local/share}/artwall/current"
 query="${1:-}"
+
+mkdir -p "$art_dir_root" "$(dirname "$rejected_file")" || exit 1
 
 reject_current() {
     [ -s "$current_file" ] || {
@@ -34,8 +36,6 @@ reject_current() {
 
     filename="${artwork##*/}"
     artwork_id="${filename%.jpg}"
-
-    mkdir -p "$art_dir_root" || return 1
 
     if ! grep -Fqx "$artwork_id" "$rejected_file" 2>/dev/null; then
         printf '%s\n' "$artwork_id" >> "$rejected_file" || return 1
@@ -152,6 +152,6 @@ artwork="$(
 
 [ -n "$artwork" ] || exit 1
 
-printf '%s\n' "$artwork" > "$current_file" || exit 1
+feh --bg-fill "$artwork" || exit 1
 
-feh --bg-fill "$artwork"
+printf '%s\n' "$artwork" > "$current_file" || exit 1
