@@ -17,7 +17,7 @@ In the name of Allah, the most Gracious, the most Merciful.
 # random image from walls dir
 # convert image to png format because i3lock only supports png format
 
-walls_dir="$HOME/pix/wall/collection/dark"
+walls_dir="$HOME/pix/wall/art"
 
 # Check if wallpapers directory exists and isn't empty
 

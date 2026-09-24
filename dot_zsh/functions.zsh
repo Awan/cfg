@@ -617,11 +617,11 @@ purgegit () {
   # Add all the files and commit
   git commit -am 'In the name of Allah, the most Gracious, the most Merciful'
   # Delete the master branch
-  git branch -D master
+  git branch -D main
   # Rename the temporary branch to master
-  git branch -m master
+  git branch -m main
   # Push the changes forcefully
-  git push -uf origin master
+  git push -uf origin main
 
 }
 
