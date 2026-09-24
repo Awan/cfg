@@ -1197,8 +1197,8 @@ psearch() {
 }
 
 alis() {
-    $EDITOR ~/.zsh/custom-aliases
-    source ~/.zsh/custom-aliases
+    $EDITOR ~/.zsh/custom-aliases.zsh
+    source ~/.zsh/custom-aliases.zsh
 }
 
 # mpv helpers
