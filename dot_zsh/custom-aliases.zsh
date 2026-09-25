@@ -238,7 +238,8 @@ alias czv='chezmoi verify'
 alias v='$EDITOR'
 alias btc='bluetoothctl connect 31:1E:8D:BF:E5:E5'
 alias btd='bluetoothctl disconnect 31:1E:8D:BF:E5:E5'
-alias artr='artwall --reject && artwall'
+alias art='artwall'
+alias artr='artwall --reject'
 
     
 
