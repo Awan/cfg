@@ -15,7 +15,8 @@ In the name of Allah, the most Gracious, the most Merciful.
 '
 
 # random image from walls dir
-# convert image to png format because i3lock only supports png format
+# i3lock accepts raw RGB data; resize and crop artwork to the display resolution
+
 
 walls_dir="$HOME/pix/wall/art"
 
@@ -23,7 +24,7 @@ walls_dir="$HOME/pix/wall/art"
 
 if [ -d "$walls_dir" ]; then
     # select a random wallpaper safely handling spaces
-    random_wall=$(find "$walls_dir" -type f -iname "*.png" | shuf -n 1)
+    random_wall=$(find "$walls_dir" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | shuf -n 1)
 else
     echo "Directory $walls_dir does not exist." >&2
     exit 1
@@ -37,5 +38,5 @@ revert() {
 trap revert HUP INT TERM
 xset +dpms dpms 5 5 5
 dunstctl set-paused true
-/usr/bin/i3lock -enfi "$random_wall"
+magick "$random_wall" -resize '1366x768^' -gravity center -extent 1366x768 -depth 8 RGB:- | /usr/bin/i3lock -enf --raw 1366x768:rgb --image /dev/stdin
 revert
