@@ -10,17 +10,19 @@ on:
 
 permissions:
   contents: read
-  packages: read
 
 jobs:
   chezmoi:
     runs-on: ubuntu-latest
 
     container:
-      image: ghcr.io/awan/cfg:latest
+      image: archlinux:latest
       options: --user root
 
     steps:
+      - name: Install CI dependencies
+        run: pacman -Syu --noconfirm --needed git nodejs chezmoi zsh shellcheck age curl
+
       - name: Checkout repository
         uses: actions/checkout@v7
 
@@ -66,7 +68,6 @@ jobs:
           age --decrypt -i /tmp/fixture-key.txt -o /tmp/fixture-decrypted.txt /tmp/fixture.age
           cmp -s /tmp/fixture-plain.txt /tmp/fixture-decrypted.txt
 
-
       - name: Notify Slack
         if: always()
         env:
@@ -75,9 +76,5 @@ jobs:
           CI_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           [ -n "$SLACK_WEBHOOK_URL" ] || exit 0
-
           payload=$(printf '{"text":"Dotfiles CI: %s\\n%s"}' "$CI_STATUS" "$CI_RUN_URL")
-          curl -fsS \
-            -H 'Content-Type: application/json' \
-            --data "$payload" \
-            "$SLACK_WEBHOOK_URL"
+          curl -fsS -H 'Content-Type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
