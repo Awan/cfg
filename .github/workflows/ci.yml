@@ -35,8 +35,37 @@ jobs:
 
       - name: Validate chezmoi source
         run: |
+          mkdir -p /tmp/chezmoi-ci/bin
+          printf '%s\n' '#!/bin/sh' '[ "$1" = "show" ] || exit 1' 'case "$2" in' 'isync/user) printf "%s\n" "ci-test@example.invalid" ;;' 'isync/pass) printf "%s\n" "ci-test-password" ;;' '*) exit 1 ;;' 'esac' > /tmp/chezmoi-ci/bin/passage
+          chmod +x /tmp/chezmoi-ci/bin/passage
+          printf '%s\n' '[pass]' 'command = "/tmp/chezmoi-ci/bin/passage"' > /tmp/chezmoi-ci/chezmoi.toml
           mkdir -p /tmp/chezmoi-home
-          chezmoi --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home apply --dry-run --exclude=encrypted,templates
+          chezmoi --config /tmp/chezmoi-ci/chezmoi.toml --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home apply --dry-run --exclude=encrypted
+
+      - name: Validate encrypted age files
+        run: |
+          age-keygen -o /tmp/ci-age-key.txt
+          for file in dot_android/encrypted_adbkey.pub.age dot_android/encrypted_private_adbkey.age private_dot_config/pacman/encrypted_installed_packages.age; do
+            if age --decrypt --identity /tmp/ci-age-key.txt "$file" >/dev/null 2>/tmp/age-error; then
+              echo "Unexpected decryption success: $file"
+              exit 1
+            fi
+            if ! grep -Fq 'no identity matched any of the recipients' /tmp/age-error; then
+              cat /tmp/age-error
+              echo "Invalid age file or unexpected error: $file"
+              exit 1
+            fi
+          done
+
+      - name: Validate age encryption round-trip
+        run: |
+          age-keygen -o /tmp/fixture-key.txt
+          age-keygen -y /tmp/fixture-key.txt > /tmp/fixture-recipient.txt
+          printf '%s\n' 'chezmoi CI age fixture' > /tmp/fixture-plain.txt
+          age -r "$(cat /tmp/fixture-recipient.txt)" -o /tmp/fixture.age /tmp/fixture-plain.txt
+          age --decrypt -i /tmp/fixture-key.txt -o /tmp/fixture-decrypted.txt /tmp/fixture.age
+          cmp -s /tmp/fixture-plain.txt /tmp/fixture-decrypted.txt
+
 
       - name: Notify Slack
         if: always()

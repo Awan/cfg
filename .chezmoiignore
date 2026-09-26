@@ -1,14 +1,16 @@
-.gitignore
-.gitmodules
-.chezmoiignore
+# Repository-only documentation and build files
 README.md
 LICENSE
+Dockerfile
+
+# Repository-only installation scripts
 INSTALL.sh
 install.sh
-installed_packages
+
+# Repository-only kernel tooling
 kernel/
-secrets/
+
+# Editor and OS temporary files
 *.swp
 *~
 .DS_Store
-Dockerfile
