@@ -14,10 +14,10 @@
 ############################################################### 
 
 [user]
-	name = "Muhammad Abdullah Khabir"
-	email = abdullah@abdullah.support
-	signingkey = ~/.ssh/id_ed25519.pub
-	username = Abdullah
+	name = {{ .git.name | quote }}
+	email = {{ .git.email | quote }}
+	signingkey = {{ joinPath .chezmoi.homeDir ".ssh/id_ed25519.pub" | quote }}
+        username = {{ .git.username | quote }}
 [push]
         default = current
         followTags = true
@@ -104,7 +104,7 @@
 [sendemail]
         smtpEncryption = tls
         smtpServer = mail.abdullah.support
-        smtpUser = abdullah
+        smtpUser = {{ .git.username | quote }}
 [log]
         abbrevCommit = true
 [pull]
@@ -126,11 +126,11 @@
 [mergetool "$EDITOR"]
         prompt = false
 [github]
-	user = Awan
+        user = {{ .git.github_username | quote }}
 [notabug]
-        user = Abdullah
+        user = {{ .git.notabug_username | quote }}
 [gitlab]
-        user = Abdullah
+        user = {{ .git.gitlab_username | quote }}
 [advice]
 	addignoredfile = true
 	waitingForEditor = true
@@ -138,6 +138,7 @@
 [init]
 	defaultBranch = main
 [gpg "ssh"]
-	allowedSignersFile = ~/.config/git/allowed_signers
+	allowedSignersFile = {{ joinPath .chezmoi.homeDir ".config/git/allowed_signers" | quote }}
+
 
 # vim: set ft=gitconfig :
