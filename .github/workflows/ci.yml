@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Install CI dependencies
         run: pacman -Syu --noconfirm --needed git nodejs chezmoi zsh shellcheck age curl
+        run: pacman -Syu --noconfirm --needed git nodejs chezmoi zsh shellcheck age curl diffutils
+
 
       - name: Checkout repository
         uses: actions/checkout@v7
