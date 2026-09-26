@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: dotfiles-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -21,11 +25,11 @@ jobs:
 
     steps:
       - name: Install CI dependencies
-        run: pacman -Syu --noconfirm --needed git nodejs chezmoi zsh shellcheck age curl diffutils
+        run: pacman -Syu --noconfirm --needed git nodejs chezmoi zsh shellcheck age curl diffutils systemd vim
 
 
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Show chezmoi version
         run: chezmoi --version
@@ -36,6 +40,9 @@ jobs:
       - name: Validate Shell scripts
         run: find "$GITHUB_WORKSPACE" -type f -name "*.sh" -print0 | xargs -0 -r shellcheck -S error
 
+      - name: Validate Vim configuration
+        run: vim -Nu NONE -n -es -c 'set rtp^=./dot_vim' -c 'source dot_vimrc' -c 'qa!'
+
       - name: Validate chezmoi source
         run: |
           mkdir -p /tmp/chezmoi-ci/bin
@@ -43,7 +50,13 @@ jobs:
           chmod +x /tmp/chezmoi-ci/bin/passage
           printf '%s\n' '[pass]' 'command = "/tmp/chezmoi-ci/bin/passage"' > /tmp/chezmoi-ci/chezmoi.toml
           mkdir -p /tmp/chezmoi-home
-          chezmoi --config /tmp/chezmoi-ci/chezmoi.toml --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home apply --dry-run --exclude=encrypted
+          chezmoi --config /tmp/chezmoi-ci/chezmoi.toml --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home managed >/tmp/managed.txt
+          test -s /tmp/managed.txt
+          chezmoi --config /tmp/chezmoi-ci/chezmoi.toml --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home apply --exclude=encrypted,scripts
+          chezmoi --config /tmp/chezmoi-ci/chezmoi.toml --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home verify --exclude=encrypted,scripts
+
+      - name: Validate systemd units
+        run: find /tmp/chezmoi-home/.config/systemd/user -type f \( -name "*.service" -o -name "*.timer" -o -name "*.socket" \) -print0 | xargs -0 -r systemd-analyze verify
 
       - name: Validate encrypted age files
         run: |
@@ -70,7 +83,7 @@ jobs:
           cmp -s /tmp/fixture-plain.txt /tmp/fixture-decrypted.txt
 
       - name: Notify Slack
-        if: always()
+        if: always() && github.event_name == 'push'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }}
           CI_STATUS: ${{ job.status }}
