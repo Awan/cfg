@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+find . -type f -name 'executable_*' -print0 |
+while IFS= read -r -d '' file; do
+    case "$file" in
+        */private_dot_config/sxhkd/executable_sxhkdrc)
+            printf 'Skipping sxhkd configuration: %s\n' "$file"
+            continue
+            ;;
+    esac
+    first_line=$(sed -n '1p' "$file")
+
+    case "$first_line" in
+        '#!/bin/sh'*|'#!/usr/bin/env sh'*|'#!/bin/bash'*|'#!/usr/bin/bash'*|'#!/usr/bin/env bash'*)
+            shellcheck -S error "$file"
+            ;;
+        '#!/bin/zsh'*|'#!/usr/bin/env zsh'*)
+            zsh -n "$file"
+            ;;
+        '#!'*)
+            printf 'Skipping non-shell executable: %s (%s)\n' "$file" "$first_line"
+            ;;
+        *)
+            printf 'Skipping executable without shebang: %s\n' "$file"
+            ;;
+    esac
+done

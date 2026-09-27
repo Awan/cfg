@@ -13,8 +13,7 @@
 
 #If no argument is specified, ask for it and exit
 
-if [[ -z "$@" ]];
-then
+if (( $# == 0 )); then
     echo "An argument is needed to run this script";
     exit
 else

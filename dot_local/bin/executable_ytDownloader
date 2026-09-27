@@ -6,7 +6,7 @@
 
 read -p 'what do you wanna download, audio or video?' DEST
 
-if [ $DEST='audio' ]; then
+if [[ $DEST == 'audio' ]]; then
   cd ~/mus
 else
   cd ~/mus/vid

@@ -43,6 +43,9 @@ jobs:
       - name: Validate Shell scripts
         run: find "$GITHUB_WORKSPACE" -type f -name "*.sh" -print0 | xargs -0 -r shellcheck -S error
 
+      - name: Validate executable shell files
+        run: bash .github/scripts/check-shell-files
+
       - name: Validate Vim configuration
         run: vim -Nu NONE -n -es -c 'set rtp^=./dot_vim' -c 'source dot_vimrc' -c 'qa!'
 

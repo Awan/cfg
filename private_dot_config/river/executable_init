@@ -31,7 +31,7 @@ riverctl map normal $mod W spawn $BROWSER
 
 # Music
 riverctl map normal $alt B spawn ~/.local/bin/music
-riverctl map normal $alt V spwan `cmus-remote -u || if ( (tmux has-session -t $USER) ); then tmux new-window cmus; else tmux new-session -d -s $USER cmus fi`
+riverctl map normal $alt V spawn 'cmus-remote -u || if tmux has-session -t "$USER"; then tmux new-window cmus; else tmux new-session -d -s "$USER" cmus; fi'
 riverctl map normal $alt Bracketleft spawn "music_seek -10"
 riverctl map normal $alt Bracketright spawn "music_seek +10"
 riverctl map normal $alt+Shift Bracketleft spawn "music_seek -100"
