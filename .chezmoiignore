@@ -14,3 +14,6 @@ kernel/
 *.swp
 *~
 .DS_Store
+
+# Historical configurations kept for repository reference
+archive/
