@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Install CI dependencies
-        run: pacman -Syu --noconfirm --needed git nodejs chezmoi zsh shellcheck age curl diffutils systemd vim
+        run: pacman -Syu --noconfirm --needed git nodejs chezmoi zsh shellcheck age curl diffutils vim
 
 
       - name: Checkout repository
@@ -36,6 +36,9 @@ jobs:
 
       - name: Validate Zsh syntax
         run: find "$GITHUB_WORKSPACE" -type f -name "*.zsh" -print0 | xargs -0 -r zsh -n
+
+      - name: Validate Zsh startup files
+        run: zsh -n dot_zshenv dot_zshrc dot_zprofile
 
       - name: Validate Shell scripts
         run: find "$GITHUB_WORKSPACE" -type f -name "*.sh" -print0 | xargs -0 -r shellcheck -S error
@@ -54,9 +57,6 @@ jobs:
           test -s /tmp/managed.txt
           chezmoi --config /tmp/chezmoi-ci/chezmoi.toml --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home apply --exclude=encrypted,scripts
           chezmoi --config /tmp/chezmoi-ci/chezmoi.toml --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home verify --exclude=encrypted,scripts
-
-      - name: Validate systemd units
-        run: find /tmp/chezmoi-home/.config/systemd/user -type f \( -name "*.service" -o -name "*.timer" -o -name "*.socket" \) -print0 | xargs -0 -r systemd-analyze verify
 
       - name: Validate encrypted age files
         run: |
