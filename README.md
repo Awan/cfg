@@ -165,6 +165,14 @@ My current graphical setup is based on:
 
 The repository also contains configurations for other window managers, compositors, terminal emulators and status bars that are not necessarily part of the current setup. These are retained as optional configurations rather than indicating that every application is currently installed or in use.
 
+# Archived Configurations
+
+The `archive/` directory contains configurations retained for historical reference or optional use. These files are kept in the repository but are **not managed or deployed by chezmoi**.
+
+Archived configurations include older desktop environments, terminal emulators, status bars, and applications that are no longer part of the current setup. They can be restored or adapted for use on another system without affecting the active configuration.
+
+The active configuration remains in the chezmoi source tree and represents the setup currently deployed on my system.
+
 # Additional Configurations
 
 The repository contains configurations accumulated over time for additional applications and environments.
