@@ -1001,10 +1001,13 @@ andvid()
 {
     # convert video mobile friendly
     # Don't foret to give output file with an extension
-    video_file="$1"
-    output_file="$2"
-    ffmpeg -i $video_file -vcodec h264 -s 1280x720 $output_file
-
+    if [[ $# -ne 2 ]]; then
+        printf 'Usage: andvid INPUT OUTPUT\n' >&2
+        return 2
+    fi
+    local video_file="$1"
+    local output_file="$2"
+    ffmpeg -i "$video_file" -vcodec h264 -s 1280x720 "$output_file"
 }
 
 draw()
@@ -1024,21 +1027,14 @@ zal () {
     curl -s https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.csv
 }
 
-nowall()
-{
- awk '{print $4}' ~/.fehbg | xargs rm
- systemctl --user restart wallpaper.service
-}
-
 doips()
 {
     # docker containers IPs with IDs
-    for ID in $(docker ps -q | awk '{print $1}');
-    do
-        IP=$(docker inspect --format="{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" "$ID")
-        NAME=$(docker ps | grep "$ID" | awk '{print $NF}')
-        printf "%s %s\n" "$IP" "$NAME"
-    done
+    docker ps --format '{{.ID}} {{.Names}}' |
+        while read -r id name; do
+            ip=$(docker inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$id")
+            printf '%s %s\n' "$ip" "$name"
+        done
 }
 
 usbtr() {
@@ -1055,49 +1051,74 @@ geometry() {
     fi
 }
 
-encme () {
+encme()
+{
     # encrypt files/directories to myself
-    if [ $# -eq 0 ]; then
-    echo "Usage: encme <file1> [<file2> ...]"
-    return 1
+    if (( $# == 0 )); then
+        printf 'Usage: encme <file1> [<file2> ...]\n' >&2
+        return 2
     fi
 
-    recipient_file="$HOME/.passage/store/.age-recipients"
-    
+    local recipient_file="$HOME/.passage/store/.age-recipients"
+    local file
+    local status=0
+
     for file in "$@"; do
-      if [ -f "$file" ]; then
-        age -R "$recipient_file" -o "$file.age" "$file"
-      elif [ -d "$file" ]; then
-        tar -czf - "$file" | age -r "$recipient" -o "$file.tar.gz.age"
-      else
-        echo "$file is not a file or directory or does not exist"
-      fi
+        if [[ -f "$file" ]]; then
+            age -R "$recipient_file" -o "$file.age" "$file" || status=1
+        elif [[ -d "$file" ]]; then
+            tar -C "$(dirname -- "$file")" -czf - -- "$(basename -- "$file")" |
+                age -R "$recipient_file" -o "$file.tar.gz.age" || status=1
+        else
+            printf 'encme: not found: %s\n' "$file" >&2
+            status=1
+        fi
     done
+
+    return "$status"
 }
 
-decme() {
-    # Decrypt files, encrypted to myself
-    
-    identity_file="$HOME/.passage/identities"
+decme()
+{
+    # Decrypt files which were encrypted to myself
+    local identity_file="$HOME/.passage/identities"
+    local file
+    local output_file
+    local status=0
 
-    if [ ! -f "$identity_file" ]; then
-        echo "Error: Identity file '$identity_file' not found. Please add it first..."
+    if [[ ! -f "$identity_file" ]]; then
+        printf "Error: Identity file '%s' not found. Please add it first.\n" "$identity_file" >&2
         return 1
     fi
 
-    if [ $# -eq 0 ]; then
-        echo "Usage: decrypt_files file1.age file2.age ..."
-        return 1
+    if (( $# == 0 )); then
+        printf 'Usage: decme file1.age file2.age ...\n' >&2
+        return 2
     fi
-    
+
     for file in "$@"; do
-      if [ -f "$file" ]; then
-        age --decrypt --identity "$identity_file" -o "${file%.age}" "$file"
-      else
-        echo "$file is not a file or does not exist"
-      fi
+        if [[ ! -f "$file" ]]; then
+            printf 'decme: not a file or does not exist: %s\n' "$file" >&2
+            status=1
+            continue
+        fi
+
+        if [[ "$file" != *.age ]]; then
+            printf 'decme: expected an .age file: %s\n' "$file" >&2
+            status=1
+            continue
+        fi
+
+        output_file="${file%.age}"
+
+        if ! age --decrypt --identity "$identity_file" -o "$output_file" "$file"; then
+            status=1
+        fi
     done
+
+    return "$status"
 }
+
 
 ghsubdomains_takeover() {
     name=$1
