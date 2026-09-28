@@ -647,15 +647,11 @@ augroup misc_autocmds
 augroup END
 
 " ---------------------------------------------------------------------
-" Pastebins (personal -- untouched)
+" Pastebin
 " ---------------------------------------------------------------------
-command! -range=% CL <line1>,<line2>w !curl -F 'clbin=<-' https://clbin.com | tr -d '\n' | xclip -i -selection clipboard
-command! -range=% VP <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net | tr -d '\n' | xclip -i -selection clipboard
-command! -range=% PB <line1>,<line2>w !curl -F 'c=@-' https://ptpb.pw/ | sed -n 's/^url: //p' | xclip
-command! -range=% TB <line1>,<line2>w !fb
-command! -range=% GT <line1>,<line2>w !gist -c -p -f %
+command! -range=% GT <line1>,<line2>w !gh gist create --filename %:t -
 
-map <F3> :! ( urxvt & ) &>/dev/null &<CR><CR>
+map <F3> :! ( alacritty & ) &>/dev/null &<CR><CR>
 
 " Wrap current WORD (includes $) in double quotes with <Leader>"
 nnoremap <Leader>" viWc"<C-r>""<Esc>
