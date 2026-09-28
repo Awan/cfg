@@ -136,9 +136,6 @@ set shortmess+=I
 set lazyredraw
 set noshowmatch
 set mouse=a
-if $TERM !~# '^linux\|^Eterm|^screen-*|^tmux-*'
-    set t_Co=8
-endif
 set ttyfast
 
 " Cursor line/column, cursorline only active in the focused window
@@ -338,8 +335,18 @@ augroup filetype_settings
     " (the old version used a global noremap re-applied on every
     " BufEnter, so F5 would still try to open Chrome even after you
     " switched to an unrelated buffer -- <buffer> fixes that).
-    autocmd FileType markdown nnoremap <buffer> <F5> :!google-chrome-stable %:p<CR>
     "autocmd! bufwritepost *.md !pandoc -o /tmp/index.html --template $HOME/.local/share/pandoc/template.html -s -f markdown -t html -V mainfont="Chakra Petch" -V fontsize=25px --metadata-file $HOME/.local/share/pandoc/metadata.yaml --toc %:p
+    function! s:OpenMarkdownPreview()
+    if executable('google-chrome-stable')
+        execute '!google-chrome-stable ' . shellescape(expand('%:p'))
+    elseif executable('xdg-open')
+        execute '!xdg-open ' . shellescape(expand('%:p'))
+    else
+        echoerr 'No browser available'
+    endif
+endfunction
+
+    autocmd FileType markdown nnoremap <buffer> <F5> :call <SID>OpenMarkdownPreview()<CR>
 
     if has("nvim")
         " Neovim 0.2.1+: terminal buffers now have line numbers
@@ -433,7 +440,9 @@ augroup END
 " ---------------------------------------------------------------------
 set completeopt=menuone
 set nrformats=bin,hex,unsigned
-set clipboard=unnamed,unnamedplus
+if has('clipboard')
+    set clipboard=unnamed,unnamedplus
+endif
 set updatetime=300
 
 if &diff
