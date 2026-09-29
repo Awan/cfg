@@ -4,7 +4,9 @@
 # ░░░░░░░░░░ 
 
 # Start keychain for SSH keys
-eval "$(keychain add --eval --systemd --quiet id_ed25519)"
+if (( $+commands[keychain] )) && [[ -f "$HOME/.ssh/id_ed25519" ]]; then
+    eval "$(keychain add --eval --systemd --quiet id_ed25519)"
+fi
 
 # Start X at login on tty1
 if [[ -o login && -z ${DISPLAY:-} && -z ${WAYLAND_DISPLAY:-} && ${TTY:-} == /dev/tty1 ]]; then
@@ -15,9 +17,13 @@ if [[ -o login && -z ${DISPLAY:-} && -z ${WAYLAND_DISPLAY:-} && ${TTY:-} == /dev
 fi
 
 # Start/attach tmux for interactive local login shells
-if [[ -o interactive && -z ${SSH_CONNECTION:-} && -t 0 ]]; then
+if [[ -o interactive &&
+      -z ${SSH_CONNECTION:-} &&
+      -z ${TMUX:-} &&
+      -t 0 &&
+      $+commands[tmux] ]]; then
     if ! tmux has-session -t "$USER" 2>/dev/null; then
         tmux new-session -d -s "$USER"
     fi
-    tmux attach-session -t "$USER"
+    exec tmux attach-session -t "$USER"
 fi
