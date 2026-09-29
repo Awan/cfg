@@ -292,6 +292,37 @@ function! s:OpenMarkdownPreview()
 endfunction
 
 " ---------------------------------------------------------------------
+"  Comment/Un-comment 
+" ---------------------------------------------------------------------
+function! s:ToggleCommentLine()
+    let l:comment = &l:commentstring
+    let l:marker = stridx(l:comment, '%s')
+
+    if empty(l:comment) || l:marker < 0
+        echoerr 'No comment string defined for this filetype'
+        return
+    endif
+
+    let l:prefix = strpart(l:comment, 0, l:marker)
+    let l:suffix = strpart(l:comment, l:marker + 2)
+    let l:line = getline('.')
+    let l:indent = matchstr(l:line, '^\s*')
+    let l:text = strpart(l:line, strlen(l:indent))
+
+    if stridx(l:text, l:prefix) == 0
+        let l:text = strpart(l:text, strlen(l:prefix))
+        if !empty(l:suffix) && strlen(l:text) >= strlen(l:suffix) && strpart(l:text, strlen(l:text) - strlen(l:suffix)) ==# l:suffix
+            let l:text = strpart(l:text, 0, strlen(l:text) - strlen(l:suffix))
+        endif
+        call setline('.', l:indent . l:text)
+    else
+        call setline('.', l:indent . l:prefix . l:text . l:suffix)
+    endif
+endfunction
+
+nnoremap <leader>c :call <SID>ToggleCommentLine()<CR>
+
+" ---------------------------------------------------------------------
 " Filetype-specific settings
 " ---------------------------------------------------------------------
 augroup filetype_settings
@@ -399,7 +430,7 @@ endfunction
 augroup file_templates
     autocmd!
     autocmd BufNewFile *.sh call s:NewFileTemplate(['#!/usr/bin/env bash', '', 'set -euo pipefail', ''])
-    autocmd BufNewFile *.py call s:NewFileTemplate(['#!/usr/bin/env python3', ''])
+    autocmd BufNewFile *.py call s:NewFileTemplate(['#!/usr/bin/env python', ''])
     autocmd BufNewFile Dockerfile,Dockerfile.*,*.dockerfile call s:NewFileTemplate(['# syntax=docker/dockerfile:1', 'FROM '])
     autocmd BufNewFile Makefile call s:NewFileTemplate(['.PHONY: all', '', 'all:', "\t"])
     autocmd BufNewFile *.yml,*.yaml call s:NewFileTemplate(['---', ''])
@@ -626,8 +657,6 @@ endif
 vnoremap < <gv
 vnoremap > >gv
 
-" comment out current line
-map <leader>c 0i# <ESC>
 " native file explorer (used to be a coc.nvim mapping)
 nnoremap <leader>n :Lexplore<CR>
 nnoremap <leader>u :w \| startinsert \| term urlview %<CR>

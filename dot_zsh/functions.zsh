@@ -78,7 +78,7 @@ speedup ()
   ext="${base##*.}"
   base="${base%.*}"
 
-  ffmpeg -i "$1" -filter:v "setpts=0.5*PTS"  $base'_speed.'$ext
+  ffmpeg -i "$1" -filter:v "setpts=0.5*PTS" "$base"'_speed.'"$ext"
 
 
   notify-send "your video has got speed. Enjoy"
@@ -86,12 +86,46 @@ speedup ()
 
 # aac + image = mp4
 
-aactomkv ()
+aactomp4()
 {
-  for files in *.aac
-  do
-    ffmpeg -y -loop 1 -framerate 1/25 -i image.jpg  -i "$file" -vf "scale='min(1280,iw)':-2, format=yuv420p" -c:v libx264 -preset veryslow -crf 0 -c:a copy  "`basename "$file" .aac`.mkv"
-  done
+    if (( $# != 2 )); then
+        printf 'Usage: aactomp4 <image> <audio.aac>\n'
+        return 1
+    fi
+
+    if ! command -v ffmpeg >/dev/null 2>&1; then
+        printf '%s\n' 'Error: ffmpeg is not installed.'
+        return 1
+    fi
+
+    local image="$1"
+    local audio="$2"
+    local output="${audio%.aac}.mp4"
+
+    if [[ ! -f "$image" ]]; then
+        printf 'Error: image not found: %s\n' "$image"
+        return 1
+    fi
+
+    if [[ ! -f "$audio" ]]; then
+        printf 'Error: audio not found: %s\n' "$audio"
+        return 1
+    fi
+
+    ffmpeg -y \
+        -loop 1 \
+        -framerate 1 \
+        -i "$image" \
+        -i "$audio" \
+        -map 0:v:0 \
+        -map 1:a:0 \
+        -vf "scale='min(1280,iw)':-2,format=yuv420p" \
+        -c:v libx264 \
+        -preset veryslow \
+        -crf 18 \
+        -c:a copy \
+        -shortest \
+        "$output"
 }
 
 
@@ -132,14 +166,14 @@ mergeaudio ()
 # Usage:
 # mergeaudio files.txt output.mp3
 {
-  ffmpeg -f concat -safe 0 -i $1 -c copy $2
+  ffmpeg -f concat -safe 0 -i "$1" -c copy "$2"
 }
 
 mergeaudiotovideo ()
 # maps audio with video, first arg should be video, second should be audio and
 # third should be the output
 {
-  ffmpeg -i $1 -i $2 -c copy -map 0:v:0 -map 1:a:0 $3
+  ffmpeg -i "$1" -i "$2" -c copy -map 0:v:0 -map 1:a:0 "$3"
 }
 
 
@@ -416,7 +450,7 @@ sprunge ()
 
 removeaudio ()
 {
-  ffmpeg -i $1 -vcodec copy -an $2
+  ffmpeg -i "$1" -vcodec copy -an "$2"
 }
 
 
@@ -485,7 +519,7 @@ lightmin ()
 }
 
 lightmax ()
-## ⚠️  INTEL-SPECIFIC: Set brightness to maximum
+# ⚠️  INTEL-SPECIFIC: Set brightness to maximum
 # Requires: /sys/class/backlight/intel_backlight/
 # On other systems, check: ls /sys/class/backlight/
 {
@@ -691,7 +725,7 @@ gifspeed() {
 
   for file in *.gif
   do
-    convert -delay 10x100 $file gifs_with_speed/`basename $file`
+    convert -delay 10x100 "$file" gifs_with_speed/"$(basename "$file")"
   done
 }
 
