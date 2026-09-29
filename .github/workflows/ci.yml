@@ -40,6 +40,9 @@ jobs:
       - name: Validate Zsh startup files
         run: zsh -n dot_zshenv dot_zshrc dot_zprofile
 
+      - name: Validate Zsh function loading
+        run: zsh -e -fc 'source dot_zsh/functions.zsh'
+
       - name: Validate Shell scripts
         run: find "$GITHUB_WORKSPACE" -type f -name "*.sh" -print0 | xargs -0 -r shellcheck -S error
 

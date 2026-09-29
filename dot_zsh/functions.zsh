@@ -174,7 +174,7 @@ mp3tomp4 ()
 pl ()
 {
     # search and play some song based on filename.
-  mpc searchadd filename $1 && mpc searchplay filename $1
+  mpc searchadd filename "$1" && mpc searchplay filename "$1"
 }
 
 mergeaudio ()
@@ -518,7 +518,7 @@ playandroid ()
 {
   music_file="$1"
   format="$2"
-  adb shell am start -a android.intent.action.VIEW -d file://$music_file -t $format
+  adb shell am start -a android.intent.action.VIEW -d "file://$music_file" -t "$format"
 }
 
 imei ()
@@ -533,13 +533,13 @@ apkrun ()
 # the package by using `adb shell pm list packages`
 {
   package_name="$1"
-  adb shell monkey -p $package_name 1
+  adb shell monkey -p "$package_name" 1
 }
 
 apkstop ()
 {
   package_name="$1"
-  adb shell am force-stop $package_name
+  adb shell am force-stop "$package_name"
 }
 
 apkun ()

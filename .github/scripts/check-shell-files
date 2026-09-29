@@ -1,4 +1,16 @@
 #!/usr/bin/env bash
+# Validates shell scripts with shellcheck and zsh, Python with AST parsing
+# and Perl with -c
+# Fails if an executable has an unrecognized shebang.
+# Supported interpreters:
+#   - bash, sh
+#   - zsh
+#   - python3
+#   - perl
+#
+# Add unsupported executables to the explicit skip patterns above or update
+# their shebangs.
+
 set -euo pipefail
 
 find . -type f -name 'executable_*' -print0 |

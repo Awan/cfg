@@ -315,15 +315,29 @@ function! s:ToggleCommentLine()
 
     let l:prefix = strpart(l:comment, 0, l:marker)
     let l:suffix = strpart(l:comment, l:marker + 2)
+    let l:prefix_base = substitute(l:prefix, '\s\+$', '', '')
+    let l:suffix_base = substitute(l:suffix, '^\s\+', '', '')
     let l:line = getline('.')
     let l:indent = matchstr(l:line, '^\s*')
     let l:text = strpart(l:line, strlen(l:indent))
 
-    if stridx(l:text, l:prefix) == 0
-        let l:text = strpart(l:text, strlen(l:prefix))
-        if !empty(l:suffix) && strlen(l:text) >= strlen(l:suffix) && strpart(l:text, strlen(l:text) - strlen(l:suffix)) ==# l:suffix
-            let l:text = strpart(l:text, 0, strlen(l:text) - strlen(l:suffix))
+    if stridx(l:text, l:prefix_base) == 0
+        let l:text = strpart(l:text, strlen(l:prefix_base))
+
+        if !empty(l:prefix) && !empty(l:text) && strpart(l:text, 0, 1) =~# '\s'
+            let l:text = strpart(l:text, 1)
         endif
+
+        if !empty(l:suffix_base)
+            let l:suffix_pos = strlen(l:text) - strlen(l:suffix_base)
+            if l:suffix_pos >= 0 && strpart(l:text, l:suffix_pos) ==# l:suffix_base
+                let l:text = strpart(l:text, 0, l:suffix_pos)
+                if !empty(l:suffix) && !empty(l:text) && strpart(l:text, strlen(l:text) - 1, 1) =~# '\s'
+                    let l:text = strpart(l:text, 0, strlen(l:text) - 1)
+                endif
+            endif
+        endif
+
         call setline('.', l:indent . l:text)
     else
         call setline('.', l:indent . l:prefix . l:text . l:suffix)
