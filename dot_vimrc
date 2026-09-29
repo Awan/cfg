@@ -258,6 +258,39 @@ set statusline+=\ %p%%
 set statusline+=%#Number#
 set statusline+=\ %l:%c/%L
 
+function! s:OpenMarkdownPreview()
+    if !executable('pandoc')
+        echoerr 'Pandoc not found'
+        return
+    endif
+
+    let l:input = expand('%:p')
+    let l:output = '/tmp/index.html'
+    let l:template = expand('$HOME/.local/share/pandoc/template.html')
+    let l:metadata = expand('$HOME/.local/share/pandoc/metadata.yaml')
+
+    execute '!pandoc -s -f markdown -t html --template='
+        \ . shellescape(l:template)
+        \ . ' -V ' . shellescape('mainfont=Chakra Petch')
+        \ . ' -V ' . shellescape('fontsize=25px')
+        \ . ' --metadata-file=' . shellescape(l:metadata)
+        \ . ' --toc -o ' . shellescape(l:output)
+        \ . ' ' . shellescape(l:input)
+
+    if v:shell_error
+        echoerr 'Pandoc conversion failed'
+        return
+    endif
+
+    if executable('google-chrome-stable')
+        execute '!google-chrome-stable ' . shellescape(l:output) . ' >/dev/null 2>&1 &'
+    elseif executable('xdg-open')
+        execute '!xdg-open ' . shellescape(l:output) . ' >/dev/null 2>&1 &'
+    else
+        echoerr 'No browser available'
+    endif
+endfunction
+
 " ---------------------------------------------------------------------
 " Filetype-specific settings
 " ---------------------------------------------------------------------
@@ -300,8 +333,10 @@ augroup filetype_settings
     autocmd FileType yaml match ErrorMsg /\t/
 
     " Terraform / HCL
-    autocmd BufNewFile,BufRead *.tf,*.tfvars,*.tfstate setlocal filetype=terraform
+    autocmd BufNewFile,BufRead *.tf,*.tfvars setlocal filetype=terraform
+    autocmd BufNewFile,BufRead *.tfstate setlocal filetype=json
     autocmd FileType terraform setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+
     autocmd FileType terraform setlocal commentstring=#\ %s
 
     " Dockerfiles
@@ -328,24 +363,10 @@ augroup filetype_settings
           \ setlocal filetype=conf wrap nolinebreak
     autocmd BufNewFile,BufRead /etc/motd setlocal expandtab
 
-    " Don't let modelines run in things you didn't author yourself
-    autocmd BufNewFile,BufRead COMMIT_EDITMSG,git-rebase-todo setlocal nomodeline
-
-    " Markdown preview in Chrome, scoped to markdown buffers only
+    " Markdown preview, scoped to markdown buffers only
     " (the old version used a global noremap re-applied on every
     " BufEnter, so F5 would still try to open Chrome even after you
     " switched to an unrelated buffer -- <buffer> fixes that).
-    "autocmd! bufwritepost *.md !pandoc -o /tmp/index.html --template $HOME/.local/share/pandoc/template.html -s -f markdown -t html -V mainfont="Chakra Petch" -V fontsize=25px --metadata-file $HOME/.local/share/pandoc/metadata.yaml --toc %:p
-    function! s:OpenMarkdownPreview()
-    if executable('google-chrome-stable')
-        execute '!google-chrome-stable ' . shellescape(expand('%:p'))
-    elseif executable('xdg-open')
-        execute '!xdg-open ' . shellescape(expand('%:p'))
-    else
-        echoerr 'No browser available'
-    endif
-endfunction
-
     autocmd FileType markdown nnoremap <buffer> <F5> :call <SID>OpenMarkdownPreview()<CR>
 
     if has("nvim")
@@ -403,7 +424,7 @@ set sessionoptions-=curdir
 " Backup / swap / undo
 " ---------------------------------------------------------------------
 set nobackup
-set modeline
+set nomodeline
 set viminfo='10,\"100,:20,%,n~/.viminfo
 
 if has("unix")

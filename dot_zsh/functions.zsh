@@ -2,16 +2,16 @@
 
 # In the name of Allah, the most Gracious, the most Merciful.
 #
-#  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah Khabir <https://abdullah.support> 
-# ░▓▓▓▓▓▓▓▓▓▓ 
-# ░░░░░░░░░░ 
+#  ▓▓▓▓▓▓▓▓▓▓
+# ░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
+# ░▓▓▓▓▓▓▓▓▓▓
+# ░░░░░░░░░░
 
 
 # ░█▀▀░█░█░█▀▀░█░░░█░░░░░█▀▀░█░█░█▀█░█▀▀░▀█▀░▀█▀░█▀█░█▀█░█▀▀
 # ░▀▀█░█▀█░█▀▀░█░░░█░░░░░█▀▀░█░█░█░█░█░░░░█░░░█░░█░█░█░█░▀▀█
 # ░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░░░▀░░░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀▀▀
- 
+
 
 mkd ()
 {
@@ -23,8 +23,8 @@ mkd ()
 webm2mp4 ()
 {
   for file in *.webm
-  do 
-    ffmpeg -i "$file" "`basename "$file" .webm`.mp4"
+  do
+    ffmpeg -i "$file" "$(basename "$file" .webm).mp4"
   done
 }
 
@@ -39,7 +39,7 @@ mp42mp3 ()
 
   for file in *.mp4
   do
-    ffmpeg -y -i "$file" "`basename "$file" .mp4`.mp3"
+    ffmpeg -y -i "$file" "$(basename "$file" .mp4).mp3"
   done
 
 
@@ -66,7 +66,7 @@ mp42mp3 ()
 mp3toaac () {
   for file in *.mp3
   do
-    ffmpeg -y -i "$file" "`basename "$file" .mp3`.aac"
+    ffmpeg -y -i "$file" "$(basename "$file" .mp3).aac"
   done
 }
 
@@ -78,7 +78,7 @@ speedup ()
   ext="${base##*.}"
   base="${base%.*}"
 
-  ffmpeg -i $1 -filter:v "setpts=0.5*PTS"  $base'_speed.'$ext
+  ffmpeg -i "$1" -filter:v "setpts=0.5*PTS"  $base'_speed.'$ext
 
 
   notify-send "your video has got speed. Enjoy"
@@ -90,8 +90,8 @@ aactomkv ()
 {
   for files in *.aac
   do
-    ffmpeg -y -loop 1 -framerate 1/25 -i image.jpg  -i "$file" -vf "scale='min(1280,iw)':-2, format=yuv420p" -c:v libx264 -preset veryslow -crf 0 -c:a copy  "`basename "$file" .aac`.mkv" 
-  done 
+    ffmpeg -y -loop 1 -framerate 1/25 -i image.jpg  -i "$file" -vf "scale='min(1280,iw)':-2, format=yuv420p" -c:v libx264 -preset veryslow -crf 0 -c:a copy  "`basename "$file" .aac`.mkv"
+  done
 }
 
 
@@ -102,10 +102,10 @@ hdimg () {
 
   ext="$1"
   mkdir resized 2>/dev/null
-  
+
   for file in *."$ext"
   do
-    convert $file -resize 1920x1080! resized/`basename $file .$ext`.$ext
+    convert "$file" -resize 1920x1080! resized/"$(basename "$file" ".$ext")"."$ext"
   done
 
 }
@@ -117,7 +117,7 @@ mp3tomp4 ()
 # Usage:
 # mp3tomp4 image.jpg audio.mp3 output.mp4
 {
-  ffmpeg -loop 1 -r 1 -i $1 -i $2 -vcodec libx264 -acodec copy -shortest $3
+  ffmpeg -loop 1 -r 1 -i "$1" -i "$2" -vcodec libx264 -acodec copy -shortest "$3"
 }
 
 
@@ -147,7 +147,7 @@ mergeaudiotovideo ()
 
 bakchod ()
 {
-  echo "$@" | tr a-zA-Z n-za-mN-ZA-M 
+  printf '%s\n' "$*" | tr a-zA-Z n-za-mN-ZA-M
 }
 
 # mailto
@@ -157,24 +157,24 @@ mailto ()
   $TERMINAL -e mutt "$@"
 }
 
-aa_256 () 
-{ 
+aa_256 ()
+{
   local o= i= x=`tput op` cols=`tput cols` y= oo= yy=;
   y=`printf %$(($cols-6))s`;
   yy=${y// /=};
   for i in {0..256};
   do
     o=00${i};
-    oo=`echo -en "setaf ${i}\nsetab ${i}\n"|tput -S`;
-    echo -e "${o:${#o}-3:3} ${oo}${yy}${x}";
+    oo=$(printf 'setaf %s\nsetab %s\n' "$i" "$i" | tput -S)
+    printf '%s\n' "${o:${#o}-3:3} ${oo}${yy}${x}"
   done
 }
 
-ht() { 
-  a=$(cat); curl -X POST -s -d "$a" https://hastebin.com/documents | awk -F '"' '{print "https://hastebin.com/"$4}' | xclip ; 
+ht() {
+  a=$(cat); curl -X POST -s -d "$a" https://hastebin.com/documents | awk -F '"' '{print "https://hastebin.com/"$4}' | xclip ;
 }
 
-fs() 
+fs()
 {
   if du -b /dev/null > /dev/null 2>&1; then
     local arg=-sbh;
@@ -188,25 +188,25 @@ fs()
     fi;
   }
 
-dataurl() 
+dataurl()
 {
   local mimeType=$(file -b --mime-type "$1");
   if [[ $mimeType == text/* ]]; then
     mimeType="${mimeType};charset=utf-8";
   fi
-  echo "data:${mimeType};base64,$(openssl base64 -in "$1" | tr -d '\n')";
+  printf 'data:%s;base64,%s\n' "$mimeType" "$(openssl base64 -in "$1" | tr -d '\n')"
 }
 
-escape() 
+escape()
 {
   printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u);
   # print a newline unless we’re piping the output to another program
   if [ -t 1 ]; then
-    echo ""; # newline
+    printf '\n'
     fi;
   }
 
-# v() 
+# v()
 # {
 #   if [ $# -eq 0 ]; then
 #     $EDITOR .;
@@ -214,8 +214,8 @@ escape()
 #     $EDITOR "$@";
 #     fi;
 #   }
-# 
-o() 
+#
+o()
 {
   if [ $# -eq 0 ]; then
     ranger .;
@@ -224,41 +224,17 @@ o()
     fi;
   }
 
-tre() 
+tre()
 {
   tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
 }
 
-ix() {
-  local opts
-  local OPTIND
-  [ -f "$HOME/.netrc" ] && opts='-n'
-  while getopts ":hd:i:n:" x; do
-    case $x in
-      h) echo "ix [-d ID] [-i ID] [-n N] [opts]"; return;;
-      d) $echo curl $opts -X DELETE ix.io/$OPTARG; return;;
-      i) opts="$opts -X PUT"; local id="$OPTARG";;
-      n) opts="$opts -F read:1=$OPTARG";;
-    esac
-  done
-  shift $(($OPTIND - 1))
-  [ -t 0 ] && {
-    local filename="$1"
-      shift
-      [ "$filename" ] && {
-        curl $opts -F f:1=@"$filename" $* ix.io/$id
-              return
-            }
-          echo "^C to cancel, ^D to send."
-        }
-      curl $opts -F f:1='<-' $* ix.io/$id
-    }
 shebang() {
     if i=$(which $1);
     then
         printf '#!/usr/bin/env %s\n\n' $1 > $2 && chmod 755 $2 && $EDITOR + $2 && chmod 755 $2;
     else
-        echo "'which' could not find $1, is it in your \$PATH?";
+        printf "'which' could not find %s, is it in your \$PATH?\n" "$1";
     fi;
     # in case the new script is in path, this throw out the command hash table and
     # start over  (man zshbuiltins)
@@ -291,7 +267,7 @@ cnst () {
     doas /etc/rc.d/crond status
 }
 
-ko () { 
+ko () {
   a=$(cat)
   curl -X POST -s -d "raw:$a" http://kopy.io/documents | awk -F '"' '{print "http://kopy.io/"$4}'
 }
@@ -335,12 +311,13 @@ ap()
 }
 
 
-gct()
-{
-  token=$(pass gist/github)
-  curl -u Awan:$token -X POST https://api.github.com/user/repos -d '{"name":"'$1'"}'
-  git init
-  git remote add origin git@github.com:Awan/$1.git
+gct() {
+  if [[ -z "$1" ]]; then
+    printf '%s\n' 'Usage: gct <repository-name>'
+    return 1
+  fi
+
+  git init && gh repo create "Awan/$1" --private --source=. --remote=origin
 }
 
 sne ()
@@ -372,11 +349,11 @@ mpgo ()
     clipboard=$(xsel -b)
   fi
   if [[ $clipboard =~ ^http ]] || [[ -f $clipboard ]]; then
-		echo "$clipboard" > /tmp/mpv/last_link
+		printf '%s\n' "$clipboard" > /tmp/mpv/last_link
 		# ytdl messes up direct links for some reason (slow)
 		mpv --no-ytdl --screenshot-template="./%tY.%tm.%td_%tH:%tM:%tS" "$clipboard"
 	elif [[ $clipboard =~ ^magnet ]]; then
-		echo "$clipboard" > /tmp/mpv/last_link
+		printf '%s\n' "$clipboard" > /tmp/mpv/last_link
 		 peerflix  "$clipboard" --mpv -- --no-ytdl \
 			--screenshot-template="./%tY.%tm.%td_%tH:%tM:%tS"
 	fi
@@ -395,28 +372,28 @@ arec ()
   arecord -vv -f wav "$1"
 }
 
-ram () 
+ram ()
 {
 	local sum
 	local items
 	local app="$1"
 	if [ -z "$app" ]; then
-		echo "First argument - pattern to grep from processes"
+		printf '%s\n' 'First argument - pattern to grep from processes'
 	else
 		sum=0
 		for i in `ps aux | grep -i "$app" | grep -v "grep" | awk '{print $6}'`; do
 		sum=$(($i + $sum))
 	done
-		sum=$(echo "scale=2; $sum / 1024.0" | bc)
+		sum=$(printf 'scale=2; %s / 1024.0\n' "$sum" | bc)
 	if [[ $sum != "0" ]]; then
-		echo "${fg[blue]}${app}${reset_color} uses ${fg[green]}${sum}${reset_color} MBs of RAM."
+		printf '%s uses %s MB of RAM.\n' "${fg[blue]}${app}${reset_color}" "${fg[green]}${sum}${reset_color}"
 	else
-		echo "There are no processes with pattern '${fg[blue]}${app}${reset_color}' are running."
+		printf "There are no processes with pattern '%s' running.\n" "${fg[blue]}${app}${reset_color}"
 	fi
 	fi
 }
 
-pdfmerge () 
+pdfmerge ()
 {
 	local tomerge
 	tomerge=""
@@ -500,15 +477,19 @@ apkun ()
 }
 
 lightmin ()
-# Set brightness to minimum
+# ⚠️  INTEL-SPECIFIC: Set brightness to minimum
+# Requires: /sys/class/backlight/intel_backlight/
+# On other systems, check: ls /sys/class/backlight/
 {
-  echo 100 | doas tee /sys/class/backlight/intel_backlight/brightness
+    printf '%s\n' 100 | doas tee /sys/class/backlight/intel_backlight/brightness
 }
 
 lightmax ()
-# Set brightness to maximum
+## ⚠️  INTEL-SPECIFIC: Set brightness to maximum
+# Requires: /sys/class/backlight/intel_backlight/
+# On other systems, check: ls /sys/class/backlight/
 {
-  echo 852 | doas tee /sys/class/backlight/intel_backlight/brightness
+    printf '%s\n' 852 | doas tee /sys/class/backlight/intel_backlight/brightness
 }
 
 #light ()
@@ -525,7 +506,7 @@ bulkrename ()
   find "$1" -depth | while read line; do
   dir="$(dirname "$line")"
   old="$(basename "$line")"
-  new="$(echo $old | tr ' ' '_' \
+  new="$(printf '%s\n' "$old" | tr ' ' '_' \
     | tr -d '()[]{},?!' | tr -d "'" \
     | tr '[[:upper:]]' '[[:lower:]]' \
     | sed 's/__/_/g' | sed 's/_-_/-/g' )"
@@ -541,7 +522,7 @@ tf ()
 
 aur ()
 {
-  cd $HOME/git 
+  cd $HOME/git
   package_name="$1"
   aur_url="https://aur.archlinux.org"
   git clone $aur_url/$package_name
@@ -645,32 +626,6 @@ calc()
   python -q
 }
 
-transfer() {
-
-    tmp_file=$(mktemp /tmp/transfer_XXXXXXXX)
-    trap 'rm ${tmp_file}' EXIT
-
-    # Help. In case no arguments specified
-    if [[ $# == 0 ]]; then
-        echo "No arguments specified. Usage:"
-        echo "$ transfer /tmp/test.md"
-        echo "$ cat /tmp/test.md | transfer test.md"
-        exit 1
-    fi
-
-    # Upload either from file or stdin
-    if tty -s; then
-        basefile=$(basename "${1}" | sed -e 's/[^a-zA-Z0-9._-]/-/g')
-        curl --progress-bar --upload-file "${1}" "https://transfer.sh/${basefile}" >> "${tmp_file}"
-    else
-        curl --progress-bar --upload-file "-" "https://transfer.sh/${1}" >> "${tmp_file}"
-    fi
-
-    # Print download link
-    cat "${tmp_file}"
-    echo
-}
-
 push() {
   # http post files
   file_to_be_pushed="$1"
@@ -712,13 +667,13 @@ m() {
 
 
 dua() {
-  echo "بارك الله فيك وبارك لك ونفع بك حقق الله أمنياتك وأسعدك في الدنيا والآخرة" \
+    printf '%s\n' 'بارك الله فيك وبارك لك ونفع بك حقق الله أمنياتك وأسعدك في الدنيا والآخرة' \
   | xclip -selection clipboard
 }
 
 sitemap() {
-  # submit sitemap to google 
-  # For simplicity, add sitemap to robots.txt and then use this function to 
+  # submit sitemap to google
+  # For simplicity, add sitemap to robots.txt and then use this function to
   # update it in Google like this: sitemap https://abdullah.support/robots.txt
   google_url="https://www.google.com/webmasters/sitemaps/ping?sitemap="
   path=$1
@@ -726,7 +681,7 @@ sitemap() {
 }
 
 baqara() {
-  /usr/bin/mpv --no-resume-playback ~/haq/shuraim/002{001..286}.mp3 
+  /usr/bin/mpv --no-resume-playback ~/haq/shuraim/002{001..286}.mp3
 }
 
 gifspeed() {
@@ -743,7 +698,7 @@ gifspeed() {
 
 mkuser () {
   # Create a new user with creating new homedir, zsh as shell, adding it to
-  # audio, video and wheel group 
+  # audio, video and wheel group
 
   username="$1"
     doas useradd -m -G wheel,input,audio,video -s `which zsh` "$username" && doas passwd "$username"
@@ -757,7 +712,7 @@ Q () {
   Qari="$3"
   path="$HOME/haq/sudais/"
   [ -z "$Qari" ] && path="$HOME/haq/shuraim/"
- 
+
   if [ -z "$Surah" ] || [ -z "$Ayah" ]; then
     exit 1
   fi
@@ -769,7 +724,7 @@ Qt () {
   # listen Holy Quran with Urdu translation
   # Surah is a multipurpose Python script which feeds metadata into Verses.
   _listen="$(Surah $1)"
-  surah=$(echo -n "${_listen//[[:space:]]/}.mp3")
+  surah=$(printf '%s' "${_listen//[[:space:]]/}.mp3")
   Quran_path="$HOME/kit/mp3/urdu/"
  /usr/bin/mpv --no-resume-playback $Quran_path$surah &
 }
@@ -804,7 +759,7 @@ vers() {
 
   for i in $(seq 1 $verses);
   do
-    printf -v file '%03d%03d.mp3' $surah $i; echo "## _Ayat $i :arrow_heading_down:_\n{{< audio mp3=https://gitlab.com/Abdullah/haq/-/raw/master/shuraim/$file >}}\n" >> $output_file;
+    printf -v file '%03d%03d.mp3' "$surah" "$i"; printf '%b\n' "## _Ayat $i :arrow_heading_down:_\n{{< audio mp3=https://gitlab.com/Abdullah/haq/-/raw/master/shuraim/$file >}}\n" >> "$output_file";
   done
 
 }
@@ -816,10 +771,10 @@ getscr() {
   new_scrot_file="$1"
   [ -z $new_scrot_file ] && new_scrot_file="scrot-$(date +%d-%m-%Y-%H-%M-%S)"
   cp $scrot_file $scrot_dir$new_scrot_file.jpg && \
-    echo $scrot_dir$new_scrot_file.jpg && \
+    printf '%s\n' "$scrot_dir$new_scrot_file.jpg" && \
     notify-send -t 3500 -i \
     $HOME/.local/share/icons/drops/imgur.png \
-    "Screenshot saved: $new_scrot_file.jpg" 
+    "Screenshot saved: $new_scrot_file.jpg"
   feh $scrot_dir$new_scrot_file.jpg
 }
 
@@ -832,14 +787,14 @@ srm () {
 hg () {
   # runs hugo in root dir of my website project
   webdir="$HOME/git/mysite/"
-  echo "Current dir is $PWD"
-  echo "Building your website in $webdir"
+  printf 'Current dir is %s\n' "$PWD"
+  printf 'Building your website in %s\n' "$webdir"
   cd "$webdir"
   hugo --gc=true
-  cd public && echo "add your files and commit them!"
+  cd public && printf '%s\n' 'add your files and commit them!'
 }
 
-dep () 
+dep ()
 {
   # deploy changes to website after you have pushed the master repo with same
   # commit message
@@ -852,16 +807,16 @@ dep ()
   hugo -D
   cd "$rendered_dir"
   git add .
-  echo "Run git status and commit now!"
+  printf '%s\n' 'Run git status and commit now!'
   git commit -am "$msg" && git push; cd "$source_dir"; git push
-  echo "$site_url is live now!" 
+  printf '%s is live now!\n' "$site_url"
 }
 
 hgn ()
-{ 
+{
   arg="$@"
   if [ -z $arg ]; then
-    echo "Please give me a name!"
+    printf '%s\n' 'Please give me a name!'
   fi
 
   # Create new post and edit with $EDITOR
@@ -892,14 +847,14 @@ done
 isinstalled () {
     prog=$1
     if [[ $(command -v ${prog}) == "" ]]; then
-        echo -e "${prog} is not installed!"
+        printf '%s is not installed!\n' "$prog"
         return 1
     fi
-    echo -e "${prog} is installed!"
+    printf '%s is installed!\n' "$prog"
     return 0
 }
 
-newest () 
+newest ()
 {
     /usr/bin/ls -Art $1* | tail -n 1
 }
@@ -937,24 +892,24 @@ local items
 local app="$1"
 if [ -z "$app" ];
 then
-    echo "First argument - pattern to grep from processes"
+    printf '%s\n' 'First argument - pattern to grep from processes'
 else
     sum=0
     for i in `ps aux | grep -i "$app" | grep -v "grep" | awk '{print $6}'`
     do
         sum=$(($i + $sum))
     done
-    sum=$(echo "scale=2; $sum / 1024.0" | bc)
+    sum=$(printf 'scale=2; %s / 1024.0\n' "$sum" | bc)
     if [[ $sum != "0" ]]
     then
-        echo "${fg[blue]}${app}${reset_color} is having ${fg[green]}${sum}${reset_color} MBs of RAM."
+        printf '%s is using %s MB of RAM.\n' "${fg[blue]}${app}${reset_color}" "${fg[green]}${sum}${reset_color}"
     for i in `ps aux | grep -v 'grep' | grep -i "$app" | awk '{print $2}'`
     do
         notify-send -i ${app} -t 1500 "process ${i} is gone!"
         kill -9 $i
     done
 else
-    echo "There are no processes with pattern '${fg[blue]}${app}${reset_color}' are running."
+    printf "There are no processes with pattern '%s' are running.\n" "${fg[blue]}${app}${reset_color}"
     fi
 fi
 }
@@ -971,7 +926,7 @@ rtty()
 {
     # record my tty for youtube
     today="$HOME/you/yt-"$(date +%F_%T)
-    ffmpeg -f pulse -ac 2 -i default -f fbdev -r 30 -i /dev/fb0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.support':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv 
+    ffmpeg -f pulse -ac 2 -i default -f fbdev -r 30 -i /dev/fb0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.support':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv
 }
 
 rarea()
@@ -992,11 +947,6 @@ rec4mobi()
 
 }
 
-drd()
-{
-feh --bg-scale '/home/ak/pix/wall/collection/470768.jpg'
-}
-
 andvid()
 {
     # convert video mobile friendly
@@ -1012,8 +962,8 @@ andvid()
 
 draw()
 {
-    # floating window of $TERMINAL with specified geometry
-    # Get geometry
+    # ⚠️  BSPWM-SPECIFIC: Requires bspc command (bspwm window manager)
+    # Creates a floating window with custom geometry using hacksaw
     thickness=$(bspc config border_width)
     color=$(bspc config focused_border_color)
     hacksaw -ns $thickness -c $color | IFS=+x read -r w h x y
@@ -1047,7 +997,7 @@ geometry() {
     if [ -x /usr/sbin/slop ]; then
         slop -f "%xx%y+%w+%h"
     else
-        echo "Please install slop first..."
+        printf '%s\n' 'Please install slop first...'
     fi
 }
 
@@ -1122,7 +1072,7 @@ decme()
 
 ghsubdomains_takeover() {
     name=$1
-    http -b GET http://$name | grep -F -q "<strong>There isn't a GitHub Pages site here.</strong>" && echo "Subdomain takeover may be possible" || echo "Subdomain takeover is not possible"
+    http -b GET http://$name | grep -F -q "<strong>There isn't a GitHub Pages site here.</strong>" && printf '%s\n' 'Subdomain takeover may be possible' || printf '%s\n' 'Subdomain takeover is not possible'
 }
 
 
@@ -1131,35 +1081,34 @@ ghsubdomains_takeover() {
     input_file="$1"
     output_file="$2"
     ffmpeg -i "$input_file" -r 20 -s 352x288 -vb 400k -acodec aac -strict experimental -ac 1 -ar 8000 -ab 24k "$output_file"
-    
+
 }
 
 chromeupdate () {
-    # checks if google chrome is updated or not, if its not updated, it will ask 
+    # checks if google chrome is updated or not, if its not updated, it will ask
     # me to update it
     chrome_repo_path="$HOME/git/chrome"
     current_chrome_version_installed="$(google-chrome-stable --version | awk '{print $3}')"
     #latest_chrome_version="$(curl -sSf https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages | awk -F ': ' '/^Package: google-chrome-stable$/{getline; if ($1 == "Version") { split($2, v, "-"); print v[1]; exit; } }')"
     latest_chrome_version="$(curl -sSf https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages 2>/dev/null | awk -F ': ' '/^Package: google-chrome-stable$/{getline; if ($1 == "Version") { split($2, v, "-"); print v[1]; exit; } }')"
 
-    
-    if [[ "$current_chrome_version_installed" = "$latest_chrome_version" ]]; then
-        echo "Your Chrome is up to date (Version $current_chrome_version_installed)"
-    else
-        echo "Your Chrome is outdated (Installed version: $current_chrome_version_installed, Latest version: $latest_chrome_version)"
 
+    if [[ "$current_chrome_version_installed" = "$latest_chrome_version" ]]; then
+        printf 'Your Chrome is up to date (Version %s)\n' "$current_chrome_version_installed"
+    else
+        printf 'Your Chrome is outdated (Installed version: %s, Latest version: %s)\n' "$current_chrome_version_installed" "$latest_chrome_version"
         print -n "Do you want to update Chrome? (y/n): "
 
         read choice
 
-        case "$choice" in 
+        case "$choice" in
             [Yy]*)
-                echo "Updating Chrome..."
+                printf '%s\n' 'Updating Chrome...'
                 cd "$chrome_repo_path"
                 git pull && makepkg -sirc --noconfirm && notify-send "Chrome is updated successfully!"
                 ;;
             *)
-                echo "No update performed!"
+                printf '%s\n' 'No update performed!'
                 ;;
         esac
     fi
@@ -1247,7 +1196,7 @@ pcd() {
 
 playdir() {
   if [[ $# == 0 ]]; then
-    echo "playdir requires one or more directories on input."
+    printf '%s\n' 'playdir requires one or more directories on input.'
   else
     mpvshuf --playlist=<(find "$@" -type f -follow \
       -not -path '*/\.*' -exec realpath -s {} \;)
