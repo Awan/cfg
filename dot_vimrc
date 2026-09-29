@@ -265,9 +265,19 @@ function! s:OpenMarkdownPreview()
     endif
 
     let l:input = expand('%:p')
-    let l:output = '/tmp/index.html'
+    let l:output = tempname() . '.html'
     let l:template = expand('$HOME/.local/share/pandoc/template.html')
     let l:metadata = expand('$HOME/.local/share/pandoc/metadata.yaml')
+
+    if !filereadable(l:template)
+        echoerr 'Pandoc template not found: ' . l:template
+        return
+    endif
+
+    if !filereadable(l:metadata)
+        echoerr 'Pandoc metadata file not found: ' . l:metadata
+        return
+    endif
 
     execute '!pandoc -s -f markdown -t html --template='
         \ . shellescape(l:template)

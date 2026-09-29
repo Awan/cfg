@@ -97,7 +97,8 @@
 	dc = diff --cached
 	s = status
 	psm = submodule update --remote --recursive
-	sp = diff --ignore-all-space -- # check if there is only whitespace cleanup changes
+	sp = diff --ignore-all-space -- # show diff while ignoring whitespace
+        whitespace-only = diff --ignore-all-space --quiet
 [credential]
 	helper = cache
 [help]
@@ -120,11 +121,11 @@
         autoStash = true
         instructionFormat = %s [%an]
 [sequence]
-        editor = $EDITOR
+        editor = vim
 [merge]
-        tool = $EDITOR
+        tool = vimdiff
         conflictstyle = diff3
-[mergetool "$EDITOR"]
+[mergetool "vimdiff"]
         prompt = false
 [github]
         user = {{ .git.github_username | quote }}

@@ -9,6 +9,7 @@ while IFS= read -r -d '' file; do
             continue
             ;;
     esac
+
     first_line=$(sed -n '1p' "$file")
 
     case "$first_line" in
@@ -18,11 +19,19 @@ while IFS= read -r -d '' file; do
         '#!/bin/zsh'*|'#!/usr/bin/env zsh'*)
             zsh -n "$file"
             ;;
+        '#!/usr/bin/env python'*|'#!/usr/bin/python'*|'#!/usr/bin/python3'*)
+            python3 -c 'import ast, pathlib, sys; ast.parse(pathlib.Path(sys.argv[1]).read_text())' "$file"
+            ;;
+        '#!/usr/bin/perl'*)
+            perl -c "$file"
+            ;;
         '#!'*)
-            printf 'Skipping non-shell executable: %s (%s)\n' "$file" "$first_line"
+            printf 'Unsupported executable: %s (%s)\n' "$file" "$first_line" >&2
+            exit 1
             ;;
         *)
-            printf 'Skipping executable without shebang: %s\n' "$file"
+            printf 'Executable without a recognized shebang: %s\n' "$file" >&2
+            exit 1
             ;;
     esac
 done

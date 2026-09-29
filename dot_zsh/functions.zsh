@@ -22,7 +22,15 @@ mkd ()
 
 webm2mp4 ()
 {
-  for file in *.webm
+  local -a files
+  files=( *.webm(N.) )
+
+  (( ${#files} )) || {
+    printf '%s\n' 'No WebM files found.'
+    return 1
+  }
+
+  for file in "${files[@]}"
   do
     ffmpeg -i "$file" "$(basename "$file" .webm).mp4"
   done
@@ -32,57 +40,65 @@ webm2mp4 ()
 
 mp42mp3 ()
 {
-  CURRENTMP4HERE=$(ls *.mp4 | wc -l)
-  notify-send "Found $CURRENTMP4HERE mp4s, gonna convert them now, be patient"
+  local -a files outputs
+  local file output
 
+  files=( *.mp4(N.) )
+  (( ${#files} )) || {
+    printf '%s\n' 'No MP4 files found.'
+    return 1
+  }
 
+  mkdir -p "$HOME/mus" || return 1
 
-  for file in *.mp4
+  for file in "${files[@]}"
   do
-    ffmpeg -y -i "$file" "$(basename "$file" .mp4).mp3"
+    output="$(basename "$file" .mp4).mp3"
+    ffmpeg -y -i "$file" "$output" || return 1
+    outputs+=("$output")
   done
 
-
-
-  notify-send "All $CURRENTMP4HERE mp4s have been converted to mp3s and now we are moving them to your music dir"
-  CURRENTMP3INMPD=$(ls $HOME/mus/*.mp3 | wc -l)
-
-
-
-  notify-send "You have $CURRENTMP3INMPD mp3s in your database"
-  mv *.mp3 ~/mus/ -v
-
-
-
-  notify-send "All mp3s have been moved to music dir."
-  TOTAL=$(($CURRENTMP3INMPD + $CURRENTMP4HERE))
-
-
-  notify-send "You have got $CURRENTMP4HERE new mp3s. Now you have $TOTAL songs in database. Enjoy your music"
+  mv -- "${outputs[@]}" "$HOME/mus/"
+  local count=${#files}
+  notify-send "Converted $count MP4 file(s) to MP3."
 }
 
 # mp3 to aac
 
 mp3toaac () {
-  for file in *.mp3
+  local -a files
+  files=( *.mp3(N.) )
+
+  (( ${#files} )) || {
+    printf '%s\n' 'No MP3 files found.'
+    return 1
+  }
+
+  for file in "${files[@]}"
   do
     ffmpeg -y -i "$file" "$(basename "$file" .mp3).aac"
   done
 }
 
+speedup() {
+  if (( $# != 1 )); then
+    printf 'Usage: speedup INPUT\n' >&2
+    return 2
+  fi
 
+  local input="$1"
+  local filename="${input:t}"
+  local extension="${filename##*.}"
+  local stem="${filename%.*}"
+  local output="${stem}_speed.${extension}"
 
-speedup ()
-{
-  base=$(basename $1)
-  ext="${base##*.}"
-  base="${base%.*}"
+  ffmpeg -i "$input" \
+    -filter:v 'setpts=0.5*PTS' \
+    "$output" || return
 
-  ffmpeg -i "$1" -filter:v "setpts=0.5*PTS" "$base"'_speed.'"$ext"
-
-
-  notify-send "your video has got speed. Enjoy"
+  notify-send 'Your video has been sped up.'
 }
+
 
 # aac + image = mp4
 
@@ -100,7 +116,7 @@ aactomp4()
 
     local image="$1"
     local audio="$2"
-    local output="${audio%.aac}.mp4"
+    local output="${audio:r}.mp4"
 
     if [[ ! -f "$image" ]]; then
         printf 'Error: image not found: %s\n' "$image"
@@ -231,14 +247,21 @@ dataurl()
   printf 'data:%s;base64,%s\n' "$mimeType" "$(openssl base64 -in "$1" | tr -d '\n')"
 }
 
-escape()
-{
-  printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u);
-  # print a newline unless we’re piping the output to another program
-  if [ -t 1 ]; then
+escape() {
+  if (( $# == 0 )); then
+    return 0
+  fi
+
+  printf '%s' "$*" |
+    xxd -p -c1 -u |
+    while IFS= read -r byte; do
+      printf '\\x%s' "$byte"
+    done
+
+  if [[ -t 1 ]]; then
     printf '\n'
-    fi;
-  }
+  fi
+}
 
 # v()
 # {
@@ -264,16 +287,27 @@ tre()
 }
 
 shebang() {
-    if i=$(which $1);
-    then
-        printf '#!/usr/bin/env %s\n\n' $1 > $2 && chmod 755 $2 && $EDITOR + $2 && chmod 755 $2;
-    else
-        printf "'which' could not find %s, is it in your \$PATH?\n" "$1";
-    fi;
-    # in case the new script is in path, this throw out the command hash table and
-    # start over  (man zshbuiltins)
-    rehash
+  if (( $# != 2 )); then
+    printf 'Usage: shebang INTERPRETER FILE\n' >&2
+    return 2
+  fi
+
+  local interpreter="$1"
+  local file="$2"
+
+  if ! (( $+commands[$interpreter] )); then
+    printf 'Interpreter not found: %s\n' "$interpreter" >&2
+    return 1
+  fi
+
+  printf '#!/usr/bin/env %s\n\n' "$interpreter" > "$file" &&
+    chmod 755 "$file" &&
+    "$EDITOR" "$file" &&
+    chmod 755 "$file"
+
+  rehash
 }
+
 webcam () {
     mplayer -cache 128 -tv driver=v4l2:width=350:height=350 -vo xv tv:// -noborder -geometry "+1340+445" -ontop -quiet 2>/dev/null >/dev/null
 }
@@ -427,14 +461,17 @@ ram ()
 	fi
 }
 
-pdfmerge ()
-{
-	local tomerge
-	tomerge=""
-	for file in "$@"; do
-		tomerge="$tomerge $file"
-	done
-	pdftk "$tomerge" cat output mergd.pdf
+pdfmerge() {
+  if (( $# < 2 )); then
+    printf 'Usage: pdfmerge INPUT... OUTPUT.pdf\n' >&2
+    return 2
+  fi
+
+  local output="${argv[-1]}"
+  local -a inputs
+  inputs=("${(@)argv[1,-2]}")
+
+  pdftk "${inputs[@]}" cat output "$output"
 }
 
 bkmeup ()
@@ -515,7 +552,12 @@ lightmin ()
 # Requires: /sys/class/backlight/intel_backlight/
 # On other systems, check: ls /sys/class/backlight/
 {
-    printf '%s\n' 100 | doas tee /sys/class/backlight/intel_backlight/brightness
+    if [[ ! -w /sys/class/backlight/intel_backlight/brightness ]]; then
+        printf '%s\n' 'Intel backlight device is unavailable.' >&2
+        return 1
+    fi
+    printf '%s\n' 100 |
+        doas tee /sys/class/backlight/intel_backlight/brightness
 }
 
 lightmax ()
@@ -523,7 +565,12 @@ lightmax ()
 # Requires: /sys/class/backlight/intel_backlight/
 # On other systems, check: ls /sys/class/backlight/
 {
-    printf '%s\n' 852 | doas tee /sys/class/backlight/intel_backlight/brightness
+    if [[ ! -w /sys/class/backlight/intel_backlight/brightness ]]; then
+        printf '%s\n' 'Intel backlight device is unavailable.' >&2
+        return 1
+    fi
+    printf '%s\n' 852 |
+        doas tee /sys/class/backlight/intel_backlight/brightness
 }
 
 #light ()
@@ -537,16 +584,29 @@ lightmax ()
 bulkrename ()
 # replace spaces with underscores, change upper to lower case, remove extra # underscores.
 {
-  find "$1" -depth | while read line; do
-  dir="$(dirname "$line")"
-  old="$(basename "$line")"
-  new="$(printf '%s\n' "$old" | tr ' ' '_' \
-    | tr -d '()[]{},?!' | tr -d "'" \
-    | tr '[[:upper:]]' '[[:lower:]]' \
-    | sed 's/__/_/g' | sed 's/_-_/-/g' )"
-  [[ "$old" != "$new" ]] && mv -iv "$dir/$old" "$dir/$new"
-done
+  if (( $# != 1 )) || [[ ! -d "$1" ]]; then
+    printf 'Usage: bulkrename DIRECTORY\n' >&2
+    return 2
+  fi
+
+  find "$1" -depth -print0 |
+  while IFS= read -r -d '' line; do
+    local dir="${line:h}"
+    local old="${line:t}"
+    local new
+
+    new="$(printf '%s\n' "$old" |
+      tr ' ' '_' |
+      tr -d '()[]{},?!' |
+      tr -d "'" |
+      tr '[:upper:]' '[:lower:]' |
+      sed 's/__/_/g; s/_-_/-/g')"
+
+    [[ "$old" == "$new" ]] ||
+      mv -iv -- "$dir/$old" "$dir/$new"
+  done
 }
+
 
 tf ()
 {
@@ -706,12 +766,14 @@ dua() {
 }
 
 sitemap() {
-  # submit sitemap to google
-  # For simplicity, add sitemap to robots.txt and then use this function to
-  # update it in Google like this: sitemap https://abdullah.support/robots.txt
-  google_url="https://www.google.com/webmasters/sitemaps/ping?sitemap="
-  path=$1
-  /usr/bin/curl $google_url$path
+  if (( $# != 1 )); then
+    printf 'Usage: sitemap URL\n' >&2
+    return 2
+  fi
+
+  curl --fail --show-error --location \
+    --get 'https://www.google.com/webmasters/sitemaps/ping' \
+    --data-urlencode "sitemap=$1"
 }
 
 baqara() {
@@ -721,14 +783,21 @@ baqara() {
 gifspeed() {
   # reduce gif speed to half
 
-  mkdir -p gifs_with_speed
+  mkdir -p gifs_with_speed || return 1
 
-  for file in *.gif
+  local -a files
+  files=( *.gif(N.) )
+
+  (( ${#files} )) || {
+    printf '%s\n' 'No GIF files found.'
+    return 1
+  }
+
+  for file in "${files[@]}"
   do
-    convert -delay 10x100 "$file" gifs_with_speed/"$(basename "$file")"
+    convert -delay 10x100 "$file" "gifs_with_speed/${file:t}"
   done
 }
-
 
 mkuser () {
   # Create a new user with creating new homedir, zsh as shell, adding it to
@@ -800,22 +869,39 @@ vers() {
 
 getscr() {
   # Sometimes needed to cp scrot to ~/pix/scrots
-  scrot_file="/tmp/foo.jpg"
-  scrot_dir="$HOME/pix/scrots/"
-  new_scrot_file="$1"
-  [ -z $new_scrot_file ] && new_scrot_file="scrot-$(date +%d-%m-%Y-%H-%M-%S)"
-  cp $scrot_file $scrot_dir$new_scrot_file.jpg && \
-    printf '%s\n' "$scrot_dir$new_scrot_file.jpg" && \
-    notify-send -t 3500 -i \
-    $HOME/.local/share/icons/drops/imgur.png \
-    "Screenshot saved: $new_scrot_file.jpg"
-  feh $scrot_dir$new_scrot_file.jpg
+  local scrot_file='/tmp/foo.jpg'
+  local scrot_dir="$HOME/pix/scrots"
+  local new_scrot_file="${1:-scrot-$(date +%d-%m-%Y-%H-%M-%S)}"
+  local output="$scrot_dir/$new_scrot_file.jpg"
+  local icon="$HOME/.local/share/icons/drops/imgur.png"
+
+  [[ -f "$scrot_file" ]] || {
+    printf 'Screenshot source not found: %s\n' "$scrot_file" >&2
+    return 1
+  }
+
+  mkdir -p "$scrot_dir" || return 1
+  cp -- "$scrot_file" "$output" || return 1
+  printf '%s\n' "$output"
+
+  if [[ -f "$icon" ]]; then
+    notify-send -t 3500 -i "$icon" \
+      "Screenshot saved: $new_scrot_file.jpg"
+  else
+    notify-send -t 3500 \
+      "Screenshot saved: $new_scrot_file.jpg"
+  fi
+
+  feh "$output"
 }
 
-srm () {
-# Shred and rm
-  files_to_be_operated_on="$@"
-  shred "$files_to_be_operated_on" && rm "$files_to_be_operated_on"
+srm() {
+  if (( $# == 0 )); then
+    printf 'Usage: srm FILE...\n' >&2
+    return 2
+  fi
+
+  shred -- "$@" && rm -- "$@"
 }
 
 hg () {
@@ -911,7 +997,7 @@ man() {
 andial() {
 # Make a phone call from connected android devices
     phone_number="$1"
-    adb shell am start -a android.intent.action.CALL -d tel:$phone_number
+    adb shell am start -a android.intent.action.CALL -d "tel:$phone_number"
 }
 
 macgen() {
@@ -998,13 +1084,23 @@ draw()
 {
     # ⚠️  BSPWM-SPECIFIC: Requires bspc command (bspwm window manager)
     # Creates a floating window with custom geometry using hacksaw
-    thickness=$(bspc config border_width)
-    color=$(bspc config focused_border_color)
-    hacksaw -ns $thickness -c $color | IFS=+x read -r w h x y
-    # Add a new rule
-    bspc rule -a \* -o state=floating rectangle="$((w - 2 * thickness))x$((h - 2 * thickness))+$x+$y"
-    # Execute $TERMINAL
-    $TERMINAL &
+    if ! (( $+commands[bspc] && $+commands[hacksaw] )); then
+        printf '%s\n' 'draw requires bspwm and hacksaw.' >&2
+        return 1
+    fi
+
+    local thickness color w h x y
+    thickness="$(bspc config border_width)" || return 1
+    color="$(bspc config focused_border_color)" || return 1
+
+    hacksaw -ns "$thickness" -c "$color" |
+        IFS=+x read -r w h x y || return 1
+
+    bspc rule -a '*' -o state=floating \
+        rectangle="$((w - 2 * thickness))x$((h - 2 * thickness))+$x+$y" ||
+        return 1
+
+    command "$TERMINAL" &
 }
 
 zal () {
@@ -1151,11 +1247,10 @@ chromeupdate () {
 slowvid () {
     video_to_edit="$1"
     #slow_version="$2"
-    local base=$(basename $video_to_edit)
+    local base="${video_to_edit:t}"
     local ext="${base##*.}"
     local base="${base%.*}"
     ffmpeg -i "$video_to_edit" -vf "setpts=2.0*PTS" -acodec copy "$base-slow.$ext"
-
 }
 
 imagetovideo () {
@@ -1169,7 +1264,7 @@ andwifi() {
     # enable or disable wifi on android connected using adb
     # You can use it like: andwifi enable|disable
     operation="$1"
-    adb shell svc wifi $operation
+    adb shell svc wifi "$operation"
 }
 
 andlock() {
@@ -1201,8 +1296,8 @@ psearch() {
 }
 
 alis() {
-    $EDITOR ~/.zsh/custom-aliases.zsh
-    source ~/.zsh/custom-aliases.zsh
+    "$EDITOR" "$HOME/.zsh/custom-aliases.zsh"
+    source "$HOME/.zsh/custom-aliases.zsh"
 }
 
 # mpv helpers
