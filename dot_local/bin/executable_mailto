@@ -1,3 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-urxvtc -e mutt "$@"
+export EDITOR=vim
+export VISUAL=vim
+
+uri=$1
+
+uri=${uri#mailto:}
+address=${uri%%\?*}
+
+exec alacritty -e mutt "$address"

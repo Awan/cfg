@@ -2,11 +2,11 @@
 Categories=Office;Network;Email;
 Comment=Simple text-based Mail User Agent
 Comment[de]=Einfaches, Text-basiertes Mailprogramm
-Exec=mutt
+Exec="~/.local/bin/mailto %u"
 Icon=mutt
 Name=mutt
 Name[de]=Mutt
 MimeType=x-scheme-handler/mailto;
 NoDisplay=false
-Terminal=true
+Terminal=false
 Type=Application
