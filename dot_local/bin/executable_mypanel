@@ -82,6 +82,19 @@ mkfifo "$PANEL_FIFO"
 modules_bg="B#AAFFFFFF"
 modules_fg="F#FF000000"
 
+COLOR_FREE_FG="#7f8490"
+COLOR_FREE_BG="$COLOR_DEFAULT_BG"
+COLOR_FOCUSED_FREE_FG="#94e2d5"
+COLOR_FOCUSED_FREE_BG="$COLOR_DEFAULT_BG"
+COLOR_OCCUPIED_FG="#cba6f7"
+COLOR_OCCUPIED_BG="$COLOR_DEFAULT_BG"
+COLOR_FOCUSED_OCCUPIED_FG="#f9e2af"
+COLOR_FOCUSED_OCCUPIED_BG="$COLOR_DEFAULT_BG"
+COLOR_URGENT_FG="#f38ba8"
+COLOR_URGENT_BG="$COLOR_DEFAULT_BG"
+COLOR_FOCUSED_URGENT_FG="#ff6b81"
+COLOR_FOCUSED_URGENT_BG="$COLOR_DEFAULT_BG"
+
 get_tray_padding() {
     # List processes that use the tray
     local active_apps
@@ -480,11 +493,13 @@ my_panel() {
 								fi
 								;;
 						esac
-						wm="${wm}%{F${FG}}%{B${BG}}%{A:bspc desktop -f ${name}:}%{A5:bspc desktop -f next:}%{A4:bspc desktop -f prev:} ${name} %{A}%{A}%{A}%{B-}%{F-}"
+						#wm="${wm}%{F${FG}}%{B${BG}}%{A:bspc desktop -f ${name}:}%{A5:bspc desktop -f next:}%{A4:bspc desktop -f prev:} ${name} %{A}%{A}%{A}%{B-}%{F-}"
+						wm="${wm}%{F${FG}}%{A:bspc desktop -f ${name}:}%{A5:bspc desktop -f next:}%{A4:bspc desktop -f prev:} ${name} %{A}%{A}%{A}%{F-}"
 						;;
 					[LTG]*)
 						# layout, state and flags
-						wm="${wm}%{F$COLOR_STATE_FG}%{B$COLOR_STATE_BG} ${name} %{B-}%{F-}"
+						# wm="${wm}%{F$COLOR_STATE_FG}%{B$COLOR_STATE_BG} ${name} %{B-}%{F-}"
+						wm="${wm}%{F$COLOR_STATE_FG} ${name} %{F-}"
 						;;
 				esac
 				shift
