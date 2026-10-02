@@ -1,0 +1,10 @@
+[Unit]
+Description=Update Artwall wallpaper periodically
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=10min
+Unit=artwall.service
+
+[Install]
+WantedBy=timers.target
