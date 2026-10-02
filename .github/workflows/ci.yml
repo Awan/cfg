@@ -34,8 +34,11 @@ jobs:
       - name: Show chezmoi version
         run: chezmoi --version
 
+      - name: Configure Git safe directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Validate Zsh syntax
-        run: find "$GITHUB_WORKSPACE" -type f -name "*.zsh" -print0 | xargs -0 -r zsh -n
+        run: git ls-files -z -- "*.zsh" ":!archive/**" | xargs -0 -r zsh -n
 
       - name: Validate Zsh startup files
         run: zsh -n dot_zshenv dot_zshrc dot_zprofile
@@ -44,7 +47,7 @@ jobs:
         run: zsh -e -fc 'source dot_zsh/functions.zsh'
 
       - name: Validate Shell scripts
-        run: find "$GITHUB_WORKSPACE" -type f -name "*.sh" -print0 | xargs -0 -r shellcheck -S error
+        run: git ls-files -z -- "*.sh" ":!archive/**" | xargs -0 -r shellcheck -S error
 
       - name: Validate executable shell files
         run: bash .github/scripts/check-shell-files
