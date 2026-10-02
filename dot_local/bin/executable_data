@@ -7,35 +7,47 @@
 
 
 import subprocess
+import sys
+from pathlib import Path
+
 import requests
 from bs4 import BeautifulSoup
 
 
-# Getting values
+MISC_DIR = Path.home() / '.local/share/misc'
 
-get_url_1, get_url_2 = subprocess.run(['gpg', '-dq',
-    '/home/ak/.local/share/misc/url-1.gpg'], check=True, stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE, encoding='utf-8'), subprocess.run(['gpg', '-dq',
-        '/home/ak/.local/share/misc/url-2.gpg'], check=True,
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
-url_1, url_2 = get_url_1.stdout[:-1], get_url_2.stdout[:-1]
-user = subprocess.sys.argv[1]
+
+def decrypt(name):
+    result = subprocess.run(
+        ['gpg', '-dq', str(MISC_DIR / name)],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    return result.stdout.rstrip('\n')
+
+
+url_1, url_2 = decrypt('url-1.gpg'), decrypt('url-2.gpg')
+user = sys.argv[1]
 
 try:
-    tries = subprocess.sys.argv[2]
+    tries = sys.argv[2]
 except IndexError:
     tries = 0
 
+
 def get_info_1(user):
-    r = requests.post(url_1, data={'number': user})
+    r = requests.post(url_1, data={'number': user}, timeout=30)
+    r.raise_for_status()
     soup = BeautifulSoup(r.content, 'html.parser')
     for data in soup.find_all('tr'):
         print(data.get_text(separator=' : ', strip=True))
 
 
-
 def get_info_2(user):
-    r = requests.post(url_2, data={'cnnum': user})
+    r = requests.post(url_2, data={'cnnum': user}, timeout=30)
+    r.raise_for_status()
     soup = BeautifulSoup(r.content, 'html.parser')
     for data in soup.find_all('tr'):
         print(data.get_text(separator=': -------> ', strip=True))
