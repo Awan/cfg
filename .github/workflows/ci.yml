@@ -34,6 +34,9 @@ jobs:
       - name: Show chezmoi version
         run: chezmoi --version
 
+      - name: Configure Git safe directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Validate Zsh syntax
         run: git ls-files -z -- "*.zsh" ":!archive/**" | xargs -0 -r zsh -n
 
