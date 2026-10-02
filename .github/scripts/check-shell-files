@@ -13,10 +13,10 @@
 
 set -euo pipefail
 
-find . -type f -name 'executable_*' -print0 |
+git ls-files -z -- ':(glob)**/executable_*' ':(exclude)archive/**' |
 while IFS= read -r -d '' file; do
     case "$file" in
-        */private_dot_config/sxhkd/executable_sxhkdrc)
+        private_dot_config/sxhkd/executable_sxhkdrc|*/private_dot_config/sxhkd/executable_sxhkdrc)
             printf 'Skipping sxhkd configuration: %s\n' "$file"
             continue
             ;;
