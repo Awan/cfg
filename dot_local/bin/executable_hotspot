@@ -18,9 +18,7 @@
 # 2. REQUIRED PRE-CONFIGURATION
 # -----------------------------
 # A. Identify Wireless Interfaces & Settings:
-#    - Find your physical Wi-Fi interface name:
-#        iw dev
-#      (Replace 'wlp59s0' in this script if yours differs).
+#    - The physical Wi-Fi interface is detected automatically from `iw dev`.
 #
 # B. Configure hostapd (/etc/hostapd/hostapd.conf):
 #    - Open or create the file using Vim:
@@ -52,7 +50,6 @@
 #
 # 3. VARIABLES TO MODIFY IN THIS SCRIPT
 # ------------------------------------
-#   INTERFACE_PHY : Name of your physical wireless card (e.g., wlp59s0)
 #   INTERFACE_AP  : Name of virtual access point interface (e.g., uap0)
 #   HOSTAPD_CONF  : Path to hostapd configuration file (/etc/hostapd/hostapd.conf)
 #   SUBNET        : Gateway IP for the virtual hotspot network (e.g., 192.168.150.1/24)
@@ -68,10 +65,13 @@
 #
 # ==============================================================================
 
-INTERFACE_PHY="wlp59s0"
 INTERFACE_AP="uap0"
 HOSTAPD_CONF="/etc/hostapd/hostapd.conf"
 SUBNET="192.168.150.1/24"
+
+get_phy_interface() {
+    iw dev | awk '$1 == "Interface" {interface=$2} $1 == "type" && $2 == "managed" {print interface; exit}'
+}
 HOTSPOT_NAT_CHAIN="CFG_HOTSPOT_NAT"
 HOTSPOT_FWD_CHAIN="CFG_HOTSPOT_FWD"
 
@@ -90,6 +90,14 @@ get_channel() {
 
 start_hotspot() {
     echo "Starting Hotspot..."
+
+    INTERFACE_PHY="$(get_phy_interface)"
+    if [ -z "$INTERFACE_PHY" ]; then
+        echo "Error: no managed wireless interface found."
+        exit 1
+    fi
+
+    echo "Using wireless interface: $INTERFACE_PHY"
 
     # Dynamically match channel of main interface
     CURR_CHAN=$(get_channel)
