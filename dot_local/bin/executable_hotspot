@@ -72,6 +72,11 @@ SUBNET="192.168.150.1/24"
 get_phy_interface() {
     iw dev | awk '$1 == "Interface" {interface=$2} $1 == "type" && $2 == "managed" {print interface; exit}'
 }
+
+get_uplink_interface() {
+    ip route get 1.1.1.1 | awk '{for (i=1; i<=NF; i++) if ($i == "dev") {print $(i+1); exit}}'
+}
+
 HOTSPOT_NAT_CHAIN="CFG_HOTSPOT_NAT"
 HOTSPOT_FWD_CHAIN="CFG_HOTSPOT_FWD"
 
@@ -92,12 +97,20 @@ start_hotspot() {
     echo "Starting Hotspot..."
 
     INTERFACE_PHY="$(get_phy_interface)"
+    INTERFACE_UPLINK="$(get_uplink_interface)"
+
     if [ -z "$INTERFACE_PHY" ]; then
         echo "Error: no managed wireless interface found."
         exit 1
     fi
 
+    if [ -z "$INTERFACE_UPLINK" ]; then
+        echo "Error: no Internet uplink interface found."
+        exit 1
+    fi
+
     echo "Using wireless interface: $INTERFACE_PHY"
+    echo "Using Internet uplink: $INTERFACE_UPLINK"
 
     # Dynamically match channel of main interface
     CURR_CHAN=$(get_channel)
@@ -135,11 +148,14 @@ start_hotspot() {
     cleanup_firewall
     sudo iptables -t nat -N "$HOTSPOT_NAT_CHAIN"
     sudo iptables -N "$HOTSPOT_FWD_CHAIN"
-    sudo iptables -t nat -A "$HOTSPOT_NAT_CHAIN" -o "$INTERFACE_PHY" -j MASQUERADE
+    sudo iptables -t nat -A "$HOTSPOT_NAT_CHAIN" -o "$INTERFACE_UPLINK" -j MASQUERADE
     sudo iptables -A "$HOTSPOT_FWD_CHAIN" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-    sudo iptables -A "$HOTSPOT_FWD_CHAIN" -i "$INTERFACE_AP" -o "$INTERFACE_PHY" -j ACCEPT
+    sudo iptables -A "$HOTSPOT_FWD_CHAIN" -i "$INTERFACE_AP" -o "$INTERFACE_UPLINK" -j ACCEPT
     sudo iptables -t nat -A POSTROUTING -j "$HOTSPOT_NAT_CHAIN"
     sudo iptables -A FORWARD -j "$HOTSPOT_FWD_CHAIN"
+    sudo nft add rule inet filter input iifname "$INTERFACE_AP" udp dport 67 accept comment "CFG_HOTSPOT_DHCP"
+    sudo nft add rule inet filter forward iifname "$INTERFACE_AP" oifname "$INTERFACE_UPLINK" accept comment "CFG_HOTSPOT_FWD"
+    sudo nft add rule inet filter forward iifname "$INTERFACE_UPLINK" oifname "$INTERFACE_AP" ct state established,related accept comment "CFG_HOTSPOT_FWD"
 
     # Restart DHCP/DNS server
     sudo systemctl restart dnsmasq
@@ -153,6 +169,12 @@ cleanup_firewall() {
     sudo iptables -F "$HOTSPOT_FWD_CHAIN" 2>/dev/null || true
     sudo iptables -t nat -X "$HOTSPOT_NAT_CHAIN" 2>/dev/null || true
     sudo iptables -X "$HOTSPOT_FWD_CHAIN" 2>/dev/null || true
+    for handle in $(sudo nft -a list chain inet filter input | awk '/comment "CFG_HOTSPOT_DHCP"/ {print $NF}'); do
+        sudo nft delete rule inet filter input handle "$handle"
+    done
+    for handle in $(sudo nft -a list chain inet filter forward | awk '/comment "CFG_HOTSPOT_FWD"/ {print $NF}'); do
+        sudo nft delete rule inet filter forward handle "$handle"
+    done
 }
 
 stop_hotspot() {
