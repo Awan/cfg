@@ -182,8 +182,9 @@ mpd_music() {
 #}
 
 wifi() {
-    interface="wlp59s0"
-    ssid="$(iw dev ${interface} link | awk -F: '/SSID/ {print $NF}')"
+    interface="$(iw dev | awk '$1 == "Interface" {print $2; exit}')"
+    [ -n "$interface" ] || return
+    ssid="$(iw dev "$interface" link | awk -F': ' '/SSID:/ {print $2}')"
     if [ -z "${ssid}" ]; then
         # Do nothing
         :
