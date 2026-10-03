@@ -72,6 +72,8 @@ INTERFACE_PHY="wlp59s0"
 INTERFACE_AP="uap0"
 HOSTAPD_CONF="/etc/hostapd/hostapd.conf"
 SUBNET="192.168.150.1/24"
+HOTSPOT_NAT_CHAIN="CFG_HOTSPOT_NAT"
+HOTSPOT_FWD_CHAIN="CFG_HOTSPOT_FWD"
 
 get_channel() {
     # Extract frequency from iw link and map to 2.4GHz channel
@@ -121,16 +123,28 @@ start_hotspot() {
         exit 1
     fi
 
-    # Apply iptables NAT rules
-    sudo iptables -t nat -F
-    sudo iptables -F
-    sudo iptables -t nat -A POSTROUTING -o "$INTERFACE_PHY" -j MASQUERADE
-    sudo iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-    sudo iptables -A FORWARD -i "$INTERFACE_AP" -o "$INTERFACE_PHY" -j ACCEPT
+    # Apply only the rules owned by this hotspot script.
+    cleanup_firewall
+    sudo iptables -t nat -N "$HOTSPOT_NAT_CHAIN"
+    sudo iptables -N "$HOTSPOT_FWD_CHAIN"
+    sudo iptables -t nat -A "$HOTSPOT_NAT_CHAIN" -o "$INTERFACE_PHY" -j MASQUERADE
+    sudo iptables -A "$HOTSPOT_FWD_CHAIN" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+    sudo iptables -A "$HOTSPOT_FWD_CHAIN" -i "$INTERFACE_AP" -o "$INTERFACE_PHY" -j ACCEPT
+    sudo iptables -t nat -A POSTROUTING -j "$HOTSPOT_NAT_CHAIN"
+    sudo iptables -A FORWARD -j "$HOTSPOT_FWD_CHAIN"
 
     # Restart DHCP/DNS server
     sudo systemctl restart dnsmasq
     echo "Hotspot started successfully on Channel $CURR_CHAN."
+}
+
+cleanup_firewall() {
+    sudo iptables -t nat -D POSTROUTING -j "$HOTSPOT_NAT_CHAIN" 2>/dev/null || true
+    sudo iptables -D FORWARD -j "$HOTSPOT_FWD_CHAIN" 2>/dev/null || true
+    sudo iptables -t nat -F "$HOTSPOT_NAT_CHAIN" 2>/dev/null || true
+    sudo iptables -F "$HOTSPOT_FWD_CHAIN" 2>/dev/null || true
+    sudo iptables -t nat -X "$HOTSPOT_NAT_CHAIN" 2>/dev/null || true
+    sudo iptables -X "$HOTSPOT_FWD_CHAIN" 2>/dev/null || true
 }
 
 stop_hotspot() {
@@ -139,8 +153,7 @@ stop_hotspot() {
     sudo ip link set "$INTERFACE_AP" down 2>/dev/null
     sudo iw dev "$INTERFACE_AP" del 2>/dev/null
     sudo systemctl stop dnsmasq 2>/dev/null
-    sudo iptables -t nat -F
-    sudo iptables -F
+    cleanup_firewall
     echo "Hotspot stopped."
 }
 
