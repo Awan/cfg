@@ -35,3 +35,6 @@ DHCP
 nftables
 mypanel
 SSID
+artwall
+run_onchange
+doas
