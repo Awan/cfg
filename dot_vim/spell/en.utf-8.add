@@ -31,3 +31,7 @@ dunst
 Keychain
 systemd
 chezmoi
+DHCP
+nftables
+mypanel
+SSID
