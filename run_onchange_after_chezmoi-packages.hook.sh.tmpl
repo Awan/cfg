@@ -1,4 +1,4 @@
 #!/bin/sh
 
-# chezmoi-packages.hook hash: {{ include "chezmoi-packages.hook" | sha256sum }}
-doas install -m 0644 "{{ joinPath .chezmoi.sourceDir "chezmoi-packages.hook" }}" /etc/pacman.d/hooks/chezmoi-packages.hook
+# chezmoi-packages.hook hash: {{ include "chezmoi-packages.hook.tmpl" | sha256sum }}
+chezmoi execute-template < "{{ joinPath .chezmoi.sourceDir "chezmoi-packages.hook.tmpl" }}" | doas install -m 0644 /dev/stdin /etc/pacman.d/hooks/chezmoi-packages.hook
