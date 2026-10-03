@@ -21,7 +21,7 @@ RUN printf '%s\n' \
 RUN printf '%s\n' 'DisableDownloadTimeout' >> /etc/pacman.conf
 RUN pacman -Syu --noconfirm base-devel go zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting git openssh chezmoi zsh vim shellcheck python age opendoas nodejs && pacman -Scc --noconfirm
 
-RUN useradd -m -s /usr/sbin/zsh ak
+RUN useradd -m -s /usr/bin/zsh ak
 RUN usermod -aG wheel ak
 RUN printf '%s\n' 'permit nopass keepenv :wheel' > /etc/doas.conf && chmod 0400 /etc/doas.conf
 RUN printf '%s\n' 'PACMAN_AUTH=(doas)' >> /etc/makepkg.conf
@@ -35,8 +35,8 @@ ENV GOPATH=/home/ak/go
 ENV PATH=/home/ak/go/bin:/usr/local/bin:/usr/bin:/bin
 ENV HOME=/home/ak
 ENV USER=ak
-ENV SHELL=/usr/sbin/zsh
+ENV SHELL=/usr/bin/zsh
 
 RUN git clone https://aur.archlinux.org/age-plugin-sshagent.git /build/age-plugin-sshagent && cd /build/age-plugin-sshagent && makepkg -si --noconfirm && cd / && rm -rf /build/age-plugin-sshagent
 RUN rm -rf /home/ak/.config/go/telemetry
-CMD ["/usr/sbin/zsh"]
+CMD ["/usr/bin/zsh"]
