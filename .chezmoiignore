@@ -17,3 +17,6 @@ kernel/
 
 # Historical configurations kept for repository reference
 archive/
+
+# Source-only files deployed outside the home directory
+chezmoi-packages.hook
