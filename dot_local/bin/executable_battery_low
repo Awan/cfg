@@ -21,6 +21,9 @@ is_charger_connected=$(cat /sys/class/power_supply/AC/online)
 
 
 while true; do
+  battery_status=$(cat /sys/class/power_supply/BAT0/capacity)
+  is_charger_connected=$(cat /sys/class/power_supply/AC/online)
+
   if [ "$battery_status" -le 30 ] && [ "$is_charger_connected" -eq 0 ]; then
     notify-send -u critical "Battery critically low"
   fi
