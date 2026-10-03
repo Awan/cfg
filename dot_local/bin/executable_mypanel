@@ -182,17 +182,16 @@ mpd_music() {
 #}
 
 wifi() {
-    interface="wlp59s0"
-    ssid="$(iw dev ${interface} link | awk -F: '/SSID/ {print $NF}')"
+    interface="$(iw dev | awk '$1 == "Interface" {print $2; exit}')"
+    [ -n "$interface" ] || return
+    ssid="$(iw dev "$interface" link | awk -F': ' '/SSID:/ {print $2}')"
     if [ -z "${ssid}" ]; then
         # Do nothing
         :
     else
         printf "%s" "%{F#5E81AC}%{F-} %{F#A89984}$ssid%{F-}"
     fi
-}
-
-cpu() {
+}cpu() {
     cpu=$(ps -eo pcpu | awk 'BEGIN {sum=0.0f} {sum+=$1} END {print sum}')
     temp=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))
     if [ $temp -ge 60 ];
