@@ -1339,3 +1339,24 @@ pd() {
 random-mpv() {
   find . -type f | shuf | head -n 1 | xargs mpv
 }
+
+novabak()
+{
+    local backup
+    local output="$HOME/.local/share/chezmoi/encrypted_novabackup.age"
+
+    backup=(/tmp/*.novabackup(Om[1].N))
+
+    if (( ${#backup[@]} == 0 )); then
+        printf '%s\n' 'novabak: no Nova backup found in /tmp.' >&2
+        return 1
+    fi
+
+    printf 'Encrypting: %s\n' "$backup"
+
+    cz encrypt --output="$output" "$backup" || return 1
+
+    git -C "$HOME/.local/share/chezmoi" add -- encrypted_novabackup.age || return 1
+
+    printf 'Encrypted and staged: %s\n' "$output"
+}
