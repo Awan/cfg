@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# 99-secureboot-sign.hook hash: {{ include "system/pacman/hooks/99-secureboot-sign.hook" | sha256sum }}
+doas install -m 0644 "{{ joinPath .chezmoi.sourceDir "system/pacman/hooks/99-secureboot-sign.hook" }}" /etc/pacman.d/hooks/99-secureboot-sign.hook

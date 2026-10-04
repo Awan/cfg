@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# dash.hook hash: {{ include "system/pacman/hooks/dash.hook" | sha256sum }}
+doas install -m 0644 "{{ joinPath .chezmoi.sourceDir "system/pacman/hooks/dash.hook" }}" /etc/pacman.d/hooks/dash.hook

@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = linux
+Target = systemd
+
+[Action]
+Description = Re-signing UKI and systemd-boot for Secure Boot...
+When = PostTransaction
+Exec = /usr/local/bin/sign-secureboot.sh

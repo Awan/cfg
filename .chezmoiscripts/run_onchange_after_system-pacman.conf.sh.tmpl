@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# pacman.conf hash: {{ include "system/pacman/pacman.conf" | sha256sum }}
+doas install -m 0644 "{{ joinPath .chezmoi.sourceDir "system/pacman/pacman.conf" }}" /etc/pacman.conf
