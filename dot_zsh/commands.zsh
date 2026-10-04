@@ -13,7 +13,7 @@ if [[ $commands[notmuch] ]]; then
 fi
 
 if [[ $commands[bat] ]]; then
-  alias cat='PAGER=less bat -p'
+  alias batp='PAGER=less bat -p'
 fi
 
 if [[ $commands[pydf] ]]; then
