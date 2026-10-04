@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# 30-touchpad.conf hash: {{ include "system/xorg/30-touchpad.conf" | sha256sum }}
+doas install -m 0644 "{{ joinPath .chezmoi.sourceDir "system/xorg/30-touchpad.conf" }}" /etc/X11/xorg.conf.d/30-touchpad.conf

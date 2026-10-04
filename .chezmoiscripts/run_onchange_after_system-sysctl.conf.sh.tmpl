@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# 99-security.conf hash: {{ include "system/sysctl/99-security.conf" | sha256sum }}
+doas install -m 0644 "{{ joinPath .chezmoi.sourceDir "system/sysctl/99-security.conf" }}" /etc/sysctl.d/99-security.conf

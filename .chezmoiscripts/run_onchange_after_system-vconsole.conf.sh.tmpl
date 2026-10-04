@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# vconsole.conf hash: {{ include "system/console/vconsole.conf" | sha256sum }}
+doas install -m 0644 "{{ joinPath .chezmoi.sourceDir "system/console/vconsole.conf" }}" /etc/vconsole.conf

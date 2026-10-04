@@ -6,7 +6,10 @@ Host *
     KbdInteractiveAuthentication no
     PubkeyAuthentication yes
     HashKnownHosts yes
-    VisualHostKey yes
+    VisualHostKey no
+    ControlMaster auto
+    ControlPersist 30m
+    ControlPath ~/.ssh/controlmasters/%r@%h:%p
     UpdateHostKeys yes
     ServerAliveInterval 60
     ServerAliveCountMax 3

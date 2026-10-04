@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# doas.conf hash: {{ include "system/doas/doas.conf" | sha256sum }}
+doas install -m 0644 "{{ joinPath .chezmoi.sourceDir "system/doas/doas.conf" }}" /etc/doas.conf

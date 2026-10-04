@@ -21,7 +21,7 @@ archive/
 # Source-only files deployed outside the home directory
 chezmoi-packages.hook
 chezmoi-packages.hook.tmpl
-doas.conf
+system/
 
 # Nova Launcher backups
 *.novabackup*
