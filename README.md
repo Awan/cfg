@@ -128,6 +128,47 @@ and apply them with:
 chezmoi apply
 ```
 
+# System Configuration
+
+System-wide configuration that must be installed outside the home directory is kept separately under `system/` in the chezmoi source tree.
+
+The current layout is:
+
+```text
+system/
+├── console/
+│   └── vconsole.conf
+├── doas/
+│   └── doas.conf
+├── sysctl/
+│   └── 99-security.conf
+└── xorg/
+    └── 30-touchpad.conf
+```
+
+These files are source-only chezmoi files and are not deployed into the home directory. Their corresponding installation scripts are kept under `.chezmoiscripts/`:
+
+```text
+.chezmoiscripts/
+├── run_onchange_after_system-doas.conf.sh.tmpl
+├── run_onchange_after_system-sysctl.conf.sh.tmpl
+├── run_onchange_after_system-vconsole.conf.sh.tmpl
+└── run_onchange_after_system-xorg.conf.sh.tmpl
+```
+
+Each `run_onchange_` script includes a SHA-256 hash of its associated configuration file. Chezmoi therefore reruns only the relevant installation script when that file changes.
+
+The files are installed to their system locations as follows:
+
+| Source file | System destination |
+| --- | --- |
+| `system/doas/doas.conf` | `/etc/doas.conf` |
+| `system/console/vconsole.conf` | `/etc/vconsole.conf` |
+| `system/sysctl/99-security.conf` | `/etc/sysctl.d/99-security.conf` |
+| `system/xorg/30-touchpad.conf` | `/etc/X11/xorg.conf.d/30-touchpad.conf` |
+
+This keeps system-level configuration organized by subsystem while preserving independent change detection for each file.
+
 # Zsh
 
 The Zsh configuration is intentionally lightweight and modular. Configuration files are stored under `~/.zsh/` and are sourced from the main Zsh configuration.
