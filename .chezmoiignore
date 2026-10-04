@@ -22,3 +22,7 @@ archive/
 chezmoi-packages.hook
 chezmoi-packages.hook.tmpl
 doas.conf
+
+# Nova Launcher backups
+*.novabackup*
+novabackup

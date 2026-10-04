@@ -38,3 +38,8 @@ SSID
 artwall
 run_onchange
 doas
+tmp
+novabackup
+plaintext
+chezmoiignore
+tmpl
