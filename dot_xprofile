@@ -16,12 +16,8 @@ COMMENT
 
 # Xresources file
 user_resources=$HOME/.Xresources
-# custom keymaps
-user_keymaps=$HOME/.Xmodmap
 # custom fonts
 user_fonts_dir=$HOME/.local/share/fonts
-# Inactivity timeout
-inactivity_timeout=180
 # Time before exectuing lock 
 # shellcheck disable=2034
 notify_time=10
@@ -49,6 +45,7 @@ fi
 # If previously set wallpaper, restore it
 
 if [ -f ~/.fehbg ]; then
+    # shellcheck disable=SC1090
     . ~/.fehbg
 fi
 
