@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# nftables.conf hash: {{ include "system/nftables/nftables.conf" | sha256sum }}
+doas install -m 0644 "{{ joinPath .chezmoi.sourceDir "system/nftables/nftables.conf" }}" /etc/nftables.conf
