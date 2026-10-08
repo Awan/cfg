@@ -218,7 +218,7 @@ alias scrot='import png:- | xclip -selection c -t image/png'
 # zsh global functions
 alias -g null="2>&1 >/dev/null"
 alias xclip="xclip -selection clipboard"
-alias capslock="setxkbmap -option caps:super && xcape -e 'Super_L=Escape'"
+alias capslock="pkill -x xcape 2>/dev/null; setxkbmap -option caps:super && xcape -e 'Super_L=Escape'"
 alias vzh='$EDITOR $HISTFILE'
 alias sv='$zero $EDITOR'
 alias cz='chezmoi'

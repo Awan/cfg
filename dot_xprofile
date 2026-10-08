@@ -162,7 +162,7 @@ run dunst -c "$HOME"/.config/dunst/dunstrc
 
 # IWD connection status notification
 
-run "$HOME/.local/bin/iwd_notify"
+# run "$HOME/.local/bin/iwd_notify"
 
 # Mute the mic
 

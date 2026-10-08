@@ -1,0 +1,14 @@
+[Unit]
+Description=Notify desktop about iwd connection state changes
+
+[Service]
+Environment=DISPLAY=:1
+Environment=XAUTHORITY=%h/.local/share/sx/xauthority
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus
+ExecStartPre=/bin/sh -c 'until [ -S /tmp/.X11-unix/X1 ] && [ -f "$XAUTHORITY" ] && pgrep -x dunst >/dev/null; do sleep 1; done'
+ExecStart=%h/.local/bin/iwd_notify
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target
