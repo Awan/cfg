@@ -683,7 +683,7 @@ vnoremap > >gv
 
 " native file explorer (used to be a coc.nvim mapping)
 nnoremap <leader>n :Lexplore<CR>
-nnoremap <leader>u :w \| startinsert \| term urlview %<CR>
+nnoremap <leader>u :w \| startinsert \| term env BROWSER=xdg-open urlscan %<CR>
 nnoremap <leader>l :ls<CR>:b<Space>
 nnoremap <leader>b :bd<CR>
 nnoremap <leader>h :nohlsearch<CR>

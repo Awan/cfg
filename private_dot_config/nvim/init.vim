@@ -288,7 +288,7 @@ let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
-noremap <leader>u :w \| startinsert \| term urlview %<CR>
+nnoremap <leader>u :w \| startinsert \| term env BROWSER=xdg-open urlscan %<CR>
 map <leader>n :CocCommand explorer<CR>
 " comment out current line
 map <leader>c 0i# <ESC>
