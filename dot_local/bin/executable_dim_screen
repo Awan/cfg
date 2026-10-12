@@ -1,17 +1,6 @@
 #!/bin/bash
 
-: << 'COMMENT'
-In the name of Allah, the most Gracious, the most Merciful.
-
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
-░░░░░░░░░░
-
-░█▀▄░▀█▀░█▄█░░░░░█▀▀░█▀▀░█▀▄░█▀▀░█▀▀░█▀█
-░█░█░░█░░█░█░░░░░▀▀█░█░░░█▀▄░█▀▀░█▀▀░█░█
-░▀▀░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀░▀
-COMMENT
+# In the name of Allah, the most Gracious, the most Merciful.
 
 # A shell script which dims the screen. Its a part of my BSPWM setup which uses
 # xss-lock, i3lock and this script. Example to append in ~/.xprofile
