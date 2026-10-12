@@ -1,58 +1,52 @@
 #!/bin/sh
-# shellcheck disable=2034
-coded_by='
 
-In the name of Allah, the most Gracious, the most Merciful.
+# Rotate image wallpapers from a directory at a configurable interval.
+# Usage: walls [DIRECTORY] [SECONDS]
 
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.solutions>
-░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
-░░░░░░░░░░
-
-░█░█░█▀█░█░░░█░░░█▀▀
-░█▄█░█▀█░█░░░█░░░▀▀█
-░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀
-'
-
-# Give me some directory with pictures, time in seconds and I'll set it some random picture as wallpaper and change it 
-# after the duration you specified...
-#
-# example:
-# walls ~/pix/walls/cuties/dark 10
-# will change every 10 seconds
-
-walls_dir="$1"
-walls_duration="$2"
-
-if [ -z "$walls_dir" ]
-then
-    walls_dir="$HOME/pix/wall/cuties/dark"
+if [ "$#" -gt 2 ]; then
+    printf 'Usage: %s [DIRECTORY] [SECONDS]\n' "${0##*/}" >&2
+    exit 2
 fi
 
-if [ -z "$walls_duration" ]
-then
-    walls_duration="60"
+walls_dir="${1:-$HOME/pix/wall/cuties/dark}"
+walls_duration="${2:-60}"
+
+if [ ! -d "$walls_dir" ]; then
+    printf 'walls: directory not found: %s\n' "$walls_dir" >&2
+    exit 1
 fi
 
+case "$walls_duration" in
+    ''|*[!0-9]*|0)
+        printf 'walls: interval must be a positive integer number of seconds.\n' >&2
+        exit 2
+        ;;
+esac
+
+image_files="$(find "$walls_dir" -maxdepth 1 -type f \( \
+    -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o \
+    -iname '*.webp' -o -iname '*.gif' \) -print)"
+
+if [ -z "$image_files" ]; then
+    printf 'walls: no supported images found in %s\n' "$walls_dir" >&2
+    exit 1
+fi
 
 hd_wall() {
-    # convert images to 1920x1080 and set it as wallpaper
-    convert "$random_wall" -gravity Center -resize 1920 -crop 1920x1080+0+0 png:- | feh --bg-scale -
+    # Resize and crop non-1920x1080 images to the target wallpaper size.
+    convert "$random_wall" -gravity Center -resize 1920 -crop 1920x1080+0+0 png:- |
+        feh --bg-scale -
 }
 
+while :; do
+    random_wall="$(printf '%s\n' "$image_files" | shuf -n 1)" || exit 1
+    resolution="$(identify -format '%wx%h' "$random_wall" 2>/dev/null)" || resolution=
 
-if [ -d "$walls_dir" ]
-then
-    while true
-    do
-        random_wall="$(shuf -en1 "$walls_dir"/*)"
-        res="$(identify -format "%wx%h" "$random_wall" | cut -f 1)"
-        if [ "$res" = "1920x1080" ]
-        then
-            feh --no-fehbg --bg-scale "$random_wall"
-        else
-            hd_wall
-        fi
-        sleep "$walls_duration"s
-    done
-fi
+    if [ "$resolution" = "1920x1080" ]; then
+        feh --no-fehbg --bg-scale "$random_wall" || exit 1
+    else
+        hd_wall || exit 1
+    fi
+
+    sleep "$walls_duration" || exit 1
+done
