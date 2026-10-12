@@ -1,29 +1,31 @@
 #!/bin/sh
 
-: << 'COMMENT'
-In the name of Allah, the most Gracious, the most Merciful.
+# In the name of Allah, the Most Gracious, the Most Merciful.
+# Create a script in ~/.local/bin or open an existing script for editing.
 
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓
-░░░░░░░░░░
-
-░█▀█░█░█░▀█▀░█▀█░█▀▀░█▀▀░█▀▄░▀█▀░█▀█░▀█▀
-░█▀█░█░█░░█░░█░█░▀▀█░█░░░█▀▄░░█░░█▀▀░░█░
-░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀░░░░▀░
-
-COMMENT
-
+if [ "$#" -ne 1 ] || [ -z "$1" ] || [ "$1" = "." ] || [ "$1" = ".." ] || [ "${1##*/}" != "$1" ]; then
+  printf 'Usage: %s SCRIPT_NAME\n' "${0##*/}" >&2
+  exit 2
+fi
 
 scripts_dir="$HOME/.local/bin"
 script_file="$scripts_dir/$1"
+editor="${EDITOR:-vim}"
 
-
-if [ -f $script_file ]; then
-	 $EDITOR $script_file
-else
-	echo "#!/bin/sh\
-$($HOME/.local/bin/author $(basename $script_file))" > $script_file
-chmod +x $script_file
-$EDITOR $script_file
+if [ -e "$script_file" ] && [ ! -f "$script_file" ]; then
+  printf 'autoscript: not a regular file: %s\n' "$script_file" >&2
+  exit 1
 fi
+
+mkdir -p "$scripts_dir" || exit 1
+
+if [ ! -f "$script_file" ]; then
+  script_name="${script_file##*/}"
+  {
+    printf '%s\n' '#!/bin/sh'
+    "$scripts_dir/author" "$script_name" || exit 1
+  } > "$script_file" || exit 1
+  chmod +x "$script_file" || exit 1
+fi
+
+"$editor" "$script_file"
