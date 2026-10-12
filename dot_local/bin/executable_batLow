@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
-	
-#[ "$(cat /sys/class/power_supply/BAT0/status)" = "Charging" ] && exit
-#[ "$(cat /sys/class/power_supply/BAT0/capacity)" -lt 70 ] && 
-#  export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus && 
-#  notify-send -u critical "Battery critically low"
 
+# In the name of Allah, the Most Gracious, the Most Merciful.
+# Send a one-shot warning when battery capacity is 70% or lower.
 
-battery_now=$(cat /sys/class/power_supply/BAT0/capacity)
+battery_path=/sys/class/power_supply/BAT0/capacity
 
-if [ "$battery_now" -le 70 ]; then
-  notify-send -u critical "Battery ctrically low"
+if [[ ! -r "$battery_path" ]]; then
+  printf 'batLow: battery capacity is unavailable: %s\n' "$battery_path" >&2
+  exit 1
 fi
-		
 
+battery_now=$(<"$battery_path")
+if [[ ! "$battery_now" =~ ^[0-9]+$ ]]; then
+  printf 'batLow: invalid battery capacity: %s\n' "$battery_now" >&2
+  exit 1
+fi
+
+if (( battery_now <= 70 )); then
+  notify-send -u critical "Battery low (${battery_now}%)"
+fi
