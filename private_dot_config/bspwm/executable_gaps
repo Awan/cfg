@@ -1,39 +1,44 @@
-#!/bin/sh     
+#!/bin/sh
 
-: << 'COMMENT'
-In the name of Allah, the most Gracious, the most Merciful.
+# In the name of Allah, the Most Gracious, the Most Merciful.
+# Adjust the bspwm window gap by 3 pixels or restore the default value.
 
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓
-░░░░░░░░░░
+if [ "$#" -ne 1 ]; then
+  printf 'Usage: %s {inc|dec|def}\n' "${0##*/}" >&2
+  exit 2
+fi
 
-░█▀▀░█▀█░█▀█░█▀▀
-░█░█░█▀█░█▀▀░▀▀█
-░▀▀▀░▀░▀░▀░░░▀▀▀
-COMMENT
-
-case $1 in 
-  inc|dec|def)
-    action=$1
+case "$1" in
+  inc|dec|def) action="$1" ;;
+  *)
+    printf 'Invalid action: %s\n' "$1" >&2
+    printf 'Usage: %s {inc|dec|def}\n' "${0##*/}" >&2
+    exit 2
     ;;
 esac
 
 default_gaps=3
-
-gaps_cmd() {
-  bspc config window_gap $1
-}
-
-case $action in
-  inc)
-    gaps_cmd $(( $(bspc config window_gap) + 3 ))
-    ;;
-  dec)
-    gaps_cmd $(( $(bspc config window_gap) - 3 ))
-    ;;
-  def)
-    gaps_cmd $default_gaps
+current_gaps="$(bspc config window_gap)" || exit 1
+case "$current_gaps" in
+  ''|*[!0-9]*)
+    printf 'gaps: invalid current window gap: %s\n' "$current_gaps" >&2
+    exit 1
     ;;
 esac
-   
+
+case "$action" in
+  inc)
+    new_gaps=$((current_gaps + 3))
+    ;;
+  dec)
+    new_gaps=$((current_gaps - 3))
+    if [ "$new_gaps" -lt 0 ]; then
+      new_gaps=0
+    fi
+    ;;
+  def)
+    new_gaps=$default_gaps
+    ;;
+esac
+
+bspc config window_gap "$new_gaps"
