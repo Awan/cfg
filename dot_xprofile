@@ -1,25 +1,12 @@
 #!/bin/sh
-: << 'COMMENT'
-
-In the name of Allah, the most Gracious, the most Merciful.
-
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/@AbdullahSolutions>
-░░░░░░░░░░
-
-░█░█░█▀█░█▀▄░█▀█░█▀▀░▀█▀░█░░░█▀▀
-░▄▀▄░█▀▀░█▀▄░█░█░█▀▀░░█░░█░░░█▀▀
-░▀░▀░▀░░░▀░▀░▀▀▀░░▀░░░▀▀▀░▀▀▀░▀▀▀
-COMMENT
 
 # X resources and additional font directories.
 user_resources="$HOME/.Xresources"
 user_fonts_dir="$HOME/.local/share/fonts"
 
-# Start a program only if a matching process is not already running.
+# Start each command only when its executable is not already running.
 run() {
-  if ! pgrep "$1"; then
+  if ! pgrep -x "$1" >/dev/null 2>&1; then
     "$@" &
   fi
 }
