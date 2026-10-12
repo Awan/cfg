@@ -943,18 +943,24 @@ dep ()
 
 hgn ()
 {
-  arg="$@"
-  if [ -z $arg ]; then
-    printf '%s\n' 'Please give me a name!'
+  if (( $# == 0 )); then
+    printf 'Usage: hgn POST_NAME\n' >&2
+    return 2
   fi
 
-  # Create new post and edit with $EDITOR
-  if [ -d ~/git/mysite/ ]; then
-    posts_dir="$HOME/git/mysite/content/posts"
-    cd "$HOME/git/mysite/"
-    hugo new $posts_dir/$arg --editor $EDITOR\
-      || $EDITOR $posts_dir/$arg
+  # Create and open a post in the configured Hugo site.
+  local arg="$*"
+  local site_dir="$HOME/git/mysite"
+  local posts_dir="$site_dir/content/posts"
+  local post_path="$posts_dir/$arg"
+
+  if [[ ! -d "$site_dir" ]]; then
+    printf 'hgn: Hugo site not found: %s\n' "$site_dir" >&2
+    return 1
   fi
+
+  cd "$site_dir" || return 1
+  hugo new "$post_path" --editor "$EDITOR" || "$EDITOR" "$post_path"
 }
 
 gbi ()
