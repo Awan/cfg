@@ -1,4 +1,5 @@
 #!/bin/sh
+# In the name of Allah, the Most Gracious, the Most Merciful.
 
 # X resources and additional font directories.
 user_resources="$HOME/.Xresources"
