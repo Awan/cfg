@@ -1,17 +1,6 @@
 #!/bin/sh
 
-: << 'COMMENT'
-In the name of Allah, the most Gracious, the most Merciful.
-
-  ▓▓▓▓▓▓▓▓▓▓
- ░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
- ░▓▓▓▓▓▓▓▓▓▓
- ░░░░░░░░░░
-
-░█▀▀░█▀▀░█▀▄░█▀█░▀█▀░█▀▀░█░█░█▀█░█▀█░█▀▄
-░▀▀█░█░░░█▀▄░█▀█░░█░░█░░░█▀█░█▀▀░█▀█░█░█
-░▀▀▀░▀▀▀░▀░▀░▀░▀░░▀░░▀▀▀░▀░▀░▀░░░▀░▀░▀▀░
-COMMENT
+# In the name of Allah, the most Gracious, the most Merciful.
 
 
 toggle_flag() {
@@ -48,7 +37,6 @@ switch_app() {
     );
 
     if [ -n "$sid" ] && [ "$(printf "%04d" $sid)" != "$(printf "%04d" $id)" ]; then
-    echo "$sid" != "$id"
         xprop -id $sid -f _SCRATCH_ORDER 32ii -set _SCRATCH_ORDER $(date +%s,%N)
         xprop -id $sid -f _SCRATCH_VISIBILITY 8i -set _SCRATCH_VISIBILITY 1
         xdotool windowmap $sid
