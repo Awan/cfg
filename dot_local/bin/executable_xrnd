@@ -1,78 +1,107 @@
 #!/usr/bin/env bash
+# Create and apply a custom XRandR mode from WIDTH HEIGHT REFRESH_RATE.
+# Accept either three arguments or one quoted, space-separated argument.
+# The primary connected output is preferred; otherwise the first connected
+# output is used.
 
-# A xrandr helper
+usage() {
+  printf 'Usage: %s WIDTH HEIGHT REFRESH_RATE\n' "${0##*/}" >&2
+  printf '   or: %s "WIDTH HEIGHT REFRESH_RATE"\n' "${0##*/}" >&2
+}
 
-# import subprocess as sb
-
-# check_current_screens = sb.check_output('xrandr -q', shell=True, universal_newlines=True)
-
-# if r'HDMI2 connected' in check_current_screens:
- #    sb.run('xrandr --output HDMI2 --auto --output HDMI2 --auto --above eDP1', shell=True)
-# else:
- #    sb.run('xrandr --output HDMI2 --off', shell=True)
-
-#If no argument is specified, ask for it and exit
-
-if (( $# == 0 )); then
-    echo "An argument is needed to run this script";
-    exit
+if (( $# == 1 )); then
+  read -r -a params <<< "$1"
 else
-    arg="$@"
-    #Basic check to make sure argument number is valid. If not, display error and exit
-    if [[ $(($(echo $arg | grep -o "\s" | wc --chars) / 2 )) -ne 2 ]];
-    then
-        echo "Invalid Parameters. You need to specify parameters in the format \"width height refreshRate\""
-        echo "For example setResolution \"1920 1080 60\""
-        exit
-    fi
-    
-    #Save stuff in variables and then use xrandr with those variables
-    modename=$(echo $arg | sed 's/\s/_/g')
-    display=$(xrandr | grep -Po '.+(?=\sconnected)')
-    if [[ "$(xrandr|grep $modename)" = "" ]];
-    then
-        xrandr --newmode $modename $(gtf $(echo $arg) | grep -oP '(?<="\s\s).+') &&
-        xrandr --addmode $display $modename     
-    fi
-    xrandr --output $display --mode $modename
-
-    #If no error occurred, display success message
-    if [[ $? -eq 0 ]];
-    then
-        echo "Display changed successfully to $arg"
-    fi
+  params=("$@")
 fi
 
-<<COMMENT
-#Manual steps with explanation ahead by @debloper
-# First we need to get the modeline string for xrandr
-# Luckily, the tool "gtf" will help you calculate it.
-# All you have to do is to pass the resolution & the-
-# refresh-rate as the command parameters:
-gtf 1920 1080 60
-# In this case, the horizontal resolution is 1920px the
-# vertical resolution is 1080px & refresh-rate is 60Hz.
-# IMPORTANT: BE SURE THE MONITOR SUPPORTS THE RESOLUTION
-# Typically, it outputs a line starting with "Modeline"
-# e.g. "1920x1080_60.00"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync
-# Copy this entire string (except for the starting "Modeline")
-# Now, use "xrandr" to make the system recognize a new
-# display mode. Pass the copied string as the parameter
-# to the --newmode option:
-xrandr --newmode "1920x1080_60.00"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync
-# Well, the string within the quotes is the nick/alias
-# of the display mode - you can as well pass something
-# as "MyAwesomeHDResolution". But, careful! :-|
-# Then all you have to do is to add the new mode to the
-# display you want to apply, like this:
-xrandr --addmode VGA1 "1920x1080_60.00"
-# VGA1 is the display name, it might differ for you.
-# Run "xrandr" without any parameters to be sure.
-# The last parameter is the mode-alias/name which
-# you've set in the previous command (--newmode)
-# It should add the new mode to the display & apply it.
-# Usually unlikely, but if it doesn't apply automatically
-# then force it with this command:
-xrandr --output VGA1 --mode "1920x1080_60.00"
-# That's it... Enjoy the new awesome high-res display!
-COMMENT
+if (( ${#params[@]} != 3 )); then
+  usage
+  exit 2
+fi
+
+width="${params[0]}"
+height="${params[1]}"
+rate="${params[2]}"
+
+for value in "$width" "$height" "$rate"; do
+  if [[ ! "$value" =~ ^[0-9]+$ ]] || (( value == 0 )); then
+    printf 'xrnd: dimensions and refresh rate must be positive integers.\n' >&2
+    usage
+    exit 2
+  fi
+done
+
+for dependency in xrandr gtf; do
+  if ! command -v "$dependency" >/dev/null 2>&1; then
+    printf 'xrnd: required command not found: %s\n' "$dependency" >&2
+    exit 127
+  fi
+done
+
+display="$(xrandr --query | awk '
+  $2 == "connected" {
+    if ($3 == "primary") primary = $1
+    if (first == "") first = $1
+  }
+  END { print primary != "" ? primary : first }
+')"
+
+if [[ -z "$display" ]]; then
+  printf '%s\n' 'xrnd: no connected display was found.' >&2
+  exit 1
+fi
+
+modename="${width}_${height}_${rate}"
+modeline="$(gtf "$width" "$height" "$rate" 2>/dev/null |
+  awk '/Modeline/ {
+    sub(/^[[:space:]]*Modeline[[:space:]]+"[^"]+"[[:space:]]*/, "")
+    print
+    exit
+  }')"
+
+if [[ -z "$modeline" ]]; then
+  printf 'xrnd: gtf could not generate a mode for %s x %s at %s Hz.\n' "$width" "$height" "$rate" >&2
+  exit 1
+fi
+
+read -r -a modeline_args <<< "$modeline"
+
+mode_exists() {
+  xrandr --query | awk -v wanted="$1" '
+    $1 == wanted { found = 1 }
+    END { exit !found }
+  '
+}
+
+mode_available_on_display() {
+  xrandr --query | awk -v output="$1" -v wanted="$2" '
+    /^[^[:space:]]+ connected/ {
+      active = ($1 == output)
+      next
+    }
+    active && $1 == wanted { found = 1 }
+    END { exit !found }
+  '
+}
+
+if ! mode_exists "$modename"; then
+  if ! xrandr --newmode "$modename" "${modeline_args[@]}"; then
+    printf 'xrnd: could not register mode %s.\n' "$modename" >&2
+    exit 1
+  fi
+fi
+
+if ! mode_available_on_display "$display" "$modename"; then
+  if ! xrandr --addmode "$display" "$modename"; then
+    printf 'xrnd: could not add mode %s to display %s.\n' "$modename" "$display" >&2
+    exit 1
+  fi
+fi
+
+if xrandr --output "$display" --mode "$modename"; then
+  printf 'Display %s changed to %s x %s at %s Hz.\n' "$display" "$width" "$height" "$rate"
+else
+  printf 'xrnd: could not apply mode %s to display %s.\n' "$modename" "$display" >&2
+  exit 1
+fi
