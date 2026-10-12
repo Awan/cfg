@@ -263,15 +263,7 @@ escape() {
   fi
 }
 
-# v()
-# {
-#   if [ $# -eq 0 ]; then
-#     $EDITOR .;
-#   else
-#     $EDITOR "$@";
-#     fi;
-#   }
-#
+
 o()
 {
   if [ $# -eq 0 ]; then
@@ -573,13 +565,6 @@ lightmax ()
         doas tee /sys/class/backlight/intel_backlight/brightness
 }
 
-#light ()
-# Set brightness as first argument
-#{
-#  new_brightness="$1"
-#  echo $new_brightness | doas tee
-#  /sys/class/backlight/intel_backlight/#brightness
-#}
 
 bulkrename ()
 # replace spaces with underscores, change upper to lower case, remove extra # underscores.
@@ -624,36 +609,6 @@ aur ()
   $EDITOR PKGBUILD
 }
 
-#haq ()
-## Listen to Holy Quran's Ayah by numbers.
-#{
-#zero_pad(){
-#  # zero_pad <string> <length>
-#  [ ${#1} -lt $2 ] && printf "%0$(($2-${#1}))d" ''
-#  printf "%s\n" "$1"
-#}
-#which_surah="$1"
-#which_ayah="$2"
-#qari="$3"
-#shuraim_dir=$HOME/kit/verses/shuraim
-#sudais_dir=$HOME/kit/verses/sudais
-#surah=$(zero_pad $which_surah 3)
-#ayah=$(zero_pad $which_ayah 3)
-#
-#play_shuraim(){
-#   /usr/bin/mplayer $shuraim_dir/$surah$ayah.mp3
-#}
-#play_sudais(){
-#  /usr/bin/mplayer $sudais_dir/$surah$ayah.mp3
-#}
-#if [[ $qari == 'shuraim' ]]; then
-#  play_shuraim
-#fi
-#
-#if [[ $qari == 'sudais' ]]; then
-#  play_sudais
-#fi
-#}
 
 gfc ()
 # git initial commit
@@ -1219,7 +1174,6 @@ chromeupdate () {
     # me to update it
     chrome_repo_path="$HOME/git/chrome"
     current_chrome_version_installed="$(google-chrome-stable --version | awk '{print $3}')"
-    #latest_chrome_version="$(curl -sSf https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages | awk -F ': ' '/^Package: google-chrome-stable$/{getline; if ($1 == "Version") { split($2, v, "-"); print v[1]; exit; } }')"
     latest_chrome_version="$(curl -sSf https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages 2>/dev/null | awk -F ': ' '/^Package: google-chrome-stable$/{getline; if ($1 == "Version") { split($2, v, "-"); print v[1]; exit; } }')"
 
 
@@ -1246,7 +1200,6 @@ chromeupdate () {
 
 slowvid () {
     video_to_edit="$1"
-    #slow_version="$2"
     local base="${video_to_edit:t}"
     local ext="${base##*.}"
     local base="${base%.*}"
