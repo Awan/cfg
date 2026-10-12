@@ -1,6 +1,5 @@
 #!/bin/sh
-
-
+# In the name of Allah, the Most Gracious, the Most Merciful.
 
 # Distribute the ten desktops across connected monitors.
 
@@ -14,8 +13,6 @@ multimonitors()
     start_from=$(( start_from + per_monitor ))
  done
 }
-
-
 
 multimonitors
 
