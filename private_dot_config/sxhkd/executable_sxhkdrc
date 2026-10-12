@@ -1,22 +1,6 @@
 #!/bin/sh
 
-: << 'COMMENT'
-
-In the name of Allah, the most Gracious, the most Merciful.
-
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓
-░░░░░░░░░░
-
-░█▀▀░█░█░█░█░█░█░█▀▄
-░▀▀█░▄▀▄░█▀█░█▀▄░█░█
-░▀▀▀░▀░▀░▀░▀░▀░▀░▀▀░
-
-░█▀▄░█▀▀░█▀█░█░█░█▄█
-░█▀▄░▀▀█░█▀▀░█▄█░█░█
-░▀▀░░▀▀▀░▀░░░▀░▀░▀░▀
-COMMENT
+# In the name of Allah, the Most Gracious, the Most Merciful.
 
 # Launch Quran
 
