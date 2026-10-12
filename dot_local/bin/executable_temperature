@@ -1,20 +1,21 @@
 #!/bin/sh
 
-: << 'COMMENT'
-In the name of Allah, the most Gracious, the most Merciful.
+# In the name of Allah, the Most Gracious, the Most Merciful.
+# Print the first thermal zone temperature in degrees Celsius.
 
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
-░░░░░░░░░░
+temperature_file=/sys/class/thermal/thermal_zone0/temp
 
-░▀█▀░█▀▀░█▄█░█▀█░█▀▀░█▀▄░█▀█░▀█▀░█░█░█▀▄░█▀▀
-░░█░░█▀▀░█░█░█▀▀░█▀▀░█▀▄░█▀█░░█░░█░█░█▀▄░█▀▀
-░░▀░░▀▀▀░▀░▀░▀░░░▀▀▀░▀░▀░▀░▀░░▀░░▀▀▀░▀░▀░▀▀▀
-COMMENT
+if [ ! -r "$temperature_file" ]; then
+  printf 'temperature: reading is unavailable: %s\n' "$temperature_file" >&2
+  exit 1
+fi
 
-# Get system temperature
+temperature_millidegrees=$(cat "$temperature_file") || exit 1
+case "$temperature_millidegrees" in
+  ''|*[!0-9]*)
+    printf 'temperature: invalid sensor reading: %s\n' "$temperature_millidegrees" >&2
+    exit 1
+    ;;
+esac
 
-TEMP=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))C
-
-echo $TEMP
+printf '%sC\n' "$((temperature_millidegrees / 1000))"
