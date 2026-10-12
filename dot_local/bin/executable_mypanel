@@ -35,11 +35,6 @@ COLOR_URGENT_BG="#313244"
 COLOR_FOCUSED_URGENT_FG="#1e1e2e"
 COLOR_FOCUSED_URGENT_BG="#f38ba8"
 COLOR_STATE_FG="#94e2d5"
-COLOR_STATE_BG="#313244"
-COLOR_TITLE_FG="#a6adc8"
-COLOR_TITLE_BG="#313244"
-COLOR_SYS_FG="#cdd6f4"
-COLOR_SYS_BG="#313244"
 
 num_mon=$(bspc query -M | wc -l)
 PANEL_FIFO=/tmp/panel-fifo
@@ -60,8 +55,6 @@ trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
 
 [ -e "$PANEL_FIFO" ] && rm "$PANEL_FIFO"
 mkfifo "$PANEL_FIFO"
-modules_bg="B#AAFFFFFF"
-modules_fg="F#FF000000"
 
 COLOR_FREE_FG="#7f8490"
 COLOR_FREE_BG="$COLOR_DEFAULT_BG"
@@ -101,10 +94,10 @@ mpd_music() {
 
     # Only check other things if mpd is up and ready...
     stat=$(mpc | awk 'NR==2{print $1}')
-    if [ -z $stat ] || [ $stat = '[paused]' ]; then
+    if [ -z "$stat" ] || [ "$stat" = '[paused]' ]; then
         # do nothing
         :
-    elif [ $stat = '[playing]' ]; then
+    elif [ "$stat" = '[playing]' ]; then
         # I don't want to pollute all the bar with tags
         # If they are lenghty, make them short
         position=$(mpc | awk 'NR==2{print $3}')
@@ -146,8 +139,8 @@ cpu() {
 }
 
 mails() {
-    count=$(find $HOME/.local/share/email/x1c/INBOX/new -type f -print | wc -l)
-    if [ $count -ne 0 ]; then
+    count=$(find "$HOME"/.local/share/email/x1c/INBOX/new -type f -print | wc -l)
+    if [ "$count" -ne 0 ]; then
         printf "%s" "%{F#689D6A}%{F-} %{F#D3869B}$count%{F-}"
     fi
 }
@@ -301,6 +294,7 @@ my_panel() {
 	       # bspwm's state
 			wm=
 			IFS=':'
+			# shellcheck disable=SC2086
 			set -- ${line#?}
 			while [ $# -gt 0 ] ; do
 				item=$1
@@ -321,7 +315,7 @@ my_panel() {
 								on_focused_monitor=1
 								;;
 						esac
-						[ $num_mon -lt 2 ] && shift && continue
+						[ "$num_mon" -lt 2 ] && shift && continue
 						wm="${wm}%{F${FG}}%{B${BG}}%{A:bspc monitor -f ${name}:} ${name} %{A}%{B-}%{F-}"
 						;;
 					[fFoOuU]*)
@@ -330,57 +324,48 @@ my_panel() {
 								# free desktop
 								FG=$COLOR_FREE_FG
 								BG=$COLOR_FREE_BG
-								UL=$BG
 								;;
 							F*)
 								if [ "$on_focused_monitor" ] ; then
 									# focused free desktop
 									FG=$COLOR_FOCUSED_FREE_FG
 									BG=$COLOR_FOCUSED_FREE_BG
-									UL=$BG
 								else
 									# active free desktop
 									FG=$COLOR_FREE_FG
 									BG=$COLOR_FREE_BG
-									UL=$COLOR_FOCUSED_FREE_BG
 								fi
 								;;
 							o*)
 								# occupied desktop
 								FG=$COLOR_OCCUPIED_FG
 								BG=$COLOR_OCCUPIED_BG
-								UL=$BG
 								;;
 							O*)
 								if [ "$on_focused_monitor" ] ; then
 									# focused occupied desktop
 									FG=$COLOR_FOCUSED_OCCUPIED_FG
 									BG=$COLOR_FOCUSED_OCCUPIED_BG
-									UL=$BG
 								else
 									# active occupied desktop
 									FG=$COLOR_OCCUPIED_FG
 									BG=$COLOR_OCCUPIED_BG
-									UL=$COLOR_FOCUSED_OCCUPIED_BG
 								fi
 								;;
 							u*)
 								# urgent desktop
 								FG=$COLOR_URGENT_FG
 								BG=$COLOR_URGENT_BG
-								UL=$BG
 								;;
 							U*)
 								if [ "$on_focused_monitor" ] ; then
 									# focused urgent desktop
 									FG=$COLOR_FOCUSED_URGENT_FG
 									BG=$COLOR_FOCUSED_URGENT_BG
-									UL=$BG
 								else
 									# active urgent desktop
 									FG=$COLOR_URGENT_FG
 									BG=$COLOR_URGENT_BG
-									UL=$COLOR_FOCUSED_URGENT_BG
 								fi
 								;;
 						esac
