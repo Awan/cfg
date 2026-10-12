@@ -1,17 +1,5 @@
 #!/bin/sh
-: << 'COMMENT'
-
-In the name of Allah, the most Gracious, the most Merciful.
-
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
-░░░░░░░░░░
-
-░█▀▄░█▀█░▀█▀░▀█▀░█▀▀░█▀▄░█░█
-░█▀▄░█▀█░░█░░░█░░█▀▀░█▀▄░░█░
-░▀▀░░▀░▀░░▀░░░▀░░▀▀▀░▀░▀░░▀░
-COMMENT
+# In the name of Allah, the most Gracious, the most Merciful.
 
 
 # If battery is low, push a notification
