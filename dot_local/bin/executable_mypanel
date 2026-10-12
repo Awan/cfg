@@ -4,8 +4,10 @@
 
 
 COLOR_DEFAULT_FG="#cdd6f4"
-#COLOR_DEFAULT_BG="#1e1e2e" # opaque background
-COLOR_DEFAULT_BG="#AA1e1e2e" # 67% opacity
+# COLOR_DEFAULT_BG="#1e1e2e" # opaque background
+# COLOR_DEFAULT_BG="#AA1e1e2e" # 67% opacity
+# COLOR_DEFAULT_BG="#CC1e1e2e" # 80% opacity
+COLOR_DEFAULT_BG="#BF1e1e2e" # 75% opacity
 # COLOR_DEFAULT_BG="#801e1e2e" # 50% opacity
 COLOR_MONITOR_FG="#94e2d5"
 COLOR_MONITOR_BG="#313244"
@@ -370,7 +372,7 @@ my_panel() {
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${left_corner}${wm}${mpd_music} %{r}${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date} $(get_tray_padding) ${right_corner}"
+	printf "%s\n" "%{l}${left_corner}${wm}${mpd_music} %{r}${mails} ${wifi} ${brightness} ${cpu} ${ram} ${volume} ${battery} ${date} ${right_corner}"
 done
 }
 

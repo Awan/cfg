@@ -1,8 +1,8 @@
 # vim:filetype=config:tw=80:et
 # Tray Geometry & Sizing
-geometry 1x1-10+5
+geometry 1x1-10+3
 max_geometry 5x1-10+0
-icon_size 18
+icon_size 17
 grow_gravity E
 icon_gravity E
 

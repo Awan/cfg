@@ -159,5 +159,5 @@ bspc config pointer_modifier mod4
 sleep 1
 
 pgrep -f "alacritty -t scratchpad" >/dev/null || alacritty -t 'scratchpad' &
-killall -q stalonetray
-stalonetray -c ~/.config/stalonetrayrc &
+# killall -q stalonetray
+# stalonetray -c ~/.config/stalonetrayrc &
