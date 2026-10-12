@@ -1,18 +1,18 @@
 #!/bin/sh     
 
-: << 'COMMENT'
-In the name of Allah, the most Gracious, the most Merciful.
+# In the name of Allah, the most Gracious, the most Merciful.
 
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓
-░░░░░░░░░░
+if [ "$#" -ne 1 ]; then
+  printf 'Usage: %s {north|east|south|west}\n' "${0##*/}" >&2
+  exit 2
+fi
 
-░█▀█░█▀▄░█▀▀░█▀▀░█▀▀░█░░░█▀▀░█▀▀░▀█▀░▀█▀░█▀█░█▀█░█▀▀
-░█▀▀░█▀▄░█▀▀░▀▀█░█▀▀░█░░░█▀▀░█░░░░█░░░█░░█░█░█░█░▀▀█
-░▀░░░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀▀▀
-COMMENT
+case "$1" in
+  north|east|south|west) ;;
+  *)
+    printf 'Invalid direction: %s\n' "$1" >&2
+    exit 2
+    ;;
+esac
 
-bspc node -p \~$*
-exit
-bspc node -p $*
+bspc node -p "~$1"
