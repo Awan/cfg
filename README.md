@@ -140,6 +140,8 @@ system/
 │   └── vconsole.conf
 ├── doas/
 │   └── doas.conf
+├── nftables/
+│   └── nftables.conf
 ├── pacman/
 │   ├── hooks/
 │   │   ├── 99-secureboot-sign.hook
@@ -157,6 +159,7 @@ These files are source-only chezmoi files and are not deployed into the home dir
 ```text
 .chezmoiscripts/
 ├── run_onchange_after_system-doas.conf.sh.tmpl
+├── run_onchange_after_system-nftables.conf.sh.tmpl
 ├── run_onchange_after_system-pacman-99-secureboot-sign.hook.sh.tmpl
 ├── run_onchange_after_system-pacman-chezmoi-packages.hook.sh.tmpl
 ├── run_onchange_after_system-pacman-dash.hook.sh.tmpl
@@ -173,6 +176,7 @@ The files are installed to their system locations as follows:
 | Source file | System destination |
 | --- | --- |
 | `system/doas/doas.conf` | `/etc/doas.conf` |
+| `system/nftables/nftables.conf` | `/etc/nftables.conf` |
 | `system/console/vconsole.conf` | `/etc/vconsole.conf` |
 | `system/pacman/pacman.conf` | `/etc/pacman.conf` |
 | `system/pacman/hooks/99-secureboot-sign.hook` | `/etc/pacman.d/hooks/99-secureboot-sign.hook` |
