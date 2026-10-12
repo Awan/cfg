@@ -1,18 +1,32 @@
 #!/bin/sh
 
-if bspc query -N -n focused.floating > /dev/null; then
-    step=20
-else
-    step=100
+# Resize the focused bspwm window by moving the requested edge.
+
+if [ "$#" -ne 1 ]; then
+  printf 'Usage: %s {north|east|south|west}\n' "${0##*/}" >&2
+  exit 2
 fi
 
 case "$1" in
-    west) dir=right; falldir=left; x="-$step"; y=0;;
-    east) dir=right; falldir=left; x="$step"; y=0;;
-    north) dir=top; falldir=bottom; x=0; y="-$step";;
-    south) dir=top; falldir=bottom; x=0; y="$step";;
+  west)  dir=right; falldir=left;   x=-1; y=0 ;;
+  east)  dir=right; falldir=left;   x=1;  y=0 ;;
+  north) dir=top;   falldir=bottom; x=0;  y=-1 ;;
+  south) dir=top;   falldir=bottom; x=0;  y=1 ;;
+  *)
+    printf 'Invalid direction: %s\n' "$1" >&2
+    printf 'Usage: %s {north|east|south|west}\n' "${0##*/}" >&2
+    exit 2
+    ;;
 esac
 
+if bspc query -N -n focused.floating >/dev/null 2>&1; then
+  step=20
+else
+  step=100
+fi
+
+x=$((x * step))
+y=$((y * step))
 bspc node -z "$dir" "$x" "$y" || bspc node -z "$falldir" "$x" "$y"
 
 # vim: ft=sh
