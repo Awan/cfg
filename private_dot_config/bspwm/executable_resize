@@ -1,30 +1,27 @@
 #!/bin/sh
 
-: << 'COMMENT'
+# In the name of Allah, the most Gracious, the most Merciful.
 
-In the name of Allah, the most Gracious, the most Merciful.
+if [ "$#" -ne 1 ]; then
+    printf 'Usage: %s {north|east|south|west}\n' "${0##*/}" >&2
+    exit 2
+fi
 
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓
-░░░░░░░░░░
-
-░█▀▄░█▀▀░█▀▀░▀█▀░▀▀█░█▀▀░░░█░█░▀█▀░█▀█░█▀▄░█▀█░█░█░█▀▀
-░█▀▄░█▀▀░▀▀█░░█░░▄▀░░█▀▀░░░█▄█░░█░░█░█░█░█░█░█░█▄█░▀▀█
-░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░░░▀░▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀░▀░▀▀▀
-COMMENT
-
-if bspc query -N -n focused.floating > /dev/null; then
+if bspc query -N -n focused.floating >/dev/null; then
     step=50
 else
     step=100
 fi
 
 case "$1" in
-    west) dir=right; falldir=left; x="-$step"; y=0;;
-    east) dir=right; falldir=left; x="$step"; y=0;;
-    north) dir=top; falldir=bottom; x=0; y="-$step";;
-    south) dir=top; falldir=bottom; x=0; y="$step";;
+    west) dir=right; falldir=left; x="-$step"; y=0 ;;
+    east) dir=right; falldir=left; x="$step"; y=0 ;;
+    north) dir=top; falldir=bottom; x=0; y="-$step" ;;
+    south) dir=top; falldir=bottom; x=0; y="$step" ;;
+    *)
+        printf 'Invalid direction: %s\n' "$1" >&2
+        exit 2
+        ;;
 esac
 
 bspc node -z "$dir" "$x" "$y" || bspc node -z "$falldir" "$x" "$y"
