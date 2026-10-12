@@ -1,17 +1,6 @@
 #!/bin/sh
 
-: << 'COMMENT'
-In the name of Allah, the most Gracious, the most Merciful.
-
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
-░░░░░░░░░░
-
-░▀█▀░█░█░█▀▄░░░░░█▀█░█▀█░▀█▀░▀█▀░█▀▀░█░█
-░░█░░█▄█░█░█░░░░░█░█░█░█░░█░░░█░░█▀▀░░█░
-░▀▀▀░▀░▀░▀▀░░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀░░░░▀░
-COMMENT
+# In the name of Allah, the most Gracious, the most Merciful.
 
 
 # Monitor iwd DBus interface for state changes (suppress dbus warnings)
