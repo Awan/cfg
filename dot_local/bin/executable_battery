@@ -1,26 +1,55 @@
 #!/usr/bin/bash
 
+# Show battery percentage, estimated charging/discharging time, and design capacity.
+# The values below assume a Linux power supply named BAT0 with energy counters.
+
 SYSFS=/sys/class/power_supply
 BATTERY=BAT0
 MAINS=AC
+
+for field in power_now energy_now energy_full energy_full_design; do
+  path="$SYSFS/$BATTERY/$field"
+  if [[ ! -r "$path" ]]; then
+    printf 'battery: required reading is unavailable: %s\n' "$path" >&2
+    exit 1
+  fi
+done
+
+if [[ ! -r "$SYSFS/$MAINS/online" ]]; then
+  printf 'battery: AC status is unavailable: %s\n' "$SYSFS/$MAINS/online" >&2
+  exit 1
+fi
+
 POWER_NOW=$(<"$SYSFS/$BATTERY/power_now")
 ENERGY_NOW=$(<"$SYSFS/$BATTERY/energy_now")
 ENERGY_FULL=$(<"$SYSFS/$BATTERY/energy_full")
 ENERGY_FULL_DESIGN=$(<"$SYSFS/$BATTERY/energy_full_design")
 AC_ON=$(<"$SYSFS/$MAINS/online")
 
-printf "%s%%" "$(( ENERGY_NOW * 100 / ENERGY_FULL ))"
-if (( AC_ON )) ; then
-  if (( POWER_NOW )) ; then
-    printf " charging in %smin" "$(( (ENERGY_FULL - ENERGY_NOW) * 60 / POWER_NOW ))"
+for value in "$POWER_NOW" "$ENERGY_NOW" "$ENERGY_FULL" "$ENERGY_FULL_DESIGN" "$AC_ON"; do
+  if [[ ! "$value" =~ ^[0-9]+$ ]]; then
+    printf 'battery: invalid numeric reading: %s\n' "$value" >&2
+    exit 1
+  fi
+done
+
+if (( ENERGY_FULL == 0 || ENERGY_FULL_DESIGN == 0 )); then
+  printf '%s\n' 'battery: full-capacity readings must be greater than zero.' >&2
+  exit 1
+fi
+
+printf '%s%%' "$(( ENERGY_NOW * 100 / ENERGY_FULL ))"
+if (( AC_ON )); then
+  if (( POWER_NOW )); then
+    printf ' charging in %smin' "$(( (ENERGY_FULL - ENERGY_NOW) * 60 / POWER_NOW ))"
   else
-    printf " not charging"
+    printf ' not charging'
   fi
 else
-  if (( POWER_NOW )) ; then
-    printf " discharging in %smin" "$(( ENERGY_NOW * 60 / POWER_NOW ))"
+  if (( POWER_NOW )); then
+    printf ' discharging in %smin' "$(( ENERGY_NOW * 60 / POWER_NOW ))"
   else
-    printf " not discharging"
+    printf ' not discharging'
   fi
 fi
-printf " (%s%% of design)\n" "$(( ENERGY_FULL * 100 / ENERGY_FULL_DESIGN ))"
+printf ' (%s%% of design)\n' "$(( ENERGY_FULL * 100 / ENERGY_FULL_DESIGN ))"
