@@ -1,23 +1,64 @@
 #!/bin/sh
 
-# Gives a dmenu prompt to mount unmounted drives.
-# If they're in /etc/fstab, they'll be mounted automatically.
-# Otherwise, you'll be prompted to give a mountpoint from already existsing directories.
-# If you input a novel directory, it will prompt you to create that directory.
+# Interactively mount an unmounted partition, selecting an existing mountpoint
+# or creating one with elevated privileges when requested.
 
-pgrep -x dmenu && exit
+PRIVILEGE_COMMAND="${PRIVILEGE_COMMAND:-doas}"
 
-mountable=$(lsblk -lp | grep part | grep -v "t /" | awk '{print $1, "(" $4 ")"}') [[ "$mountable" = "" ]] && exit 1
-chosen=$(echo "$mountable" | dmenu -i -p "Mount which drive?" | awk '{print $1}') [[ "$chosen" = "" ]] && exit 1
-sudo mount "$chosen" && exit 0
-# You may want to change the line below for more suggestions for mounting.
-# I.e. you can increase the depth of the search, or add directories.
-# This will increase the load time briefly though.
-dirs=$(find /mnt /media /mount /home -type d -maxdepth 5 2>/dev/null)
-mountpoint=$(echo "$dirs" | dmenu -i -p "Type in mount point.")
-[[ "$mountpoint" = "" ]] && exit 1
-if [[ ! -d "$mountpoint" ]]; then
-	mkdiryn=$(echo -e "No\nYes" | dmenu -i -p  "$mountpoint does not exist. Create it?")
-	[[ "$mkdiryn" = Yes ]] && sudo mkdir -p "$mountpoint"
+if pgrep -x dmenu >/dev/null 2>&1; then
+    exit 0
 fi
-sudo mount $chosen $mountpoint && pgrep -x dunst && notify-send "$chosen mounted to $mountpoint."
+
+if ! command -v dmenu >/dev/null 2>&1; then
+    printf '%s\n' 'mount-menu: dmenu is required.' >&2
+    exit 127
+fi
+
+if ! command -v lsblk >/dev/null 2>&1; then
+    printf '%s\n' 'mount-menu: lsblk is required.' >&2
+    exit 127
+fi
+
+if ! command -v "$PRIVILEGE_COMMAND" >/dev/null 2>&1; then
+    printf 'mount-menu: privilege command not found: %s\n' "$PRIVILEGE_COMMAND" >&2
+    exit 127
+fi
+
+run_privileged() {
+    "$PRIVILEGE_COMMAND" "$@"
+}
+
+mountable="$(lsblk -rpn -o NAME,SIZE,TYPE,MOUNTPOINTS |
+    awk '$3 == "part" && NF == 3 { print $1, "(" $2 ")" }')"
+
+if [ -z "$mountable" ]; then
+    notify-send 'No unmounted partitions found.' 2>/dev/null || true
+    exit 0
+fi
+
+chosen="$(printf '%s\n' "$mountable" | dmenu -i -p 'Mount which drive?' | awk '{print $1}')"
+[ -n "$chosen" ] || exit 0
+
+# Let fstab handle partitions that already have a configured mountpoint.
+if run_privileged mount "$chosen"; then
+    exit 0
+fi
+
+mountpoint="$(find /mnt /media /mount /home -maxdepth 5 -type d 2>/dev/null |
+    dmenu -i -p 'Choose an existing mountpoint or type a new path:')"
+[ -n "$mountpoint" ] || exit 0
+
+if [ ! -d "$mountpoint" ]; then
+    create_dir="$(printf '%s\n' No Yes | dmenu -i -p "$mountpoint does not exist. Create it?")"
+    [ "$create_dir" = Yes ] || exit 0
+    run_privileged mkdir -p -- "$mountpoint" || exit 1
+fi
+
+if run_privileged mount -- "$chosen" "$mountpoint"; then
+    if pgrep -x dunst >/dev/null 2>&1; then
+        notify-send "$chosen mounted to $mountpoint"
+    fi
+else
+    printf 'mount-menu: failed to mount %s at %s\n' "$chosen" "$mountpoint" >&2
+    exit 1
+fi
