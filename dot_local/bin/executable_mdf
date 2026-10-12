@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # GitHub repository details
 GITHUB_REPO_OWNER="awan"
@@ -6,68 +7,62 @@ GITHUB_REPO_NAME="man"
 FILE_PATH="data"
 
 # Personal Access Token (PAT)
-GITHUB_TOKEN="$(passage github/tokens/man-app_repo_full_access)"
+GITHUB_TOKEN="$(passage github/tokens/man-app_repo_full_access)" || {
+  printf '%s\n' 'Error: unable to read the GitHub token from passage.' >&2
+  exit 1
+}
 
-# Check if the GITHUB_TOKEN command had an error
-if [ $? -ne 0 ]; then
-  echo "Error: There is no such token."
+if [[ -z "$GITHUB_TOKEN" ]]; then
+  printf '%s\n' 'Error: the GitHub token is empty.' >&2
   exit 1
 fi
 
-# Base URL for GitHub API
 BASE_URL="https://api.github.com/repos/$GITHUB_REPO_OWNER/$GITHUB_REPO_NAME/contents/$FILE_PATH"
 
-# Function to get the content of the data file from GitHub
-get_data_file_content() {
-  local data_file_content_response=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$BASE_URL")
-  echo "$data_file_content_response" | jq -r .content | base64 -d
+# Keep the token out of curl's command-line arguments. The temporary config is
+# private to this user and removed when the script exits.
+umask 077
+CURL_CONFIG="$(mktemp)"
+trap 'rm -f -- "$CURL_CONFIG"' EXIT
+printf 'header = "Authorization: token %s"\n' "$GITHUB_TOKEN" > "$CURL_CONFIG"
+unset GITHUB_TOKEN
+
+curl_api() {
+  curl --config "$CURL_CONFIG" --fail --silent --show-error \
+    --connect-timeout 5 --max-time 20 \
+    -H 'Accept: application/vnd.github+json' \
+    -H 'X-GitHub-Api-Version: 2022-11-28' \
+    "$@"
 }
 
-# Function to update a file
 update_file() {
-  local commit_message="پھول یوں ہی نہیں کھلتے؛ بیج کو دفن کرنا پڑتا ہے"
+  local commit_message="$1"
   local new_content="$2"
+  local current_response current_sha current_content encoded_content update_payload
 
-  # Encode the new content in base64
-  local encoded_content=$(echo -n "$new_content" | base64)
+  current_response="$(curl_api "$BASE_URL")"
+  current_sha="$(printf '%s' "$current_response" | jq -er '.sha')"
+  current_content="$(printf '%s' "$current_response" | jq -er '.content' | base64 -d)"
 
-  # Get the current file content using curl and check the exit status
-  local current_content_response=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$BASE_URL")
-  local curl_exit_status=$?
+  if [[ "$new_content" != "$current_content" ]]; then
+    encoded_content="$(printf '%s' "$new_content" | base64 | tr -d '\n')"
+    update_payload="$(jq -n \
+      --arg message "$commit_message" \
+      --arg content "$encoded_content" \
+      --arg sha "$current_sha" \
+      '{message: $message, content: $content, sha: $sha}')"
 
-  if [ $curl_exit_status -eq 0 ]; then
-    local current_sha=$(echo "$current_content_response" | jq -r .sha)
-    local current_content=$(echo "$current_content_response" | jq -r .content | base64 -d)
-
-    # Check if the new content is different from the current content
-    if [ "$new_content" != "$current_content" ]; then
-      # Create a JSON payload for updating the file
-      local update_payload=$(cat <<EOF
-      {
-        "message": "$commit_message",
-        "content": "$encoded_content",
-        "sha": "$current_sha"
-      }
-EOF
-      )
-
-      # Make a PUT request to update the file and hide curl output
-      curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" -d "$update_payload" "$BASE_URL" > /dev/null
-      echo "$new_content"  # Print script output
-    else
-      echo "Output is the same: $new_content"
-    fi
+    curl_api --request PUT \
+      -H 'Content-Type: application/json' \
+      --data "$update_payload" \
+      "$BASE_URL" >/dev/null
+    printf '%s\n' "$new_content"
   else
-    echo "Sorry, connection down: Here is the $new_content"
+    printf 'Output is the same: %s\n' "$new_content"
   fi
 }
 
-# Run your script and capture its output
-script_output="$($HOME/.local/bin/man.py)"
-
-# Get the current content of the data file
-current_data_file_content="$(get_data_file_content)"
-
-# Update the data file only if it's different from the script output
+# Run the data generator and update the remote file only when its content
+# differs from the current GitHub version.
+script_output="$("$HOME/.local/bin/man.py")"
 update_file "Update data file" "$script_output"
-
