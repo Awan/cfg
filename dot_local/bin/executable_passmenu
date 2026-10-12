@@ -9,8 +9,16 @@ if [[ $1 == "--type" ]]; then
 fi
 
 
-STARTDIR=${PASSWORD_STORE_DIR-~/.password-store}
-BASEDIR=$STARTDIR
+BASEDIR="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
+while [[ "$BASEDIR" != "/" && "$BASEDIR" == */ ]]; do
+  BASEDIR="${BASEDIR%/}"
+done
+STARTDIR="$BASEDIR"
+
+if [[ ! -d "$BASEDIR" ]]; then
+  printf 'passmenu: password store not found: %s\n' "$BASEDIR" >&2
+  exit 1
+fi
 DONE=0
 LEVEL=0
 PREVSELECTION=""
@@ -26,7 +34,6 @@ while [ "$DONE" -eq 0 ] ; do
   fi
   entry=$(printf '%s\n' "${password_files[@]}" | dmenu "$@" -l 15)
   
-  echo "entry: $entry"
   if [ -z "$entry" ] ; then
     DONE=1
     exit
@@ -34,7 +41,11 @@ while [ "$DONE" -eq 0 ] ; do
   
   if [ "$entry" != ".." ] ; then
     PREVSELECTION=$SELECTION
-    SELECTION="$SELECTION/$entry"
+    if [[ -n "$SELECTION" ]]; then
+      SELECTION="$SELECTION/$entry"
+    else
+      SELECTION="$entry"
+    fi
   
     # check if another dir
     if [ -d "$STARTDIR/$entry" ] ; then
@@ -54,7 +65,10 @@ while [ "$DONE" -eq 0 ] ; do
   else
     LEVEL=$((LEVEL-1))
     SELECTION=$PREVSELECTION
-    STARTDIR="$BASEDIR/$SELECTION"
+    STARTDIR="$BASEDIR"
+    if [[ -n "$SELECTION" ]]; then
+      STARTDIR="$STARTDIR/$SELECTION"
+    fi
   fi
 done
 
