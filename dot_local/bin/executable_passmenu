@@ -30,7 +30,7 @@ while [ "$DONE" -eq 0 ] ; do
   password_files=( "${password_files[@]%.gpg}" )
   
   if [ "$LEVEL" -ne 0 ] ; then
-    password_files=(".." "${password_files[@]}") 
+    password_files=( ".." "${password_files[@]}") 
   fi
   entry=$(printf '%s\n' "${password_files[@]}" | dmenu "$@" -l 15)
   
@@ -57,7 +57,15 @@ while [ "$DONE" -eq 0 ] ; do
       if [[ $typeit -eq 0 ]]; then
         pass show -c "$SELECTION" 2>/dev/null
       else
-        xdotool - <<<"type --clearmodifiers -- $(pass show "$SELECTION" | head -n 1)"
+        # Pass the password as one argument instead of feeding it to
+        # xdotool's command parser, where special characters could be
+        # interpreted as additional xdotool commands.
+        password=$(pass show "$SELECTION") || {
+          printf 'passmenu: failed to read password entry: %s\n' "$SELECTION" >&2
+          exit 1
+        }
+        password="${password%%$'\n'*}"
+        xdotool type --clearmodifiers -- "$password"
       fi
       DONE=1
     fi
