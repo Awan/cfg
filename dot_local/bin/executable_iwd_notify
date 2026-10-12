@@ -2,28 +2,31 @@
 
 # In the name of Allah, the most Gracious, the most Merciful.
 
+# Monitor iwd DBus interface for state changes.
+dbus-monitor --system "type='signal',sender='net.connman.iwd',interface='org.freedesktop.DBus.Properties',member='PropertiesChanged'" 2>/dev/null |
+while IFS= read -r line; do
+    # Avoid spawning grep for every line emitted by dbus-monitor.
+    case "$line" in
+        *'string "State"'*)
+            IFS= read -r next_line || continue
+            state=${next_line#*\"}
+            state=${state%%\"*}
 
-# Monitor iwd DBus interface for state changes (suppress dbus warnings)
-dbus-monitor --system "type='signal',sender='net.connman.iwd',interface='org.freedesktop.DBus.Properties',member='PropertiesChanged'" 2>/dev/null | \
-while read -r line; do
-    if echo "$line" | grep -q 'string "State"'; then
-        read -r next_line
-        state=$(echo "$next_line" | awk -F '"' '{print $2}')
-        
-        case "$state" in
-            "connected")
-                # Get current connected SSID using iwctl
-                interface="$(iw dev | awk '$1 == "Interface" {print $2; exit}')"
-                if [ -n "$interface" ]; then
-                    ssid=$(iwctl station "$interface" show | awk -F'State' '{print $1}' | grep -i 'Connected network' | xargs | cut -d' ' -f3-)
-                else
-                    ssid="network"
-                fi
-                dunstify -t 3000 -i network-wireless-connected-100 "Wi-Fi Connected" "Connected to ${ssid:-network}"
-                ;;
-            "disconnected")
-                dunstify -u critical -t 3000 -i network-wireless-disconnected "Wi-Fi Disconnected" 
-                ;;
-        esac
-    fi
+            case "$state" in
+                connected)
+                    # Get the current connected SSID using iwctl.
+                    interface=$(iw dev | awk '$1 == "Interface" {print $2; exit}')
+                    if [ -n "$interface" ]; then
+                        ssid=$(iwctl station "$interface" show | awk '/Connected network/ {sub(/^[[:space:]]*Connected network[[:space:]]*/, ""); print; exit}')
+                    else
+                        ssid=network
+                    fi
+                    dunstify -t 3000 -i network-wireless-connected-100 "Wi-Fi Connected" "Connected to ${ssid:-network}"
+                    ;;
+                disconnected)
+                    dunstify -u critical -t 3000 -i network-wireless-disconnected "Wi-Fi Disconnected"
+                    ;;
+            esac
+            ;;
+    esac
 done
