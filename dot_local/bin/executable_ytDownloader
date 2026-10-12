@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
 
-#Download youtube video/audio with desired quality
+# Download YouTube video/audio with the desired quality.
+# Accept either a full URL or a video ID.
 
-#accept both full URLs or just the id such as AQcQgfvfF1M
-
-read -p 'what do you wanna download, audio or video?' DEST
-
-if [[ $DEST == 'audio' ]]; then
-  cd ~/mus
-else
-  cd ~/mus/vid
+if [[ $# -ne 1 || -z "$1" ]]; then
+  printf 'Usage: %s URL_OR_VIDEO_ID\n' "${0##*/}" >&2
+  exit 2
 fi
 
-youtube-dl -F $1
+url=$1
+read -r -p 'What do you want to download, audio or video? ' DEST
 
-read -p 'which format?' FORMAT
-youtube-dl -f $FORMAT $1 --embed-subs --add-metadata -k
+if [[ $DEST == 'audio' ]]; then
+  cd "$HOME/mus" || exit
+else
+  cd "$HOME/mus/vid" || exit
+fi
 
+youtube-dl -F -- "$url" || exit
+
+read -r -p 'Which format? ' FORMAT
+[[ -n "$FORMAT" ]] || exit 0
+
+youtube-dl -f "$FORMAT" --embed-subs --add-metadata -k -- "$url"
