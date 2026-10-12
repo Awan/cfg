@@ -69,8 +69,8 @@ $HOME/.local/bin/mypanel &
 
 # Border width and gaps between windows
 
-border_width=1
-window_gaps=5
+border_width=0
+window_gaps=3
 bspc config border_width            $border_width
 bspc config window_gap              $window_gaps
 
