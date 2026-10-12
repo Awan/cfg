@@ -1,34 +1,45 @@
 #!/usr/bin/env bash
-# In the name of Allah, the most Gracious, the most Merciful.
-#
-#  ▓▓▓▓▓▓▓▓▓▓ 
-# ░▓ Author ▓ Abdullah Khabir <https://abdullah.support> 
-# ░▓▓▓▓▓▓▓▓▓▓ 
-# ░░░░░░░░░░ 
-# 
-# A script to wake system on a time specified on command line. 
+# In the name of Allah, the Most Gracious, the Most Merciful.
+# Suspend until TIME, then play SOUND (or the default alarm audio).
+# Usage: alarm TIME [SOUND]
+#        alarm stop
 
-USAGE="
-USAGE:\n
-\n
-$0 time tune\n
-\n
-Example:\n
-\n
-  $0 'today 13:00' /home/ak/Documents/somefile.mp3\n
-  $0 stop
-"
-
-[[ $# -eq 0 ]] && { echo ""; echo -e $USAGE; echo ""; exit 1; }
-
-alarm_time="$1"
-alarm_sound="$2"
-[[ -z $alarm_sound ]] && alarm_sound="$HOME/.local/share/misc/Kursi.mp3"
-
-
-alarm_start ()
-{
-  sudo rtcwake -d rtc0 -m mem -t $(date +%s -d "$alarm_time") -v && mpv --no-resume-playback --loop-file $alarm_sound 
+usage() {
+  printf 'Usage: %s TIME [SOUND]\n       %s stop\n' "${0##*/}" "${0##*/}" >&2
+  printf 'Example: %s "tomorrow 07:00" "$HOME/Music/alarm.mp3"\n' "${0##*/}" >&2
 }
 
-alarm_start
+if [[ "${1:-}" == stop ]]; then
+  if (( $# != 1 )); then
+    usage
+    exit 2
+  fi
+  sudo rtcwake -d rtc0 -m disable
+  exit $?
+fi
+
+if (( $# < 1 || $# > 2 )); then
+  usage
+  exit 2
+fi
+
+alarm_time="$1"
+alarm_sound="${2:-$HOME/.local/share/misc/Kursi.mp3}"
+
+if [[ ! -r "$alarm_sound" ]]; then
+  printf 'alarm: audio file is not readable: %s\n' "$alarm_sound" >&2
+  exit 1
+fi
+
+if ! wake_epoch="$(date -d "$alarm_time" +%s 2>/dev/null)" || [[ ! "$wake_epoch" =~ ^[0-9]+$ ]]; then
+  printf 'alarm: invalid wake time: %s\n' "$alarm_time" >&2
+  exit 2
+fi
+
+if (( wake_epoch <= $(date +%s) )); then
+  printf 'alarm: wake time must be in the future: %s\n' "$alarm_time" >&2
+  exit 2
+fi
+
+sudo rtcwake -d rtc0 -m mem -t "$wake_epoch" -v &&
+  mpv --no-resume-playback --loop-file "$alarm_sound"
