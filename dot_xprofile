@@ -10,180 +10,84 @@ In the name of Allah, the most Gracious, the most Merciful.
 
 ░█░█░█▀█░█▀▄░█▀█░█▀▀░▀█▀░█░░░█▀▀
 ░▄▀▄░█▀▀░█▀▄░█░█░█▀▀░░█░░█░░░█▀▀
-░▀░▀░▀░░░▀░▀░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀
+░▀░▀░▀░░░▀░▀░▀▀▀░░▀░░░▀▀▀░▀▀▀░▀▀▀
 COMMENT
 
+# X resources and additional font directories.
+user_resources="$HOME/.Xresources"
+user_fonts_dir="$HOME/.local/share/fonts"
 
-# Xresources file
-user_resources=$HOME/.Xresources
-# custom fonts
-user_fonts_dir=$HOME/.local/share/fonts
-# Time before exectuing lock 
-# shellcheck disable=2034
-notify_time=10
-
-# For some java apps
-
-#wmname LG3D
-
+# Start a program only if a matching process is not already running.
 run() {
-  if ! pgrep "$1" ;
-  then
+  if ! pgrep "$1"; then
     "$@" &
   fi
 }
 
-
+# Load startup scripts installed by X11 packages.
 if [ -d /etc/X11/xinit/xinitrc.d ]; then
-  for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
-    # shellcheck disable=1090
-    [ -x "$f" ] && . "$f"
-    done
-    unset f
-fi
-
-# If previously set wallpaper, restore it
-
-if [ -f ~/.fehbg ]; then
+  for f in /etc/X11/xinit/xinitrc.d/?*.sh; do
     # shellcheck disable=SC1090
-    . ~/.fehbg
+    [ -x "$f" ] && . "$f"
+  done
+  unset f
 fi
 
-# Session name
+# Restore the wallpaper previously selected with feh.
+if [ -f "$HOME/.fehbg" ]; then
+  # shellcheck disable=SC1090
+  . "$HOME/.fehbg"
+fi
+
+# Identify the desktop session to applications that use XDG metadata.
 export DESKTOP_SESSION=bspwm
-# No tty
 export XDG_SESSION_TYPE=x11
 
+# Configure the built-in display and its gamma settings.
 tab() {
-  # Configure only laptop's screen if no external monitor is connected.
   xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --brightness 1.0 \
     --gamma 0.76:0.75:0.68 "$@"
 }
 
+# Configure the external HDMI display alongside the laptop panel.
 # shellcheck disable=SC2120
 tabular() {
-  # Configure external monitor if exists
   tab
   xrandr --output HDMI-2 --mode 1280x1024 --pos 1920x0 "$@"
 }
 
-# Start sxhkd 
+# Start the keyboard shortcut daemon.
+run sxhkd
 
-run sxhkd 
-
-# Load Xresources 
-
+# Merge user-defined X resources when the file exists.
 [ -f "$user_resources" ] && xrdb -merge "$user_resources"
 
-# Load keymaps
-
-# [ -f "$user_keymaps" ] && xmodmap "$user_keymaps"
-
-# Caps Lock as Super; if pressed with other keys, it will be simulated as 
-# Super_L, else it will be simulated as Escape. Requires xcape
-
+# Treat Caps Lock as Super when held, or Escape when tapped (requires xcape).
 setxkbmap -option caps:super
 xcape -e 'Super_L=Escape'
 
-# Run compositor
+# Start the X11 compositor.
+run picom -b --config "$HOME/.config/picom/picom.conf"
 
-run picom -b --config "$HOME"/.config/picom/picom.conf 
-
-# Wallpaper
-
-# run "$HOME"/.local/bin/wallp
-
-# Set cursor shape
-
+# Set the cursor and register user and system font directories.
 xsetroot -cursor_name heart
-
-#xcompmgr -c -f D 5 
-
-# Add fonts directories
-
 xset +fp "$user_fonts_dir" && xset fp rehash &
 xset +fp /usr/share/fonts/ && xset fp rehash &
 
-# Start urxvt in daemon mode
-
-# run urxvtd -q -o -f 
-
-# Touchpad speed
-
+# Adjust touchpad pointer acceleration.
 xinput --set-prop "Synaptics TM3381-002" "libinput Accel Speed" 0.5 &
 
-# same thing for mouse
-# xinput --set-prop 10 312 0.5 &
+# Hide the pointer when it has been idle.
+run unclutter --ignore-scrolling --fork --timeout 1
 
-# No mouse when idle
+# Set screen-blanking timing and lock the session when X activates the saver.
+xset s 75 45 &
+run xss-lock -n "$HOME/.local/bin/dim_screen" --transfer-sleep-lock -- "$HOME/.local/bin/i3lock"
 
-run unclutter --ignore-scrolling --fork --timeout 1 
+# Start the notification daemon.
+run dunst -c "$HOME/.config/dunst/dunstrc"
 
-# Set cursor
-
-#xsetroot -cursor_shape ul_angle
-
-# DPMS and lock screen
-
-#xset dpms $inactivity_timeout &
-#xss-lock -- physlock -mp 'Say, "If the sea were ink for [writing] the words of my Lord, the sea would be exhausted before the words of my Lord were exhausted, even if We brought the like of it as a supplement."' 
-# run xautolock -time 2 -locker "/usr/bin/i3lock -c 000075" -notify 30 -notifier "notify-send -u critical -t 10000 -- 'Locking the screen in 30 seconds...'"
-xset s 75 45 & 
-run xss-lock -n ~/.local/bin/dim_screen --transfer-sleep-lock -- ~/.local/bin/i3lock
-# run xss-lock -n ~/.local/bin/dim_screen -- physlock -dp 'You cant run this system, fuckin looser'
-# Start Notification daemon
-
-run dunst -c "$HOME"/.config/dunst/dunstrc
-
-# Battery notification
-# Only run this script if status bar isn't lemonbar (mypanel script does that)
-
-# run $HOME/.local/bin/battery_low
-
-# Get wireless network connectivity/disconnectivity
-
-#wifi_info() {
-#    for iface in /var/run/wpa_supplicant/* ;
-#    do
-#        iface="${iface##*/}"
-#        if [ -d "/sys/class/net/${iface}/phy80211" ]; then
-#                wpa_cli -p /var/run/wpa_supplicant -i "${iface}" -a "${HOME}/.local/bin/wpa_notify"
-#        fi
-#    done
-#}
-
-
-# run wifi_info
-
-#wpa_cli -p /var/run/wpa_supplicant -i wlp59s0 -B "$HOME/.local/bin/wpa_notify"
-
-# IWD connection status notification
-
-# run "$HOME/.local/bin/iwd_notify"
-
-# Mute the mic
-
-pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
-
-# Set default volume to 80%
-
-# pactl set-sink-volume 0 80% &
-
-# Redshift for less eye strain
-
-# lets run with systemd ;-)
-# run redshift -c ~/.config/redshift/redshift.conf
-
-# Start tmux if not already running
-
-# [ -z "$TMUX" ] && tmux new-session -s "$USER" -d 
-
-# Set brightness to 10 at boot
-
-#run light -S 30
-
-# Configure multihead.
-
+# Select the display layout based on the connected monitor count.
 if [ "$(xrandr -q | awk '/ connected / {print $1}' | wc -l)" -eq 1 ]; then
   tab --primary
 else
@@ -191,14 +95,4 @@ else
   tabular
 fi
 
-# run stalonetray 
-
-# Start a scratchpad
-
-
-# alacritty --dimensions 55 15 --position 550 175 -t 'scratchpad' &
-#sleep 1
-#termite -t scratchpad
-# xfce4-terminal -T scratchpad --font='Fantasque Sans Mono Italic 16' --geometry 60x18 &
-
-# vim:ft=sh
+# vim: ft=sh
