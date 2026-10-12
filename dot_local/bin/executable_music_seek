@@ -1,24 +1,22 @@
 #!/bin/sh
 
-: << 'COMMENT'
+# In the name of Allah, the Most Gracious, the Most Merciful.
+# Seek by the supplied offset in cmus when it is playing, otherwise in MPD.
 
-In the name of Allah, the most Gracious, the most Merciful.
+if [ "$#" -ne 1 ] || [ -z "$1" ]; then
+  printf 'Usage: %s OFFSET\n' "${0##*/}" >&2
+  exit 2
+fi
 
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
-░░░░░░░░░░
+duration="$1"
+cmus_state=""
 
-COMMENT
+if command -v cmus-remote >/dev/null 2>&1; then
+  cmus_state="$(cmus-remote -Q 2>/dev/null | awk 'NR == 1 { print $2 }')"
+fi
 
-# Muisc player seek backward and forward
-# check if cmus is playing or not
-
-duration=$1
-_cmus_state=$(cmus-remote -Q | awk 'NR==1{print $2}')
-
-if [ $_cmus_state = 'playing' ]; then
-    cmus-remote -k $duration
+if [ "$cmus_state" = "playing" ]; then
+  cmus-remote -k "$duration"
 else
-    mpc seek $duration
+  mpc seek "$duration"
 fi
