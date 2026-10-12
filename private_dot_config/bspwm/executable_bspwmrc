@@ -5,13 +5,39 @@
 
 multimonitors()
 {
-  start_from=1
-  monitors_connected=$(bspc query -M | wc -l)
-  per_monitor=$(( 10 / monitors_connected ))
-  for monitor in $(bspc query -M); do
-    bspc monitor $monitor -d $(seq $start_from $(( start_from + per_monitor - 1)))
-    start_from=$(( start_from + per_monitor ))
- done
+  local total_desktops=10
+  local start_from=1
+  local monitor_list monitors_connected remaining_desktops remaining_monitors
+  local monitor desktops_for_monitor end desktop_names
+
+  monitor_list="$(bspc query -M)" || return 1
+  if [ -z "$monitor_list" ]; then
+    printf '%s\n' 'bspwmrc: no connected monitors found.' >&2
+    return 1
+  fi
+
+  monitors_connected="$(printf '%s\n' "$monitor_list" | wc -l)"
+  remaining_desktops=$total_desktops
+  remaining_monitors=$monitors_connected
+
+  for monitor in $monitor_list; do
+    desktops_for_monitor=$((remaining_desktops / remaining_monitors))
+    if [ $((remaining_desktops % remaining_monitors)) -gt 0 ]; then
+      desktops_for_monitor=$((desktops_for_monitor + 1))
+    fi
+
+    if [ "$desktops_for_monitor" -gt 0 ]; then
+      end=$((start_from + desktops_for_monitor - 1))
+      desktop_names="$(seq "$start_from" "$end")" || return 1
+      # Split the generated desktop names into separate bspc arguments.
+      # shellcheck disable=SC2086
+      bspc monitor "$monitor" -d $desktop_names || return 1
+      start_from=$((end + 1))
+      remaining_desktops=$((remaining_desktops - desktops_for_monitor))
+    fi
+
+    remaining_monitors=$((remaining_monitors - 1))
+  done
 }
 
 multimonitors
