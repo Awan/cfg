@@ -1,19 +1,36 @@
 #!/bin/sh
-# In the name of Allah, the most Gracious, the most Merciful.
 
+# In the name of Allah, the Most Gracious, the Most Merciful.
+# Notify once when battery capacity reaches 30% or less while unplugged.
 
-# If battery is low, push a notification
+battery_path=/sys/class/power_supply/BAT0/capacity
+charger_path=/sys/class/power_supply/AC/online
+threshold=30
+low_notification_sent=0
 
-battery_status=$(cat /sys/class/power_supply/BAT0/capacity)
-is_charger_connected=$(cat /sys/class/power_supply/AC/online)
+while :; do
+  battery_status=$(cat "$battery_path" 2>/dev/null) || battery_status=
+  charger_connected=$(cat "$charger_path" 2>/dev/null) || charger_connected=
+  readings_valid=1
 
+  case "$battery_status" in
+    ''|*[!0-9]*) readings_valid=0 ;;
+  esac
 
-while true; do
-  battery_status=$(cat /sys/class/power_supply/BAT0/capacity)
-  is_charger_connected=$(cat /sys/class/power_supply/AC/online)
+  case "$charger_connected" in
+    0|1) ;;
+    *) readings_valid=0 ;;
+  esac
 
-  if [ "$battery_status" -le 30 ] && [ "$is_charger_connected" -eq 0 ]; then
-    notify-send -u critical "Battery critically low"
+  if [ "$readings_valid" -eq 1 ]; then
+    if [ "$battery_status" -le "$threshold" ] && [ "$charger_connected" -eq 0 ]; then
+      if [ "$low_notification_sent" -eq 0 ] && notify-send -u critical "Battery critically low"; then
+        low_notification_sent=1
+      fi
+    else
+      low_notification_sent=0
+    fi
   fi
+
   sleep 60
 done
