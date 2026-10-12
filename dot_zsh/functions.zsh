@@ -809,18 +809,25 @@ mkuser () {
 }
 
 Q () {
-  # listen to Holy Quran
-  Surah="$1"
-  Ayah="$2"
-  Qari="$3"
-  path="$HOME/haq/sudais/"
-  [ -z "$Qari" ] && path="$HOME/haq/shuraim/"
+  # Play one verse from the local Quran audio collection.
+  local surah="${1:-}" ayah="${2:-}" qari="${3:-shuraim}" path file
 
-  if [ -z "$Surah" ] || [ -z "$Ayah" ]; then
-    exit 1
+  if (( $# < 2 || $# > 3 )) || [[ "$surah" != <-> || "$ayah" != <-> ]]; then
+    printf 'Usage: Q SURAH AYAH [shuraim|sudais]\n' >&2
+    return 2
   fi
-    printf -v file '%03d%03d.mp3' "$Surah" "$Ayah" && \
-  /usr/bin/mpv --no-resume-playback "$path""$file"
+
+  case "$qari" in
+    shuraim) path="$HOME/haq/shuraim/" ;;
+    sudais) path="$HOME/haq/sudais/" ;;
+    *)
+      printf 'Q: unsupported reciter: %s\n' "$qari" >&2
+      return 2
+      ;;
+  esac
+
+  printf -v file '%03d%03d.mp3' "$surah" "$ayah" || return
+  /usr/bin/mpv --no-resume-playback "$path$file"
 }
 
 Qt () {
@@ -852,19 +859,21 @@ aurpkgs() {
 }
 
 vers() {
-  output_file="$1"
-  surah="$2"
-  verses="$3"
-
-  if [ -z "$surah" ] || [ -z "$verses" ]; then
-    exit 1
+  # Generate Markdown audio embeds for each verse in a surah.
+  if (( $# != 3 )) || [[ -z "$1" || "$2" != <-> || "$3" != <-> ]]; then
+    printf 'Usage: vers OUTPUT_FILE SURAH VERSE_COUNT\n' >&2
+    return 2
   fi
 
-  for i in $(seq 1 $verses);
-  do
-    printf -v file '%03d%03d.mp3' "$surah" "$i"; printf '%b\n' "## _Ayat $i :arrow_heading_down:_\n{{< audio mp3=https://gitlab.com/Abdullah/haq/-/raw/master/shuraim/$file >}}\n" >> "$output_file";
-  done
+  local output_file="$1"
+  local surah="$2"
+  local verses="$3"
+  local file i
 
+  for (( i = 1; i <= verses; i++ )); do
+    printf -v file '%03d%03d.mp3' "$surah" "$i" || return
+    printf '%b\n' "## _Ayat $i :arrow_heading_down:_\n{{< audio mp3=https://gitlab.com/Abdullah/haq/-/raw/master/shuraim/$file >}}\n" >> "$output_file" || return
+  done
 }
 
 getscr() {
