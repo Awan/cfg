@@ -601,21 +601,41 @@ tf ()
 
 aur ()
 {
-  cd $HOME/git
-  package_name="$1"
-  aur_url="https://aur.archlinux.org"
-  git clone $aur_url/$package_name
-  cd $package_name
-  $EDITOR PKGBUILD
-}
+  if (( $# != 1 )); then
+    printf 'Usage: aur PACKAGE_NAME\n' >&2
+    return 2
+  fi
 
+  local package_name="$1"
+  local repository_dir="$HOME/git"
+  local package_dir="$repository_dir/$package_name"
+  local editor="${EDITOR:-vim}"
 
-gfc ()
-# git initial commit
-{
-  arabic="بِسْمِ ٱللّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيم"
-  english='In the name of Allah SWT, the most Gracious, the most Merciful.'
-  git commit -m "$arabic - $english"
+  case "$package_name" in
+    ""|*[!A-Za-z0-9@._+-]*)
+      printf 'aur: invalid package name: %s\n' "$package_name" >&2
+      return 2
+      ;;
+  esac
+
+  mkdir -p "$repository_dir" || return 1
+
+  if [[ -d "$package_dir/.git" ]]; then
+    cd "$package_dir" || return 1
+  elif [[ -e "$package_dir" ]]; then
+    printf 'aur: destination exists but is not a Git repository: %s\n' "$package_dir" >&2
+    return 1
+  else
+    git clone "https://aur.archlinux.org/${package_name}.git" "$package_dir" || return 1
+    cd "$package_dir" || return 1
+  fi
+
+  if [[ ! -f PKGBUILD ]]; then
+    printf 'aur: PKGBUILD not found in %s\n' "$PWD" >&2
+    return 1
+  fi
+
+  "$editor" PKGBUILD
 }
 
 ports ()
