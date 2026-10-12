@@ -1,27 +1,7 @@
 #!/bin/sh
+# In the name of Allah, the Most Gracious, the Most Merciful.
 
-
-coded_by='
-
-In the name of Allah, the most Gracious, the most Merciful.
-
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.solutions>
-░▓▓▓▓▓▓▓▓▓▓
-░░░░░░░░░░
-
-░█▀▄░█▀▀░█▀█░█░█░█▄█
-░█▀▄░▀▀█░█▀▀░█▄█░█░█
-░▀▀░░▀▀▀░▀░░░▀░▀░▀░▀
-'
-
-# Start some useful programs. Only useful if you don't use some display manager.
-# If you use one, that will source ~/.xprofile so execute these programs from
-# there instead.
-
-#"$HOME"/.config/bspwm/autostart.sh &
-
-# Define some functions
+# Distribute the ten desktops across connected monitors.
 
 multimonitors()
 {
@@ -33,17 +13,6 @@ multimonitors()
     start_from=$(( start_from + per_monitor ))
  done
 }
-
-multibar() {
-  # check how many monitors are connected and start polybar on all of them.
-  pkill polybar
-  while pgrep -x polybar >/dev/null; do sleep 1; done
-  xrandr -q | awk '/ connected / {print $1}' | while read -r monitor _; do
-  polybar -r "$monitor" & 
-done
-}
-
-# Divide workspaces/desktops to all connected monitors
 
 multimonitors
 
@@ -59,13 +28,8 @@ bspc config \
 
 bspc config external_rules_command "$HOME"/.config/bspwm/external_rules
 
-# Start polybar on all connected monitors
-
-# multibar &
-# Start stalonetray
-# stalonetray &
-# Start lemonbar
-$HOME/.local/bin/mypanel &
+# Start the active lemonbar-based panel.
+"$HOME/.local/bin/mypanel" &
 
 # Border width and gaps between windows
 
@@ -150,48 +114,23 @@ bspc config automatic_scheme        longest_side
 
 # Colors
 
-# Catppuccin Mocha mapped to your existing variable names
-dark_moderate_blue="#89b4fa"   # accent blue (mapped)
-mint_cream="#cdd6f4"           # foreground
-baby_blue="#94e2d5"            # soft teal (used for presel feedback previously)
-black="#1e1e2e"                # background
-white="#ffffff"                # white
-pink_flamingo="#f5c2e7"        # pinkish accent
-pure_cyan="#89b4fa"            # primary accent (same as dark_moderate_blue)
-pure_magenta="#f2cdcd"         # muted magenta
-vivid_red="#f38ba8"            # error/red accent
-hot_pink="#f5c2e7"             # hot pink (similar)
-maroon="#7c6f64"               # muted
-up_maroon="#594b4b"            # darker muted
-awesome="#cba6f7"              # purple-ish accent
-pink="#f5c2e7"                 # pink duplicate mapped
-sky_blue="#89b4fa"             # using accent blue from Catppuccin
-greenish_yellow="#a6e3a1"      # success green
+# Catppuccin Mocha colors used for window feedback and borders.
+presel_feedback_color="#94e2d5"
+focused_border_color="#a6e3a1"
+active_border_color="#f5c2e7"
+normal_border_color="#89b4fa"
 
 # Feedback color of preselection
 
-bspc config presel_feedback_color   $baby_blue
+# Window feedback and border colors.
+bspc config presel_feedback_color   "$presel_feedback_color"
+bspc config focused_border_color    "$focused_border_color"
+bspc config active_border_color     "$active_border_color"
+bspc config normal_border_color     "$normal_border_color"
 
-# Focused Border color
-
-bspc config focused_border_color    $greenish_yellow
-
-# Active border color 
-
-bspc config active_border_color     $pink
-
-# Normal border color
-
-bspc config normal_border_color     $sky_blue
-
-# Mouse
-
+# Use Super as the mouse modifier for window actions.
 bspc config pointer_modifier mod4
-bspc config pointer_action3 resize_side
-bspc config pointer_action3 resize_corner
-bspc config pointer_action1 move
 sleep 1
-# urxvtc -g 70x20 -title 'scratchpad'
 
 pgrep -f "alacritty -t scratchpad" >/dev/null || alacritty -t 'scratchpad' &
 killall -q stalonetray
