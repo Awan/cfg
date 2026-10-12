@@ -1,34 +1,31 @@
 #!/bin/sh
 
-: << 'COMMENT'
-In the name of Allah, the most Gracious, the most Merciful.
+# In the name of Allah, the Most Gracious, the Most Merciful.
+# Notify about connection changes reported by wpa_supplicant's action hook.
 
- ▓▓▓▓▓▓▓▓▓▓
-░▓ Author ▓ Abdullah Khabir <https://abdullah.support>
-░▓▓▓▓▓▓▓▓▓▓ YouTube <https://YouTube.com/AbdullahToday>
-░░░░░░░░░░
-
-░█░█░█▀█░█▀█░░░░░█▀█░█▀█░▀█▀░▀█▀░█▀▀░█░█
-░█▄█░█▀▀░█▀█░░░░░█░█░█░█░░█░░░█░░█▀▀░░█░
-░▀░▀░▀░░░▀░▀░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀░░░░▀░
-COMMENT
-
-# Get notified about connecting/disconnecting network with dunst, notify-send
-# and wpa_supplicant. Keep this script somewhere in your $PATH and add this to
-# your autostart (.xinitrc) file.
-
-#
-#for IF in /var/run/wpa_supplicant/* ; do
-#  IF="${IF##*/}"
-#    if [[ -d "/sys/class/net/${IF}/phy80211" ]] ; then
-#      wpa_cli -p /var/run/wpa_supplicant -i "${IF}" -a #"${HOME}/.local/bin/wpa_notify" &
-#    fi
-#done
-
-
-if [ "${2}" = 'DISCONNECTED' ] ; then
-        notify-send -t 3000 'wpa_supplicant' "$1 disconnected!"
-else
-  ssid="$(wpa_cli -p "${WPA_CTRL_DIR}" -i "${1}" list_networks | awk "\$1 == ${WPA_ID} { print \$2 }")"
-        notify-send -t 3000 'wpa_supplicant' "connected to $ssid"
+if [ "$#" -lt 2 ] || [ -z "$1" ] || [ -z "$2" ]; then
+  printf 'Usage: %s INTERFACE CONNECTED|DISCONNECTED\n' "${0##*/}" >&2
+  exit 2
 fi
+
+interface="$1"
+event="$2"
+
+case "$event" in
+  DISCONNECTED)
+    notify-send -t 3000 'wpa_supplicant' "$interface disconnected!"
+    ;;
+  CONNECTED)
+    ssid=""
+
+    if [ -n "${WPA_CTRL_DIR:-}" ] && [ -n "${WPA_ID:-}" ]; then
+      ssid="$(wpa_cli -p "$WPA_CTRL_DIR" -i "$interface" list_networks |
+        awk -v id="$WPA_ID" '$1 == id { print $2; exit }')"
+    fi
+
+    notify-send -t 3000 'wpa_supplicant' "connected to ${ssid:-unknown network}"
+    ;;
+  *)
+    exit 0
+    ;;
+esac
