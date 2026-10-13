@@ -8,7 +8,7 @@
 # ░░░░░░░░░░                                                  #
 #                                                             # 
 # ░█▀▀░▀█▀░▀█▀░█▀▀░█▀█░█▀█░█▀▀░▀█▀░█▀▀                        #
-# ░█░█░░█░░░█░░█░░░█░█░█░█░█▀▀░░█░░█░█                        #
+# ░█░█░░█░░░█░░█░█░█░█░█░█▀▀░░█░░█░█                        #
 # ░▀▀▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀░░░▀▀▀░▀▀▀                        #
 #                                                             #
 ############################################################### 
@@ -64,7 +64,7 @@
 	editor = $EDITOR
         #pager = vimpager
 	symlinks = true
-	excludesfile = ~/.config/git/ignore
+        excludesfile = ~/.config/git/ignore
 #         fsmonitor = some program to find last changed file since given time. (try find)
 	whitespace = trailing-space,-space-before-tab,cr-at-eol
 # 	bigFileThreshold = 
@@ -85,7 +85,7 @@
 	b = branch
         c = commit
         ca = commit -a
-        lg = log --pretty=format:\"%C(yellow)%h %ar %C(auto)%d %Creset %s, %Cblue%cn\" --graph --all
+        lg = log --pretty=format:\\"%C(yellow)%h %ar %C(auto)%d %Creset %s, %Cblue%cn\\" --graph --all
         st = stash save --include-untracked
         m = commit --message
         pop = stash pop
@@ -96,6 +96,14 @@
 	d = diff
 	dc = diff --cached
 	s = status
+        ss = status --short
+        sb = status --short --branch
+        sfull = status
+        ds = diff --stat
+        dcs = diff --cached --stat
+        recent = log -10 --oneline --decorate
+        bv = branch -vv
+        conflicts = diff --name-only --diff-filter=U
 	psm = submodule update --remote --recursive
 	sp = diff --ignore-all-space -- # show diff while ignoring whitespace
         whitespace-only = diff --ignore-all-space --quiet
