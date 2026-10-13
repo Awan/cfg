@@ -39,6 +39,22 @@ jobs:
       - name: Validate Zsh syntax
         run: git ls-files -z -- "*.zsh" ":!archive/**" | xargs -0 -r zsh -n
 
+      - name: Verify Git aliases from Zsh custom aliases
+        shell: zsh {0}
+        run: |
+          source dot_zsh/custom-aliases.zsh
+          print -r -- "Git aliases loaded from dot_zsh/custom-aliases.zsh:"
+          for name in gss gsb gsfull gds gdcs grecent gbv gconflicts; do
+            print -r -- "alias $name=${aliases[$name]}"
+          done
+          [[ "${aliases[gss]}" == "git status --short" ]]
+          [[ "${aliases[gsb]}" == "git status --short --branch" ]]
+          [[ "${aliases[gsfull]}" == "git status" ]]
+          [[ "${aliases[gds]}" == "git diff --stat" ]]
+          [[ "${aliases[gdcs]}" == "git diff --cached --stat" ]]
+          [[ "${aliases[grecent]}" == "git log -10 --oneline --decorate" ]]
+          [[ "${aliases[gbv]}" == "git branch -vv" ]]
+          [[ "${aliases[gconflicts]}" == "git diff --name-only --diff-filter=U" ]]
       - name: Validate Zsh startup files
         run: zsh -n dot_zshenv dot_zshrc dot_zprofile
 
