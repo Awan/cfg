@@ -238,5 +238,14 @@ alias art='artwall'
 alias artr='artwall --reject'
 
     
+# Git status, diff, and review shortcuts
+alias gss='git status --short'
+alias gsb='git status --short --branch'
+alias gsfull='git status'
+alias gds='git diff --stat'
+alias gdcs='git diff --cached --stat'
+alias grecent='git log -10 --oneline --decorate'
+alias gbv='git branch -vv'
+alias gconflicts='git diff --name-only --diff-filter=U'
 
 # vim: ft=zsh
