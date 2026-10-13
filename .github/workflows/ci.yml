@@ -66,6 +66,54 @@ jobs:
           chezmoi --config /tmp/chezmoi-ci/chezmoi.toml --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home apply --exclude=encrypted,scripts
           chezmoi --config /tmp/chezmoi-ci/chezmoi.toml --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home verify --exclude=encrypted,scripts
 
+      - name: Verify Git aliases from rendered configuration
+        run: |
+          config=/tmp/chezmoi-home/.config/git/config
+          test -f "$config"
+          echo "Git aliases rendered from private_dot_config/git/config.tmpl:"
+          git config --file "$config" --get-regexp '^alias\.(ss|sb|sfull|ds|dcs|recent|bv|conflicts)        run: |
+          age-keygen -o /tmp/ci-age-key.txt
+          for file in dot_android/encrypted_adbkey.pub.age dot_android/encrypted_private_adbkey.age private_dot_config/pacman/encrypted_installed_packages.age; do
+            if age --decrypt --identity /tmp/ci-age-key.txt "$file" >/dev/null 2>/tmp/age-error; then
+              echo "Unexpected decryption success: $file"
+              exit 1
+            fi
+            if ! grep -Fq 'no identity matched any of the recipients' /tmp/age-error; then
+              cat /tmp/age-error
+              echo "Invalid age file or unexpected error: $file"
+              exit 1
+            fi
+          done
+
+      - name: Validate age encryption round-trip
+        run: |
+          age-keygen -o /tmp/fixture-key.txt
+          age-keygen -y /tmp/fixture-key.txt > /tmp/fixture-recipient.txt
+          printf '%s\n' 'chezmoi CI age fixture' > /tmp/fixture-plain.txt
+          age -r "$(cat /tmp/fixture-recipient.txt)" -o /tmp/fixture.age /tmp/fixture-plain.txt
+          age --decrypt -i /tmp/fixture-key.txt -o /tmp/fixture-decrypted.txt /tmp/fixture.age
+          cmp -s /tmp/fixture-plain.txt /tmp/fixture-decrypted.txt
+
+      - name: Notify Slack
+        if: always() && github.event_name == 'push'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }}
+          CI_STATUS: ${{ job.status }}
+          CI_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          [ -n "$SLACK_WEBHOOK_URL" ] || exit 0
+          payload=$(printf '{"text":"Dotfiles CI: %s\\n%s"}' "$CI_STATUS" "$CI_RUN_URL")
+          curl -fsS --connect-timeout 5 --max-time 15 -H 'Content-Type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
+
+          test "$(git config --file "$config" --get alias.ss)" = "status --short"
+          test "$(git config --file "$config" --get alias.sb)" = "status --short --branch"
+          test "$(git config --file "$config" --get alias.sfull)" = "status"
+          test "$(git config --file "$config" --get alias.ds)" = "diff --stat"
+          test "$(git config --file "$config" --get alias.dcs)" = "diff --cached --stat"
+          test "$(git config --file "$config" --get alias.recent)" = "log -10 --oneline --decorate"
+          test "$(git config --file "$config" --get alias.bv)" = "branch -vv"
+          test "$(git config --file "$config" --get alias.conflicts)" = "diff --name-only --diff-filter=U"
+
       - name: Validate encrypted age files
         run: |
           age-keygen -o /tmp/ci-age-key.txt
