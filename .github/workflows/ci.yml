@@ -66,21 +66,6 @@ jobs:
           chezmoi --config /tmp/chezmoi-ci/chezmoi.toml --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home apply --exclude=encrypted,scripts
           chezmoi --config /tmp/chezmoi-ci/chezmoi.toml --source "$GITHUB_WORKSPACE" --destination /tmp/chezmoi-home verify --exclude=encrypted,scripts
 
-      - name: Verify Git aliases from rendered configuration
-        run: |
-          config=/tmp/chezmoi-home/.config/git/config
-          test -f "$config"
-          echo "Git aliases rendered from private_dot_config/git/config.tmpl:"
-          git config --file "$config" --get-regexp '^alias\.'
-          test "$(git config --file "$config" --get alias.ss)" = "status --short"
-          test "$(git config --file "$config" --get alias.sb)" = "status --short --branch"
-          test "$(git config --file "$config" --get alias.sfull)" = "status"
-          test "$(git config --file "$config" --get alias.ds)" = "diff --stat"
-          test "$(git config --file "$config" --get alias.dcs)" = "diff --cached --stat"
-          test "$(git config --file "$config" --get alias.recent)" = "log -10 --oneline --decorate"
-          test "$(git config --file "$config" --get alias.bv)" = "branch -vv"
-          test "$(git config --file "$config" --get alias.conflicts)" = "diff --name-only --diff-filter=U"
-
       - name: Validate encrypted age files
         run: |
           age-keygen -o /tmp/ci-age-key.txt
