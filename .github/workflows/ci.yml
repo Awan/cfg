@@ -42,6 +42,7 @@ jobs:
       - name: Verify Git aliases from Zsh custom aliases
         shell: zsh {0}
         run: |
+          set -eu
           source dot_zsh/custom-aliases.zsh
           print -r -- "Git aliases loaded from dot_zsh/custom-aliases.zsh:"
           for name in gss gsb gsfull gds gdcs grecent gbv gconflicts; do
