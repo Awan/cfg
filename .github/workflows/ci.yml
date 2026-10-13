@@ -91,7 +91,7 @@ jobs:
           cmp -s /tmp/fixture-plain.txt /tmp/fixture-decrypted.txt
 
       - name: Notify Slack
-        if: always() && github.event_name == 'push'
+        if: always() && (github.event_name == 'push' || github.event_name == 'pull_request')
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }}
           CI_STATUS: ${{ job.status }}
