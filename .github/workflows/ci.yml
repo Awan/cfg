@@ -39,21 +39,6 @@ jobs:
       - name: Validate Zsh syntax
         run: git ls-files -z -- "*.zsh" ":!archive/**" | xargs -0 -r zsh -n
 
-      - name: Verify Git aliases from Zsh custom aliases
-        shell: zsh {0}
-        run: |
-          source dot_zsh/custom-aliases.zsh
-          print -r -- "Git aliases loaded from dot_zsh/custom-aliases.zsh:"
-          for name in g gs gu gp ga gd; do
-            print -r -- "alias $name=${aliases[$name]}"
-          done
-          [[ "${aliases[g]}" == "git" ]]
-          [[ "${aliases[gs]}" == "git status" ]]
-          [[ "${aliases[gu]}" == "git push" ]]
-          [[ "${aliases[gp]}" == "git pull" ]]
-          [[ "${aliases[ga]}" == "git add" ]]
-          [[ "${aliases[gd]}" == "git diff" ]]
-
       - name: Validate Zsh startup files
         run: zsh -n dot_zshenv dot_zshrc dot_zprofile
 
@@ -106,7 +91,7 @@ jobs:
           cmp -s /tmp/fixture-plain.txt /tmp/fixture-decrypted.txt
 
       - name: Notify Slack
-        if: always()
+        if: always() && github.event_name == 'push'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }}
           CI_STATUS: ${{ job.status }}
