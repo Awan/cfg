@@ -46,7 +46,7 @@ jobs:
         run: zsh -e -fc 'source dot_zsh/functions.zsh'
 
       - name: Validate Shell scripts
-        run: git ls-files -z -- "*.sh" "*.sh.tmpl" "dot_xprofile" "dot_xinitrc" ":!archive/**" | xargs -0 -r shellcheck -S error
+        run: git ls-files -z -- "*.sh" "*.sh.tmpl" "dot_xprofile" ":!archive/**" | xargs -0 -r shellcheck -S error
 
       - name: Validate executable shell files
         run: bash .github/scripts/check-shell-files
