@@ -1,0 +1,9 @@
+[Unit]
+Description=Mail Checker Daemon 
+
+[Service]
+ExecStart=python3 -u /home/ak/bin/mailchecker
+Restart=always
+
+[Install]
+WantedBy=default.target

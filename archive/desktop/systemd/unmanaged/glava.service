@@ -1,0 +1,8 @@
+[Unit]
+Description=GLava desktop audio visualizer
+PartOf=bspwm-session.target
+
+[Service]
+ExecStart=/usr/bin/glava --desktop
+Restart=on-failure
+RestartSec=2
