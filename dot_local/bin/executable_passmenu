@@ -9,7 +9,7 @@ if [[ $1 == "--type" ]]; then
 fi
 
 
-BASEDIR="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
+BASEDIR="${PASSAGE_DIR:-${PASSWORD_STORE_DIR:-$HOME/.passage/store}}"
 while [[ "$BASEDIR" != "/" && "$BASEDIR" == */ ]]; do
   BASEDIR="${BASEDIR%/}"
 done
@@ -27,7 +27,7 @@ SELECTION=""
 while [ "$DONE" -eq 0 ] ; do 
   password_files=( "$STARTDIR"/* )
   password_files=( "${password_files[@]#"$STARTDIR"/}" )
-  password_files=( "${password_files[@]%.gpg}" )
+  password_files=( "${password_files[@]%.age}" )
   
   if [ "$LEVEL" -ne 0 ] ; then
     password_files=( ".." "${password_files[@]}") 
@@ -55,12 +55,12 @@ while [ "$DONE" -eq 0 ] ; do
       # not a directory so it must be a real password entry
   
       if [[ $typeit -eq 0 ]]; then
-        pass show -c "$SELECTION" 2>/dev/null
+        passage show -c "$SELECTION" 2>/dev/null
       else
         # Pass the password as one argument instead of feeding it to
         # xdotool's command parser, where special characters could be
         # interpreted as additional xdotool commands.
-        password=$(pass show "$SELECTION") || {
+        password=$(passage show "$SELECTION") || {
           printf 'passmenu: failed to read password entry: %s\n' "$SELECTION" >&2
           exit 1
         }

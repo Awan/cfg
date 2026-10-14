@@ -3,7 +3,7 @@
 # In the name of Allah, the Most Gracious, the Most Merciful.
 # Select and copy a password-store entry by its full relative path.
 
-store_dir="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
+store_dir="${PASSAGE_DIR:-${PASSWORD_STORE_DIR:-$HOME/.passage/store}}"
 
 if [ ! -d "$store_dir" ]; then
   printf 'dmenu_pass: password store not found: %s\n' "$store_dir" >&2
@@ -11,14 +11,14 @@ if [ ! -d "$store_dir" ]; then
 fi
 
 password="$(
-  find "$store_dir" -type f -name '*.gpg' -print |
+  find "$store_dir" -type f -name '*.age' -print |
     while IFS= read -r file; do
       relative_path="${file#"$store_dir"/}"
-      printf '%s\n' "${relative_path%.gpg}"
+      printf '%s\n' "${relative_path%.age}"
     done |
     dmenu -i -fn Terminus:size=17 -nb '#002b36' -nf '#839496' -sb '#073642' -sf '#93a1a1' -p 'Pass:'
 )"
 
 [ -n "$password" ] || exit 0
 
-exec pass show -c "$password"
+exec passage show -c "$password"

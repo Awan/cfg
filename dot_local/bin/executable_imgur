@@ -9,7 +9,7 @@
 # API Key provided by Bart;
 # replace with your own or specify yours as IMGUR_CLIENT_ID envionment variable
 # to avoid limits
-IMGUR_CLIENT_ID=$(pass imgur/AKPK | sed -n 2p | awk '{print $3}')
+IMGUR_CLIENT_ID=$(passage show imgur/AKPK | sed -n 2p | awk '{print $3}')
 client_id="${IMGUR_CLIENT_ID}"
 
 # Function to output usage instructions
