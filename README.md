@@ -370,17 +370,21 @@ The Zsh prompt also checks the local Maildir dynamically and displays the number
 
 # MPD
 
-The MPD user service configuration is also managed by chezmoi and is placed under:
-
-```text
-~/.config/systemd/user/
-```
-
-After applying the configuration, enable the socket with:
+The MPD user service, socket, and configuration are managed by chezmoi. Enable
+the socket so MPD starts on the first local client connection, such as the
+`music toggle` keybinding, without starting the service at login:
 
 ```bash
 systemctl --user --now enable mpd.socket
 ```
 
-No manual copying of the MPD service configuration is required.
+The MPD control interface is local to the laptop. Once MPD has been started by
+a local client, its HTTP audio output listens on all IPv4 interfaces at port
+`8000`. Connect from another device on the same network with:
+
+```text
+http://<laptop-ip>:8000/
+```
+
+Allow inbound TCP port `8000` in the laptop's firewall if one is enabled.
 

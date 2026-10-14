@@ -1,0 +1,13 @@
+[Unit]
+Description=MPD server socket
+
+[Socket]
+ListenStream=
+ListenStream=%t/mpd/socket
+ListenStream=127.0.0.1:6600
+Backlog=5
+KeepAlive=true
+PassCredentials=true
+
+[Install]
+WantedBy=sockets.target
