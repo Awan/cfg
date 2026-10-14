@@ -45,6 +45,12 @@
  are also retained in the repository for optional use.
 ```
 
+# Supported Systems
+
+This repository is primarily configured for the author's Arch Linux installation. The active dotfiles include Arch-specific plugin paths and Linux desktop settings, and the `system/` configuration and `.chezmoiscripts/` installers target Arch Linux and its `/etc` layout. Applying the whole repository on another operating system is not supported as a complete setup.
+
+On another system, you can use chezmoi to select and apply home-directory files that suit that machine. Review the proposed changes first, skip chezmoi lifecycle scripts, and apply only configurations you have checked for that operating system. In particular, do not run the system installers outside Arch Linux.
+
 # Installation
 
 I manage my dotfiles with [chezmoi](https://www.chezmoi.io/), a configuration management tool designed to manage personal configuration files across machines.
@@ -58,11 +64,25 @@ Install chezmoi using the package manager available on your system. For example:
 
 Alternatively, follow the [official chezmoi installation instructions](https://www.chezmoi.io/install/).
 
-Once chezmoi is installed, initialize this repository and apply the configuration:
+On the supported Arch Linux setup, initialize the repository and review the proposed changes before applying them:
 
 ```bash
-chezmoi init --apply git@github.com:Awan/cfg.git
+chezmoi init https://github.com/Awan/cfg.git
+chezmoi diff
+chezmoi apply
 ```
+
+Applying on Arch Linux may run scripts that install files under `/etc`. Those scripts use `doas`, so configure working `doas` access before applying the repository.
+
+On another operating system, initialize without `--apply`, inspect the changes, and exclude scripts when applying:
+
+```bash
+chezmoi init https://github.com/Awan/cfg.git
+chezmoi diff --exclude=scripts
+chezmoi apply --exclude=scripts
+```
+
+Excluding scripts prevents the system installers from running. It does not make every home-directory configuration portable: review the diff and apply only files that fit the system and installed software. Chezmoi also supports applying selected targets, for example `chezmoi apply --exclude=scripts ~/.zshrc`.
 
 The chezmoi source directory is stored at:
 
