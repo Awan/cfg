@@ -2,7 +2,7 @@
 Description=Wake me up for Asr Prayer
 
 [Service]
-Environment=DISPLAY=:0
+Environment=DISPLAY=:1
 Type=oneshot
 ExecStart=/usr/bin/mpv --no-resume-playback --really-quiet --volume=130 %h/.local/share/misc/Kursi.ogg
 

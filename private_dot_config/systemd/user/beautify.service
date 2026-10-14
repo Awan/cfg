@@ -3,7 +3,7 @@ Description=Auto change the wallpapers
 After=xorg.target
 
 [Service]
-Environment=DISPLAY=:0
+Environment=DISPLAY=:1
 # Change path to where you put the beautify.py executable and your wallpapers collection path and duration as well.
 ExecStart=%h/.local/bin/beautify %h/pix/wall/collection 1
 Restart=on-abnormal
