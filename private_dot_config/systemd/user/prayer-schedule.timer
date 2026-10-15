@@ -1,0 +1,14 @@
+[Unit]
+Description=Refresh offline prayer reminder schedule
+
+[Timer]
+OnBootSec=2min
+OnCalendar=*-*-* 00:05:00
+Persistent=true
+AccuracySec=1s
+Unit=prayer-schedule.service
+
+[Install]
+WantedBy=timers.target
+
+# vim: ft=systemd

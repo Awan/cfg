@@ -3,10 +3,9 @@ Description=Wake me up for Isha Prayer
 
 [Service]
 Environment=DISPLAY=:1
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus
 Type=oneshot
-ExecStart=/usr/bin/mpv --no-resume-playback --really-quiet --volume=130 %h/.local/share/misc/Kursi.ogg
-
-[Install]
-WantedBy=timers.target
+ExecStartPre=-/usr/bin/notify-send --urgency=critical --expire-time=0 --app-name="Prayer reminder" "Isha prayer in 10 minutes" "Isha prayer time is approaching."
+ExecStart=/usr/bin/mpv --no-resume-playback --really-quiet --volume=130 %h/.local/share/misc/Kursi.mp3
 
 # vim:ft=systemd

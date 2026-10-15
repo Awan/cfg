@@ -1,0 +1,6 @@
+[Unit]
+Description=Calculate and schedule offline Islamabad prayer reminders
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/prayer_schedule

@@ -1,0 +1,152 @@
+#!/usr/bin/python
+"""Schedule offline prayer reminders for Islamabad using PrayTimes-style math."""
+
+from __future__ import annotations
+
+import math
+import subprocess
+import time
+from datetime import date, datetime, timedelta
+from zoneinfo import ZoneInfo
+
+
+LATITUDE = 33.6844
+LONGITUDE = 73.0479
+TIMEZONE = ZoneInfo("Asia/Karachi")
+REMINDER_LEAD = timedelta(minutes=10)
+PRAYERS = ("fajr", "zuhr", "asr", "maghrib", "isha")
+
+
+def fix_angle(angle: float) -> float:
+    return angle - 360 * math.floor(angle / 360)
+
+
+def fix_hour(hour: float) -> float:
+    return hour - 24 * math.floor(hour / 24)
+
+
+def julian_day(day: date) -> float:
+    # Julian day at midnight for this Gregorian date.
+    return day.toordinal() + 1721424.5
+
+
+def sun_position(jd: float) -> tuple[float, float]:
+    """Return solar declination and equation of time for a Julian day."""
+    d = jd - 2451545.0
+    mean_anomaly = math.radians(fix_angle(357.529 + 0.98560028 * d))
+    mean_longitude = fix_angle(280.459 + 0.98564736 * d)
+    ecliptic_longitude = math.radians(
+        fix_angle(
+            mean_longitude
+            + 1.915 * math.sin(mean_anomaly)
+            + 0.020 * math.sin(2 * mean_anomaly)
+        )
+    )
+    obliquity = math.radians(23.439 - 0.00000036 * d)
+    right_ascension = math.degrees(
+        math.atan2(
+            math.cos(obliquity) * math.sin(ecliptic_longitude),
+            math.cos(ecliptic_longitude),
+        )
+    ) / 15
+    right_ascension = fix_hour(right_ascension)
+    equation_of_time = mean_longitude / 15 - right_ascension
+    declination = math.asin(
+        math.sin(obliquity) * math.sin(ecliptic_longitude)
+    )
+    return declination, equation_of_time
+
+
+def hour_angle(angle: float, declination: float) -> float:
+    lat = math.radians(LATITUDE)
+    numerator = -math.sin(math.radians(angle)) - math.sin(declination) * math.sin(lat)
+    denominator = math.cos(declination) * math.cos(lat)
+    value = max(-1.0, min(1.0, numerator / denominator))
+    return math.degrees(math.acos(value)) / 15
+
+
+def prayer_times(day: date) -> dict[str, datetime]:
+    """Calculate local prayer times: Karachi angles, standard Asr, Islamabad."""
+    # Evaluate the sun near local solar noon; over this interval its movement is
+    # negligible for minute-level reminder scheduling.
+    jd = julian_day(day)
+    utc_offset = TIMEZONE.utcoffset(datetime(day.year, day.month, day.day)).total_seconds() / 3600
+    declination, equation_of_time = sun_position(jd + (12 - LONGITUDE / 15) / 24)
+    solar_noon = 12 + utc_offset - LONGITUDE / 15 - equation_of_time
+
+    # Karachi method: Fajr and Isha are both 18 degrees. Standard Asr uses a
+    # shadow factor of 1 (Hanafi Asr would use 2).
+    fajr = solar_noon - hour_angle(18, declination)
+    dhuhr = solar_noon
+    asr_altitude = math.degrees(
+        math.atan(1 / (1 + math.tan(abs(math.radians(LATITUDE) - declination))))
+    )
+    asr = solar_noon + hour_angle(-asr_altitude, declination)
+    maghrib = solar_noon + hour_angle(0.833, declination)
+    isha = solar_noon + hour_angle(18, declination)
+
+    result = {}
+    for name, hours in zip(
+        PRAYERS, (fajr, dhuhr, asr, maghrib, isha), strict=True
+    ):
+        whole_minutes = round(hours * 60)
+        result[name] = datetime.combine(day, datetime.min.time(), TIMEZONE) + timedelta(
+            minutes=whole_minutes
+        )
+    return result
+
+
+def cancel_existing_reminders() -> None:
+    listed = subprocess.run(
+        [
+            "/usr/bin/systemctl",
+            "--user",
+            "list-units",
+            "--all",
+            "--type=timer",
+            "--no-legend",
+            "--plain",
+            "prayer-reminder-*.timer",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    units = [line.split()[0] for line in listed.stdout.splitlines() if line.split()]
+    if units:
+        subprocess.run(
+            ["/usr/bin/systemctl", "--user", "stop", *units],
+            check=True,
+        )
+
+
+def schedule_reminders(now: datetime) -> None:
+    cancel_existing_reminders()
+    today = now.date()
+    run_id = str(time.time_ns())
+
+    for name, prayer_time in prayer_times(today).items():
+        reminder_time = prayer_time - REMINDER_LEAD
+        if reminder_time <= now:
+            continue
+
+        unit = f"prayer-reminder-{name}-{run_id}"
+        subprocess.run(
+            [
+                "/usr/bin/systemd-run",
+                "--user",
+                f"--unit={unit}",
+                f"--on-calendar={reminder_time:%Y-%m-%d %H:%M:%S}",
+                "--timer-property=AccuracySec=1s",
+                "--collect",
+                "/usr/bin/systemctl",
+                "--user",
+                "start",
+                f"{name}.service",
+            ],
+            check=True,
+        )
+
+
+if __name__ == "__main__":
+    schedule_reminders(datetime.now(TIMEZONE))
