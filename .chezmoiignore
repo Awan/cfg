@@ -1,5 +1,7 @@
 # Repository-only documentation and build files
 README.md
+SECURITY.md
+CONTRIBUTING.md
 LICENSE
 Dockerfile
 
