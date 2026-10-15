@@ -368,6 +368,40 @@ systemctl --user --now enable isync.timer
 
 The Zsh prompt also checks the local Maildir dynamically and displays the number of new messages when available.
 
+# Prayer Reminders
+
+Prayer reminders are calculated locally for Islamabad using the `Asia/Karachi`
+time zone, the Karachi calculation method, and standard (non-Hanafi) Asr. The
+scheduler needs no network connection. It refreshes after the user systemd
+manager starts and daily at 00:05, then schedules each reminder 10 minutes
+before prayer time.
+
+At reminder time, the service sends a critical Dunst notification and plays
+Ayat al-Kursi (Al-Baqarah 2:255) in Saud Ash-Shuraim's recitation. The audio is
+managed by chezmoi. Critical Dunst notifications remain visible until dismissed.
+Dunst is started by the X session configuration.
+
+On a fresh Arch Linux installation, install the playback and notification
+packages if they are not already present, then apply chezmoi and enable the
+scheduler timer:
+
+```bash
+sudo pacman -S dunst libnotify mpv
+chezmoi apply
+systemctl --user enable --now prayer-schedule.timer
+```
+
+Only `prayer-schedule.timer` should be enabled. The five prayer playback
+services are started on demand by its generated timers; enabling them directly
+would start them at session startup. Check the upcoming reminders with:
+
+```bash
+systemctl --user list-timers --all | rg prayer
+```
+
+These are calculated prayer times and may differ slightly from a local mosque's
+timetable.
+
 # MPD
 
 The MPD user service, socket, and configuration are managed by chezmoi. Enable
