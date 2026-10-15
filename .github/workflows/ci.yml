@@ -16,6 +16,21 @@ permissions:
   contents: read
 
 jobs:
+  secret-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Scan for secrets
+        uses: trufflesecurity/trufflehog@27d8ea2876d990b274996fc97aff0f8d952d364c
+        with:
+          version: 3.99.2
+          extra_args: --no-verification --exclude-paths=.github/trufflehog-exclude-paths.txt
+
   chezmoi:
     runs-on: ubuntu-latest
 

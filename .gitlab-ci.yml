@@ -54,3 +54,26 @@ chezmoi:
       age --decrypt -i /tmp/fixture-key.txt -o /tmp/fixture-decrypted.txt /tmp/fixture.age
       cmp -s /tmp/fixture-plain.txt /tmp/fixture-decrypted.txt
 
+secret-scan:
+  stage: test
+  image:
+    name: ghcr.io/trufflesecurity/trufflehog@sha256:47a84bc18a0d04a165498bbbd3bacfd84176661cbc91f8e0f85467f6a771e99a
+    entrypoint: [""]
+  variables:
+    GIT_DEPTH: "0"
+  before_script: []
+  script:
+    - |
+      scan_base=""
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ]; then
+        scan_base="$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+      elif [ "$CI_COMMIT_BEFORE_SHA" != "0000000000000000000000000000000000000000" ]; then
+        scan_base="$CI_COMMIT_BEFORE_SHA"
+      fi
+
+      set -- --branch "$CI_COMMIT_SHA" --no-verification --no-update \
+        --exclude-paths "$CI_PROJECT_DIR/.github/trufflehog-exclude-paths.txt" --fail
+      if [ -n "$scan_base" ]; then
+        set -- --since-commit "$scan_base" "$@"
+      fi
+      trufflehog git "file://$CI_PROJECT_DIR" "$@"
