@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+  schedule:
+    - cron: "17 6 * * 1"
 
 concurrency:
   group: dotfiles-${{ github.workflow }}-${{ github.ref }}
@@ -26,10 +28,24 @@ jobs:
           fetch-depth: 0
 
       - name: Scan for secrets
+        if: github.event_name != 'schedule'
         uses: trufflesecurity/trufflehog@27d8ea2876d990b274996fc97aff0f8d952d364c
         with:
           version: 3.99.2
           extra_args: --no-verification --exclude-paths=.github/trufflehog-exclude-paths.txt
+
+      - name: Scan full history for secrets
+        if: github.event_name == 'schedule'
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/repo:ro" \
+            -w /repo \
+            ghcr.io/trufflesecurity/trufflehog@sha256:47a84bc18a0d04a165498bbbd3bacfd84176661cbc91f8e0f85467f6a771e99a \
+            git file:///repo \
+            --no-verification \
+            --no-update \
+            --exclude-paths=/repo/.github/trufflehog-exclude-paths.txt \
+            --fail
 
   chezmoi:
     runs-on: ubuntu-latest
