@@ -374,11 +374,14 @@ Prayer reminders are calculated locally for Islamabad using the `Asia/Karachi`
 time zone, the Karachi calculation method, and standard (non-Hanafi) Asr. The
 scheduler needs no network connection. It refreshes after the user systemd
 manager starts and daily at 00:05, then schedules each reminder 10 minutes
-before prayer time.
+before prayer time. If a reminder timer expires during suspend, it is skipped
+when the laptop resumes if it is more than five minutes late; reminders are not
+played late after a long suspend.
 
 At reminder time, the service sends a critical Dunst notification and plays
-Ayat al-Kursi (Al-Baqarah 2:255) in Saud Ash-Shuraim's recitation. The audio is
-managed by chezmoi. Critical Dunst notifications remain visible until dismissed.
+[Ayat al-Kursi (Al-Baqarah 2:255)](https://gitlab.com/Abdullah/haq/-/blob/main/shuraim/002255.mp3)
+in Saud Ash-Shuraim's recitation. The audio is managed by chezmoi. Critical
+Dunst notifications remain visible until dismissed.
 Dunst is started by the X session configuration.
 
 On a fresh Arch Linux installation, install the playback and notification

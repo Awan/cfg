@@ -5,8 +5,10 @@ from __future__ import annotations
 
 import math
 import subprocess
+import sys
 import time
 from datetime import date, datetime, timedelta
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 
@@ -14,6 +16,7 @@ LATITUDE = 33.6844
 LONGITUDE = 73.0479
 TIMEZONE = ZoneInfo("Asia/Karachi")
 REMINDER_LEAD = timedelta(minutes=10)
+MAX_REMINDER_LATENESS = timedelta(minutes=5)
 PRAYERS = ("fajr", "zuhr", "asr", "maghrib", "isha")
 
 
@@ -139,14 +142,31 @@ def schedule_reminders(now: datetime) -> None:
                 f"--on-calendar={reminder_time:%Y-%m-%d %H:%M:%S}",
                 "--timer-property=AccuracySec=1s",
                 "--collect",
-                "/usr/bin/systemctl",
-                "--user",
-                "start",
-                f"{name}.service",
+                sys.executable,
+                str(Path(__file__).resolve()),
+                "--play-reminder",
+                name,
+                reminder_time.isoformat(),
             ],
             check=True,
         )
 
 
+def play_reminder(name: str, reminder_time: datetime) -> None:
+    """Skip reminders that became stale while the machine was suspended."""
+    now = datetime.now(TIMEZONE)
+    if now - reminder_time > MAX_REMINDER_LATENESS:
+        return
+    subprocess.run(
+        ["/usr/bin/systemctl", "--user", "start", f"{name}.service"],
+        check=True,
+    )
+
+
 if __name__ == "__main__":
-    schedule_reminders(datetime.now(TIMEZONE))
+    if len(sys.argv) == 4 and sys.argv[1] == "--play-reminder":
+        play_reminder(sys.argv[2], datetime.fromisoformat(sys.argv[3]))
+    elif len(sys.argv) == 1:
+        schedule_reminders(datetime.now(TIMEZONE))
+    else:
+        raise SystemExit("Usage: prayer_schedule [--play-reminder PRAYER ISO_DATETIME]")
