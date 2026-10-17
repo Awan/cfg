@@ -26,6 +26,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Scan for secrets
         if: github.event_name != 'schedule'
@@ -60,6 +61,8 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Show chezmoi version
         run: chezmoi --version
@@ -122,7 +125,7 @@ jobs:
           cmp -s /tmp/fixture-plain.txt /tmp/fixture-decrypted.txt
 
       - name: Notify Slack
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }}
           CI_STATUS: ${{ job.status }}
