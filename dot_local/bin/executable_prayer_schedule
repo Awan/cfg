@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
+import fcntl
 import math
+import os
 import subprocess
 import sys
 import time
@@ -16,8 +18,9 @@ LATITUDE = 33.6844
 LONGITUDE = 73.0479
 TIMEZONE = ZoneInfo("Asia/Karachi")
 REMINDER_LEAD = timedelta(minutes=10)
-MAX_REMINDER_LATENESS = timedelta(minutes=5)
+MAX_POST_PRAYER_LATENESS = timedelta(minutes=10)
 PRAYERS = ("fajr", "zuhr", "asr", "maghrib", "isha")
+STATE_DIR = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "prayer_schedule"
 
 
 def fix_angle(angle: float) -> float:
@@ -53,7 +56,7 @@ def sun_position(jd: float) -> tuple[float, float]:
         )
     ) / 15
     right_ascension = fix_hour(right_ascension)
-    equation_of_time = mean_longitude / 15 - right_ascension
+    equation_of_time = (mean_longitude / 15 - right_ascension + 12) % 24 - 12
     declination = math.asin(
         math.sin(obliquity) * math.sin(ecliptic_longitude)
     )
@@ -99,7 +102,7 @@ def prayer_times(day: date) -> dict[str, datetime]:
     return result
 
 
-def cancel_existing_reminders() -> None:
+def cancel_existing_reminders(keep_units: set[str] | None = None) -> None:
     listed = subprocess.run(
         [
             "/usr/bin/systemctl",
@@ -115,7 +118,12 @@ def cancel_existing_reminders() -> None:
         capture_output=True,
         text=True,
     )
-    units = [line.split()[0] for line in listed.stdout.splitlines() if line.split()]
+    keep_units = keep_units or set()
+    units = [
+        line.split()[0]
+        for line in listed.stdout.splitlines()
+        if line.split() and line.split()[0] not in keep_units
+    ]
     if units:
         subprocess.run(
             ["/usr/bin/systemctl", "--user", "stop", *units],
@@ -124,43 +132,79 @@ def cancel_existing_reminders() -> None:
 
 
 def schedule_reminders(now: datetime) -> None:
-    cancel_existing_reminders()
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    with (STATE_DIR / "schedule.lock").open("a") as lock_file:
+        try:
+            fcntl.flock(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return
+        _schedule_reminders_locked(now)
+
+
+def _schedule_reminders_locked(now: datetime) -> None:
     today = now.date()
     run_id = str(time.time_ns())
+    new_units: set[str] = set()
 
-    for name, prayer_time in prayer_times(today).items():
-        reminder_time = prayer_time - REMINDER_LEAD
-        if reminder_time <= now:
-            continue
+    try:
+        for name, prayer_time in prayer_times(today).items():
+            reminder_time = prayer_time - REMINDER_LEAD
+            if reminder_time <= now:
+                if now <= prayer_time + MAX_POST_PRAYER_LATENESS:
+                    play_reminder(name, reminder_time)
+                continue
 
-        unit = f"prayer-reminder-{name}-{run_id}"
-        subprocess.run(
-            [
-                "/usr/bin/systemd-run",
-                "--user",
-                f"--unit={unit}",
-                f"--on-calendar={reminder_time:%Y-%m-%d %H:%M:%S}",
-                "--timer-property=AccuracySec=1s",
-                "--collect",
-                sys.executable,
-                str(Path(__file__).resolve()),
-                "--play-reminder",
-                name,
-                reminder_time.isoformat(),
-            ],
-            check=True,
-        )
+            unit = f"prayer-reminder-{name}-{run_id}"
+            subprocess.run(
+                [
+                    "/usr/bin/systemd-run",
+                    "--user",
+                    f"--unit={unit}",
+                    f"--on-calendar={reminder_time:%Y-%m-%d %H:%M:%S}",
+                    "--timer-property=AccuracySec=1s",
+                    "--collect",
+                    sys.executable,
+                    str(Path(__file__).resolve()),
+                    "--play-reminder",
+                    name,
+                    reminder_time.isoformat(),
+                ],
+                check=True,
+            )
+            new_units.add(f"{unit}.timer")
+    except Exception:
+        if new_units:
+            subprocess.run(
+                ["/usr/bin/systemctl", "--user", "stop", *sorted(new_units)],
+                check=False,
+            )
+        raise
+
+    cancel_existing_reminders(keep_units=new_units)
 
 
 def play_reminder(name: str, reminder_time: datetime) -> None:
-    """Skip reminders that became stale while the machine was suspended."""
+    """Skip stale reminders and prevent duplicate playback."""
     now = datetime.now(TIMEZONE)
-    if now - reminder_time > MAX_REMINDER_LATENESS:
+    if now > reminder_time + REMINDER_LEAD + MAX_POST_PRAYER_LATENESS:
         return
-    subprocess.run(
-        ["/usr/bin/systemctl", "--user", "start", f"{name}.service"],
-        check=True,
-    )
+
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    marker = STATE_DIR / f"{reminder_time:%Y-%m-%d}-{name}.played"
+
+    try:
+        marker.touch(exist_ok=False)
+    except FileExistsError:
+        return
+
+    try:
+        subprocess.run(
+            ["/usr/bin/systemctl", "--user", "start", f"{name}.service"],
+            check=True,
+        )
+    except Exception:
+        marker.unlink(missing_ok=True)
+        raise
 
 
 if __name__ == "__main__":
