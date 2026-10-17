@@ -415,13 +415,7 @@ the socket so MPD starts on the first local client connection, such as the
 systemctl --user --now enable mpd.socket
 ```
 
-The MPD control interface is local to the laptop. Once MPD has been started by
-a local client, its HTTP audio output listens on all IPv4 interfaces at port
-`8000`. Connect from another device on the same network with:
-
-```text
-http://<laptop-ip>:8000/
-```
-
-Allow inbound TCP port `8000` in the laptop's firewall if one is enabled.
+The MPD control interface listens only on loopback (`127.0.0.1:6600`), and
+audio plays locally through PipeWire. HTTP streaming is disabled, so MPD does
+not expose an audio stream to other devices on the network.
 
