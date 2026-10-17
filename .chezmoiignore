@@ -28,3 +28,6 @@ system/
 # Nova Launcher backups
 *.novabackup*
 novabackup
+
+# Renovate
+renovate.json
