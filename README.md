@@ -184,6 +184,7 @@ These files are source-only chezmoi files and are not deployed into the home dir
 ├── run_onchange_after_system-pacman-chezmoi-packages.hook.sh.tmpl
 ├── run_onchange_after_system-pacman-dash.hook.sh.tmpl
 ├── run_onchange_after_system-pacman.conf.sh.tmpl
+├── run_onchange_after_system-sign-secureboot.sh.tmpl
 ├── run_onchange_after_system-sysctl.conf.sh.tmpl
 ├── run_onchange_after_system-vconsole.conf.sh.tmpl
 └── run_onchange_after_system-xorg.conf.sh.tmpl
@@ -200,6 +201,7 @@ The files are installed to their system locations as follows:
 | `system/console/vconsole.conf` | `/etc/vconsole.conf` |
 | `system/pacman/pacman.conf` | `/etc/pacman.conf` |
 | `system/pacman/hooks/99-secureboot-sign.hook` | `/etc/pacman.d/hooks/99-secureboot-sign.hook` |
+| `dot_local/bin/executable_sign-secureboot.sh` | `/usr/local/bin/sign-secureboot.sh` (Pacman hook helper; also managed in the user's `~/.local/bin/`) |
 | `system/pacman/hooks/chezmoi-packages.hook` | `/etc/pacman.d/hooks/chezmoi-packages.hook` |
 | `system/pacman/hooks/dash.hook` | `/etc/pacman.d/hooks/dash.hook` |
 | `system/sysctl/99-security.conf` | `/etc/sysctl.d/99-security.conf` |
