@@ -375,7 +375,7 @@ time zone, the Karachi calculation method, and standard (non-Hanafi) Asr. The
 scheduler needs no network connection. It refreshes after the user systemd
 manager starts and daily at 00:05, then schedules each reminder 10 minutes
 before prayer time. If a reminder timer expires during suspend, it is skipped
-when the laptop resumes if it is more than five minutes late; reminders are not
+when the laptop resumes if it is more than ten minutes past the prayer time; reminders are not
 played late after a long suspend.
 
 At reminder time, the service sends a critical Dunst notification and plays
