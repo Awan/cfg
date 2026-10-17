@@ -29,9 +29,9 @@ jobs:
 
       - name: Scan for secrets
         if: github.event_name != 'schedule'
-        uses: trufflesecurity/trufflehog@005b692bdfd0764e5da402887d9ab9196f8023dc # v3.99.1
+        uses: trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9 # v3.99.2
         with:
-          version: 3.99.1
+          version: 3.99.2
           extra_args: --no-verification --exclude-paths=.github/trufflehog-exclude-paths.txt
 
       - name: Scan full history for secrets
@@ -40,7 +40,7 @@ jobs:
           docker run --rm \
             -v "$GITHUB_WORKSPACE:/repo:ro" \
             -w /repo \
-            ghcr.io/trufflesecurity/trufflehog:3.99.1@sha256:5c4d4838b96178c3577c4d2f3f131320991648cffd06ff66f01591f5fd5790cf \
+            ghcr.io/trufflesecurity/trufflehog:3.99.2@sha256:47a84bc18a0d04a165498bbbd3bacfd84176661cbc91f8e0f85467f6a771e99a \
             git file:///repo \
             --no-verification \
             --no-update \
