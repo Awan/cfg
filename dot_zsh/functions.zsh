@@ -700,11 +700,11 @@ push() {
   file_to_be_pushed="$1"
   type_of_file="$2"
   if [ "$type_of_file" = "f" ] || [ -z "$type_of_file" ]; then
-    curl -F "file=@$file_to_be_pushed" http://0x0.st  | xclip
+    curl -F "file=@$file_to_be_pushed" https://0x0.st | xclip
   elif [ "$type_of_file" = "u" ]; then
-    curl -F "url=$file_to_be_pushed" http://0x0.st | xclip
+    curl -F "url=$file_to_be_pushed" https://0x0.st | xclip
   elif [ "$type_of_file" = "s" ]; then
-    curl -F "shorten=$file_to_be_pushed" http://0x0.st | xclip
+    curl -F "shorten=$file_to_be_pushed" https://0x0.st | xclip
   fi
 }
 
