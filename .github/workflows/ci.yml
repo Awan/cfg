@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   secret-scan:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-26.04
 
     steps:
       - name: Checkout repository
@@ -48,7 +48,7 @@ jobs:
             --fail
 
   chezmoi:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-26.04
 
     container:
       image: archlinux:latest
