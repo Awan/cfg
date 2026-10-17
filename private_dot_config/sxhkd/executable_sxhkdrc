@@ -34,7 +34,8 @@ super + {_,shift } + q
 # Increase/Decrease window gaps
 
 super + {minus,plus}
-    bspc config window_gap {3,13}
+    gap=$(bspc config window_gap); next=$((gap {-,+} 3)); [ "$next" -lt 3 ] && next=3; [ "$next" -gt 12 ] && next=12; bspc config window_gap "$next"
+
 
 # Push focused window to scratchpad (background), Un-Hide it
 

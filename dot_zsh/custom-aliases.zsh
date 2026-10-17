@@ -242,9 +242,11 @@ alias artr='artwall --reject'
 alias gss='git status --short'
 alias gsb='git status --short --branch'
 alias gds='git diff --stat'
+alias gdc='git diff --check'
 alias gdcs='git diff --cached --stat'
 alias grecent='git log -10 --oneline --decorate'
 alias gbv='git branch -vv'
 alias gconflicts='git diff --name-only --diff-filter=U'
+
 
 # vim: ft=zsh
