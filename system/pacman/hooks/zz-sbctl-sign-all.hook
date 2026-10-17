@@ -1,0 +1,13 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Path
+Target = usr/lib/modules/*/vmlinuz
+Target = usr/lib/initcpio/*
+Target = boot/*-ucode.img
+Target = usr/lib/systemd/boot/efi/*
+
+[Action]
+Description = Re-signing EFI binaries with sbctl...
+When = PostTransaction
+Exec = /usr/bin/sbctl sign-all

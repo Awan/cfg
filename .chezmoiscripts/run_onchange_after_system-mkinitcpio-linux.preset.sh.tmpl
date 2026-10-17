@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# linux.preset hash: {{ include "system/mkinitcpio/linux.preset" | sha256sum }}
+doas install -D -m 0644 "{{ joinPath .chezmoi.sourceDir "system/mkinitcpio/linux.preset" }}" /etc/mkinitcpio.d/linux.preset

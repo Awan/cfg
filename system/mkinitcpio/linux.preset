@@ -1,0 +1,7 @@
+ALL_kver="/boot/vmlinuz-linux"
+ALL_cmdline="/etc/cmdline.d"
+PRESETS=('default' 'fallback')
+default_uki="/boot/EFI/Linux/arch-linux.efi"
+default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
+fallback_uki="/boot/EFI/Linux/arch-linux-fallback.efi"
+fallback_options="-S autodetect --splash /usr/share/systemd/bootctl/splash-arch.bmp"

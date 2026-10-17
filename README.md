@@ -150,23 +150,29 @@ chezmoi apply
 
 # System Configuration
 
-System-wide configuration that must be installed outside the home directory is kept separately under `system/` in the chezmoi source tree.
+System-wide configuration that must be installed outside the home directory is kept separately under `system/` in the chezmoi source tree. The system configuration and installers target Arch Linux; do not run these system installers on another operating system.
 
 The current layout is:
 
 ```text
 system/
+├── cmdline.d/
+│   └── 10-common.conf
 ├── console/
 │   └── vconsole.conf
 ├── doas/
 │   └── doas.conf
+├── kernel/
+│   └── generate-storage-cmdline.sh
+├── mkinitcpio/
+│   └── linux.preset
 ├── nftables/
 │   └── nftables.conf
 ├── pacman/
 │   ├── hooks/
-│   │   ├── 99-secureboot-sign.hook
 │   │   ├── chezmoi-packages.hook
-│   │   └── dash.hook
+│   │   ├── dash.hook
+│   │   └── zz-sbctl-sign-all.hook
 │   └── pacman.conf
 ├── sysctl/
 │   └── 99-security.conf
@@ -178,34 +184,96 @@ These files are source-only chezmoi files and are not deployed into the home dir
 
 ```text
 .chezmoiscripts/
+├── run_onchange_after_system-cmdline.d-10-common.conf.sh.tmpl
 ├── run_onchange_after_system-doas.conf.sh.tmpl
+├── run_onchange_after_system-kernel-generate-storage-cmdline.sh.tmpl
+├── run_onchange_after_system-mkinitcpio-linux.preset.sh.tmpl
 ├── run_onchange_after_system-nftables.conf.sh.tmpl
-├── run_onchange_after_system-pacman-99-secureboot-sign.hook.sh.tmpl
 ├── run_onchange_after_system-pacman-chezmoi-packages.hook.sh.tmpl
 ├── run_onchange_after_system-pacman-dash.hook.sh.tmpl
+├── run_onchange_after_system-pacman-zz-sbctl-sign-all.hook.sh.tmpl
 ├── run_onchange_after_system-pacman.conf.sh.tmpl
 ├── run_onchange_after_system-sysctl.conf.sh.tmpl
 ├── run_onchange_after_system-vconsole.conf.sh.tmpl
 └── run_onchange_after_system-xorg.conf.sh.tmpl
 ```
 
-Each `run_onchange_` script includes a SHA-256 hash of its associated configuration file. Chezmoi therefore reruns only the relevant installation script when that file changes.
+Each `run_onchange_` installer includes a SHA-256 hash of the relevant source file, so chezmoi reruns the installer when its rendered script changes. The generator installer uses run_onchange_after_: it runs after managed files are updated and only when its rendered contents change. It generates the local storage configuration on the first apply and reruns if the generator changes, without rewriting machine-specific storage configuration on every apply.
 
 The files are installed to their system locations as follows:
 
 | Source file | System destination |
 | --- | --- |
-| `system/doas/doas.conf` | `/etc/doas.conf` |
-| `system/nftables/nftables.conf` | `/etc/nftables.conf` |
+| `system/cmdline.d/10-common.conf` | `/etc/cmdline.d/10-common.conf` |
 | `system/console/vconsole.conf` | `/etc/vconsole.conf` |
+| `system/doas/doas.conf` | `/etc/doas.conf` |
+| `system/kernel/generate-storage-cmdline.sh` | `/usr/local/bin/generate-storage-cmdline` |
+| `system/mkinitcpio/linux.preset` | `/etc/mkinitcpio.d/linux.preset` |
+| `system/nftables/nftables.conf` | `/etc/nftables.conf` |
 | `system/pacman/pacman.conf` | `/etc/pacman.conf` |
-| `system/pacman/hooks/99-secureboot-sign.hook` | `/etc/pacman.d/hooks/99-secureboot-sign.hook` |
 | `system/pacman/hooks/chezmoi-packages.hook` | `/etc/pacman.d/hooks/chezmoi-packages.hook` |
 | `system/pacman/hooks/dash.hook` | `/etc/pacman.d/hooks/dash.hook` |
+| `system/pacman/hooks/zz-sbctl-sign-all.hook` | `/etc/pacman.d/hooks/zz-sbctl-sign-all.hook` |
 | `system/sysctl/99-security.conf` | `/etc/sysctl.d/99-security.conf` |
 | `system/xorg/30-touchpad.conf` | `/etc/X11/xorg.conf.d/30-touchpad.conf` |
 
-This keeps system-level configuration organized by subsystem while preserving independent change detection for each file.
+## Kernel command line and UKIs
+
+The UKI preset in `system/mkinitcpio/linux.preset` sets `ALL_cmdline="/etc/cmdline.d"`. The preset therefore builds the default and fallback UKIs using the command-line drop-ins in that directory, rather than embedding a static command line containing one machine's disk UUIDs.
+
+The command line is split into two parts:
+
+- `system/cmdline.d/10-common.conf` is public, version-controlled configuration. It contains the author's general boot preferences and hardware/policy options. Review the options below before applying them to another computer; they are deliberately visible so users can make their own choices.
+- `/etc/cmdline.d/00-storage.conf` is generated locally by `/usr/local/bin/generate-storage-cmdline`. It is **not stored in this repository**. The generator detects the running system's root filesystem, its LUKS backing device and active swap UUID (when the configured initramfs hooks use resume), then writes the corresponding storage parameters. This avoids copying the author's root, LUKS or swap UUIDs to another installation.
+
+Run the generator after booting into the installed target system, not from an installation ISO or a chroot. Inspect its proposed values first:
+
+```bash
+doas /usr/local/bin/generate-storage-cmdline --dry-run
+doas /usr/local/bin/generate-storage-cmdline --write
+```
+
+The generator intentionally stops when it encounters storage layouts or options it cannot identify safely. Its current implementation expects a block-device root and supports the configured `encrypt` or `sd-encrypt` initramfs unlock hook, with the matching LVM hook when applicable. Swap-file resume and ambiguous or separate encryption chains require explicit configuration rather than guessed UUIDs. If the storage layout changes later, inspect the dry run and regenerate the local file deliberately.
+
+After changing the common options, generator, or UKI preset, rebuild the UKIs and check their signatures before rebooting:
+
+```bash
+chezmoi apply
+doas mkinitcpio -P
+doas sbctl sign-all
+doas sbctl verify
+```
+
+The custom `zz-sbctl-sign-all.hook` supplements the hook installed by the `sbctl` package so EFI binaries are re-signed after relevant package transactions. The signing keys stay on the machine and must never be committed to this repository. Secure Boot key enrollment is separate from signing; this configuration does not enroll keys or replace your existing keys.
+
+### Public kernel options
+
+The options below are ordinary kernel parameters, not credentials or secrets. Their effects vary with hardware, kernel version, initramfs configuration and userspace. The values are published intentionally for review, not as a claim that every machine should use all of them.
+
+| Option | Intent and considerations |
+| --- | --- |
+| `rw` | Requests a read-write root mount. |
+| `quiet` | Suppresses routine boot messages; this can make startup less noisy but also less informative when diagnosing problems. |
+| `consoleblank=60` | Blanks the text console after 60 seconds of inactivity. Review this if it is undesirable on a particular console or device. |
+| `nowatchdog` | Disables kernel watchdog functionality. This may reduce watchdog-related overhead, but also removes a mechanism that can help detect some hangs. |
+| `mitigations=auto` | Uses the kernel's automatic policy for applicable CPU vulnerability mitigations; it does not explicitly disable mitigations. |
+| `loglevel=3` | Restricts routine kernel console output to more severe messages. Increase or remove it when investigating boot problems. |
+| `rd.systemd.show_status=auto` | Controls status display when systemd is PID 1 in the initramfs. The current configuration uses BusyBox-based initramfs hooks, so this option has no effect during the current initramfs stage; it may be useful on systems using a systemd-based initramfs. |
+| `bgrt_disable` | Disables use of the firmware-provided boot graphics resource table image. |
+| `intel_pstate=active` | Requests active mode for the Intel P-state CPU frequency driver. It is relevant only to supported Intel CPUs and driver configurations. |
+| `i915.enable_fbc=1` | Requests framebuffer compression from the Intel `i915` graphics driver when supported. Remove it if unsupported or problematic on other graphics hardware. |
+| `i915.enable_guc=2` | Selects the `i915` GuC/HuC parameter bitmask value `2` (HuC loading in documented versions). Support depends on GPU generation, firmware and driver version; do not assume it applies to other GPUs. See the [i915 driver documentation](https://docs.kernel.org/gpu/i915.html). |
+| `pcie_aspm=auto` | Retained from the author's existing command line, but `auto` is not listed as a documented value for `pcie_aspm=` in current upstream kernel parameter documentation. Do not assume this token changes ASPM policy; verify its effect or remove it. See [kernel parameters](https://docs.kernel.org/admin-guide/kernel-parameters.html). |
+| `usbcore.autosuspend=1` | Sets the default USB autosuspend delay to one second. Some peripherals do not tolerate runtime power management well; remove or adjust it if devices disconnect or misbehave. |
+| `noatime` | Intended to avoid file access-time updates, but a bare `noatime` token on the kernel command line does not itself guarantee that the root filesystem is mounted with that option. Configure actual mount options (for example through the appropriate root mount configuration) and verify with `findmnt`. |
+| `ipv6.disable=1` | Disables IPv6 system-wide. This is a deliberate policy choice that can break networks or services requiring IPv6; remove it if IPv6 is needed. |
+| `apparmor=1` | Requests enabling AppArmor where the kernel and initramfs support it. |
+| `security=apparmor` | Selects AppArmor as the primary Linux Security Module where supported. Review alongside the `lsm=` list for the target kernel. |
+| `lsm=landlock,lockdown,yama,integrity,apparmor,bpf` | Explicitly specifies the desired Linux Security Module list/order. Entries must be supported and enabled by the target kernel; adjust this list to the kernel's compiled-in LSM support and security requirements. |
+
+The Intel options are hardware-specific, `ipv6.disable=1` reflects a network-policy choice, and the other options may affect diagnostics, power management or security behavior. Users should edit `system/cmdline.d/10-common.conf` to suit their hardware and requirements rather than blindly copying every option. After editing it, rebuild and verify the UKIs before rebooting.
+
+This keeps system-level configuration organized by subsystem, stores reusable choices in the public repository, and generates storage identifiers locally for each installation.
 
 # Zsh
 

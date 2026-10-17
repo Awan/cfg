@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# zz-sbctl-sign-all.hook hash: {{ include "system/pacman/hooks/zz-sbctl-sign-all.hook" | sha256sum }}
+doas install -D -m 0644 "{{ joinPath .chezmoi.sourceDir "system/pacman/hooks/zz-sbctl-sign-all.hook" }}" /etc/pacman.d/hooks/zz-sbctl-sign-all.hook

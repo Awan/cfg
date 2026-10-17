@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# 10-common.conf hash: {{ include "system/cmdline.d/10-common.conf" | sha256sum }}
+doas install -D -m 0644 "{{ joinPath .chezmoi.sourceDir "system/cmdline.d/10-common.conf" }}" /etc/cmdline.d/10-common.conf

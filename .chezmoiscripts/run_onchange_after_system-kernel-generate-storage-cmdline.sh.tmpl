@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# generate-storage-cmdline.sh hash: {{ include "system/kernel/generate-storage-cmdline.sh" | sha256sum }}
+doas install -D -m 0755 "{{ joinPath .chezmoi.sourceDir "system/kernel/generate-storage-cmdline.sh" }}" /usr/local/bin/generate-storage-cmdline
+doas /usr/local/bin/generate-storage-cmdline --write
