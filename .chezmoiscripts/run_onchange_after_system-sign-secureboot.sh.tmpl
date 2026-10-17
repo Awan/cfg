@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+
+# sign-secureboot.sh hash: {{ include "dot_local/bin/executable_sign-secureboot.sh" | sha256sum }}
+doas install -D -m 0755 "{{ joinPath .chezmoi.sourceDir "dot_local/bin/executable_sign-secureboot.sh" }}" /usr/local/bin/sign-secureboot.sh
