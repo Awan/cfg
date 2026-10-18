@@ -3,7 +3,7 @@
 # In the name of Allah, the Most Gracious, the Most Merciful.
 
 
-# Load the shared X session setup before launching bspwm.
+# Load the shared X session setup before launching the window manager.
 [ -f ~/.xprofile ] && . ~/.xprofile
 
-exec bspwm >/tmp/bspwm-"$USER".log 2>&1
+exec spectrwm >/tmp/spectrwm-"$USER".log 2>&1

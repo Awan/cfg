@@ -28,7 +28,7 @@ if [ -f "$HOME/.fehbg" ]; then
 fi
 
 # Identify the desktop session to applications that use XDG metadata.
-export DESKTOP_SESSION=bspwm
+export DESKTOP_SESSION=spectrwm
 export XDG_SESSION_TYPE=x11
 
 # Configure the built-in display and its gamma settings.
@@ -44,8 +44,8 @@ tabular() {
   xrandr --output HDMI-2 --mode 1280x1024 --pos 1920x0 "$@"
 }
 
-# Start the keyboard shortcut daemon.
-run sxhkd
+# SXHKD contains BSPWM-specific bindings and is not used by Spectrwm.
+[ "$DESKTOP_SESSION" = bspwm ] && run sxhkd
 
 # Merge user-defined X resources when the file exists.
 [ -f "$user_resources" ] && xrdb -merge "$user_resources"

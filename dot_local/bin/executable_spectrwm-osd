@@ -1,0 +1,123 @@
+#!/bin/sh
+
+notify_volume() {
+    volume_info=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null) || return 1
+
+    case "$volume_info" in
+        *"[MUTED]"*)
+            dunstify -a Spectrwm -i audio-volume-muted -t 1200 \
+                -h int:value:0 \
+                -h string:hlcolor:#50e050 \
+                -h string:x-canonical-private-synchronous:volume \
+                "Volume" "Muted"
+            return
+            ;;
+        "Volume: "*)
+            level=${volume_info#Volume: }
+            level=${level%% *}
+
+            case "$level" in
+                *.*)
+                    whole=${level%%.*}
+                    fraction=${level#*.}
+                    fraction=${fraction}00
+                    fraction=${fraction%"${fraction#??}"}
+                    while [ "${fraction#0}" != "$fraction" ]; do
+                        fraction=${fraction#0}
+                    done
+                    [ -n "$fraction" ] || fraction=0
+                    percentage=$((whole * 100 + fraction))
+                    ;;
+                *)
+                    percentage=$((level * 100))
+                    ;;
+            esac
+            ;;
+        *) return 1 ;;
+    esac
+
+    progress=$percentage
+    [ "$progress" -gt 100 ] && progress=100
+    [ "$progress" -lt 0 ] && progress=0
+
+    if [ "$percentage" -le 33 ]; then
+        icon=audio-volume-low
+    elif [ "$percentage" -le 66 ]; then
+        icon=audio-volume-medium
+    else
+        icon=audio-volume-high
+    fi
+
+    dunstify -a Spectrwm -i "$icon" -t 1200 \
+        -h "int:value:$progress" \
+        -h string:hlcolor:#50e050 \
+        -h string:x-canonical-private-synchronous:volume \
+        "Volume" "${percentage}%"
+}
+
+notify_brightness() {
+    dir=/sys/class/backlight/intel_backlight
+    [ -r "$dir/brightness" ] && [ -r "$dir/max_brightness" ] || return 1
+
+    read -r current < "$dir/brightness"
+    read -r maximum < "$dir/max_brightness"
+    [ "$maximum" -gt 0 ] || return 1
+
+    percentage=$(((current * 100 + maximum / 2) / maximum))
+
+    dunstify -a Spectrwm -i display-brightness -t 1200 \
+        -h "int:value:$percentage" \
+        -h string:hlcolor:#ffde59 \
+        -h string:x-canonical-private-synchronous:brightness \
+        "Brightness" "${percentage}%"
+}
+
+notify_mic() {
+    mic_info=$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ 2>/dev/null) || return 1
+
+    case "$mic_info" in
+        *"[MUTED]"*) state=Muted ;;
+        *) state=Unmuted ;;
+    esac
+
+    dunstify -a Spectrwm -t 1200 \
+        -h string:x-canonical-private-synchronous:microphone \
+        "Microphone" "$state"
+}
+
+case "$1" in
+    volume-up)
+        wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+ || exit 1
+        notify_volume
+        ;;
+    volume-down)
+        wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%- || exit 1
+        notify_volume
+        ;;
+    volume-mute)
+        wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle || exit 1
+        notify_volume
+        ;;
+    mic-mute)
+        wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle || exit 1
+        notify_mic
+        ;;
+    brightness-up)
+        light -A 5 || exit 1
+        notify_brightness
+        ;;
+    brightness-down)
+        light -U 5 || exit 1
+        notify_brightness
+        ;;
+    volume-show)
+        notify_volume
+        ;;
+    brightness-show)
+        notify_brightness
+        ;;
+    *)
+        printf 'Usage: %s {volume-up|volume-down|volume-mute|mic-mute|brightness-up|brightness-down|volume-show|brightness-show}\n' "$0" >&2
+        exit 2
+        ;;
+esac

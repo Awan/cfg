@@ -1,0 +1,282 @@
+#!/bin/sh
+
+mail_count() {
+    count=0
+    for mail in "$HOME"/.local/share/email/x1c/INBOX/new/*; do
+        [ -f "$mail" ] && count=$((count + 1))
+    done
+    printf '%s' "$count"
+}
+
+read_hardware_status() {
+    battery='?'
+    battery_icon=''
+    battery_color=8
+    battery_state=
+
+    for battery_dir in /sys/class/power_supply/*; do
+        [ -r "$battery_dir/type" ] || continue
+        IFS= read -r battery_type < "$battery_dir/type"
+        [ "$battery_type" = Battery ] || continue
+        [ -r "$battery_dir/capacity" ] || continue
+
+        IFS= read -r battery_level < "$battery_dir/capacity"
+        case "$battery_level" in
+            ''|*[!0-9]*) continue ;;
+        esac
+
+        battery="${battery_level}%"
+        if [ -r "$battery_dir/status" ]; then
+            IFS= read -r battery_state < "$battery_dir/status"
+        fi
+
+        if [ "$battery_level" -le 15 ]; then
+            battery_color=1
+            battery_icon=''
+        elif [ "$battery_level" -le 35 ]; then
+            battery_icon=''
+        elif [ "$battery_level" -le 60 ]; then
+            battery_icon=''
+        elif [ "$battery_level" -le 85 ]; then
+            battery_icon=''
+        else
+            battery_icon=''
+        fi
+
+        if [ "$battery_state" = Charging ]; then
+            battery_color=3
+        fi
+        break
+    done
+
+    temperature='?'
+    temperature_color=9
+    thermal_zone=
+
+    for thermal_type in /sys/class/thermal/thermal_zone*/type; do
+        [ -r "$thermal_type" ] || continue
+        IFS= read -r zone_type < "$thermal_type"
+        case "$zone_type" in
+            *cpu*|*CPU*|*pkg*|*Package*|*package*)
+                thermal_zone=${thermal_type%/type}
+                break
+                ;;
+        esac
+        [ -n "$thermal_zone" ] || thermal_zone=${thermal_type%/type}
+    done
+
+    if [ -n "$thermal_zone" ] && [ -r "$thermal_zone/temp" ]; then
+        IFS= read -r temperature_raw < "$thermal_zone/temp"
+        case "$temperature_raw" in
+            ''|*[!0-9]*) temperature='?' ;;
+            *)
+                temperature=$((temperature_raw / 1000))
+                [ "$temperature" -ge 80 ] && temperature_color=1
+                ;;
+        esac
+    fi
+}
+
+read_cpu() {
+    read -r _ user nice system idle iowait irq softirq steal rest < /proc/stat
+    cpu_total=$((user + nice + system + idle + iowait + irq + softirq + steal))
+    cpu_idle=$((idle + iowait))
+}
+
+read_memory() {
+    mem_total=0
+    mem_available=0
+
+    while read -r key value rest; do
+        case "$key" in
+            MemTotal:) mem_total=$value ;;
+            MemAvailable:) mem_available=$value ;;
+        esac
+    done < /proc/meminfo
+
+    if [ "$mem_total" -gt 0 ]; then
+        ram=$(((mem_total - mem_available) * 100 / mem_total))
+    else
+        ram=0
+    fi
+}
+
+mpd_refresh=0
+wifi_refresh=0
+hardware_refresh=0
+music_status=
+wifi='?'
+
+while :; do
+    read_cpu
+
+    if [ -n "${prev_total:-}" ]; then
+        delta_total=$((cpu_total - prev_total))
+        delta_idle=$((cpu_idle - prev_idle))
+
+        if [ "$delta_total" -gt 0 ]; then
+            cpu_usage=$(((delta_total - delta_idle) * 100 / delta_total))
+        else
+            cpu_usage=0
+        fi
+    else
+        cpu_usage=0
+    fi
+
+    prev_total=$cpu_total
+    prev_idle=$cpu_idle
+
+    read_memory
+
+    brightness_dir=/sys/class/backlight/intel_backlight
+    brightness_pct='?'
+
+    if [ -r "$brightness_dir/brightness" ] && [ -r "$brightness_dir/max_brightness" ]; then
+        read -r brightness < "$brightness_dir/brightness"
+        read -r max_brightness < "$brightness_dir/max_brightness"
+
+        if [ "$max_brightness" -gt 0 ]; then
+            brightness_pct=$(((brightness * 100 + max_brightness / 2) / max_brightness))
+        fi
+    fi
+
+    if [ "$wifi_refresh" -le 0 ]; then
+        wifi_interface=
+        for network_device in /sys/class/net/*; do
+            if [ -d "$network_device/wireless" ]; then
+                wifi_interface=${network_device##*/}
+                break
+            fi
+        done
+
+        if [ -n "$wifi_interface" ]; then
+            wifi_info=$(iw dev "$wifi_interface" link 2>/dev/null)
+            case "$wifi_info" in
+                *"Not connected."*) wifi=off ;;
+                *"Connected to "*)
+                    wifi_ssid=
+                    while IFS= read -r wifi_line; do
+                        case "$wifi_line" in
+                            *"SSID: "*) wifi_ssid=${wifi_line#*SSID: }; break ;;
+                        esac
+                    done <<EOF
+$wifi_info
+EOF
+                    while [ "${#wifi_ssid}" -gt 16 ]; do
+                        wifi_ssid=${wifi_ssid%?}
+                    done
+                    if [ -n "$wifi_ssid" ]; then
+                        wifi=$wifi_ssid
+                    else
+                        wifi=on
+                    fi
+                    ;;
+                *) wifi='?' ;;
+            esac
+        else
+            wifi=off
+        fi
+        wifi_refresh=4
+    else
+        wifi_refresh=$((wifi_refresh - 1))
+    fi
+
+    volume_info=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null)
+    case "$volume_info" in
+        *"[MUTED]"*)
+            volume=MUTE
+            volume_icon=''
+            ;;
+        "Volume: "*)
+            volume=${volume_info#Volume: }
+            volume=${volume%% *}
+
+            case "$volume" in
+                *.*)
+                    volume_whole=${volume%%.*}
+                    volume_frac=${volume#*.}
+                    volume_frac=${volume_frac}00
+                    volume_frac=${volume_frac%"${volume_frac#??}"}
+
+                    while [ "${volume_frac#0}" != "$volume_frac" ]; do
+                        volume_frac=${volume_frac#0}
+                    done
+
+                    [ -n "$volume_frac" ] || volume_frac=0
+                    volume=$((volume_whole * 100 + volume_frac))
+                    ;;
+                *)
+                    volume=$((volume * 100))
+                    ;;
+            esac
+
+            volume=${volume}%
+            volume_icon=''
+            ;;
+        *)
+            volume='?'
+            volume_icon=''
+            ;;
+    esac
+
+    mail=$(mail_count)
+
+    if [ "$hardware_refresh" -le 0 ]; then
+        read_hardware_status
+        hardware_refresh=4
+    else
+        hardware_refresh=$((hardware_refresh - 1))
+    fi
+
+    if [ "$mpd_refresh" -le 0 ]; then
+        mpd_state=$(mpc status 2>/dev/null)
+        case "$mpd_state" in
+            *"[playing]"*)
+                music_track=$(mpc --format '%artist% - %title%' current 2>/dev/null)
+                while [ "${#music_track}" -gt 20 ]; do
+                    music_track=${music_track%?}
+                done
+                if [ -n "$music_track" ]; then
+                    music_status="  +@fg=6; $music_track+@fg=0;"
+                else
+                    music_status=
+                fi
+                ;;
+            *) music_status= ;;
+        esac
+        mpd_refresh=4
+    else
+        mpd_refresh=$((mpd_refresh - 1))
+    fi
+
+    battery_status=
+    case "$battery" in
+        '?') battery_status= ;;
+        *)
+            battery_status="  +@fg=$battery_color;$battery_icon $battery+@fg=0;"
+            [ "$battery_state" = Charging ] &&
+                battery_status="  +@fg=$battery_color; $battery+@fg=0;"
+            ;;
+    esac
+
+    temperature_status=
+    case "$temperature" in
+        '?') temperature_status= ;;
+        *) temperature_status="  +@fg=$temperature_color; ${temperature}°C+@fg=0;" ;;
+    esac
+
+    mail_status=
+    if [ "$mail" -gt 0 ]; then
+        mail_status="  +@fg=1; $mail+@fg=0;"
+    fi
+
+    printf '%s%s' "$mail_status" "$music_status"
+
+    printf '+@fg=2; %s+@fg=0;  +@fg=3;%s %s+@fg=0;  +@fg=4; %s%%+@fg=0;  +@fg=7; %s%%+@fg=0;  +@fg=5; %s%%+@fg=0;%s%s' \
+        "$wifi" "$volume_icon" "$volume" "$cpu_usage" "$brightness_pct" "$ram" \
+        "$battery_status" "$temperature_status"
+
+    printf '\n'
+
+    sleep 1
+done

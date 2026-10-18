@@ -1,0 +1,80 @@
+#!/bin/sh
+
+property=_SPECTRWM_SCRATCH_ORDER
+
+window_list() {
+    xprop -root _NET_CLIENT_LIST 2>/dev/null |
+        sed 's/^.*# //; s/,/ /g'
+}
+
+scratch_order() {
+    xprop -id "$1" "$property" 2>/dev/null |
+        sed -n 's/.*= *\([0-9][0-9]*\).*/\1/p'
+}
+
+next_order() {
+    max_order=0
+    for candidate in $(window_list); do
+        candidate_order=$(scratch_order "$candidate")
+        if [ -n "$candidate_order" ] && [ "$candidate_order" -gt "$max_order" ]; then
+            max_order=$candidate_order
+        fi
+    done
+    printf '%s' "$((max_order + 1))"
+}
+
+toggle_flag() {
+    window=$(xdotool getactivewindow 2>/dev/null) || return 1
+    order=$(scratch_order "$window")
+
+    if [ -n "$order" ]; then
+        xprop -id "$window" -remove "$property" >/dev/null || return 1
+    else
+        order=$(next_order)
+        xprop -id "$window" -f "$property" 32i -set "$property" "$order" >/dev/null ||
+            return 1
+        xdotool windowminimize "$window" || return 1
+    fi
+}
+
+switch_app() {
+    active_window=$(xdotool getactivewindow 2>/dev/null) || active_window=
+    active_order=
+    [ -n "$active_window" ] && active_order=$(scratch_order "$active_window")
+
+    if [ -n "$active_order" ]; then
+        order=$(next_order)
+        xprop -id "$active_window" -f "$property" 32i -set "$property" "$order" >/dev/null ||
+            return 1
+        xdotool windowminimize "$active_window" || return 1
+    fi
+
+    next_window=
+    next_order=
+    for candidate in $(window_list); do
+        [ "$candidate" = "$active_window" ] && continue
+        candidate_order=$(scratch_order "$candidate")
+        [ -n "$candidate_order" ] || continue
+
+        if [ -z "$next_order" ] || [ "$candidate_order" -lt "$next_order" ]; then
+            next_window=$candidate
+            next_order=$candidate_order
+        fi
+    done
+
+    if [ -n "$next_window" ]; then
+        order=$(next_order)
+        xprop -id "$next_window" -f "$property" 32i -set "$property" "$order" >/dev/null ||
+            return 1
+        xdotool windowactivate --sync "$next_window"
+    fi
+}
+
+case "$1" in
+    switch-app) switch_app ;;
+    toggle-flag) toggle_flag ;;
+    *)
+        printf 'Usage: %s {switch-app|toggle-flag}\n' "$0" >&2
+        exit 2
+        ;;
+esac
