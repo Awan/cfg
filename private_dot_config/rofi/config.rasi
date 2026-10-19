@@ -1,0 +1,140 @@
+/* Rofi configuration for spectrwm.
+ * https://abdullah.support https://github.com/Awan/cfg.git
+ */
+
+configuration {
+    modes: [ combi ];
+    combi-modes: [ window, drun, run ];
+    show-icons: true;
+    icon-theme: "hicolor";
+    font: "BlexMono Nerd Font Mono 13";
+    terminal: "alacritty";
+    drun-display-format: "{name}";
+    matching: "fuzzy";
+    sort: true;
+    sorting-method: "levenshtein";
+    disable-history: false;
+}
+
+* {
+    bg: #101216F4;
+    bg-alt: #1A1E26F5;
+    fg: #F2F2F2;
+    muted: #9AA4B2;
+    accent: #00D7FF;
+    accent-soft: #12333A;
+    red: #FF3030;
+    green: #50E050;
+    yellow: #FFD700;
+    purple: #C080FF;
+
+    font: "BlexMono Nerd Font Mono 13";
+    background-color: @bg;
+    text-color: @fg;
+    border-color: @accent;
+}
+
+window {
+    location: center;
+    anchor: center;
+    width: 58%;
+    padding: 14px;
+    border: 2px;
+    border-radius: 8px;
+    border-color: @accent;
+    background-color: @bg;
+}
+
+mainbox {
+    orientation: vertical;
+    children: [ inputbar, message, listview ];
+    spacing: 10px;
+    background-color: transparent;
+}
+
+inputbar {
+    children: [ prompt, entry, case-indicator ];
+    spacing: 10px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background-color: @bg-alt;
+}
+
+prompt {
+    text-color: @accent;
+    padding: 2px 0px;
+}
+
+entry {
+    placeholder: "Search apps, windows, or commands";
+    placeholder-color: @muted;
+    text-color: @fg;
+}
+
+case-indicator {
+    text-color: @yellow;
+}
+
+listview {
+    columns: 1;
+    lines: 8;
+    fixed-height: false;
+    dynamic: true;
+    scrollbar: false;
+    spacing: 4px;
+    padding: 2px 0px;
+    background-color: transparent;
+}
+
+element {
+    orientation: horizontal;
+    children: [ element-icon, element-text ];
+    spacing: 10px;
+    padding: 8px 10px;
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+element normal.normal {
+    text-color: @fg;
+    background-color: transparent;
+}
+
+element alternate.normal {
+    text-color: @fg;
+    background-color: @bg-alt;
+}
+
+element selected.normal {
+    text-color: #101216;
+    background-color: @accent;
+}
+
+element-icon {
+    size: 1.25em;
+}
+
+element-text {
+    vertical-align: 0.5;
+}
+
+element-text selected.normal {
+    text-color: #101216;
+    highlight: bold #101216;
+}
+
+message {
+    padding: 6px 10px;
+    border-radius: 5px;
+    background-color: @bg-alt;
+}
+
+textbox {
+    text-color: @muted;
+}
+
+scrollbar {
+    background-color: @bg-alt;
+    handle-color: @accent;
+    handle-width: 4px;
+}
