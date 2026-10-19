@@ -47,6 +47,7 @@ switch_app() {
         xprop -id "$active_window" -f "$property" 32i -set "$property" "$order" >/dev/null ||
             return 1
         xdotool windowminimize "$active_window" || return 1
+        return
     fi
 
     next_window=
@@ -63,6 +64,8 @@ switch_app() {
     done
 
     if [ -n "$next_window" ]; then
+        current_desktop=$(xdotool get_desktop) || return 1
+        xdotool set_desktop_for_window "$next_window" "$current_desktop" || return 1
         order=$(next_order)
         xprop -id "$next_window" -f "$property" 32i -set "$property" "$order" >/dev/null ||
             return 1
