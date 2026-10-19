@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Vim (Terminal)
+GenericName=Text Editor
+Comment=Edit text files in a terminal
+Exec=alacritty -e vim %F
+TryExec=vim
+Icon=vim
+Terminal=false
+Categories=Utility;TextEditor;
+MimeType=text/plain;
+StartupNotify=false
