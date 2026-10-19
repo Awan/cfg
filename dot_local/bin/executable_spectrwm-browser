@@ -1,0 +1,18 @@
+#!/bin/sh
+
+browser_workspace=1
+
+if ! xdotool set_desktop "$browser_workspace"; then
+    printf '%s\n' 'spectrwm-browser: unable to switch to workspace 2' >&2
+    exit 1
+fi
+
+if [ "$#" -gt 0 ]; then
+    exec google-chrome-stable "$@"
+fi
+
+if xdotool search --class '[Gg]oogle-[Cc]hrome' >/dev/null 2>&1; then
+    exit 0
+fi
+
+exec google-chrome-stable

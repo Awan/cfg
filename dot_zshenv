@@ -1,4 +1,4 @@
-export BROWSER=google-chrome-stable
+export BROWSER="$HOME/.local/bin/spectrwm-browser"
 export TERMINAL=alacritty
 export EDITOR=vim
 export GIT_EDITOR=vim
