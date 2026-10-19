@@ -10,7 +10,7 @@ mail_count() {
 
 read_hardware_status() {
     battery='?'
-    battery_icon=''
+    battery_icon='󰁹'
     battery_color=8
     battery_state=
 
@@ -32,15 +32,15 @@ read_hardware_status() {
 
         if [ "$battery_level" -le 15 ]; then
             battery_color=1
-            battery_icon=''
+            battery_icon='󰂃'
         elif [ "$battery_level" -le 35 ]; then
-            battery_icon=''
+            battery_icon='󰂂'
         elif [ "$battery_level" -le 60 ]; then
-            battery_icon=''
+            battery_icon='󰂀'
         elif [ "$battery_level" -le 85 ]; then
-            battery_icon=''
+            battery_icon='󰁼'
         else
-            battery_icon=''
+            battery_icon='󰁹'
         fi
 
         if [ "$battery_state" = Charging ]; then
@@ -101,11 +101,13 @@ read_memory() {
     fi
 }
 
-mpd_refresh=0
 wifi_refresh=0
 hardware_refresh=0
 music_status=
-wifi='?'
+music_artist=
+music_title=
+wifi=
+wifi_connected=0
 
 while :; do
     read_cpu
@@ -142,6 +144,8 @@ while :; do
 
     if [ "$wifi_refresh" -le 0 ]; then
         wifi_interface=
+        wifi=
+        wifi_connected=0
         for network_device in /sys/class/net/*; do
             if [ -d "$network_device/wireless" ]; then
                 wifi_interface=${network_device##*/}
@@ -152,8 +156,8 @@ while :; do
         if [ -n "$wifi_interface" ]; then
             wifi_info=$(iw dev "$wifi_interface" link 2>/dev/null)
             case "$wifi_info" in
-                *"Not connected."*) wifi=off ;;
                 *"Connected to "*)
+                    wifi_connected=1
                     wifi_ssid=
                     while IFS= read -r wifi_line; do
                         case "$wifi_line" in
@@ -165,16 +169,9 @@ EOF
                     while [ "${#wifi_ssid}" -gt 16 ]; do
                         wifi_ssid=${wifi_ssid%?}
                     done
-                    if [ -n "$wifi_ssid" ]; then
-                        wifi=$wifi_ssid
-                    else
-                        wifi=on
-                    fi
+                    wifi=$wifi_ssid
                     ;;
-                *) wifi='?' ;;
             esac
-        else
-            wifi=off
         fi
         wifi_refresh=4
     else
@@ -228,26 +225,44 @@ EOF
         hardware_refresh=$((hardware_refresh - 1))
     fi
 
-    if [ "$mpd_refresh" -le 0 ]; then
-        mpd_state=$(mpc status 2>/dev/null)
-        case "$mpd_state" in
-            *"[playing]"*)
-                music_track=$(mpc --format '%artist% - %title%' current 2>/dev/null)
-                while [ "${#music_track}" -gt 20 ]; do
-                    music_track=${music_track%?}
-                done
-                if [ -n "$music_track" ]; then
-                    music_status="  +@fg=6; $music_track+@fg=0;"
-                else
-                    music_status=
+    mpd_state=$(mpc status 2>/dev/null)
+    mpd_status_line=
+    {
+        IFS= read -r _
+        IFS= read -r mpd_status_line
+    } <<EOF
+$mpd_state
+EOF
+    IFS=' ' read -r _ _ music_time _ <<EOF
+$mpd_status_line
+EOF
+    music_elapsed=${music_time%%/*}
+    case "$music_elapsed" in
+        [0-9]:[0-9][0-9]) music_elapsed="0$music_elapsed" ;;
+    esac
+
+    case "$mpd_state" in
+        *"[playing]"*)
+            music_artist=$(mpc --format '%artist%' current 2>/dev/null)
+            music_title=$(mpc --format '%title%' current 2>/dev/null)
+            ;;
+        *) music_artist=; music_title= ;;
+    esac
+
+    music_status=
+    case "$mpd_state" in
+        *"[playing]"*)
+            if [ -n "$music_artist$music_title" ]; then
+                music_status="  +@fg=6; $music_artist"
+                [ -n "$music_title" ] &&
+                    music_status="$music_status - +@fg=2;$music_title"
+                if [ -n "$music_elapsed" ]; then
+                    music_status="$music_status +@fg=4;$music_elapsed"
                 fi
-                ;;
-            *) music_status= ;;
-        esac
-        mpd_refresh=4
-    else
-        mpd_refresh=$((mpd_refresh - 1))
-    fi
+                music_status="$music_status+@fg=0;"
+            fi
+            ;;
+    esac
 
     battery_status=
     case "$battery" in
@@ -270,10 +285,15 @@ EOF
         mail_status="  +@fg=1; $mail+@fg=0;"
     fi
 
-    printf '%s%s' "$mail_status" "$music_status"
+    wifi_status=
+    if [ "$wifi_connected" -eq 1 ]; then
+        wifi_status="  +@fg=2;${wifi:+ $wifi}+@fg=0;"
+    fi
 
-    printf '+@fg=2; %s+@fg=0;  +@fg=3;%s %s+@fg=0;  +@fg=4; %s%%+@fg=0;  +@fg=7; %s%%+@fg=0;  +@fg=5; %s%%+@fg=0;%s%s' \
-        "$wifi" "$volume_icon" "$volume" "$cpu_usage" "$brightness_pct" "$ram" \
+    printf '%s%s%s' "$mail_status" "$music_status" "$wifi_status"
+
+    printf '  +@fg=3;%s %s+@fg=0;  +@fg=4; %s%%+@fg=0;  +@fg=7; %s%%+@fg=0;  +@fg=5; %s%%+@fg=0;%s%s' \
+        "$volume_icon" "$volume" "$cpu_usage" "$brightness_pct" "$ram" \
         "$battery_status" "$temperature_status"
 
     printf '\n'
