@@ -57,12 +57,20 @@ jobs:
 
     steps:
       - name: Install CI dependencies
-        run: pacman -Syu --noconfirm --needed git nodejs chezmoi zsh shellcheck age curl diffutils vim python
+        run: pacman -Syu --noconfirm --needed git nodejs chezmoi zsh shellcheck age curl diffutils vim python gcc pkgconf libpulse libmpdclient libnl
 
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Compile native Spectrwm status program
+        run: |
+          cflags=$(pkg-config --cflags libpulse libmpdclient libnl-3.0 libnl-genl-3.0)
+          libs=$(pkg-config --libs libpulse libmpdclient libnl-3.0 libnl-genl-3.0)
+          # shellcheck disable=SC2086
+          cc -O2 -std=c11 -Wall -Wextra -Werror $cflags dot_local/share/spectrwm-status/spectrwm-status.c -o /tmp/spectrwm-status-native $libs -pthread
+          test -x /tmp/spectrwm-status-native
 
       - name: Show chezmoi version
         run: chezmoi --version
