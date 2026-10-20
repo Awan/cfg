@@ -155,6 +155,24 @@ copy_string(char *destination, size_t size, const char *source)
 }
 
 static void
+copy_status_title(char *destination, size_t size, const char *source)
+{
+    size_t used = 0;
+
+    if (size == 0)
+        return;
+    if (source == NULL)
+        source = "";
+
+    while (*source != '\0' && used + 1 < size) {
+        unsigned char character = (unsigned char)*source++;
+        destination[used++] =
+            character < 0x20 || character == 0x7f ? ' ' : (char)character;
+    }
+    destination[used] = '\0';
+}
+
+static void
 update_music(struct mpd_connection *connection)
 {
     struct mpd_status *status;
@@ -178,7 +196,7 @@ update_music(struct mpd_connection *connection)
         song = mpd_run_current_song(connection);
         if (song != NULL) {
             title = mpd_song_get_tag(song, MPD_TAG_TITLE, 0);
-            copy_string(next.title, sizeof(next.title), title);
+            copy_status_title(next.title, sizeof(next.title), title);
             mpd_song_free(song);
         }
     }
