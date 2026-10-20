@@ -4,6 +4,7 @@
   </a>
 </p>
 
+![spectrwm](https://github.com/user-attachments/assets/7455f68a-e10d-47b9-83af-4fb32ea68bab)
 ![bspwm](https://user-images.githubusercontent.com/42554663/100934595-ca9d7e00-3510-11eb-8943-4061ea1040ea.png)
 ![dwm](https://user-images.githubusercontent.com/42554663/62346164-8827f380-b50e-11e9-8538-a25c46c51af9.png)
 ![lewany](https://user-images.githubusercontent.com/42554663/68199427-d8b45e80-ffdf-11e9-80d5-b8666ceff734.png)
@@ -27,11 +28,10 @@
  zsh        > vanilla Zsh setup with a lightweight Git-aware prompt
  tmux       > terminal multiplexer
  alacritty  > terminal emulator configuration
- bspwm      > current tiling window manager configuration
- lemonbar   > lightweight status bar and panel configuration
+ spectrwm   > current tiling window manager configuration
+ status bar > native C status program used by Spectrwm
  picom      > compositor configuration
  dunst      > notification daemon
- sxhkd      > hotkey daemon configuration
  ranger     > file manager configuration
  feh        > image viewer configuration
  mpd        > Music Player Daemon configuration
@@ -304,11 +304,17 @@ The repository contains the Zsh configuration and package references, while the 
 My current graphical setup is based on:
 
 * **Alacritty** as the terminal emulator
-* **bspwm** as the tiling window manager
-* **sxhkd** for keyboard shortcuts
+* **Spectrwm** as the tiling window manager and for window-manager keybindings
 * **picom** as the compositor
-* **lemonbar-ng** and my panel scripts for the status bar
 * **dunst** for notifications
+* **a native C status program** integrated into Spectrwm's bar
+
+The status program reports music, audio, Wi-Fi, Maildir, CPU, memory, brightness,
+battery, and temperature. MPD, audio, Wi-Fi, and Maildir changes use event
+notifications; sampled system metrics refresh every five seconds. Chezmoi builds
+the program from `dot_local/share/spectrwm-status/spectrwm-status.c` when its
+source changes. Building requires a C compiler, `pkg-config`, and the PulseAudio,
+MPD client, and libnl development libraries.
 
 The repository also contains configurations for other window managers, compositors, terminal emulators and status bars that are not necessarily part of the current setup. These are retained as optional configurations rather than indicating that every application is currently installed or in use.
 
@@ -333,7 +339,7 @@ herbstluftwm
 i3
 hyprland
 river
-spectrwm
+bspwm
 sway
 weston
 ```
@@ -370,9 +376,9 @@ zathura
 
 These configurations remain available in the repository even when the corresponding application is not part of my current daily environment. The repository therefore serves both as the configuration for my current system and as a collection of configurations for applications I may use on other systems or at another time.
 
-# Lemonbar NG
+# Lemonbar NG (retained project)
 
-Lemonbar NG is my maintained fork of Lemonbar XFT, focused on improved Unicode and Nerd Font support while preserving the lightweight design and XCB-based architecture of the original project.
+Lemonbar NG is my maintained fork of Lemonbar XFT, focused on improved Unicode and Nerd Font support while preserving the lightweight design and XCB-based architecture of the original project. It and its configuration are retained in this repository, but Lemonbar NG is not the status bar in my current Spectrwm setup.
 
 It provides XFT rendering, full UTF-8/32-bit Unicode support, Nerd Font compatibility, basic formatting, RandR and Xinerama support, and EWMH compliance without wasting precious memory.
 
@@ -486,4 +492,3 @@ systemctl --user --now enable mpd.socket
 The MPD control interface listens only on loopback (`127.0.0.1:6600`), and
 audio plays locally through PipeWire. HTTP streaming is disabled, so MPD does
 not expose an audio stream to other devices on the network.
-

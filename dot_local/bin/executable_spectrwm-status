@@ -101,13 +101,45 @@ read_memory() {
     fi
 }
 
+read_output_icon() {
+    volume_icon=''
+    default_sink=$(pactl get-default-sink 2>/dev/null) || return
+
+    case "$default_sink" in
+        *bluez*|*bluetooth*)
+            volume_icon=''
+            ;;
+        *)
+            active_port=$(
+                pactl list sinks 2>/dev/null |
+                    awk -v sink="$default_sink" '
+                        /^Sink #[0-9]/ { in_sink = 0 }
+                        /^[[:space:]]+Name: / { in_sink = ($2 == sink) }
+                        in_sink && /^[[:space:]]+Active Port: / {
+                            print $3
+                            exit
+                        }
+                    '
+            )
+            case "$active_port" in
+                *headphone*|*headset*) volume_icon='' ;;
+            esac
+            ;;
+    esac
+}
+
+music_metadata_separator=$(printf '\034')
+music_metadata_format=$(printf '%%artist%%%s%%title%%' "$music_metadata_separator")
 wifi_refresh=0
 hardware_refresh=0
+audio_refresh=0
 music_status=
 music_artist=
 music_title=
+music_key=
 wifi=
 wifi_connected=0
+volume_icon=''
 
 while :; do
     read_cpu
@@ -179,6 +211,12 @@ EOF
     fi
 
     volume_info=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null)
+    if [ "$audio_refresh" -le 0 ]; then
+        read_output_icon
+        audio_refresh=4
+    else
+        audio_refresh=$((audio_refresh - 1))
+    fi
     case "$volume_info" in
         *"[MUTED]"*)
             volume=MUTE
@@ -208,11 +246,9 @@ EOF
             esac
 
             volume=${volume}%
-            volume_icon=''
             ;;
         *)
             volume='?'
-            volume_icon=''
             ;;
     esac
 
@@ -226,16 +262,18 @@ EOF
     fi
 
     mpd_state=$(mpc status 2>/dev/null)
+    mpd_track_line=
     mpd_status_line=
     {
-        IFS= read -r _
+        IFS= read -r mpd_track_line
         IFS= read -r mpd_status_line
     } <<EOF
 $mpd_state
 EOF
-    IFS=' ' read -r _ _ music_time _ <<EOF
+    IFS=' ' read -r mpd_position _ music_time _ <<EOF
 $mpd_status_line
 EOF
+    music_key=$mpd_track_line:$mpd_position
     music_elapsed=${music_time%%/*}
     case "$music_elapsed" in
         [0-9]:[0-9][0-9]) music_elapsed="0$music_elapsed" ;;
@@ -243,19 +281,39 @@ EOF
 
     case "$mpd_state" in
         *"[playing]"*)
-            music_artist=$(mpc --format '%artist%' current 2>/dev/null)
-            music_title=$(mpc --format '%title%' current 2>/dev/null)
+            if [ "$music_key" != "$previous_music_key" ]; then
+                music_metadata=$(mpc --format="$music_metadata_format" current 2>/dev/null)
+                case "$music_metadata" in
+                    *"$music_metadata_separator"*)
+                        music_artist=${music_metadata%%"$music_metadata_separator"*}
+                        music_title=${music_metadata#*"$music_metadata_separator"}
+                        ;;
+                    *)
+                        music_artist=$music_metadata
+                        music_title=
+                        ;;
+                esac
+            fi
+            previous_music_key=$music_key
             ;;
-        *) music_artist=; music_title= ;;
+        *) music_artist=; music_title=; previous_music_key= ;;
     esac
 
     music_status=
     case "$mpd_state" in
         *"[playing]"*)
             if [ -n "$music_artist$music_title" ]; then
-                music_status="  +@fg=6; $music_artist"
-                [ -n "$music_title" ] &&
-                    music_status="$music_status - +@fg=2;$music_title"
+                display_title=$music_title
+                if [ "${#display_title}" -gt 24 ]; then
+                    while [ "${#display_title}" -gt 23 ]; do
+                        display_title=${display_title%?}
+                    done
+                    display_title="${display_title}…"
+                fi
+
+                music_status="  +@fg=6; +@fg=10;$music_artist"
+                [ -n "$display_title" ] &&
+                    music_status="$music_status - +@fg=2;$display_title"
                 if [ -n "$music_elapsed" ]; then
                     music_status="$music_status +@fg=4;$music_elapsed"
                 fi

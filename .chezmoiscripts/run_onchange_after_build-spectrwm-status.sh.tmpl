@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# C source hash: {{ include "dot_local/share/spectrwm-status/spectrwm-status.c" | sha256sum }}
+set -eu
+
+source_file="$HOME/.local/share/spectrwm-status/spectrwm-status.c"
+output_file="$HOME/.local/bin/spectrwm-status-native"
+temporary_file="${output_file}.tmp.$$"
+cflags=$(pkg-config --cflags libpulse libmpdclient libnl-3.0 libnl-genl-3.0)
+libs=$(pkg-config --libs libpulse libmpdclient libnl-3.0 libnl-genl-3.0)
+
+trap 'rm -f "$temporary_file"' EXIT
+trap 'exit 1' HUP INT TERM
+
+# shellcheck disable=SC2086
+cc -O2 -std=c11 -Wall -Wextra -Werror $cflags \
+    "$source_file" -o "$temporary_file" $libs -pthread
+chmod 0755 "$temporary_file"
+mv "$temporary_file" "$output_file"
