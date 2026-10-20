@@ -1,5 +1,20 @@
 
 [Default Applications]
+text/english=vim.desktop
+text/plain=vim.desktop
+text/x-makefile=vim.desktop
+text/x-c++hdr=vim.desktop
+text/x-c++src=vim.desktop
+text/x-chdr=vim.desktop
+text/x-csrc=vim.desktop
+text/x-java=vim.desktop
+text/x-moc=vim.desktop
+text/x-pascal=vim.desktop
+text/x-tcl=vim.desktop
+text/x-tex=vim.desktop
+application/x-shellscript=vim.desktop
+text/x-c=vim.desktop
+text/x-c++=vim.desktop
 text/html=spectrwm-browser.desktop
 x-scheme-handler/http=spectrwm-browser.desktop
 x-scheme-handler/https=spectrwm-browser.desktop
@@ -18,4 +33,3 @@ image/jpeg=feh.desktop;
 image/png=feh.desktop;
 image/jpg=feh.desktop;
 text/html=spectrwm-browser.desktop;google-chrome.desktop;vim.desktop;
-text/plain=vim.desktop;
