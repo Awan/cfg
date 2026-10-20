@@ -497,11 +497,11 @@ read_hardware(void)
             if (level <= 15) {
                 strcpy(battery_icon, "󰂃");
             } else if (level <= 35) {
-                strcpy(battery_icon, "󰁼");
+                strcpy(battery_icon, "󰂂");
             } else if (level <= 60) {
                 strcpy(battery_icon, "󰂀");
             } else if (level <= 85) {
-                strcpy(battery_icon, "󰂂");
+                strcpy(battery_icon, "󰁼");
             }
             if (level < 30 && strcmp(battery_state, "Charging") != 0)
                 battery_color = 1;
@@ -1029,6 +1029,7 @@ print_status(void)
 {
     struct music_snapshot current_music;
     char display_title[sizeof(music.title)];
+    char escaped_title[sizeof(music.title) * 2];
     char battery_status[128] = "";
     char temperature_status[128] = "";
     char mail_status[64] = "";
@@ -1050,6 +1051,7 @@ print_status(void)
     pthread_mutex_unlock(&wifi_mutex);
 
     copy_title_words(display_title, sizeof(display_title), current_music.title);
+    escape_markup(display_title, escaped_title, sizeof(escaped_title));
 
     if (audio.muted) {
         volume[0] = '\0';
@@ -1064,7 +1066,7 @@ print_status(void)
     if (current_music.state == MPD_STATE_PLAY &&
         current_music.title[0] != '\0') {
         snprintf(music_status, sizeof(music_status),
-            "  +@fg=6; +@fg=10;%s", display_title);
+            "  +@fg=6; +@fg=10;%s", escaped_title);
     }
 
     unsigned current_mail_count =
