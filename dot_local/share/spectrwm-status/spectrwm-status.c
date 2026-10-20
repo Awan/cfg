@@ -497,11 +497,11 @@ read_hardware(void)
             if (level <= 15) {
                 strcpy(battery_icon, "󰂃");
             } else if (level <= 35) {
-                strcpy(battery_icon, "󰂂");
+                strcpy(battery_icon, "󰁼");
             } else if (level <= 60) {
                 strcpy(battery_icon, "󰂀");
             } else if (level <= 85) {
-                strcpy(battery_icon, "󰁼");
+                strcpy(battery_icon, "󰂂");
             }
             if (level < 30 && strcmp(battery_state, "Charging") != 0)
                 battery_color = 1;
