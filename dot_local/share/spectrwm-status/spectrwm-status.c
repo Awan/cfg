@@ -1033,7 +1033,7 @@ print_status(void)
     char battery_status[128] = "";
     char temperature_status[128] = "";
     char mail_status[64] = "";
-    char music_status[2048] = "";
+    char music_status[sizeof(music.title) * 2 + 64] = "";
     char wifi_status[512] = "";
     char current_wifi_ssid[sizeof(wifi_ssid)];
     char escaped_wifi_ssid[sizeof(wifi_ssid) * 2];
