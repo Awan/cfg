@@ -36,7 +36,7 @@ notify_volume() {
         *) return 1 ;;
     esac
 
-    progress=$percentage
+    progress=$(((percentage * 100 + 75) / 150))
     [ "$progress" -gt 100 ] && progress=100
     [ "$progress" -lt 0 ] && progress=0
 
@@ -85,6 +85,42 @@ notify_mic() {
         "Microphone" "$state"
 }
 
+notify_bluetooth() {
+    bluetooth_info=$(rfkill list bluetooth 2>/dev/null) || return 1
+
+    case "$bluetooth_info" in
+        *"Soft blocked: yes"*"Soft blocked: no"*|*"Soft blocked: no"*"Soft blocked: yes"*) state=Mixed ;;
+        *"Soft blocked: yes"*) state=Off ;;
+        *"Soft blocked: no"*) state=On ;;
+        *) return 1 ;;
+    esac
+
+    dunstify -a Spectrwm -i bluetooth -t 1200 \
+        -h string:x-canonical-private-synchronous:bluetooth \
+        "Bluetooth" "$state"
+}
+
+notify_wlan() {
+    wlan_info=$(rfkill list wlan 2>/dev/null) || return 1
+
+    case "$wlan_info" in
+        *"Soft blocked: yes"*"Soft blocked: no"*|*"Soft blocked: no"*"Soft blocked: yes"*) state=Mixed ;;
+        *"Soft blocked: yes"*) state=Off ;;
+        *"Soft blocked: no"*) state=On ;;
+        *) return 1 ;;
+    esac
+
+    case "$state" in
+        On) icon=network-wireless ;;
+        Off) icon=network-wireless-offline ;;
+        Mixed) icon=network-wireless ;;
+    esac
+
+    dunstify -a Spectrwm -i "$icon" -t 1200 \
+        -h string:x-canonical-private-synchronous:wlan \
+        "Wi-Fi" "$state"
+}
+
 case "$1" in
     volume-up)
         wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+ || exit 1
@@ -97,6 +133,12 @@ case "$1" in
     volume-mute)
         wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle || exit 1
         notify_volume
+        ;;
+    bluetooth-toggle)
+        notify_bluetooth || exit 1
+        ;;
+    wlan-status)
+        notify_wlan || exit 1
         ;;
     mic-mute)
         wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle || exit 1
@@ -117,7 +159,7 @@ case "$1" in
         notify_brightness
         ;;
     *)
-        printf 'Usage: %s {volume-up|volume-down|volume-mute|mic-mute|brightness-up|brightness-down|volume-show|brightness-show}\n' "$0" >&2
+        printf 'Usage: %s {volume-up|volume-down|volume-mute|bluetooth-toggle|wlan-status|mic-mute|brightness-up|brightness-down|volume-show|brightness-show}\n' "$0" >&2
         exit 2
         ;;
 esac
