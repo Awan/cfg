@@ -18,6 +18,44 @@ mkd ()
   mkdir -p "$@" && cd "$_";
 }
 
+bright ()
+{
+  if (( ! $+commands[light] )); then
+    printf '%s\n' 'bright: light is not installed.' >&2
+    return 127
+  fi
+
+  if (( $# == 0 )); then
+    command light -G
+    return
+  fi
+
+  if (( $# != 1 )); then
+    printf 'Usage: bright [0-100|+STEP|-STEP]\n' >&2
+    return 2
+  fi
+
+  case "$1" in
+    +<->)
+      command light -A "${1#+}"
+      ;;
+    -<->)
+      command light -U "${1#-}"
+      ;;
+    <->)
+      if (( $1 > 100 )); then
+        printf '%s\n' 'bright: brightness must be between 0 and 100.' >&2
+        return 2
+      fi
+      command light -S "$1"
+      ;;
+    *)
+      printf 'Usage: bright [0-100|+STEP|-STEP]\n' >&2
+      return 2
+      ;;
+  esac
+}
+
 # for webm videos to mp4
 
 webm2mp4 ()

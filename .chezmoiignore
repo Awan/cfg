@@ -5,10 +5,6 @@ CONTRIBUTING.md
 LICENSE
 Dockerfile
 
-# Repository-only installation scripts
-INSTALL.sh
-install.sh
-
 # Repository-only kernel tooling
 kernel/
 
@@ -21,8 +17,6 @@ kernel/
 archive/
 
 # Source-only files deployed outside the home directory
-chezmoi-packages.hook
-chezmoi-packages.hook.tmpl
 system/
 
 # Nova Launcher backups

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+directory="${1:-.}"
+if [[ ! -d "$directory" ]]; then
+    printf 'Not a directory: %s\n' "$directory" >&2
+    exit 1
+fi
+
+if ! command -v fbi >/dev/null 2>&1; then
+    printf 'fbi is required to browse images from ranger.\n' >&2
+    exit 1
+fi
+
+mapfile -d '' -t images < <(
+    find "$directory" -maxdepth 1 -type f \
+        \( -iname '*.bmp' -o -iname '*.gif' -o -iname '*.jpeg' \
+        -o -iname '*.jpg' -o -iname '*.pcd' -o -iname '*.png' \
+        -o -iname '*.ppm' -o -iname '*.tif' -o -iname '*.tiff' \
+        -o -iname '*.webp' -o -iname '*.xwd' \) \
+        -print0 | sort -zV
+)
+
+if ((${#images[@]} == 0)); then
+    printf 'No supported images in %s\n' "$directory" >&2
+    exit 1
+fi
+
+exec fbi -a -v "${images[@]}"

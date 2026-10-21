@@ -1,0 +1,127 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+loop=0
+if [[ "${1:-}" == '--loop' ]]; then
+    loop=1
+    shift
+fi
+
+if (($# == 0)) || [[ "${1:-}" == '--help' ]]; then
+    printf 'Usage: ranger-mplayer [--loop] VIDEO...\n'
+    exit "$(( $# == 0 ? 2 : 0 ))"
+fi
+
+if ! command -v mplayer >/dev/null 2>&1; then
+    if command -v mpv >/dev/null 2>&1; then
+        mpv_args=(--vo=drm --drm-mode=preferred --volume=20)
+        ((loop)) && mpv_args+=(--loop-file=inf)
+        exec mpv "${mpv_args[@]}" -- "$@"
+    fi
+    printf 'Neither mplayer nor mpv is installed.\n' >&2
+    exit 127
+fi
+
+if ! command -v ffprobe >/dev/null 2>&1; then
+    printf 'ffprobe is required to fit videos to the framebuffer while preserving aspect ratio.\n' >&2
+    exit 127
+fi
+
+framebuffer_size=/sys/class/graphics/fb0/virtual_size
+if [[ ! -r "$framebuffer_size" ]]; then
+    printf 'Cannot read framebuffer dimensions from %s.\n' "$framebuffer_size" >&2
+    exit 1
+fi
+IFS=, read -r screen_width screen_height < "$framebuffer_size"
+if [[ ! "$screen_width" =~ ^[0-9]+$ || ! "$screen_height" =~ ^[0-9]+$ ]] ||
+    ((screen_width == 0 || screen_height == 0)); then
+    printf 'Invalid framebuffer dimensions in %s.\n' "$framebuffer_size" >&2
+    exit 1
+fi
+
+max_width=$((screen_width * 931 / 1920))
+max_height=$((screen_height * 580 / 1080))
+right_margin=$(((screen_width * 11 + 960) / 1920))
+top_margin=$(((screen_height * 4 + 540) / 1080))
+
+for file in "$@"; do
+    metadata="$(ffprobe -v error -select_streams v:0 \
+        -show_entries stream=width,height,display_aspect_ratio,duration,duration_ts,time_base \
+        -of json -- "$file")" || {
+        printf 'Could not read video dimensions: %s\n' "$file" >&2
+        exit 1
+    }
+    parsed_metadata="$(
+        python3 -c '
+import json
+import sys
+from fractions import Fraction
+
+stream = json.load(sys.stdin).get("streams", [{}])[0]
+duration = stream.get("duration")
+if not duration or duration == "N/A":
+    ticks = stream.get("duration_ts")
+    time_base = stream.get("time_base")
+    if ticks not in (None, "N/A") and time_base not in (None, "N/A"):
+        duration = str(float(int(ticks) * Fraction(time_base)))
+    else:
+        duration = ""
+print(
+    stream.get("width", ""),
+    stream.get("height", ""),
+    stream.get("display_aspect_ratio", ""),
+    duration,
+    sep="\t",
+)
+' <<< "$metadata"
+    )" || {
+        printf 'Could not parse video metadata: %s\n' "$file" >&2
+        exit 1
+    }
+    IFS=$'\t' read -r source_width source_height display_aspect video_duration <<< "$parsed_metadata"
+    if [[ ! "$source_width" =~ ^[0-9]+$ || ! "$source_height" =~ ^[0-9]+$ ]] ||
+        ((source_width == 0 || source_height == 0)); then
+        printf 'Invalid video dimensions: %s\n' "$file" >&2
+        exit 1
+    fi
+    if [[ ! "$video_duration" =~ ^[0-9]+([.][0-9]+)?$ ]] ||
+        ! python3 -c 'import sys; raise SystemExit(float(sys.argv[1]) <= 0)' "$video_duration"; then
+        printf 'Could not determine a valid video duration; audio tail will not be trimmed: %s\n' "$file" >&2
+        video_duration=""
+    fi
+
+    dimensions="$(
+        python3 - "$source_width" "$source_height" "$display_aspect" "$max_width" "$max_height" <<'PY'
+import sys
+
+source_width, source_height, aspect, max_width, max_height = sys.argv[1:]
+try:
+    numerator, denominator = aspect.split(":")
+    ratio = float(numerator) / float(denominator)
+    if ratio <= 0:
+        raise ValueError
+except (ValueError, ZeroDivisionError):
+    ratio = int(source_width) / int(source_height)
+
+if ratio > int(max_width) / int(max_height):
+    width, height = int(max_width), int(max_width) / ratio
+else:
+    width, height = int(max_height) * ratio, int(max_height)
+
+width = max(2, int(width) // 2 * 2)
+height = max(2, int(height) // 2 * 2)
+print(f"{width}x{height}")
+PY
+    )"
+    IFS=x read -r video_width video_height <<< "$dimensions"
+    x_position=$((screen_width - video_width - right_margin))
+
+    mplayer_args=(-vo fbdev2 -softvol -volume 20 \
+        -vf "scale=${video_width}:${video_height}" \
+        -x "$video_width" -y "$video_height" \
+        -geometry "${x_position}:${top_margin}")
+    [[ -n "$video_duration" ]] && mplayer_args+=(-endpos "$video_duration")
+    ((loop)) && mplayer_args+=(-loop 0)
+    mplayer "${mplayer_args[@]}" -- "$file"
+done

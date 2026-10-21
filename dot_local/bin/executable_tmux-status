@@ -1,108 +1,61 @@
 #!/bin/sh
 
-# In the name of Allah, the most Gracious, the most Merciful.
+session=${1:-tmux}
+client_pid=${2:-}
 
-battery(){
-  SYSFS=/sys/class/power_supply
-  BATTERY=BAT0
-  MAINS=AC
-  POWER_NOW=$(cat $SYSFS/$BATTERY/power_now)
-  ENERGY_NOW=$(cat $SYSFS/$BATTERY/energy_now)
-  ENERGY_FULL=$(cat $SYSFS/$BATTERY/energy_full)
-  ENERGY_FULL_DESIGN=$(cat $SYSFS/$BATTERY/energy_full_design)
-  AC_ON=$(cat $SYSFS/$MAINS/online)
-
-  printf "%s%%" "$(( ENERGY_NOW * 100 / ENERGY_FULL ))"
-  if [ $AC_ON -ne 0 ] ; then
-    if [ $POWER_NOW -ne 0 ] ; then
-      printf " charging in %smin" "$(( (ENERGY_FULL - ENERGY_NOW) * 60 / POWER_NOW ))"
-    else
-      printf " not charging"
+case "$client_pid" in
+  ''|*[!0-9]*) ;;
+  *)
+    client_env="/proc/$client_pid/environ"
+    if [ -r "$client_env" ]; then
+      display=$(tr '\0' '\n' < "$client_env" | sed -n 's/^DISPLAY=//p' | head -n 1)
+      xauthority=$(tr '\0' '\n' < "$client_env" | sed -n 's/^XAUTHORITY=//p' | head -n 1)
+      if [ -n "$display" ] &&
+         env DISPLAY="$display" XAUTHORITY="$xauthority" xset q >/dev/null 2>&1; then
+        printf 'tmux: %s' "$session"
+        exit
+      fi
     fi
-  else
-    if [ $POWER_NOW -ne 0 ] ; then
-      printf " discharging in %smin" "$(( ENERGY_NOW * 60 / POWER_NOW ))"
-    else
-      printf " not discharging"
-    fi
+    ;;
+esac
+
+status=
+
+maildir=$HOME/.local/share/email/x1c/INBOX/new
+if [ -d "$maildir" ]; then
+  mail_count=$(find "$maildir" -type f 2>/dev/null | wc -l)
+  status="${status}mail ${mail_count}  "
+fi
+
+for battery in /sys/class/power_supply/*; do
+  [ -r "$battery/type" ] || continue
+  IFS= read -r type < "$battery/type"
+  [ "$type" = Battery ] || continue
+  if [ -r "$battery/capacity" ]; then
+    IFS= read -r capacity < "$battery/capacity"
+    case "$capacity" in
+      ''|*[!0-9]*) ;;
+      *)
+        battery_status=
+        if [ -r "$battery/status" ]; then
+          IFS= read -r battery_status < "$battery/status"
+        fi
+        status="${status}bat ${capacity}%${battery_status:+ $battery_status}  "
+        ;;
+    esac
   fi
-  printf " (%s%% of design)\n" "$(( ENERGY_FULL * 100 / ENERGY_FULL_DESIGN ))"
-}
+  break
+done
 
-wifi()
-{
-  iw dev wlp3s0 link | awk -F: '/SSID/ {print $NF}'
-}
-
-mails()
-{
-  mails_count=$(find $HOME/.local/share/email/x1c/INBOX/new -type f -printf . | wc -c)
-  if [ $mails_count -eq 0 ]
-  then
-    echo 'No new mails'
-  elif
-    [ $mails_count -eq 1 ]
-  then
-    echo ${mails_count} new mail
-  elif
-    [ $mails_count -gt 1 ]
-  then
-    echo ${mails_count} new mails
+if command -v iw >/dev/null 2>&1; then
+  wifi=$(iw dev 2>/dev/null | awk '$1 == "Interface" {print $2; exit}')
+  if [ -n "$wifi" ]; then
+    ssid=$(iw dev "$wifi" link 2>/dev/null | sed -n 's/^[[:space:]]*SSID: //p' | head -n 1)
+    [ -z "$ssid" ] || status="${status}wifi ${ssid}  "
   fi
-    
-}
+fi
 
+memory=$(free 2>/dev/null | awk '/^Mem:/ {if ($2 > 0) printf "%d%%", $3 * 100 / $2}')
+[ -z "$memory" ] || status="${status}ram ${memory}  "
 
-ram()
-{
-  ram=$(free | awk '/Mem:/ {print int($3/$2 * 100.0)}')
-  echo 'RAM: '$ram%
-}
-
-
-just_ram()
-{
-  echo $(free | awk '/Mem:/ {print int($3/$2 * 100.0)}')%
-  
-}
-
-
-date_time()
-{
-  date +'%a %d-%m %H:%M'
-}
-
-
-music()
-{
-  is_playing=$(mpc | grep "^\[playing\]" | awk '{print $1}')
-  how_long_the_tags_are=$(mpc | head -1 | wc -c)
-  shorter_tags=$(mpc --format='[%artist% - %title%]' current | head -1 | head -c 30)
-
-  if [ "$is_playing" = "[playing]" ]; then
-    if [ "$how_long_the_tags_are" -lt 30 ]; then
-      echo "$(mpc --format='[%artist% - %title%]' current)"
-    else
-      echo "$shorter_tags..."
-    fi
-  fi
-
-}
-
-
-cpu()
-{
-  cpu_usage=$(grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage}')
-  printf "%.0f" $cpu_usage
-}
-
-
-temperature()
-{
-  temp=$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))°c
-  echo $temp
-}
-
-
-
-echo "♥ `temperature` ♥  `mails` ♥  `wifi` ♥  `just_ram` ♥ `battery` ♥  `date_time` ♥"
+printf '%s%s' "$status" "$(date '+%a %d-%m %H:%M')"

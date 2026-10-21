@@ -43,7 +43,13 @@ alias ncm='ncmpcpp 2>/dev/null'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias ipy='ipython3'
-alias tmux='tmux has-session -t $USER || tmux new-session -s $USER &&  tmux -2 attach-session -t $USER'
+tmux() {
+    if (( $# == 0 )); then
+        command tmux new-session -A -s "$USER"
+    else
+        command tmux "$@"
+    fi
+}
 alias py='python3'
 alias cdw='cd ~/git/dwm; ls'
 #alias pyc='export _JAVA_AWT_WM_NONREPARENTING=1 ; $HOME/bin/pycharm/bin/pycharm.sh $1'

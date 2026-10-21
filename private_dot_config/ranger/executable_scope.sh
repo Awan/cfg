@@ -96,6 +96,12 @@ handle_image() {
 
         # Image
         image/*)
+            # Linux consoles lack image protocols; render ANSI art in the preview pane.
+            if [[ "${TERM}" == 'linux' ]] || \
+                [[ -n "${TMUX:-}" && "$(tmux display-message -p '#{client_termname}' 2>/dev/null)" == 'linux' ]]; then
+                img2txt --format=ansi --width="${PV_WIDTH}" --height="${PV_HEIGHT}" -- "${FILE_PATH}" && exit 5
+                exit 1
+            fi
             local orientation
             orientation="$( identify -format '%[EXIF:Orientation]\n' -- "${FILE_PATH}" )"
             # If orientation data is present and the image actually
