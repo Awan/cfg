@@ -1,0 +1,28 @@
+! Catppuccin Mocha palette matching Alacritty.
+! Keep the terminal background 80% opaque; text remains fully opaque.
+URxvt*foreground:           #CDD6F4
+URxvt*background:           [80]#1E1E2E
+URxvt*cursorColor:          #F5E0DC
+URxvt*cursorColor2:         #1E1E2E
+URxvt*highlightColor:       #F5E0DC
+URxvt*highlightTextColor:   #1E1E2E
+
+! Normal colors
+URxvt*color0:               #45475A
+URxvt*color1:               #F38BA8
+URxvt*color2:               #A6E3A1
+URxvt*color3:               #F9E2AF
+URxvt*color4:               #89B4FA
+URxvt*color5:               #F5C2E7
+URxvt*color6:               #94E2D5
+URxvt*color7:               #BAC2DE
+
+! Bright colors
+URxvt*color8:               #585B70
+URxvt*color9:               #F38BA8
+URxvt*color10:              #A6E3A1
+URxvt*color11:              #F9E2AF
+URxvt*color12:              #89B4FA
+URxvt*color13:              #F5C2E7
+URxvt*color14:              #94E2D5
+URxvt*color15:              #A6ADC8

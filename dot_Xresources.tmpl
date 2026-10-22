@@ -10,7 +10,7 @@
 ! ░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀
 
 
-#include ".urxvt/colors/wombat"
+#include ".urxvt/colors/catppuccin-mocha"
 !*.cursorColor:  #f8f8f2
 !*background:  #575757
 !*foreground:  #dcdccc
@@ -45,29 +45,17 @@
 ! if remote host is having problems with rxvt-unicode, copy
 ! /usr/share/terminfo/r/rxvt-unicode at hosts ~/.terminfo/r/rxvt-unicode
 
-URxvt*font                 :xft:mononoki\ Nerd\ Font:regular:size=17,\
-xft:DejaVuSansMono\ Nerd\ Font:size=15
-URxvt*ItalicFont           :xft:mononoki\ Nerd\ Font:italic:size=17,\
-xft:DejaVuSansMono\ Nerd\ Font:italic:size=15
-URxvt*boldFont             :xft:mononoki\ Nerd\ Font:bold:size=17,\
-xft:DejaVuSansMono\ Nerd\ Font:bold:size=15
-URxvt*boldItalicFont       :xft:mononoki\ Nerd\ Font:bold:italic:size=17,\
-xft:DejaVuSansMono\ Nerd\ Font:bold:italic:size=15
-!urxvt*font: -misc-tamsyn-bold-r-normal--20-145-100-100-c-100-iso8859-1
-!URxvt*font                 : xft:Terminus:size=17
-!URxvt*boldFont             : xft:Terminus:Bold:pixelsize=17
-!URxvt*italicFont           : xft:Terminus:Italic:pixelsize=17
-!URxvt*boldItalicFont       : xft:Terminus:Bold:Italic:pixelsize=17
-!URxvt*font                 : xft:DejaVuSansMono\ Nerd\ Font:size=17
-!URxvt*boldFont             : xft:DejaVuSansMono\ Nerd\ Font:Bold:size=17
-!URxvt*boldItalicFont       : xft:DejaVuSansMono\ Nerd\ Font:Bold:Italic:size=17
-URxvt*letterSpace          : -1
+URxvt*font                 :xft:BlexMono\ Nerd\ Font\ Mono:style=Regular:size=13
+URxvt*boldFont             :xft:BlexMono\ Nerd\ Font\ Mono:style=Bold:size=13
+URxvt*italicFont           :xft:BlexMono\ Nerd\ Font\ Mono:style=Italic:size=13
+URxvt*boldItalicFont       :xft:BlexMono\ Nerd\ Font\ Mono:style=Bold\ Italic:size=13
+URxvt*letterSpace          : 0
 URxvt*utf                  : 1
 URxvt*locale               : 1
 URxvt.imlocale             : en_US.UTF-8
 URxvt*termName             : xterm-256color
-URxvt*geometry             : 96x30
-URxvt*background           : #1B2B34
+URxvt*geometry             : 80x24
+! Background color and opacity are set by the included Catppuccin Mocha theme.
 URxvt*reverseVideo         : 0
 URxvt*loginShell           : 0
 URxvt*jumpScroll           : 1
@@ -102,14 +90,14 @@ URxvt*cursorBlink          : 0
 URxvt*pointerBlank         : 1
 !URxvt*iconFile             : /usr/local/share/icons/scalable/apps/utilities-terminal-symbolic.svg
 URxvt*pointerShape         : ul_angle
-URxvt*intensityStyles      : 1
-URxvt*saveLines            : 9999
+URxvt*intensityStyles      : 0
+URxvt*saveLines            : 10000
 URxvt*buffered             : 1
 URxvt*depth                : 32
 !URxvt*visual               : 0x16f
 URxvt*override-redirect    : 0
-URxvt*externalBorder       : 15
-URxvt*internalBorder       : 15
+URxvt*externalBorder       : 0
+URxvt*internalBorder       : 10
 URxvt*borderLess           : 0
 URxvt*lineSpace            : 0
 URxvt*skipBuiltinGlyphs    : 0
@@ -141,9 +129,9 @@ URxvt.keysym.C-S-Down: font-size:decglobal
 
 
 URxvt.termName:         rxvt-256color
-URxvt.cursorBlink:      true
+URxvt.cursorBlink:      false
 URxvt.scrollBar:        false
-URxvt.internalBorder:   8
+URxvt.internalBorder:   10
 
 !URxvt.font: -misc-tamsyn-medium-r-normal-*-15-108-100-100-c-80-iso8859-1
 !URxvt.boldFont: -misc-tamsyn-medium-r-normal-*-15-108-100-100-c-80-iso8859-1
