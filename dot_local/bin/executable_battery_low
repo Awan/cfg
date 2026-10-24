@@ -3,24 +3,51 @@
 # In the name of Allah, the Most Gracious, the Most Merciful.
 # Notify once when battery capacity reaches 30% or less while unplugged.
 
-battery_path=/sys/class/power_supply/BAT0/capacity
-charger_path=/sys/class/power_supply/AC/online
+power_supply_dir=${POWER_SUPPLY_DIR:-/sys/class/power_supply}
+battery_path=
+for supply_dir in "$power_supply_dir"/*; do
+  [ -r "$supply_dir/type" ] && [ -r "$supply_dir/capacity" ] || continue
+  IFS= read -r supply_type < "$supply_dir/type"
+  if [ "$supply_type" = Battery ]; then
+    battery_path="$supply_dir/capacity"
+    break
+  fi
+done
+
+if [ -z "$battery_path" ]; then
+  printf 'battery_low: no readable battery capacity found in %s.\n' "$power_supply_dir" >&2
+  exit 1
+fi
+
 threshold=30
 low_notification_sent=0
 
 while :; do
   battery_status=$(cat "$battery_path" 2>/dev/null) || battery_status=
-  charger_connected=$(cat "$charger_path" 2>/dev/null) || charger_connected=
+  charger_connected=
+  charger_seen=0
+  for supply_dir in "$power_supply_dir"/*; do
+    [ -r "$supply_dir/type" ] && [ -r "$supply_dir/online" ] || continue
+    IFS= read -r supply_type < "$supply_dir/type"
+    case "$supply_type" in
+      Mains|USB|USB_C|USB_PD|Wireless) ;;
+      *) continue ;;
+    esac
+
+    IFS= read -r charger_status < "$supply_dir/online"
+    case "$charger_status" in
+      1) charger_connected=1; break ;;
+      0) charger_seen=1; charger_connected=0 ;;
+      *) charger_connected=; break ;;
+    esac
+  done
   readings_valid=1
 
   case "$battery_status" in
     ''|*[!0-9]*) readings_valid=0 ;;
   esac
 
-  case "$charger_connected" in
-    0|1) ;;
-    *) readings_valid=0 ;;
-  esac
+  [ "$charger_seen" -eq 1 ] || [ "$charger_connected" = 1 ] || readings_valid=0
 
   if [ "$readings_valid" -eq 1 ]; then
     if [ "$battery_status" -le "$threshold" ] && [ "$charger_connected" -eq 0 ]; then

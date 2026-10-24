@@ -8,28 +8,31 @@
 #     ix -d ID
 
 ix() {
-    local opts
+    local -a opts=()
     local OPTIND
-    [ -f "$HOME/.netrc" ] && opts='-n'
+    local id=""
+    [ -f "$HOME/.netrc" ] && opts+=(-n)
     while getopts ":hd:i:n:" x; do
         case $x in
             h) echo "ix [-d ID] [-i ID] [-n N] [opts]"; return;;
-            d) $echo curl $opts -X DELETE ix.io/$OPTARG; return;;
-            i) opts="$opts -X PUT"; local id="$OPTARG";;
-            n) opts="$opts -F read:1=$OPTARG";;
+            d) curl "${opts[@]}" -X DELETE "https://ix.io/$OPTARG"; return;;
+            i) opts+=(-X PUT); id="$OPTARG";;
+            n) opts+=(-F "read:1=$OPTARG");;
+            \?) printf 'ix: invalid option -- %s\n' "$OPTARG" >&2; return 2;;
+            :) printf 'ix: option -%s requires an argument\n' "$OPTARG" >&2; return 2;;
         esac
     done
     shift $(($OPTIND - 1))
     [ -t 0 ] && {
-        local filename="$1"
-        shift
-        [ "$filename" ] && {
-            curl $opts -F f:1=@"$filename" $* ix.io/$id
+        if [ "$#" -gt 0 ]; then
+            local filename="$1"
+            shift
+            curl "${opts[@]}" -F "f:1=@$filename" "$@" "https://ix.io/$id"
             return
-        }
+        fi
         echo "^C to cancel, ^D to send."
     }
-    curl $opts -F f:1='<-' $* ix.io/$id
+    curl "${opts[@]}" -F 'f:1=<-' "$@" "https://ix.io/$id"
 }
 
-ix $*
+ix "$@"

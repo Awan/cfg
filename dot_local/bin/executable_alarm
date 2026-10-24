@@ -9,12 +9,31 @@ usage() {
   printf 'Example: %s "tomorrow 07:00" "$HOME/Music/alarm.mp3"\n' "${0##*/}" >&2
 }
 
+get_privilege_command() {
+  if [[ -n "${PRIVILEGE_COMMAND:-}" ]]; then
+    if command -v "$PRIVILEGE_COMMAND" >/dev/null 2>&1; then
+      printf '%s\n' "$PRIVILEGE_COMMAND"
+    else
+      printf 'alarm: privilege command not found: %s\n' "$PRIVILEGE_COMMAND" >&2
+      return 127
+    fi
+  elif command -v doas >/dev/null 2>&1; then
+    printf '%s\n' doas
+  elif command -v sudo >/dev/null 2>&1; then
+    printf '%s\n' sudo
+  else
+    printf '%s\n' 'alarm: neither doas nor sudo is installed.' >&2
+    return 127
+  fi
+}
+
 if [[ "${1:-}" == stop ]]; then
   if (( $# != 1 )); then
     usage
     exit 2
   fi
-  sudo rtcwake -d rtc0 -m disable
+  privilege_command=$(get_privilege_command) || exit $?
+  "$privilege_command" rtcwake -d rtc0 -m disable
   exit $?
 fi
 
@@ -41,5 +60,6 @@ if (( wake_epoch <= $(date +%s) )); then
   exit 2
 fi
 
-sudo rtcwake -d rtc0 -m mem -t "$wake_epoch" -v &&
+privilege_command=$(get_privilege_command) || exit $?
+"$privilege_command" rtcwake -d rtc0 -m mem -t "$wake_epoch" -v &&
   mpv --no-resume-playback --loop-file "$alarm_sound"

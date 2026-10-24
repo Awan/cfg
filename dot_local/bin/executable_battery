@@ -1,32 +1,64 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # Show battery percentage, estimated charging/discharging time, and design capacity.
-# The values below assume a Linux power supply named BAT0 with energy counters.
+# This estimate uses Linux power-supply energy counters and power readings.
 
-SYSFS=/sys/class/power_supply
-BATTERY=BAT0
-MAINS=AC
+SYSFS=${POWER_SUPPLY_DIR:-/sys/class/power_supply}
+BATTERY_DIR=
+for supply_dir in "$SYSFS"/*; do
+  [[ -r "$supply_dir/type" ]] || continue
+  supply_type=$(<"$supply_dir/type")
+  if [[ "$supply_type" == Battery ]]; then
+    BATTERY_DIR=$supply_dir
+    break
+  fi
+done
+
+if [[ -z "$BATTERY_DIR" ]]; then
+  printf 'battery: no battery found in %s.\n' "$SYSFS" >&2
+  exit 1
+fi
 
 for field in power_now energy_now energy_full energy_full_design; do
-  path="$SYSFS/$BATTERY/$field"
+  path="$BATTERY_DIR/$field"
   if [[ ! -r "$path" ]]; then
     printf 'battery: required reading is unavailable: %s\n' "$path" >&2
     exit 1
   fi
 done
 
-if [[ ! -r "$SYSFS/$MAINS/online" ]]; then
-  printf 'battery: AC status is unavailable: %s\n' "$SYSFS/$MAINS/online" >&2
+POWER_SOURCE_FOUND=0
+AC_ON=0
+for supply_dir in "$SYSFS"/*; do
+  [[ -r "$supply_dir/type" && -r "$supply_dir/online" ]] || continue
+  supply_type=$(<"$supply_dir/type")
+  case "$supply_type" in
+    Mains|USB|USB_C|USB_PD|Wireless) ;;
+    *) continue ;;
+  esac
+
+  POWER_SOURCE_FOUND=1
+  source_online=$(<"$supply_dir/online")
+  if [[ "$source_online" == 1 ]]; then
+    AC_ON=1
+    break
+  elif [[ "$source_online" != 0 ]]; then
+    printf 'battery: invalid online reading: %s\n' "$source_online" >&2
+    exit 1
+  fi
+done
+if (( ! POWER_SOURCE_FOUND )); then
+  printf 'battery: no readable external power source found in %s.\n' "$SYSFS" >&2
   exit 1
 fi
 
-POWER_NOW=$(<"$SYSFS/$BATTERY/power_now")
-ENERGY_NOW=$(<"$SYSFS/$BATTERY/energy_now")
-ENERGY_FULL=$(<"$SYSFS/$BATTERY/energy_full")
-ENERGY_FULL_DESIGN=$(<"$SYSFS/$BATTERY/energy_full_design")
-AC_ON=$(<"$SYSFS/$MAINS/online")
+POWER_NOW=$(<"$BATTERY_DIR/power_now")
+ENERGY_NOW=$(<"$BATTERY_DIR/energy_now")
+ENERGY_FULL=$(<"$BATTERY_DIR/energy_full")
+ENERGY_FULL_DESIGN=$(<"$BATTERY_DIR/energy_full_design")
 
-for value in "$POWER_NOW" "$ENERGY_NOW" "$ENERGY_FULL" "$ENERGY_FULL_DESIGN" "$AC_ON"; do
+for value in "$POWER_NOW" "$ENERGY_NOW" "$ENERGY_FULL" "$ENERGY_FULL_DESIGN"; do
   if [[ ! "$value" =~ ^[0-9]+$ ]]; then
     printf 'battery: invalid numeric reading: %s\n' "$value" >&2
     exit 1

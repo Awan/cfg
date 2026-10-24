@@ -67,8 +67,15 @@
 
 INTERFACE_AP="uap0"
 HOSTAPD_CONF="/etc/hostapd/hostapd.conf"
+HOSTAPD_RUNTIME_CONF="/run/chezmoi-hotspot-hostapd.conf"
 SUBNET="192.168.150.1/24"
-PRIVILEGE_COMMAND="${PRIVILEGE_COMMAND:-doas}"
+if [ -z "${PRIVILEGE_COMMAND:-}" ]; then
+    if command -v doas >/dev/null 2>&1; then
+        PRIVILEGE_COMMAND=doas
+    else
+        PRIVILEGE_COMMAND=sudo
+    fi
+fi
 
 check_privilege_command() {
     if ! command -v "$PRIVILEGE_COMMAND" >/dev/null 2>&1; then
@@ -91,17 +98,27 @@ get_uplink_interface() {
 
 HOTSPOT_NAT_CHAIN="CFG_HOTSPOT_NAT"
 HOTSPOT_FWD_CHAIN="CFG_HOTSPOT_FWD"
+IP_FORWARDING_STATE="/run/chezmoi-hotspot-ipv4-forwarding"
+HOSTAPD_PID_FILE="/run/chezmoi-hotspot-hostapd.pid"
+DNSMASQ_STARTED_STATE="/run/chezmoi-hotspot-started-dnsmasq"
+AP_INTERFACE_STATE="/run/chezmoi-hotspot-created-interface"
 
 get_channel() {
-    # Extract frequency from iw link and map to 2.4GHz channel
-    FREQ=$(iw dev "$INTERFACE_PHY" link | awk '/freq:/ {print $2}' | cut -d. -f1)
-    if [ -n "$FREQ" ]; then
-        # Channel calculation for 2.4GHz (2412MHz = Ch 1)
-        CHANNEL=$(( (FREQ - 2407) / 5 ))
-        echo "$CHANNEL"
+    frequency=$(iw dev "$INTERFACE_PHY" link | awk '/freq:/ {print int($2); exit}')
+
+    if [ -z "$frequency" ]; then
+        echo 6
+    elif [ "$frequency" -ge 2412 ] && [ "$frequency" -le 2484 ]; then
+        if [ "$frequency" -eq 2484 ]; then
+            echo 14
+        else
+            echo $(( (frequency - 2407) / 5 ))
+        fi
+    elif [ "$frequency" -ge 5000 ] && [ "$frequency" -le 5900 ]; then
+        echo $(( (frequency - 5000) / 5 ))
     else
-        # Default fallback channel if not connected
-        echo "6"
+        printf 'hotspot: unsupported upstream Wi-Fi frequency: %s MHz\n' "$frequency" >&2
+        return 1
     fi
 }
 
@@ -126,32 +143,82 @@ start_hotspot() {
     echo "Using Internet uplink: $INTERFACE_UPLINK"
 
     # Dynamically match channel of main interface
-    CURR_CHAN=$(get_channel)
+    CURR_CHAN=$(get_channel) || exit 1
     echo "Syncing hostapd to Channel $CURR_CHAN..."
-    run_privileged sed -i "s/^channel=.*/channel=$CURR_CHAN/" "$HOSTAPD_CONF"
+    if ! run_privileged grep -Eq '^[[:space:]]*channel=' "$HOSTAPD_CONF"; then
+        echo "Error: $HOSTAPD_CONF must contain a channel= setting." >&2
+        exit 1
+    fi
+    if [ "$CURR_CHAN" -gt 14 ] &&
+       ! run_privileged grep -Eq '^[[:space:]]*hw_mode=[[:space:]]*a([[:space:]#]|$)' "$HOSTAPD_CONF"; then
+        echo "Error: upstream is on 5 GHz, but $HOSTAPD_CONF must set hw_mode=a." >&2
+        exit 1
+    fi
+    if ! run_privileged install -m 0600 -- "$HOSTAPD_CONF" "$HOSTAPD_RUNTIME_CONF" ||
+       ! run_privileged sed -i "s/^channel=.*/channel=$CURR_CHAN/" "$HOSTAPD_RUNTIME_CONF"; then
+        echo "Error: failed to prepare temporary hostapd configuration." >&2
+        run_privileged rm -f -- "$HOSTAPD_RUNTIME_CONF"
+        exit 1
+    fi
+
+    # Save the prior setting so stop_hotspot can restore it.
+    if ! run_privileged test -e "$IP_FORWARDING_STATE"; then
+        forwarding_before=$(sysctl -n net.ipv4.ip_forward) || exit 1
+        case "$forwarding_before" in
+            0|1) ;;
+            *) echo "Error: unexpected IPv4 forwarding value: $forwarding_before" >&2; exit 1 ;;
+        esac
+        printf '%s\n' "$forwarding_before" |
+            run_privileged tee "$IP_FORWARDING_STATE" >/dev/null || exit 1
+    fi
 
     # Enable IP forwarding
-    run_privileged sysctl -w net.ipv4.ip_forward=1 >/dev/null
+    if ! run_privileged sysctl -w net.ipv4.ip_forward=1 >/dev/null; then
+        echo "Error: failed to enable IPv4 forwarding." >&2
+        stop_hotspot
+        exit 1
+    fi
 
     # Unblock RFKILL
     run_privileged rfkill unblock wlan 2>/dev/null
 
-    # Cleanup old interface if present
-    run_privileged ip link set "$INTERFACE_AP" down 2>/dev/null
-    run_privileged iw dev "$INTERFACE_AP" del 2>/dev/null
+    # Remove a stale AP interface only when this script recorded creating it.
+    if run_privileged iw dev "$INTERFACE_AP" info >/dev/null 2>&1; then
+        if run_privileged test -f "$AP_INTERFACE_STATE"; then
+            run_privileged ip link set "$INTERFACE_AP" down 2>/dev/null
+            run_privileged iw dev "$INTERFACE_AP" del 2>/dev/null
+            run_privileged rm -f -- "$AP_INTERFACE_STATE"
+        else
+            echo "Error: interface $INTERFACE_AP already exists and is not owned by this script." >&2
+            stop_hotspot
+            exit 1
+        fi
+    fi
 
     # Create virtual AP interface
-    run_privileged iw dev "$INTERFACE_PHY" interface add "$INTERFACE_AP" type __ap
+    if ! run_privileged iw dev "$INTERFACE_PHY" interface add "$INTERFACE_AP" type __ap; then
+        echo "Error: failed to create access point interface $INTERFACE_AP." >&2
+        stop_hotspot
+        exit 1
+    fi
+    if ! printf '%s\n' created | run_privileged tee "$AP_INTERFACE_STATE" >/dev/null; then
+        echo "Error: failed to record ownership of interface $INTERFACE_AP." >&2
+        run_privileged iw dev "$INTERFACE_AP" del 2>/dev/null
+        stop_hotspot
+        exit 1
+    fi
 
     # Bring up the interface
-    run_privileged ip link set "$INTERFACE_AP" up
-
-    # Assign IP address
-    run_privileged ip addr flush dev "$INTERFACE_AP"
-    run_privileged ip addr add "$SUBNET" dev "$INTERFACE_AP"
+    if ! run_privileged ip link set "$INTERFACE_AP" up ||
+       ! run_privileged ip addr flush dev "$INTERFACE_AP" ||
+       ! run_privileged ip addr add "$SUBNET" dev "$INTERFACE_AP"; then
+        echo "Error: failed to configure access point interface $INTERFACE_AP." >&2
+        stop_hotspot
+        exit 1
+    fi
 
     # Start hostapd
-    if ! run_privileged hostapd -B "$HOSTAPD_CONF"; then
+    if ! run_privileged hostapd -B -P "$HOSTAPD_PID_FILE" "$HOSTAPD_RUNTIME_CONF"; then
         echo "Error: hostapd failed to start."
         stop_hotspot
         exit 1
@@ -159,19 +226,47 @@ start_hotspot() {
 
     # Apply only the rules owned by this hotspot script.
     cleanup_firewall
-    run_privileged iptables -t nat -N "$HOTSPOT_NAT_CHAIN"
-    run_privileged iptables -N "$HOTSPOT_FWD_CHAIN"
-    run_privileged iptables -t nat -A "$HOTSPOT_NAT_CHAIN" -o "$INTERFACE_UPLINK" -j MASQUERADE
-    run_privileged iptables -A "$HOTSPOT_FWD_CHAIN" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-    run_privileged iptables -A "$HOTSPOT_FWD_CHAIN" -i "$INTERFACE_AP" -o "$INTERFACE_UPLINK" -j ACCEPT
-    run_privileged iptables -t nat -A POSTROUTING -j "$HOTSPOT_NAT_CHAIN"
-    run_privileged iptables -A FORWARD -j "$HOTSPOT_FWD_CHAIN"
-    run_privileged nft add rule inet filter input iifname "$INTERFACE_AP" udp dport 67 accept comment "CFG_HOTSPOT_DHCP"
-    run_privileged nft add rule inet filter forward iifname "$INTERFACE_AP" oifname "$INTERFACE_UPLINK" accept comment "CFG_HOTSPOT_FWD"
-    run_privileged nft add rule inet filter forward iifname "$INTERFACE_UPLINK" oifname "$INTERFACE_AP" ct state established,related accept comment "CFG_HOTSPOT_FWD"
+    if ! run_privileged iptables -t nat -N "$HOTSPOT_NAT_CHAIN" ||
+       ! run_privileged iptables -N "$HOTSPOT_FWD_CHAIN" ||
+       ! run_privileged iptables -t nat -A "$HOTSPOT_NAT_CHAIN" -o "$INTERFACE_UPLINK" -j MASQUERADE ||
+       ! run_privileged iptables -A "$HOTSPOT_FWD_CHAIN" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT ||
+       ! run_privileged iptables -A "$HOTSPOT_FWD_CHAIN" -i "$INTERFACE_AP" -o "$INTERFACE_UPLINK" -j ACCEPT ||
+       ! run_privileged iptables -t nat -A POSTROUTING -j "$HOTSPOT_NAT_CHAIN" ||
+       ! run_privileged iptables -A FORWARD -j "$HOTSPOT_FWD_CHAIN"; then
+        echo "Error: failed to configure hotspot iptables rules." >&2
+        stop_hotspot
+        exit 1
+    fi
+    if run_privileged nft list chain inet filter input >/dev/null 2>&1; then
+        run_privileged nft add rule inet filter input iifname "$INTERFACE_AP" udp dport 67 accept comment "CFG_HOTSPOT_DHCP" || {
+            echo "Error: failed to add the hotspot DHCP firewall rule." >&2
+            stop_hotspot
+            exit 1
+        }
+    fi
+    if run_privileged nft list chain inet filter forward >/dev/null 2>&1; then
+        run_privileged nft add rule inet filter forward iifname "$INTERFACE_AP" oifname "$INTERFACE_UPLINK" accept comment "CFG_HOTSPOT_FWD" || {
+            echo "Error: failed to add the hotspot forwarding firewall rule." >&2
+            stop_hotspot
+            exit 1
+        }
+        run_privileged nft add rule inet filter forward iifname "$INTERFACE_UPLINK" oifname "$INTERFACE_AP" ct state established,related accept comment "CFG_HOTSPOT_FWD" || {
+            echo "Error: failed to add the hotspot return-traffic firewall rule." >&2
+            stop_hotspot
+            exit 1
+        }
+    fi
 
-    # Restart DHCP/DNS server
-    run_privileged systemctl restart dnsmasq
+    # Start dnsmasq only if it was not already active, and remember ownership.
+    if ! run_privileged systemctl is-active --quiet dnsmasq; then
+        printf '%s\n' started |
+            run_privileged tee "$DNSMASQ_STARTED_STATE" >/dev/null || exit 1
+        if ! run_privileged systemctl start dnsmasq; then
+            echo "Error: dnsmasq failed to start." >&2
+            stop_hotspot
+            exit 1
+        fi
+    fi
     echo "Hotspot started successfully on Channel $CURR_CHAN."
 }
 
@@ -182,10 +277,10 @@ cleanup_firewall() {
     run_privileged iptables -F "$HOTSPOT_FWD_CHAIN" 2>/dev/null || true
     run_privileged iptables -t nat -X "$HOTSPOT_NAT_CHAIN" 2>/dev/null || true
     run_privileged iptables -X "$HOTSPOT_FWD_CHAIN" 2>/dev/null || true
-    for handle in $(run_privileged nft -a list chain inet filter input | awk '/comment "CFG_HOTSPOT_DHCP"/ {print $NF}'); do
+    for handle in $(run_privileged nft -a list chain inet filter input 2>/dev/null | awk '/comment "CFG_HOTSPOT_DHCP"/ {print $NF}'); do
         run_privileged nft delete rule inet filter input handle "$handle"
     done
-    for handle in $(run_privileged nft -a list chain inet filter forward | awk '/comment "CFG_HOTSPOT_FWD"/ {print $NF}'); do
+    for handle in $(run_privileged nft -a list chain inet filter forward 2>/dev/null | awk '/comment "CFG_HOTSPOT_FWD"/ {print $NF}'); do
         run_privileged nft delete rule inet filter forward handle "$handle"
     done
 }
@@ -193,11 +288,47 @@ cleanup_firewall() {
 stop_hotspot() {
     check_privilege_command || exit $?
     echo "Stopping Hotspot..."
-    run_privileged killall hostapd 2>/dev/null
-    run_privileged ip link set "$INTERFACE_AP" down 2>/dev/null
-    run_privileged iw dev "$INTERFACE_AP" del 2>/dev/null
-    run_privileged systemctl stop dnsmasq 2>/dev/null
+    if run_privileged test -f "$HOSTAPD_PID_FILE"; then
+        hostapd_pid=$(run_privileged cat "$HOSTAPD_PID_FILE")
+        case "$hostapd_pid" in
+            ''|*[!0-9]*)
+                printf 'hotspot: invalid PID in %s; leaving it for inspection.\n' \
+                    "$HOSTAPD_PID_FILE" >&2
+                ;;
+            *)
+                if [ "$(run_privileged cat "/proc/$hostapd_pid/comm" 2>/dev/null)" = hostapd ]; then
+                    run_privileged kill "$hostapd_pid"
+                fi
+                run_privileged rm -f -- "$HOSTAPD_PID_FILE"
+                ;;
+        esac
+    fi
+    run_privileged rm -f -- "$HOSTAPD_RUNTIME_CONF"
+    if run_privileged test -f "$AP_INTERFACE_STATE"; then
+        run_privileged ip link set "$INTERFACE_AP" down 2>/dev/null
+        if run_privileged iw dev "$INTERFACE_AP" del 2>/dev/null; then
+            run_privileged rm -f -- "$AP_INTERFACE_STATE"
+        fi
+    fi
+    if run_privileged test -f "$DNSMASQ_STARTED_STATE"; then
+        if run_privileged systemctl stop dnsmasq; then
+            run_privileged rm -f -- "$DNSMASQ_STARTED_STATE"
+        fi
+    fi
     cleanup_firewall
+    if run_privileged test -f "$IP_FORWARDING_STATE"; then
+        forwarding_before=$(run_privileged cat "$IP_FORWARDING_STATE")
+        case "$forwarding_before" in
+            0|1)
+                run_privileged sysctl -w "net.ipv4.ip_forward=$forwarding_before" >/dev/null &&
+                    run_privileged rm -f -- "$IP_FORWARDING_STATE"
+                ;;
+            *)
+                printf 'hotspot: invalid saved forwarding value in %s; leaving it for inspection.\n' \
+                    "$IP_FORWARDING_STATE" >&2
+                ;;
+        esac
+    fi
     echo "Hotspot stopped."
 }
 

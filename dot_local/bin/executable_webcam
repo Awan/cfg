@@ -4,20 +4,18 @@
 # ░▓▓▓▓▓▓▓▓▓▓
 # ░░░░░░░░░░
 
-# This script is an effort to use mpv for screencasts when you wanna include your video too.
+# Show the camera as a small, borderless overlay at the lower-right corner.
+camera_device=${WEBCAM_DEVICE:-/dev/video0}
 
-# lets start mpv, edit the video path how your camera is appearing in your file system.
+if ! command -v mpv >/dev/null 2>&1; then
+    printf '%s\n' 'webcam: mpv is not installed.' >&2
+    exit 127
+fi
+if [ ! -e "$camera_device" ]; then
+    printf 'webcam: camera device not found: %s\n' "$camera_device" >&2
+    exit 1
+fi
 
-mpv /dev/video0 --geometry=640x480 --no-osc --title="webcam" --no-input-default-bindings --input-conf=/dev/null --no-resume-playback --really-quiet &
-
-# camera is started in full screen, now lets resize it.
-sleep 1;
-
-camWindow=`xdotool search webcam`
-xdotool windowsize "$camWindow" 489 367
-
-# lets move it to the bottom right.
-
-xdotool windowmove "$camWindow" 1109 511
-
-exit 0
+mpv "$camera_device" --geometry=-10-10 --autofit=30% --no-osc \
+    --no-border --ontop --title=webcam --no-input-default-bindings \
+    --input-conf=/dev/null --no-resume-playback --really-quiet &

@@ -7,15 +7,45 @@
 
 # A simple script to take screenshots and copy it to clipboard
 
-x=1920
-y=1080
-idx=1
-width=$(( $x ))
-height=$(( $y ))
-start_x=$(( $idx * $x ))
-start_y=$(( 0 ))
+if ! display_info=$(xrandr --query); then
+	printf '%s\n' 'pic: could not read display layout from xrandr.' >&2
+	exit 1
+fi
+
+screen_size=$(printf '%s\n' "$display_info" | awk '
+  /^Screen [0-9]+:/ {
+    for (i = 1; i <= NF; i++) {
+      if ($i == "current" && $(i + 2) == "x") {
+        height = $(i + 3)
+        sub(/,$/, "", height)
+        print $(i + 1), height
+        exit
+      }
+    }
+  }
+')
+if [[ ! $screen_size =~ ^[0-9]+[[:space:]][0-9]+$ ]]; then
+	printf '%s\n' 'pic: xrandr did not report a usable screen size.' >&2
+	exit 1
+fi
+read -r width height <<< "$screen_size"
+printf 'Capturing full XRandR screen (%sx%s), including all active monitors.\n' \
+	"$width" "$height"
+
+temp_dir=$(mktemp -d "${TMPDIR:-/tmp}/pic.XXXXXX") || {
+	printf '%s\n' 'pic: could not create a private temporary directory.' >&2
+	exit 1
+}
+trap 'rm -rf -- "$temp_dir"' EXIT
 
 sleep 1
-import -window root -quality 100 /tmp/scrot.png
-convert /tmp/scrot.png -crop ${width}x${height}+${start_x}+${start_y} /tmp/scrot-modified.png 2>/dev/null
-cat /tmp/scrot-modified.png | xclip -selection clipboard -t image/png
+if ! import -window root -quality 100 "$temp_dir/screenshot.png"; then
+	printf '%s\n' 'pic: failed to capture the screen.' >&2
+	exit 1
+fi
+if ! convert "$temp_dir/screenshot.png" \
+	-crop "${width}x${height}+0+0" +repage "$temp_dir/crop.png" 2>/dev/null; then
+	printf '%s\n' 'pic: failed to size the screenshot to the XRandR screen.' >&2
+	exit 1
+fi
+xclip -selection clipboard -t image/png < "$temp_dir/crop.png"

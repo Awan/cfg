@@ -1,19 +1,23 @@
 #!/usr/bin/env bash
 
-cd /tmp 
-scripts_dir="/tmp"
-script_file="$scripts_dir/$1"
-
-
-if [[ -f $script_file ]]; then
-	vim +3 $script_file
-else
-	echo '#!/usr/bin/env python3
-	
-
-
-
-		' > $script_file
-	chmod +x $script_file
-	vim +3 $script_file
+if [[ $# -ne 1 || -z $1 || $1 == */* || $1 == . || $1 == .. ]]; then
+	printf 'Usage: %s <filename-without-path>\n' "$0" >&2
+	exit 2
 fi
+
+script_file="/tmp/$1"
+
+if [[ -L $script_file || ( -e $script_file && ! -f $script_file ) ]]; then
+	printf 'pi: refusing non-regular file: %s\n' "$script_file" >&2
+	exit 1
+fi
+
+if [[ ! -e $script_file ]]; then
+	if ! (umask 077; set -o noclobber; printf '#!/usr/bin/env python3\n\n\n' > "$script_file"); then
+		printf 'pi: could not create file safely: %s\n' "$script_file" >&2
+		exit 1
+	fi
+	chmod +x -- "$script_file" || exit 1
+fi
+
+vim +3 -- "$script_file"

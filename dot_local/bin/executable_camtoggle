@@ -1,7 +1,22 @@
 #!/bin/bash
 # Use mpv as camera
 
-pkill -f /dev/video0 || mpv --no-osc --no-input-default-bindings --input-conf=/dev/null --geometry=-0-0 --autofit=30%  --title="webcam" /dev/video0
+shopt -s nullglob
+video_devices=(/dev/video*)
+camera_device=${WEBCAM_DEVICE:-/dev/video0}
+
+if [[ ! -e $camera_device && -z ${WEBCAM_DEVICE:-} ]]; then
+    camera_device=${video_devices[0]:-}
+fi
+
+if [[ -z $camera_device || ! -e $camera_device ]]; then
+    printf 'camtoggle: no camera device found; set WEBCAM_DEVICE to select one.\n' >&2
+    exit 1
+fi
+
+pkill -f -- "$camera_device" ||
+    mpv --no-osc --no-input-default-bindings --input-conf=/dev/null \
+        --geometry=-0-0 --autofit=30% --title="webcam" "$camera_device"
 
 
 #pkill -f /dev/video0 || mpv --no-osc --geometry=-0-0 --autofit=30%  --title="webcam" /dev/video0

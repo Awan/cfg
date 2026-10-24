@@ -3,10 +3,19 @@
 # In the name of Allah, the Most Gracious, the Most Merciful.
 # Send a one-shot warning when battery capacity is 70% or lower.
 
-battery_path=/sys/class/power_supply/BAT0/capacity
+power_supply_dir=${POWER_SUPPLY_DIR:-/sys/class/power_supply}
+battery_path=
+for supply_dir in "$power_supply_dir"/*; do
+  [[ -r "$supply_dir/type" && -r "$supply_dir/capacity" ]] || continue
+  supply_type=$(<"$supply_dir/type")
+  if [[ "$supply_type" == Battery ]]; then
+    battery_path="$supply_dir/capacity"
+    break
+  fi
+done
 
-if [[ ! -r "$battery_path" ]]; then
-  printf 'batLow: battery capacity is unavailable: %s\n' "$battery_path" >&2
+if [[ -z "$battery_path" ]]; then
+  printf 'batLow: no readable battery capacity found in %s.\n' "$power_supply_dir" >&2
   exit 1
 fi
 

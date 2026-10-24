@@ -3,7 +3,13 @@
 # Interactively mount an unmounted partition, selecting an existing mountpoint
 # or creating one with elevated privileges when requested.
 
-PRIVILEGE_COMMAND="${PRIVILEGE_COMMAND:-doas}"
+if [ -z "${PRIVILEGE_COMMAND:-}" ]; then
+    if command -v doas >/dev/null 2>&1; then
+        PRIVILEGE_COMMAND=doas
+    else
+        PRIVILEGE_COMMAND=sudo
+    fi
+fi
 
 if pgrep -x dmenu >/dev/null 2>&1; then
     exit 0

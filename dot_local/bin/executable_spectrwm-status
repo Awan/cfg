@@ -162,17 +162,20 @@ while :; do
 
     read_memory
 
-    brightness_dir=/sys/class/backlight/intel_backlight
     brightness_pct='?'
-
-    if [ -r "$brightness_dir/brightness" ] && [ -r "$brightness_dir/max_brightness" ]; then
-        read -r brightness < "$brightness_dir/brightness"
-        read -r max_brightness < "$brightness_dir/max_brightness"
+    for brightness_dir in "${BACKLIGHT_SYSFS_DIR:-/sys/class/backlight}"/*; do
+        [ -r "$brightness_dir/brightness" ] &&
+            [ -r "$brightness_dir/max_brightness" ] || continue
+        IFS= read -r brightness < "$brightness_dir/brightness"
+        IFS= read -r max_brightness < "$brightness_dir/max_brightness"
+        case "$brightness" in ''|*[!0-9]*) continue ;; esac
+        case "$max_brightness" in ''|*[!0-9]*) continue ;; esac
 
         if [ "$max_brightness" -gt 0 ]; then
             brightness_pct=$(((brightness * 100 + max_brightness / 2) / max_brightness))
+            break
         fi
-    fi
+    done
 
     if [ "$wifi_refresh" -le 0 ]; then
         wifi_interface=

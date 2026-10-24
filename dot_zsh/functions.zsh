@@ -339,7 +339,20 @@ shebang() {
 }
 
 webcam () {
-    mplayer -cache 128 -tv driver=v4l2:width=350:height=350 -vo xv tv:// -noborder -geometry "+1340+445" -ontop -quiet 2>/dev/null >/dev/null
+    local camera_device=${WEBCAM_DEVICE:-/dev/video0}
+
+    if ! (( $+commands[mpv] )); then
+        printf '%s\n' 'webcam: mpv is not installed.' >&2
+        return 127
+    fi
+    if [[ ! -e "$camera_device" ]]; then
+        printf 'webcam: camera device not found: %s\n' "$camera_device" >&2
+        return 1
+    fi
+
+    mpv --no-osc --no-terminal --no-border --ontop \
+        --autofit=30% --geometry=-10-10 --title=webcam \
+        --really-quiet "$camera_device"
 }
 
 psg () {
@@ -354,15 +367,15 @@ weather() {
 }
 
 cnsp () {
-    doas /etc/rc.d/crond stop
+    "$zero" /etc/rc.d/crond stop
   sleep 1
-    doas /etc/rc.d/crond status
+    "$zero" /etc/rc.d/crond status
 }
 
 cnst () {
-    doas /etc/rc.d/crond start
+    "$zero" /etc/rc.d/crond start
   sleep 1
-    doas /etc/rc.d/crond status
+    "$zero" /etc/rc.d/crond status
 }
 
 ko () {
@@ -405,7 +418,7 @@ pg()
 
 ap()
 {
-    doas apt update && doas apt full-upgrade -V
+    "$zero" apt update && "$zero" apt full-upgrade -V
 }
 
 
@@ -420,17 +433,17 @@ gct() {
 
 sne ()
 {
-    doas systemctl --now enable $1
+    "$zero" systemctl --now enable "$1"
 }
 
 snd ()
 {
-    doas systemctl stop $1
+    "$zero" systemctl stop "$1"
 }
 
 gadd ()
 {
-    doas gpasswd -a "$USER" "$1"
+    "$zero" gpasswd -a "$USER" "$1"
 }
 
 ed ()
@@ -578,29 +591,15 @@ apkun ()
 }
 
 lightmin ()
-# ⚠️  INTEL-SPECIFIC: Set brightness to minimum
-# Requires: /sys/class/backlight/intel_backlight/
-# On other systems, check: ls /sys/class/backlight/
+# Set brightness to approximately the previous Intel minimum (100 of 852).
 {
-    if [[ ! -w /sys/class/backlight/intel_backlight/brightness ]]; then
-        printf '%s\n' 'Intel backlight device is unavailable.' >&2
-        return 1
-    fi
-    printf '%s\n' 100 |
-        doas tee /sys/class/backlight/intel_backlight/brightness
+    "$zero" light -S 12
 }
 
 lightmax ()
-# ⚠️  INTEL-SPECIFIC: Set brightness to maximum
-# Requires: /sys/class/backlight/intel_backlight/
-# On other systems, check: ls /sys/class/backlight/
+# Set brightness to maximum.
 {
-    if [[ ! -w /sys/class/backlight/intel_backlight/brightness ]]; then
-        printf '%s\n' 'Intel backlight device is unavailable.' >&2
-        return 1
-    fi
-    printf '%s\n' 852 |
-        doas tee /sys/class/backlight/intel_backlight/brightness
+    "$zero" light -S 100
 }
 
 
@@ -678,7 +677,7 @@ aur ()
 
 ports ()
 {
-    doas lsof -nPi | grep -i listen | awk '{print substr($1, 1, 7), substr($3, 1, 7), $5, $8, $9}' | sort | uniq | tr ' ' '\t'
+    "$zero" lsof -nPi | grep -i listen | awk '{print substr($1, 1, 7), substr($3, 1, 7), $5, $8, $9}' | sort | uniq | tr ' ' '\t'
 }
 
 listcon ()
@@ -817,7 +816,7 @@ mkuser () {
   # audio, video and wheel group
 
   username="$1"
-    doas useradd -m -G wheel,input,audio,video -s `which zsh` "$username" && doas passwd "$username"
+    "$zero" useradd -m -G wheel,input,audio,video -s "$(command -v zsh)" "$username" && "$zero" passwd "$username"
 
 }
 

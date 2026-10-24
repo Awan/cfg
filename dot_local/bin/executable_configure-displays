@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+query=$(xrandr --query) || {
+  printf '%s\n' 'configure-displays: unable to query XRandR outputs.' >&2
+  exit 1
+}
+
+mapfile -t connected_outputs < <(
+  printf '%s\n' "$query" | awk '$2 == "connected" { print $1 }'
+)
+
+if ((${#connected_outputs[@]} == 0)); then
+  printf '%s\n' 'configure-displays: no connected outputs found.' >&2
+  exit 1
+fi
+
+# Prefer the built-in panel on laptops; use the first output on desktops.
+primary_output=
+has_internal_panel=0
+for output in "${connected_outputs[@]}"; do
+  case "$output" in
+    eDP*|LVDS*|DSI*)
+      primary_output=$output
+      has_internal_panel=1
+      break
+      ;;
+  esac
+done
+
+if [[ -z "$primary_output" ]]; then
+  primary_output=${connected_outputs[0]}
+fi
+
+if ((has_internal_panel)); then
+  xrandr --output "$primary_output" --auto --pos 0x0 --primary \
+    --brightness 1.0 --gamma 0.76:0.75:0.68
+else
+  xrandr --output "$primary_output" --auto --pos 0x0 --primary
+fi
+
+previous_output=$primary_output
+for output in "${connected_outputs[@]}"; do
+  [[ "$output" == "$primary_output" ]] && continue
+  xrandr --output "$output" --auto --right-of "$previous_output"
+  previous_output=$output
+done

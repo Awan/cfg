@@ -6,4 +6,4 @@ Target = *
 
 [Action]
 When = PostTransaction
-Exec = /usr/bin/bash -c '/usr/bin/pacman -Qq > /home/ak/.config/pacman/installed_packages'
+Exec = /usr/bin/runuser -u ak -- /usr/bin/bash -c '/usr/bin/pacman -Qq > /home/ak/.config/pacman/installed_packages'

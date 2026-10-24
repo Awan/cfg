@@ -10,7 +10,13 @@ fi
 
 # Remap Caps Lock to Escape on virtual-console logins.
 if [[ -o login && ${TTY:-} == /dev/tty<-> && -r "$HOME/.loadkeysrc" && $+commands[loadkeys] ]]; then
-    doas loadkeys "$HOME/.loadkeysrc"
+    if [[ $+commands[doas] ]]; then
+        doas loadkeys "$HOME/.loadkeysrc"
+    elif [[ $+commands[sudo] ]]; then
+        sudo loadkeys "$HOME/.loadkeysrc"
+    else
+        print -u2 'zprofile: cannot load console keymap; neither doas nor sudo is installed.'
+    fi
 fi
 
 # Start X at login on tty1

@@ -1,6 +1,12 @@
 #!/bin/sh
 # In the name of Allah, the Most Gracious, the Most Merciful.
 
+# Configure outputs before assigning desktops to connected monitors.
+if ! "$HOME/.local/bin/configure-displays"; then
+  printf '%s\n' 'bspwmrc: display configuration failed.' >&2
+  exit 1
+fi
+
 # Distribute the ten desktops across connected monitors.
 
 multimonitors()

@@ -28,21 +28,8 @@ if [ -f "$HOME/.fehbg" ]; then
 fi
 
 # Identify the desktop session to applications that use XDG metadata.
-export DESKTOP_SESSION=spectrwm
+export DESKTOP_SESSION="${DESKTOP_SESSION:-spectrwm}"
 export XDG_SESSION_TYPE=x11
-
-# Configure the built-in display and its gamma settings.
-tab() {
-  xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --brightness 1.0 \
-    --gamma 0.76:0.75:0.68 "$@"
-}
-
-# Configure the external HDMI display alongside the laptop panel.
-# shellcheck disable=SC2120
-tabular() {
-  tab
-  xrandr --output HDMI-2 --mode 1280x1024 --pos 1920x0 "$@"
-}
 
 # SXHKD contains BSPWM-specific bindings and is not used by Spectrwm.
 [ "$DESKTOP_SESSION" = bspwm ] && run sxhkd
@@ -62,8 +49,21 @@ xsetroot -cursor_name heart
 xset +fp "$user_fonts_dir" && xset fp rehash &
 xset +fp /usr/share/fonts/ && xset fp rehash &
 
-# Adjust touchpad pointer acceleration.
-xinput --set-prop "Synaptics TM3381-002" "libinput Accel Speed" 0.5 &
+# Adjust acceleration on the first recognized touchpad that exposes the
+# libinput property. Device names vary across hardware and Xorg drivers.
+if command -v xinput >/dev/null 2>&1; then
+    xinput --list --name-only | while IFS= read -r device; do
+        case "$device" in
+            *[Tt]ouchpad*|*[Tt]rackpad*|*Synaptics*|*ELAN*|*Elan*|*elan*)
+                if xinput --list-props "$device" 2>/dev/null |
+                    grep -q 'libinput Accel Speed'; then
+                    xinput --set-prop "$device" "libinput Accel Speed" 0.5
+                    break
+                fi
+                ;;
+        esac
+    done &
+fi
 
 # Hide the pointer when it has been idle.
 run unclutter --ignore-scrolling --fork --timeout 1
@@ -75,12 +75,7 @@ run xss-lock -n "$HOME/.local/bin/dim_screen" --transfer-sleep-lock -- "$HOME/.l
 # Start the notification daemon.
 run dunst -c "$HOME/.config/dunst/dunstrc"
 
-# Select the display layout based on the connected monitor count.
-if [ "$(xrandr -q | awk '/ connected / {print $1}' | wc -l)" -eq 1 ]; then
-  tab --primary
-else
-  # shellcheck disable=SC2119
-  tabular
-fi
+# Configure connected displays before the window manager starts.
+"$HOME/.local/bin/configure-displays"
 
 # vim: ft=sh

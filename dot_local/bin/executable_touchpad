@@ -4,4 +4,13 @@
 # Reload the PS/2 touchpad driver to reinitialize a stuck device.
 # This restarts the driver; it does not toggle the touchpad on or off.
 
-doas modprobe -r psmouse && doas modprobe psmouse
+if command -v doas >/dev/null 2>&1; then
+    privilege_command=doas
+elif command -v sudo >/dev/null 2>&1; then
+    privilege_command=sudo
+else
+    printf '%s\n' 'touchpad: neither doas nor sudo is installed.' >&2
+    exit 127
+fi
+
+"$privilege_command" modprobe -r psmouse && "$privilege_command" modprobe psmouse

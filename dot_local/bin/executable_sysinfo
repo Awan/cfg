@@ -4,6 +4,15 @@
 fg=$'\e[39m'
 ac=$'\e[38;5;243m'
 re=$'\e[37m'
+logo=$'\e[38;5;39m'
+
+# CPU display settings; callers can override these through the environment.
+: "${machine_arch:=$(uname -m)}"
+: "${speed_type:=bios_limit}"
+: "${cpu_cores:=off}"
+: "${cpu_brand:=on}"
+: "${cpu_speed:=off}"
+: "${speed_shorthand:=off}"
 
 # get os
 get_os() {
@@ -84,11 +93,18 @@ get_cpu() {
     speed_dir="/sys/devices/system/cpu/cpu0/cpufreq"
     # Get CPU speed.
     if [[ -d "$speed_dir" ]]; then
-      # Fallback to bios_limit if $speed_type fails.
-      speed="$(< "${speed_dir}/${speed_type}")" ||\
-      speed="$(< "${speed_dir}/scaling_max_freq")" ||\
-      speed="$(< "${speed_dir}/cpuinfo_max_freq")"
-      speed="$((speed / 1000))"
+      for speed_file in "$speed_dir/$speed_type" \
+          "$speed_dir/scaling_max_freq" "$speed_dir/cpuinfo_max_freq"; do
+        if [[ -r "$speed_file" ]]; then
+          speed="$(< "$speed_file")"
+          break
+        fi
+      done
+      if [[ $speed =~ ^[0-9]+$ ]]; then
+        speed="$((speed / 1000))"
+      else
+        speed=""
+      fi
     else
       speed="$(awk -F ': |\\.' '/cpu MHz|^clock/ {printf $2; exit}' "$cpu_file")"
       speed="${speed/MHz}"
@@ -173,12 +189,12 @@ get_cpu() {
 
 cat << EOF
 ${re}
-  [0m [0m[0m [0m[0m [0m[0;31m▄[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[0;31m▄[0m[0m [0m[0m [0m[0m  ${ac}os:${fg} ${os} ${re}
-  [0m [0m[0;31m▄[0m[31;41m▀[0m[31;41m▀[0m[0;40;31m▀[0m[0m [0m[0m [0m[0m [0m[0m [0m[0;40;31m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[0;31m▄[0m[0m  ${ac}kernel:${fg} ${kernel} ${re}
-  [31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[0m [0m[0m [0m[0;31m▄[0m[0;31m▄[0m[0;40;31m▀[0m[0m [0m[0m [0m[0m [0m[0;40;31m▀[0m[31;41m▀[0m[31;41m▀[0m[0m  ${ac}model:${fg} ${model} ${re}
-  [31;41m▀[0m[31;41m▀[0m[0m [0m[0m [0m[0m [0m[31;41m▀[0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[31;41m▀[0m[31;41m▀[0m[0m  ${ac}uptime:${fg} ${uptime} ${re}
-  [31;41m▀[0m[0m [0m[0m [0m[0m [0m[0m [0m[31;41m▀[0m[0;31m▄[0m[0m [0m[0m [0m[0m [0m[0m [0m[0;31m▄[0m[31;41m▀[0m[0;40;31m▀[0m[0m  ${ac}packages:${fg} ${packages} ${re}
-  [31;41m▀[0m[0;31m▄[0m[0m [0m[0m [0m[0m [0m[0m [0m[0;40;31m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[31;41m▀[0m[0;40;31m▀[0m[0m [0m[0m [0m[0m  ${ac}wm:${fg} ${wm} ${re}
-  [0;40;31m▀[0m[31;41m▀[0m[31;41m▀[0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m  ${ac}cpu:${fg} ${cpu} ${re}
-  [0m [0m[0m [0m[0;40;31m▀[0m[0;40;31m▀[0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m [0m[0m  ${ac}ram:${fg} ${ram}
+${logo}       /\\${re}  ${ac}os:${fg} ${os} ${re}
+${logo}      /  \\${re}  ${ac}kernel:${fg} ${kernel} ${re}
+${logo}     /    \\${re}  ${ac}model:${fg} ${model} ${re}
+${logo}    /      \\${re}  ${ac}uptime:${fg} ${uptime} ${re}
+${logo}   /   /\\   \\${re}  ${ac}packages:${fg} ${packages} ${re}
+${logo}  /   /  \\   \\${re}  ${ac}wm:${fg} ${wm} ${re}
+${logo} /___/____\\___\\${re}  ${ac}cpu:${fg} ${cpu} ${re}
+${logo} \\___________/  ${ac}ram:${fg} ${ram} ${re}
 EOF

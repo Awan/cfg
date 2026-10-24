@@ -42,18 +42,6 @@ export DESKTOP_SESSION=bspwm
 # No tty
 export XDG_SESSION_TYPE=x11
 
-tab() {
-  # Configure only laptop's screen if no external monitor is connected.
-  xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --brightness 1.0 \
-    --gamma 0.76:0.75:0.68 "$@"
-}
-
-tabular() {
-  # Configure external monitor if exists
-  tab
-  xrandr --output HDMI-2 --mode 1280x1024 --pos 1920x0 "$@"
-}
-
 # Start sxhkd
 
 sxhkd &
@@ -116,14 +104,6 @@ pactl set-source-mute alsa_input.pci-0000_00_1b.0.analog-stereo true &
 # Set brightness to 30 at boot
 
 light -S 30
-
-# Configure multihead.
-
-if [ "$(xrandr -q | awk '/ connected / {print $1}' | wc -l)" -eq 1 ]; then
-  tab --primary
-else
-  tabular
-fi
 
 # Start a scratchpad
 

@@ -56,14 +56,15 @@ notify_volume() {
 }
 
 notify_brightness() {
-    dir=/sys/class/backlight/intel_backlight
-    [ -r "$dir/brightness" ] && [ -r "$dir/max_brightness" ] || return 1
-
-    read -r current < "$dir/brightness"
-    read -r maximum < "$dir/max_brightness"
-    [ "$maximum" -gt 0 ] || return 1
-
-    percentage=$(((current * 100 + maximum / 2) / maximum))
+    brightness_info=$(light -G 2>/dev/null) || return 1
+    percentage=$(printf '%s\n' "$brightness_info" | awk '
+        /^[0-9]+([.][0-9]+)?$/ && $0 >= 0 && $0 <= 100 {
+            printf "%d\n", $0 + 0.5
+            found = 1
+            exit
+        }
+        END { if (!found) exit 1 }
+    ') || return 1
 
     dunstify -a Spectrwm -i display-brightness -t 1200 \
         -h "int:value:$percentage" \

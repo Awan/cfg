@@ -1,16 +1,38 @@
 #!/bin/sh
 
 # In the name of Allah, the Most Gracious, the Most Merciful.
-# Print the first thermal zone temperature in degrees Celsius.
+# Print a CPU thermal zone temperature, falling back to the first readable zone.
 
-temperature_file=/sys/class/thermal/thermal_zone0/temp
+thermal_sysfs_dir=${THERMAL_SYSFS_DIR:-/sys/class/thermal}
+temperature_file=
+fallback_file=
+
+for type_file in "$thermal_sysfs_dir"/thermal_zone*/type; do
+  [ -r "$type_file" ] || continue
+  candidate_file=${type_file%/type}/temp
+  [ -r "$candidate_file" ] || continue
+  [ -n "$fallback_file" ] || fallback_file=$candidate_file
+
+  IFS= read -r zone_type < "$type_file" || continue
+  case "$zone_type" in
+    *cpu*|*CPU*|*pkg*|*Package*|*package*)
+      temperature_file=$candidate_file
+      break
+      ;;
+  esac
+done
+
+if [ -z "$temperature_file" ]; then
+  temperature_file=$fallback_file
+fi
 
 if [ ! -r "$temperature_file" ]; then
-  printf 'temperature: reading is unavailable: %s\n' "$temperature_file" >&2
+  printf 'temperature: no readable thermal-zone temperature found in %s.\n' \
+    "$thermal_sysfs_dir" >&2
   exit 1
 fi
 
-temperature_millidegrees=$(cat "$temperature_file") || exit 1
+IFS= read -r temperature_millidegrees < "$temperature_file" || exit 1
 case "$temperature_millidegrees" in
   ''|*[!0-9]*)
     printf 'temperature: invalid sensor reading: %s\n' "$temperature_millidegrees" >&2
