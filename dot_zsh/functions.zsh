@@ -183,19 +183,58 @@ aactomp4()
 }
 
 
+_xrandr_desktop_size () {
+  local screen_size
+
+  screen_size=$(xrandr --query | awk '
+    /current [0-9]+ x [0-9]+/ {
+      for (i = 1; i <= NF; i++) {
+        if ($i == "current") {
+          height = $(i + 3)
+          sub(/,$/, "", height)
+          print $(i + 1) "x" height
+          exit
+        }
+      }
+    }
+  ')
+
+  if [[ ! $screen_size =~ ^[0-9]+x[0-9]+$ ]]; then
+    return 1
+  fi
+  print -r -- "$screen_size"
+}
+
+
 hdimg () {
-# converts images into HD wallpapers 1920x1080
-# Accepts globbing as first argument e.g. jpg as first argument will convert all
-# jpgs into HD images and saves them into new dir resized in same directory
+  # Resize matching images to the current XRandR desktop size for wallpapers.
+  local ext="$1" screen_size file
+  local -a files
 
-  ext="$1"
-  mkdir resized 2>/dev/null
+  if [[ -z "$ext" ]]; then
+    printf 'Usage: hdimg EXTENSION\n' >&2
+    return 2
+  fi
 
-  for file in *."$ext"
-  do
-    convert "$file" -resize 1920x1080! resized/"$(basename "$file" ".$ext")"."$ext"
+  screen_size=$(_xrandr_desktop_size) || {
+    printf 'hdimg: could not determine the current screen size from xrandr.\n' >&2
+    return 1
+  }
+
+  files=( *."$ext"(N) )
+  if (( ${#files} == 0 )); then
+    printf 'hdimg: no *.%s files found.\n' "$ext" >&2
+    return 1
+  fi
+
+  if ! mkdir -p -- resized; then
+    printf 'hdimg: could not create output directory: resized\n' >&2
+    return 1
+  fi
+
+  for file in "${files[@]}"; do
+    convert "$file" -resize "${screen_size}!" "resized/${file%.$ext}.$ext" || return
   done
-
 }
 
 
@@ -714,10 +753,8 @@ purgegit () {
 
 wallpaper ()
 {
-  # Convert an image into wallpaper using imagemagick
-  # and then sets it as wallpapers using feh
-  convert "${1}" -gravity Center -resize 1920 -crop 1920x1080+0+0 png:- \
-    | feh --bg-scale -
+  # Fill the current desktop, preserving aspect ratio and cropping as needed.
+  feh --bg-fill -- "$1"
 }
 
 gr()
@@ -1063,34 +1100,78 @@ fi
 
 ryt()
 {
-# record a youtube video from my screen
-    today="$HOME/you/yt-"$(date +%F_%T)
-    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :1 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.support':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv
+    local output_dir today screen_size x_display
 
- }
+    screen_size=$(_xrandr_desktop_size) || {
+        print -u2 'ryt: could not determine the current screen size from xrandr'
+        return 1
+    }
+
+    output_dir="$HOME/you"
+    if ! mkdir -p -- "$output_dir"; then
+        print -u2 "ryt: could not create output directory: $output_dir"
+        return 1
+    fi
+
+    today="$output_dir/yt-$(date +%F_%T)"
+    x_display=${DISPLAY:-:0.0}
+    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -video_size "$screen_size" -i "$x_display" -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='https\://abdullah.support | YouTube\: @AbdullahSolutions':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" "$today.mkv"
+
+}
 
 rtty()
 {
     # record my tty for youtube
-    today="$HOME/you/yt-"$(date +%F_%T)
-    ffmpeg -f pulse -ac 2 -i default -f fbdev -r 30 -i /dev/fb0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.support':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" $today.mkv
+    local output_dir today
+
+    output_dir="$HOME/you"
+    if ! mkdir -p -- "$output_dir"; then
+        print -u2 "rtty: could not create output directory: $output_dir"
+        return 1
+    fi
+
+    today="$output_dir/yt-$(date +%F_%T)"
+    ffmpeg -f pulse -ac 2 -i default -f fbdev -r 30 -i /dev/fb0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 -vf "drawtext=text='Follow me on   AbdullahToday  AbdullahToday  AbdullahToday  https\://abdullah.support':y=h-line_h-50:x=if(eq(t\,0)\,w\,if(lt(x\,(0-tw))\,w\,x-4)):fontsize=50:fontfile=/usr/share/fonts/nerd-fonts-complete/TTF/Go Mono Nerd Font Complete.ttf:fontcolor=white" "$today.mkv"
 }
 
 rarea()
 {
     # Record an area of the screen. Hacksaw is the dependency.
-    today="$HOME/you/yt-"$(date +%F_%T)
+    local output_dir today x_display w h x y
+
+    output_dir="$HOME/you"
+    if ! mkdir -p -- "$output_dir"; then
+        print -u2 "rarea: could not create output directory: $output_dir"
+        return 1
+    fi
+
+    today="$output_dir/yt-$(date +%F_%T)"
+    x_display=${DISPLAY:-:0.0}
     hacksaw -n | IFS=+x read -r w h x y
     w=$((w + w % 2))
     h=$((h + h % 2))
-    ffmpeg -v 16 -r 30 -f x11grab -s "${w}x${h}" -i ":0.0+$x,$y" -preset ultrafast -c:v h264 -pix_fmt yuv420p -crf 20 $today.mkv
+    ffmpeg -v 16 -r 30 -f x11grab -s "${w}x${h}" -i "${x_display}+$x,$y" -preset ultrafast -c:v h264 -pix_fmt yuv420p -crf 20 "$today.mkv"
 }
 
 rec4mobi()
 {
     # Record videos for mobile devices
-    today="$HOME/you/mob-"$(date +%F_%T)
-    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -s 1920x1080 -i :1 -acodec aac -b:a 320k -ar 48000 -vcodec libx264 -preset ultrafast -b:v 15M -threads 4 -pix_fmt yuv420p -cpu-used 0 $today.mp4
+    local output_dir today screen_size x_display
+
+    screen_size=$(_xrandr_desktop_size) || {
+        print -u2 'rec4mobi: could not determine the current screen size from xrandr'
+        return 1
+    }
+
+    output_dir="$HOME/you"
+    if ! mkdir -p -- "$output_dir"; then
+        print -u2 "rec4mobi: could not create output directory: $output_dir"
+        return 1
+    fi
+
+    today="$output_dir/mob-$(date +%F_%T)"
+    x_display=${DISPLAY:-:0.0}
+    ffmpeg -f pulse -ac 2 -i default -f x11grab -r 30 -video_size "$screen_size" -i "$x_display" -acodec aac -b:a 320k -ar 48000 -vcodec libx264 -preset ultrafast -b:v 15M -threads 4 -pix_fmt yuv420p -cpu-used 0 "$today.mp4"
 
 }
 
