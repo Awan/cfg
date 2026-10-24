@@ -20,39 +20,6 @@ In the name of Allah, the most Gracious, the most Merciful.
 
 walls_dir="$HOME/pix/wall/art"
 
-if ! display_info=$(xrandr --query); then
-    printf '%s\n' 'i3lock: could not read display size from xrandr.' >&2
-    exit 1
-fi
-display_size=$(printf '%s\n' "$display_info" | awk '
-    /^Screen [0-9]+:/ {
-        for (i = 1; i <= NF; i++) {
-            if ($i == "current" && $(i + 2) == "x") {
-                height = $(i + 3)
-                sub(/,$/, "", height)
-                print $(i + 1) "x" height
-                exit
-            }
-        }
-    }
-')
-case "$display_size" in
-    ''|*[!0-9x]*|x*|*x)
-        printf '%s\n' 'i3lock: xrandr returned an invalid screen size.' >&2
-        exit 1
-        ;;
-esac
-case "$display_size" in
-    *x*x*)
-        printf '%s\n' 'i3lock: xrandr returned an invalid screen size.' >&2
-        exit 1
-        ;;
-esac
-if ! command -v i3lock >/dev/null 2>&1; then
-    printf '%s\n' 'i3lock: i3lock executable not found in PATH.' >&2
-    exit 127
-fi
-
 # Check if wallpapers directory exists and isn't empty
 
 if [ -d "$walls_dir" ]; then
@@ -60,10 +27,6 @@ if [ -d "$walls_dir" ]; then
     random_wall=$(find "$walls_dir" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | shuf -n 1)
 else
     echo "Directory $walls_dir does not exist." >&2
-    exit 1
-fi
-if [ -z "$random_wall" ]; then
-    printf 'i3lock: no wallpapers found in %s.\n' "$walls_dir" >&2
     exit 1
 fi
 
@@ -75,7 +38,5 @@ revert() {
 trap revert HUP INT TERM
 xset +dpms dpms 5 5 5
 dunstctl set-paused true
-magick "$random_wall" -resize "${display_size}^" -gravity center \
-    -extent "$display_size" -depth 8 RGB:- |
-    i3lock -enf --raw "${display_size}:rgb" --image /dev/stdin
+magick "$random_wall" -resize '1366x768^' -gravity center -extent 1366x768 -depth 8 RGB:- | /usr/bin/i3lock -enf --raw 1366x768:rgb --image /dev/stdin
 revert
