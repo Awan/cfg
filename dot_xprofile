@@ -45,7 +45,7 @@ xcape -e 'Super_L=Escape'
 run picom -b --config "$HOME/.config/picom/picom.conf"
 
 # Set the cursor and register user and system font directories.
-xsetroot -cursor_name heart
+run xsetroot -cursor_name heart
 xset +fp "$user_fonts_dir" && xset fp rehash &
 xset +fp /usr/share/fonts/ && xset fp rehash &
 
