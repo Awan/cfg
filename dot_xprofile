@@ -57,7 +57,7 @@ if command -v xinput >/dev/null 2>&1; then
             *[Tt]ouchpad*|*[Tt]rackpad*|*Synaptics*|*ELAN*|*Elan*|*elan*)
                 if xinput --list-props "$device" 2>/dev/null |
                     grep -q 'libinput Accel Speed'; then
-                    xinput --set-prop "$device" "libinput Accel Speed" 0.5
+                    xinput --set-prop "$device" "libinput Accel Speed" 0.8
                     break
                 fi
                 ;;
