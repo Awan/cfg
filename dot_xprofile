@@ -21,12 +21,6 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
-# Restore the wallpaper previously selected with feh.
-if [ -f "$HOME/.fehbg" ]; then
-  # shellcheck disable=SC1090
-  . "$HOME/.fehbg"
-fi
-
 # Identify the desktop session to applications that use XDG metadata.
 export DESKTOP_SESSION="${DESKTOP_SESSION:-spectrwm}"
 export XDG_SESSION_TYPE=x11
@@ -76,6 +70,12 @@ run dunst -c "$HOME/.config/dunst/dunstrc"
 
 # Configure connected displays before the window manager starts.
 "$HOME/.local/bin/configure-displays"
+
+# Restore the wallpaper previously selected with feh.
+if [ -f "$HOME/.fehbg" ]; then
+  # shellcheck disable=SC1090
+  . "$HOME/.fehbg"
+fi
 
 # Set the cursor after the window manager has started.
 (sleep 1; xsetroot -cursor_name heart) &
