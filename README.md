@@ -4,6 +4,7 @@
   </a>
 </p>
 
+![spectrwm-multimonitor](https://github.com/user-attachments/assets/8997e1a7-94be-4b21-9bda-bab70bb043a6)
 ![spectrwm](https://github.com/user-attachments/assets/7455f68a-e10d-47b9-83af-4fb32ea68bab)
 ![bspwm](https://user-images.githubusercontent.com/42554663/100934595-ca9d7e00-3510-11eb-8943-4061ea1040ea.png)
 ![dwm](https://user-images.githubusercontent.com/42554663/62346164-8827f380-b50e-11e9-8538-a25c46c51af9.png)
