@@ -44,8 +44,7 @@ xcape -e 'Super_L=Escape'
 # Start the X11 compositor.
 run picom -b --config "$HOME/.config/picom/picom.conf"
 
-# Set the cursor and register user and system font directories.
-run xsetroot -cursor_name heart
+# Register user and system font directories.
 xset +fp "$user_fonts_dir" && xset fp rehash &
 xset +fp /usr/share/fonts/ && xset fp rehash &
 
@@ -77,5 +76,8 @@ run dunst -c "$HOME/.config/dunst/dunstrc"
 
 # Configure connected displays before the window manager starts.
 "$HOME/.local/bin/configure-displays"
+
+# Set the cursor after the window manager has started.
+(sleep 1; xsetroot -cursor_name heart) &
 
 # vim: ft=sh
