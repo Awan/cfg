@@ -25,6 +25,13 @@ walls_dir="$HOME/pix/wall/art"
 if [ -d "$walls_dir" ]; then
     # select a random wallpaper safely handling spaces
     random_wall=$(find "$walls_dir" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | shuf -n 1)
+    # Detect the combined dimensions of the active X screen.
+    screen_size=$(xrandr --current | awk '/^Screen 0:/ { for (i=1; i<=NF; i++) if ($i == "current") { gsub(/,/, "", $(i+3)); print $(i+1) "x" $(i+3); exit } }')
+
+    if [ -z "$screen_size" ]; then
+        printf '%s\n' "Unable to determine X screen dimensions." >&2
+    exit 1
+    fi
 else
     echo "Directory $walls_dir does not exist." >&2
     exit 1
@@ -38,5 +45,5 @@ revert() {
 trap revert HUP INT TERM
 xset +dpms dpms 5 5 5
 dunstctl set-paused true
-magick "$random_wall" -resize '1366x768^' -gravity center -extent 1366x768 -depth 8 RGB:- | /usr/bin/i3lock -enf --raw 1366x768:rgb --image /dev/stdin
+magick "$random_wall" -resize "${screen_size}^" -gravity center -extent "$screen_size" -depth 8 RGB:- | /usr/bin/i3lock -enf -t --raw "${screen_size}:rgb" --image /dev/stdin
 revert
