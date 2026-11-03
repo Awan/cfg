@@ -311,11 +311,15 @@ My current graphical setup is based on:
 * **a native C status program** integrated into Spectrwm's bar
 
 The status program reports music, audio, Wi-Fi, Maildir, CPU, memory, brightness,
-battery, and temperature. MPD, audio, Wi-Fi, and Maildir changes use event
-notifications; sampled system metrics refresh every five seconds. Chezmoi builds
-the program from `dot_local/share/spectrwm-status/spectrwm-status.c` when its
-source changes. Building requires a C compiler, `pkg-config`, and the PulseAudio,
-MPD client, and libnl development libraries.
+battery, temperature, and pending package updates. MPD, audio, Wi-Fi, and
+Maildir changes use event notifications; sampled system metrics refresh every
+five seconds. Package updates are checked hourly for official repositories and
+installed AUR packages. AUR checks compare published package versions and do
+not detect upstream VCS changes that have not been published as a new AUR
+version. Chezmoi builds the program from
+`dot_local/share/spectrwm-status/spectrwm-status.c` when its source changes.
+Building requires a C compiler, `pkg-config`, and the PulseAudio, MPD client,
+and libnl development libraries.
 
 The repository also contains configurations for other window managers, compositors, terminal emulators and status bars that are not necessarily part of the current setup. These are retained as optional configurations rather than indicating that every application is currently installed or in use.
 

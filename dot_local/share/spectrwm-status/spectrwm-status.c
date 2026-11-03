@@ -18,6 +18,7 @@
 #include <pulse/pulseaudio.h>
 #include <pthread.h>
 #include <signal.h>
+#include <spawn.h>
 #include <stdbool.h>
 #include <stdatomic.h>
 #include <stdint.h>
@@ -27,11 +28,16 @@
 #include <sys/stat.h>
 #include <sys/inotify.h>
 #include <sys/time.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #define MPD_RECONNECT_SECONDS 2
 #define STATUS_REFRESH_SECONDS 5
+#define UPDATE_REFRESH_SECONDS 3600
+#define UPDATE_CHECK_TIMEOUT_SECONDS 300
 #define MUSIC_TITLE_WORD_LIMIT 4
+
+extern char **environ;
 
 struct music_snapshot {
     char title[1024];
@@ -48,6 +54,7 @@ struct audio_snapshot {
 
 static pthread_mutex_t music_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t wifi_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t updates_mutex = PTHREAD_MUTEX_INITIALIZER;
 static struct music_snapshot music;
 static struct audio_snapshot audio = {
     .icon = "",
@@ -61,6 +68,8 @@ static char pulse_sink_name[256];
 static uint32_t pulse_sink_index = PA_INVALID_INDEX;
 static atomic_uint mail_count = ATOMIC_VAR_INIT(0);
 static atomic_bool mail_watch_active = ATOMIC_VAR_INIT(false);
+static int repository_update_count = -1;
+static int aur_update_count = -1;
 static int status_pipe[2] = {-1, -1};
 static unsigned long long previous_cpu_total;
 static unsigned long long previous_cpu_idle;
@@ -91,6 +100,213 @@ notify_status_change(void)
         write(status_pipe[1], &notification, sizeof(notification)) < 0 &&
         errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR)
         perror("spectrwm-status: status notification");
+}
+
+static bool
+run_update_check(unsigned *repository_count, unsigned *aur_count)
+{
+    const char *home = getenv("HOME");
+    char executable[PATH_MAX];
+    char output[128] = "";
+    size_t output_length = 0;
+    int descriptors[2];
+    int error;
+    pid_t child;
+    posix_spawn_file_actions_t actions;
+    posix_spawnattr_t attributes;
+    short spawn_flags = POSIX_SPAWN_SETPGROUP;
+    char *arguments[2];
+    bool output_closed = false;
+    bool child_exited = false;
+    int child_status = 0;
+    unsigned elapsed = 0;
+
+    if (home == NULL ||
+        snprintf(executable, sizeof(executable),
+            "%s/.local/bin/spectrwm-updates", home) >=
+            (int)sizeof(executable)) {
+        fprintf(stderr, "spectrwm-status: invalid HOME for update checker\n");
+        return false;
+    }
+
+    if (pipe(descriptors) < 0) {
+        perror("spectrwm-status: create update-check pipe");
+        return false;
+    }
+    if (fcntl(descriptors[0], F_SETFD, FD_CLOEXEC) < 0 ||
+        fcntl(descriptors[1], F_SETFD, FD_CLOEXEC) < 0) {
+        perror("spectrwm-status: configure update-check pipe");
+        close(descriptors[0]);
+        close(descriptors[1]);
+        return false;
+    }
+
+    error = posix_spawn_file_actions_init(&actions);
+        if (error != 0) {
+            fprintf(stderr, "spectrwm-status: configure update checker: %s\n",
+                strerror(error));
+            close(descriptors[0]);
+            close(descriptors[1]);
+            return false;
+        }
+        error = posix_spawn_file_actions_adddup2(&actions, descriptors[1],
+            STDOUT_FILENO);
+        if (error == 0)
+            error = posix_spawn_file_actions_addclose(&actions, descriptors[0]);
+        if (error == 0)
+            error = posix_spawn_file_actions_addclose(&actions, descriptors[1]);
+        if (error != 0) {
+            fprintf(stderr, "spectrwm-status: configure update checker: %s\n",
+                strerror(error));
+            posix_spawn_file_actions_destroy(&actions);
+            close(descriptors[0]);
+            close(descriptors[1]);
+            return false;
+        }
+
+        error = posix_spawnattr_init(&attributes);
+        if (error != 0) {
+            fprintf(stderr, "spectrwm-status: configure update-check process: %s\n",
+                strerror(error));
+            posix_spawn_file_actions_destroy(&actions);
+            close(descriptors[0]);
+            close(descriptors[1]);
+            return false;
+        }
+        error = posix_spawnattr_setpgroup(&attributes, 0);
+        if (error == 0)
+            error = posix_spawnattr_setflags(&attributes, spawn_flags);
+        if (error != 0) {
+            fprintf(stderr, "spectrwm-status: configure update-check process: %s\n",
+                strerror(error));
+            posix_spawnattr_destroy(&attributes);
+            posix_spawn_file_actions_destroy(&actions);
+            close(descriptors[0]);
+            close(descriptors[1]);
+            return false;
+        }
+
+        arguments[0] = executable;
+    arguments[1] = NULL;
+    error = posix_spawn(&child, executable, &actions, &attributes,
+        arguments, environ);
+    posix_spawnattr_destroy(&attributes);
+    posix_spawn_file_actions_destroy(&actions);
+    close(descriptors[1]);
+    if (error != 0) {
+        fprintf(stderr, "spectrwm-status: start update checker: %s\n",
+            strerror(error));
+        close(descriptors[0]);
+        return false;
+    }
+
+    while (!output_closed || !child_exited) {
+        struct pollfd descriptor = {
+            .fd = descriptors[0],
+            .events = POLLIN,
+        };
+        int poll_result;
+
+        if (atomic_load_explicit(&stopping, memory_order_relaxed)) {
+            kill(-child, SIGTERM);
+            while (waitpid(child, &child_status, 0) < 0 && errno == EINTR)
+                ;
+            close(descriptors[0]);
+            return false;
+        }
+        if (elapsed >= UPDATE_CHECK_TIMEOUT_SECONDS) {
+            fprintf(stderr, "spectrwm-status: update check timed out\n");
+            kill(-child, SIGTERM);
+            while (waitpid(child, &child_status, 0) < 0 && errno == EINTR)
+                ;
+            close(descriptors[0]);
+            return false;
+        }
+
+        poll_result = poll(&descriptor, 1, 1000);
+        ++elapsed;
+        if (poll_result < 0 && errno != EINTR) {
+            perror("spectrwm-status: wait for update checker");
+            kill(-child, SIGTERM);
+            while (waitpid(child, &child_status, 0) < 0 && errno == EINTR)
+                ;
+            close(descriptors[0]);
+            return false;
+        }
+        if (poll_result > 0 &&
+            (descriptor.revents & (POLLIN | POLLHUP | POLLERR)) != 0) {
+            char buffer[sizeof(output)];
+            ssize_t bytes = read(descriptors[0], buffer, sizeof(buffer));
+
+            if (bytes < 0 && errno != EINTR) {
+                perror("spectrwm-status: read update-check result");
+                kill(-child, SIGTERM);
+                while (waitpid(child, &child_status, 0) < 0 && errno == EINTR)
+                    ;
+                close(descriptors[0]);
+                return false;
+            }
+            if (bytes == 0) {
+                output_closed = true;
+            } else if (bytes > 0) {
+                size_t available = sizeof(output) - output_length - 1;
+                size_t copied = (size_t)bytes < available ?
+                    (size_t)bytes : available;
+
+                memcpy(output + output_length, buffer, copied);
+                output_length += copied;
+                output[output_length] = '\0';
+            }
+        }
+
+        if (!child_exited) {
+            pid_t result = waitpid(child, &child_status, WNOHANG);
+
+            if (result == child)
+                child_exited = true;
+            else if (result < 0 && errno != EINTR) {
+                perror("spectrwm-status: wait for update checker process");
+                close(descriptors[0]);
+                return false;
+            }
+        }
+    }
+    close(descriptors[0]);
+
+    while (output_length > 0 &&
+        isspace((unsigned char)output[output_length - 1]))
+        output[--output_length] = '\0';
+
+    if (!WIFEXITED(child_status) || WEXITSTATUS(child_status) != 0 ||
+        sscanf(output, "%u %u", repository_count, aur_count) != 2) {
+        fprintf(stderr, "spectrwm-status: update checker returned invalid data\n");
+        return false;
+    }
+    return true;
+}
+
+static void *
+updates_worker(void *unused)
+{
+    (void)unused;
+
+    while (!atomic_load_explicit(&stopping, memory_order_relaxed)) {
+        unsigned repository_count;
+        unsigned aur_count;
+
+        if (run_update_check(&repository_count, &aur_count)) {
+            pthread_mutex_lock(&updates_mutex);
+            repository_update_count = (int)repository_count;
+            aur_update_count = (int)aur_count;
+            pthread_mutex_unlock(&updates_mutex);
+            notify_status_change();
+        }
+
+        for (unsigned elapsed = 0; elapsed < UPDATE_REFRESH_SECONDS &&
+            !atomic_load_explicit(&stopping, memory_order_relaxed); ++elapsed)
+            sleep(1);
+    }
+    return NULL;
 }
 
 static void
@@ -1051,6 +1267,7 @@ print_status(void)
     char battery_status[128] = "";
     char temperature_status[128] = "";
     char mail_status[64] = "";
+    char updates_status[128] = "";
     char music_status[sizeof(music.title) * 2 + 64] = "";
     char wifi_status[512] = "";
     char current_wifi_ssid[sizeof(wifi_ssid)];
@@ -1058,6 +1275,8 @@ print_status(void)
     char volume[32];
     const char *volume_icon = audio.icon;
     unsigned volume_color = 14;
+    int current_repository_update_count;
+    int current_aur_update_count;
     bool current_wifi_connected;
 
     pthread_mutex_lock(&music_mutex);
@@ -1067,6 +1286,10 @@ print_status(void)
     current_wifi_connected = wifi_connected;
     copy_string(current_wifi_ssid, sizeof(current_wifi_ssid), wifi_ssid);
     pthread_mutex_unlock(&wifi_mutex);
+    pthread_mutex_lock(&updates_mutex);
+    current_repository_update_count = repository_update_count;
+    current_aur_update_count = aur_update_count;
+    pthread_mutex_unlock(&updates_mutex);
 
     copy_title_words(display_title, sizeof(display_title), current_music.title);
     escape_markup(display_title, escaped_title, sizeof(escaped_title));
@@ -1093,6 +1316,16 @@ print_status(void)
         snprintf(mail_status, sizeof(mail_status),
             "  +@fg=1; %u+@fg=0;", current_mail_count);
 
+    if (current_repository_update_count > 0)
+        snprintf(updates_status, sizeof(updates_status),
+            "  +@fg=7; %d+@fg=0;", current_repository_update_count);
+    if (current_aur_update_count > 0) {
+        size_t used = strlen(updates_status);
+
+        snprintf(updates_status + used, sizeof(updates_status) - used,
+            "  +@fg=7; %d+@fg=0;", current_aur_update_count);
+    }
+
     if (current_wifi_connected)
         escape_markup(current_wifi_ssid, escaped_wifi_ssid,
             sizeof(escaped_wifi_ssid));
@@ -1115,10 +1348,11 @@ print_status(void)
         snprintf(temperature_status, sizeof(temperature_status),
             "  +@fg=%u; %s°C+@fg=0;", temperature_color, temperature);
 
-    printf("%s%s%s  +@fg=%u;%s%s+@fg=0;  +@fg=4; %u%%+@fg=0;"
+    printf("%s%s%s%s  +@fg=%u;%s%s+@fg=0;  +@fg=4; %u%%+@fg=0;"
         "  +@fg=20; %s%%+@fg=0;  +@fg=5; %u%%+@fg=0;%s%s\n",
-        mail_status, music_status, wifi_status, volume_color, volume_icon, volume,
-        cpu_usage, brightness, ram_usage, battery_status, temperature_status);
+        mail_status, updates_status, music_status, wifi_status, volume_color,
+        volume_icon, volume, cpu_usage, brightness, ram_usage, battery_status,
+        temperature_status);
     fflush(stdout);
 }
 
@@ -1214,10 +1448,12 @@ create_status_pipe(void)
 int
 main(void)
 {
-    pthread_t mpd_thread, wifi_thread_id, maildir_thread_id;
+    pthread_t mpd_thread, wifi_thread_id, maildir_thread_id, updates_thread_id;
     struct timeval first_tick;
     struct sigaction action = {0};
     int result;
+    int thread_error;
+    bool updates_thread_started = false;
 
     action.sa_handler = handle_signal;
     sigemptyset(&action.sa_mask);
@@ -1310,6 +1546,15 @@ main(void)
         return EXIT_FAILURE;
     }
 
+    thread_error = pthread_create(&updates_thread_id, NULL, updates_worker,
+        NULL);
+    if (thread_error != 0) {
+        fprintf(stderr, "spectrwm-status: unable to start update checker: %s\n",
+            strerror(thread_error));
+    } else {
+        updates_thread_started = true;
+    }
+
     read_cpu_memory();
     read_hardware();
     read_brightness();
@@ -1318,6 +1563,8 @@ main(void)
     result = pa_mainloop_run(pulse_mainloop, NULL);
 
     atomic_store_explicit(&stopping, true, memory_order_relaxed);
+    if (updates_thread_started)
+        pthread_join(updates_thread_id, NULL);
     pa_mainloop_get_api(pulse_mainloop)->time_free(tick_event);
     pa_mainloop_get_api(pulse_mainloop)->io_free(status_io_event);
     if (pulse_context != NULL) {
