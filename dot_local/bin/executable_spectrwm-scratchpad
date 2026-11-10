@@ -37,6 +37,39 @@ toggle_flag() {
     fi
 }
 
+ensure_app() {
+    for candidate in $(window_list); do
+        [ -n "$(scratch_order "$candidate")" ] && return 0
+    done
+
+    window=$(xdotool search --classname '^scratchpad$' 2>/dev/null | head -n 1)
+    if [ -n "$window" ]; then
+        order=$(next_order)
+        xprop -id "$window" -f "$property" 32i -set "$property" "$order" >/dev/null ||
+            return 1
+        return 0
+    fi
+
+    alacritty --class Alacritty,scratchpad --title scratchpad &
+
+    attempts=0
+    while [ "$attempts" -lt 100 ]; do
+        window=$(xdotool search --classname '^scratchpad$' 2>/dev/null | head -n 1)
+        if [ -n "$window" ]; then
+            order=$(next_order)
+            xprop -id "$window" -f "$property" 32i -set "$property" "$order" >/dev/null ||
+                return 1
+            xdotool windowminimize "$window" || return 1
+            return 0
+        fi
+        attempts=$((attempts + 1))
+        sleep 0.1
+    done
+
+    printf '%s\n' 'spectrwm-scratchpad: timed out waiting for the terminal window' >&2
+    return 1
+}
+
 switch_app() {
     active_window=$(xdotool getactivewindow 2>/dev/null) || active_window=
     active_order=
@@ -74,10 +107,11 @@ switch_app() {
 }
 
 case "$1" in
+    ensure-app) ensure_app ;;
     switch-app) switch_app ;;
     toggle-flag) toggle_flag ;;
     *)
-        printf 'Usage: %s {switch-app|toggle-flag}\n' "$0" >&2
+        printf 'Usage: %s {ensure-app|switch-app|toggle-flag}\n' "$0" >&2
         exit 2
         ;;
 esac
