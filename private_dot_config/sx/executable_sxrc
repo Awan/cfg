@@ -3,7 +3,10 @@
 # In the name of Allah, the Most Gracious, the Most Merciful.
 
 
+# Set the session name before loading shared X session setup.
+export DESKTOP_SESSION=herbstluftwm
+
 # Load the shared X session setup before launching the window manager.
 [ -f ~/.xprofile ] && . ~/.xprofile
 
-exec spectrwm >/tmp/spectrwm-"$USER".log 2>&1
+exec herbstluftwm >/tmp/herbstluftwm-"$USER".log 2>&1

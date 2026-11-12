@@ -1,0 +1,51 @@
+#!/bin/sh
+
+set -eu
+
+if [ "$#" -ne 1 ]; then
+    printf 'Usage: %s next|previous\n' "$0" >&2
+    exit 2
+fi
+
+case "$1" in
+    next) direction=1 ;;
+    previous) direction=-1 ;;
+    *)
+        printf 'Usage: %s next|previous\n' "$0" >&2
+        exit 2
+        ;;
+esac
+
+current=$(herbstclient get_attr tags.focus.name)
+status=$(herbstclient tag_status)
+target=$(printf '%s\n' "$status" | awk \
+    -v current="$current" -v direction="$direction" '
+    {
+        for (i = 1; i <= NF; ++i) {
+            tags[++count] = $i
+            if (substr($i, 2) == current) {
+                current_index = count
+            }
+        }
+    }
+    END {
+        if (count < 2 || current_index == 0) {
+            exit
+        }
+        for (step = 1; step < count; ++step) {
+            target_index = ((current_index - 1 + direction * step) % count + count) % count + 1
+            marker = substr(tags[target_index], 1, 1)
+            if (marker == ":" || marker == "!") {
+                print substr(tags[target_index], 2)
+                exit
+            }
+        }
+    }
+')
+
+if [ -z "$target" ]; then
+    printf 'herbstluftwm-populated-tag: no other workspace has clients\n' >&2
+    exit 1
+fi
+
+herbstclient use "$target"

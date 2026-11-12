@@ -1,0 +1,116 @@
+#!/bin/sh
+
+hc() {
+  herbstclient "$@"
+}
+
+hc emit_hook reload
+hc keyunbind --all
+hc mouseunbind --all
+
+hc set frame_border_width 1
+hc set frame_border_active_color '#89b4fa'
+hc set frame_border_normal_color '#45475a'
+hc attr theme.border_width 1
+hc attr theme.active.color '#89b4fa'
+hc attr theme.normal.color '#45475a'
+hc set frame_gap 2
+hc set window_gap 4
+hc set frame_padding 2
+hc set smart_frame_surroundings hide_gaps
+hc set smart_window_surroundings on
+hc set focus_follows_mouse false
+hc set swap_monitors_to_get_tag true
+
+if hc tag_status | grep -Eq '(^|[[:space:]])[#:.+!]default([[:space:]]|$)'; then
+  hc rename default 1
+fi
+
+for tag in 1 2 3 4 5 6 7 8 9; do
+  if ! hc tag_status | grep -Eq "(^|[[:space:]])[#:.+!]?$tag([[:space:]]|$)"; then
+    hc add "$tag"
+  fi
+done
+
+current_tag=$(hc get_attr tags.focus.name)
+for tag in 1 2 3 4 5 6 7 8 9; do
+  hc use "$tag"
+  hc set_layout grid
+done
+hc use "$current_tag"
+
+hc keybind Mod4-Shift-q quit
+hc keybind Mod4-Shift-r reload
+hc keybind Mod4-Return spawn alacritty
+hc keybind Mod4-d spawn rofi -show drun
+hc keybind Mod4-q close
+
+hc keybind Mod4-h focus left
+hc keybind Mod4-j focus down
+hc keybind Mod4-k focus up
+hc keybind Mod4-l focus right
+hc keybind Mod4-Left focus left
+hc keybind Mod4-Down focus down
+hc keybind Mod4-Up focus up
+hc keybind Mod4-Right focus right
+hc keybind Mod4-Shift-h shift left
+hc keybind Mod4-Shift-j shift down
+hc keybind Mod4-Shift-k shift up
+hc keybind Mod4-Shift-l shift right
+hc keybind Mod4-Shift-Left shift left
+hc keybind Mod4-Shift-Down shift down
+hc keybind Mod4-Shift-Up shift up
+hc keybind Mod4-Shift-Right shift right
+
+hc keybind Mod4-u split bottom 0.5
+hc keybind Mod4-o split right 0.5
+hc keybind Mod4-f fullscreen toggle
+hc keybind Mod4-s floating toggle
+hc keybind Mod4-r remove
+hc keybind Mod4-space cycle_layout +1
+hc keybind Mod4-Tab cycle_all +1
+hc keybind Mod4-Shift-Tab cycle_all -1
+hc keybind Mod4-BackSpace cycle_monitor
+hc keybind Mod4-period use_index +1 --skip-visible
+hc keybind Mod4-comma use_index -1 --skip-visible
+hc keybind Mod4-semicolon spawn ~/.local/bin/herbstluftwm-populated-tag next
+hc keybind Mod4-apostrophe spawn ~/.local/bin/herbstluftwm-populated-tag previous
+hc keybind Mod4-Control-h resize left +0.02
+hc keybind Mod4-Control-j resize down +0.02
+hc keybind Mod4-Control-k resize up +0.02
+hc keybind Mod4-Control-l resize right +0.02
+
+for tag in 1 2 3 4 5 6 7 8 9; do
+  index=$((tag - 1))
+  hc keybind "Mod4-$tag" use_index "$index"
+  hc keybind "Mod4-Shift-$tag" move_index "$index"
+done
+
+hc mousebind Mod4-Button1 move
+hc mousebind Mod4-Button2 zoom
+hc mousebind Mod4-Button3 resize
+
+hc keybind XF86AudioRaiseVolume spawn ~/.local/bin/spectrwm-osd volume-up
+hc keybind XF86AudioLowerVolume spawn ~/.local/bin/spectrwm-osd volume-down
+hc keybind XF86AudioMute spawn ~/.local/bin/spectrwm-osd volume-mute
+hc keybind Mod1-b spawn mpc toggle
+hc keybind Mod1-bracketleft spawn mpc seekthrough -00:00:05
+hc keybind Mod1-bracketright spawn mpc seekthrough +00:00:05
+hc keybind Print spawn sh -c 'import -window root -quality 100 png:- | xclip -selection clipboard -t image/png'
+
+hc unrule -F
+hc rule focus=on
+hc rule floatplacement=smart
+hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on
+hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
+
+for monitor in $(hc list_monitors | cut -d: -f1); do
+  hc pad "$monitor" 24
+done
+
+bar="$HOME/.local/bin/herbstluftwm-status"
+if [ -x "$bar" ]; then
+  "$bar" >"/tmp/herbstluftwm-status-$USER.log" 2>&1 &
+else
+  printf 'herbstluftwm: status bar binary is missing: %s\n' "$bar" >&2
+fi
