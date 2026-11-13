@@ -1,25 +1,34 @@
 #!/bin/sh
 
+# Workspace helpers for herbstluftwm that mirror the spectrwm bindings:
+#   next | previous  switch to the next/previous workspace that has windows
+#   empty            switch to the first empty workspace
+#   move-empty       move the focused window to the first empty workspace
+#                    and follow it
+
 set -eu
 
-if [ "$#" -ne 1 ]; then
-    printf 'Usage: %s next|previous\n' "$0" >&2
+usage() {
+    printf 'Usage: %s next|previous|empty|move-empty\n' "$0" >&2
     exit 2
+}
+
+if [ "$#" -ne 1 ]; then
+    usage
 fi
 
 case "$1" in
-    next) direction=1 ;;
-    previous) direction=-1 ;;
-    *)
-        printf 'Usage: %s next|previous\n' "$0" >&2
-        exit 2
-        ;;
+    next) mode=populated direction=1 ;;
+    previous) mode=populated direction=-1 ;;
+    empty) mode=empty direction=1 ;;
+    move-empty) mode=empty direction=1 ;;
+    *) usage ;;
 esac
 
 current=$(herbstclient get_attr tags.focus.name)
 status=$(herbstclient tag_status)
 target=$(printf '%s\n' "$status" | awk \
-    -v current="$current" -v direction="$direction" '
+    -v current="$current" -v direction="$direction" -v mode="$mode" '
     {
         for (i = 1; i <= NF; ++i) {
             tags[++count] = $i
@@ -35,7 +44,11 @@ target=$(printf '%s\n' "$status" | awk \
         for (step = 1; step < count; ++step) {
             target_index = ((current_index - 1 + direction * step) % count + count) % count + 1
             marker = substr(tags[target_index], 1, 1)
-            if (marker == ":" || marker == "!") {
+            if (mode == "populated" && (marker == ":" || marker == "!")) {
+                print substr(tags[target_index], 2)
+                exit
+            }
+            if (mode == "empty" && marker == ".") {
                 print substr(tags[target_index], 2)
                 exit
             }
@@ -44,8 +57,11 @@ target=$(printf '%s\n' "$status" | awk \
 ')
 
 if [ -z "$target" ]; then
-    printf 'herbstluftwm-populated-tag: no other workspace has clients\n' >&2
+    printf 'herbstluftwm-populated-tag: no matching workspace (%s)\n' "$mode" >&2
     exit 1
 fi
 
+if [ "$1" = move-empty ]; then
+    herbstclient move "$target"
+fi
 herbstclient use "$target"

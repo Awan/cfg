@@ -99,10 +99,34 @@ hc keybind XF86AudioMicMute spawn ~/.local/bin/spectrwm-osd mic-mute
 hc keybind XF86MonBrightnessUp spawn ~/.local/bin/spectrwm-osd brightness-up
 hc keybind XF86MonBrightnessDown spawn ~/.local/bin/spectrwm-osd brightness-down
 hc keybind Mod1-b spawn mpc toggle
-hc keybind Mod1-bracketleft spawn mpc seekthrough -00:00:05
-hc keybind Mod1-bracketright spawn mpc seekthrough +00:00:05
+hc keybind Mod1-bracketleft spawn mpc seek -10
+hc keybind Mod1-bracketright spawn mpc seek +10
+hc keybind Mod1-Shift-bracketleft spawn mpc prev
+hc keybind Mod1-Shift-bracketright spawn mpc next
 hc keybind Print spawn sh -c 'import -window root -quality 100 png:- | xclip -selection clipboard -t image/png'
 hc keybind Mod4-Shift-Print spawn bash -o pipefail -c 'import -window "$(xdotool getwindowfocus)" -quality 100 png:- | xclip -selection clipboard -t image/png'
+
+# Keybindings carried over from the spectrwm setup.
+hc keybind Mod4-Shift-Return spawn alacritty
+hc keybind Mod4-Shift-d spawn rofi -show combi
+hc keybind Mod4-w spawn ~/.local/bin/spectrwm-browser
+hc keybind Mod4-x spawn xset s activate
+hc keybind Mod4-Mod1-w spawn ~/.local/bin/artwall
+hc keybind Mod4-Mod1-Shift-w spawn ~/.local/bin/artwall --reject
+hc keybind Mod4-Mod1-e spawn ~/.local/bin/touchpad
+hc keybind Mod4-i spawn ~/.local/bin/herbstluftwm-scratchpad toggle
+hc keybind Mod4-e spawn ~/.local/bin/herbstluftwm-populated-tag empty
+hc keybind Mod4-Shift-e spawn ~/.local/bin/herbstluftwm-populated-tag move-empty
+hc keybind Mod4-n use_previous
+hc keybind Mod4-m cycle_layout +1
+hc keybind Mod4-v set_layout vertical
+hc keybind Mod4-Shift-z set_layout horizontal
+hc keybind Mod4-Shift-m set_layout max
+hc keybind Mod4-bracketleft focus_monitor -1
+hc keybind Mod4-bracketright focus_monitor +1
+hc keybind Mod4-Shift-bracketleft shift_to_monitor -1
+hc keybind Mod4-Shift-bracketright shift_to_monitor +1
+hc keybind Mod4-p spawn ~/.local/bin/herbstluftwm-monitors rescan
 
 hc unrule -F
 hc rule focus=on
@@ -110,13 +134,22 @@ hc rule floatplacement=smart
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 
-for monitor in $(hc list_monitors | cut -d: -f1); do
-  hc pad "$monitor" 24
-done
+# Window rules carried over from the spectrwm quirks.
+# Float utility windows that should not be tiled.
+hc rule class~'^(Thunar|Pavucontrol|Galculator|Gpick|feh|Sxiv|mpv|MPlayer)$' floating=on
+hc rule class~'^[Pp]inentry' floating=on
+# Workspace assignments (the workspace is not switched to).
+hc rule class=Google-chrome instance=google-chrome tag=2
+hc rule class=Opera tag=3
+hc rule class=Anydesk tag=4
+hc rule class=Gimp tag=5
+# The scratchpad terminal floats in the centre and is managed by
+# herbstluftwm-scratchpad, so it must not steal focus when it appears.
+hc rule class=Alacritty instance=scratchpad floating=on floatplacement=center focus=off
 
-bar="$HOME/.local/bin/herbstluftwm-status"
-if [ -x "$bar" ]; then
-  "$bar" >"/tmp/herbstluftwm-status-$USER.log" 2>&1 &
-else
-  printf 'herbstluftwm: status bar binary is missing: %s\n' "$bar" >&2
-fi
+# Reserve the bar strip on every monitor and (re)start the status bar. After
+# plugging or unplugging a display, Super+P runs "herbstluftwm-monitors rescan".
+~/.local/bin/herbstluftwm-monitors refresh
+
+# Start the scratchpad terminal once per session; the helper reuses it.
+~/.local/bin/herbstluftwm-scratchpad ensure-app &

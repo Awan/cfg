@@ -1,0 +1,91 @@
+#!/bin/sh
+
+# Floating scratchpad terminal for herbstluftwm, equivalent to the spectrwm
+# scratchpad: a dedicated Alacritty window that is hidden (minimized) until
+# summoned onto the current workspace, and hidden again on a second press.
+#
+#   ensure-app   start the scratchpad terminal once, hidden
+#   toggle       show it here, or hide it if it is already focused
+
+set -eu
+
+hc() {
+    herbstclient "$@"
+}
+
+find_window() {
+    xdotool search --classname '^scratchpad$' 2>/dev/null | head -n 1
+}
+
+client_path() {
+    printf 'clients.0x%x' "$1"
+}
+
+wait_for_window() {
+    attempts=0
+    while [ "$attempts" -lt 100 ]; do
+        window=$(find_window)
+        if [ -n "$window" ]; then
+            printf '%s' "$window"
+            return 0
+        fi
+        attempts=$((attempts + 1))
+        sleep 0.1
+    done
+    return 1
+}
+
+start_terminal() {
+    alacritty --class Alacritty,scratchpad --title scratchpad >/dev/null 2>&1 &
+}
+
+ensure_app() {
+    window=$(find_window)
+    if [ -n "$window" ]; then
+        return 0
+    fi
+
+    start_terminal
+    window=$(wait_for_window) || {
+        printf '%s\n' 'herbstluftwm-scratchpad: timed out waiting for the terminal window' >&2
+        return 1
+    }
+    hc set_attr "$(client_path "$window").minimized" on
+}
+
+toggle() {
+    window=$(find_window)
+    if [ -z "$window" ]; then
+        start_terminal
+        window=$(wait_for_window) || {
+            printf '%s\n' 'herbstluftwm-scratchpad: timed out waiting for the terminal window' >&2
+            return 1
+        }
+        hc bring "0x$(printf '%x' "$window")"
+        hc jumpto "0x$(printf '%x' "$window")"
+        return 0
+    fi
+
+    path=$(client_path "$window")
+    id=$(printf '0x%x' "$window")
+    minimized=$(hc get_attr "$path.minimized")
+    focused=$(hc get_attr clients.focus.winid 2>/dev/null || true)
+
+    if [ "$minimized" = false ] && [ "$focused" = "$id" ]; then
+        hc set_attr "$path.minimized" on
+        return 0
+    fi
+
+    hc bring "$id"
+    hc set_attr "$path.minimized" off
+    hc jumpto "$id"
+}
+
+case "${1:-}" in
+    ensure-app) ensure_app ;;
+    toggle) toggle ;;
+    *)
+        printf 'Usage: %s {ensure-app|toggle}\n' "$0" >&2
+        exit 2
+        ;;
+esac
