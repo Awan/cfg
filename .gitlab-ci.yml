@@ -58,7 +58,7 @@ chezmoi:
 secret-scan:
   stage: test
   image:
-    name: ghcr.io/trufflesecurity/trufflehog@sha256:674b2f187620a19df77f44cf9a7d77efcc581a5662accef2f2739cbb46ba4a3a
+    name: ghcr.io/trufflesecurity/trufflehog@sha256:2ec535840f860aa27f11fee20222fb790326ecd66325c96bd49d02ec6af46eca
     entrypoint: [""]
   variables:
     GIT_DEPTH: "0"
