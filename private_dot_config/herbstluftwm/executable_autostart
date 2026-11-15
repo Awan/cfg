@@ -1,0 +1,155 @@
+#!/bin/sh
+
+hc() {
+  herbstclient "$@"
+}
+
+hc emit_hook reload
+hc keyunbind --all
+hc mouseunbind --all
+
+hc set frame_border_width 1
+hc set frame_border_active_color '#89b4fa'
+hc set frame_border_normal_color '#45475a'
+hc attr theme.border_width 1
+hc attr theme.active.color '#89b4fa'
+hc attr theme.normal.color '#45475a'
+hc set frame_gap 2
+hc set window_gap 4
+hc set frame_padding 2
+hc set smart_frame_surroundings hide_gaps
+hc set smart_window_surroundings on
+hc set focus_follows_mouse false
+hc set swap_monitors_to_get_tag true
+
+if hc tag_status | grep -Eq '(^|[[:space:]])[#:.+!]default([[:space:]]|$)'; then
+  hc rename default 1
+fi
+
+for tag in 1 2 3 4 5 6 7 8 9; do
+  if ! hc tag_status | grep -Eq "(^|[[:space:]])[#:.+!]?$tag([[:space:]]|$)"; then
+    hc add "$tag"
+  fi
+done
+
+current_tag=$(hc get_attr tags.focus.name)
+for tag in 1 2 3 4 5 6 7 8 9; do
+  hc use "$tag"
+  hc set_layout grid
+done
+hc use "$current_tag"
+
+hc keybind Mod4-Shift-q quit
+hc keybind Mod4-Shift-r reload
+hc keybind Mod4-Return spawn alacritty
+hc keybind Mod4-d spawn rofi -show drun
+hc keybind Mod4-q close
+
+hc keybind Mod4-h focus left
+hc keybind Mod4-j focus down
+hc keybind Mod4-k focus up
+hc keybind Mod4-l focus right
+hc keybind Mod4-Left focus left
+hc keybind Mod4-Down focus down
+hc keybind Mod4-Up focus up
+hc keybind Mod4-Right focus right
+hc keybind Mod4-Shift-h shift left
+hc keybind Mod4-Shift-j shift down
+hc keybind Mod4-Shift-k shift up
+hc keybind Mod4-Shift-l shift right
+hc keybind Mod4-Shift-Left shift left
+hc keybind Mod4-Shift-Down shift down
+hc keybind Mod4-Shift-Up shift up
+hc keybind Mod4-Shift-Right shift right
+
+hc keybind Mod4-u split bottom 0.5
+hc keybind Mod4-o split right 0.5
+hc keybind Mod4-f fullscreen toggle
+hc keybind Mod4-s floating toggle
+hc keybind Mod4-r remove
+hc keybind Mod4-space cycle_layout +1
+hc keybind Mod4-Tab cycle_all +1
+hc keybind Mod4-Shift-Tab cycle_all -1
+hc keybind Mod4-BackSpace cycle_monitor
+hc keybind Mod4-period use_index +1 --skip-visible
+hc keybind Mod4-comma use_index -1 --skip-visible
+hc keybind Mod4-semicolon spawn ~/.local/bin/herbstluftwm-populated-tag next
+hc keybind Mod4-apostrophe spawn ~/.local/bin/herbstluftwm-populated-tag previous
+hc keybind Mod4-Control-h resize left +0.02
+hc keybind Mod4-Control-j resize down +0.02
+hc keybind Mod4-Control-k resize up +0.02
+hc keybind Mod4-Control-l resize right +0.02
+
+for tag in 1 2 3 4 5 6 7 8 9; do
+  index=$((tag - 1))
+  hc keybind "Mod4-$tag" use_index "$index"
+  hc keybind "Mod4-Shift-$tag" move_index "$index"
+done
+
+hc mousebind Mod4-Button1 move
+hc mousebind Mod4-Button2 zoom
+hc mousebind Mod4-Button3 resize
+
+hc keybind XF86AudioRaiseVolume spawn ~/.local/bin/spectrwm-osd volume-up
+hc keybind XF86AudioLowerVolume spawn ~/.local/bin/spectrwm-osd volume-down
+hc keybind XF86AudioMute spawn ~/.local/bin/spectrwm-osd volume-mute
+hc keybind XF86Bluetooth spawn sh -c 'rfkill toggle bluetooth && ~/.local/bin/spectrwm-osd bluetooth-toggle'
+hc keybind XF86WLAN spawn ~/.local/bin/spectrwm-osd wlan-status
+hc keybind XF86AudioMicMute spawn ~/.local/bin/spectrwm-osd mic-mute
+hc keybind XF86MonBrightnessUp spawn ~/.local/bin/spectrwm-osd brightness-up
+hc keybind XF86MonBrightnessDown spawn ~/.local/bin/spectrwm-osd brightness-down
+hc keybind Mod1-b spawn mpc toggle
+hc keybind Mod1-bracketleft spawn mpc seek -10
+hc keybind Mod1-bracketright spawn mpc seek +10
+hc keybind Mod1-Shift-bracketleft spawn mpc prev
+hc keybind Mod1-Shift-bracketright spawn mpc next
+hc keybind Print spawn sh -c 'import -window root -quality 100 png:- | xclip -selection clipboard -t image/png'
+hc keybind Mod4-Shift-Print spawn bash -o pipefail -c 'import -window "$(xdotool getwindowfocus)" -quality 100 png:- | xclip -selection clipboard -t image/png'
+
+# Keybindings carried over from the spectrwm setup.
+hc keybind Mod4-Shift-Return spawn alacritty
+hc keybind Mod4-Shift-d spawn rofi -show combi
+hc keybind Mod4-w spawn ~/.local/bin/spectrwm-browser
+hc keybind Mod4-x spawn xset s activate
+hc keybind Mod4-Mod1-w spawn ~/.local/bin/artwall
+hc keybind Mod4-Mod1-Shift-w spawn ~/.local/bin/artwall --reject
+hc keybind Mod4-Mod1-e spawn ~/.local/bin/touchpad
+hc keybind Mod4-i spawn ~/.local/bin/herbstluftwm-scratchpad toggle
+hc keybind Mod4-e spawn ~/.local/bin/herbstluftwm-populated-tag empty
+hc keybind Mod4-Shift-e spawn ~/.local/bin/herbstluftwm-populated-tag move-empty
+hc keybind Mod4-n use_previous
+hc keybind Mod4-m cycle_layout +1
+hc keybind Mod4-v set_layout vertical
+hc keybind Mod4-Shift-z set_layout horizontal
+hc keybind Mod4-Shift-m set_layout max
+hc keybind Mod4-bracketleft focus_monitor -1
+hc keybind Mod4-bracketright focus_monitor +1
+hc keybind Mod4-Shift-bracketleft shift_to_monitor -1
+hc keybind Mod4-Shift-bracketright shift_to_monitor +1
+hc keybind Mod4-p spawn ~/.local/bin/herbstluftwm-monitors rescan
+
+hc unrule -F
+hc rule focus=on
+hc rule floatplacement=smart
+hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on
+hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
+
+# Window rules carried over from the spectrwm quirks.
+# Float utility windows that should not be tiled.
+hc rule class~'^(Thunar|Pavucontrol|Galculator|Gpick|feh|Sxiv|mpv|MPlayer)$' floating=on
+hc rule class~'^[Pp]inentry' floating=on
+# Workspace assignments (the workspace is not switched to).
+hc rule class=Google-chrome instance=google-chrome tag=2
+hc rule class=Opera tag=3
+hc rule class=Anydesk tag=4
+hc rule class=Gimp tag=5
+# The scratchpad terminal floats in the centre and is managed by
+# herbstluftwm-scratchpad, so it must not steal focus when it appears.
+hc rule class=Alacritty instance=scratchpad floating=on floatplacement=center focus=off
+
+# Reserve the bar strip on every monitor and (re)start the status bar. After
+# plugging or unplugging a display, Super+P runs "herbstluftwm-monitors rescan".
+~/.local/bin/herbstluftwm-monitors refresh
+
+# Start the scratchpad terminal once per session; the helper reuses it.
+~/.local/bin/herbstluftwm-scratchpad ensure-app &

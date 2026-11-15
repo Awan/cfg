@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# Monitor housekeeping for herbstluftwm.
+#
+#   refresh   reserve the status-bar strip on every monitor and (re)start the
+#             status bar so it picks up the current screen width
+#   rescan    reconfigure displays with XRandR, re-detect monitors and refresh
+#
+# herbstluftwm has no hook for monitor hotplug, so after plugging or
+# unplugging a display run "rescan" (bound to Super+P).
+
+set -eu
+
+bar_height=24
+bar="$HOME/.local/bin/herbstluftwm-status"
+bar_log="/tmp/herbstluftwm-status-$USER.log"
+
+hc() {
+    herbstclient "$@"
+}
+
+apply_padding() {
+    for monitor in $(hc list_monitors | cut -d: -f1); do
+        hc pad "$monitor" "$bar_height"
+    done
+}
+
+restart_bar() {
+    # Stop any running copy first so a reload or rescan never leaves two bars
+    # behind, then start one that matches the current screen width.
+    pkill -u "$(id -u)" -x -f "$bar" 2>/dev/null || true
+
+    if [ -x "$bar" ]; then
+        "$bar" >"$bar_log" 2>&1 &
+    else
+        printf 'herbstluftwm: status bar binary is missing: %s\n' "$bar" >&2
+    fi
+}
+
+refresh() {
+    apply_padding
+    restart_bar
+}
+
+rescan() {
+    "$HOME/.local/bin/configure-displays"
+    hc detect_monitors
+    refresh
+}
+
+case "${1:-}" in
+    refresh) refresh ;;
+    rescan) rescan ;;
+    *)
+        printf 'Usage: %s {refresh|rescan}\n' "$0" >&2
+        exit 2
+        ;;
+esac

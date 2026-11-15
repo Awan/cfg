@@ -1,0 +1,198 @@
+#!/usr/bin/python3
+
+import json
+import subprocess
+import sys
+from urllib.error import URLError
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+
+
+AUR_RPC_URL = "https://aur.archlinux.org/rpc/v5/info"
+AUR_BATCH_SIZE = 40
+CHROME_PACKAGES_URL = (
+    "https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages"
+)
+
+
+def run_command(arguments, timeout):
+    try:
+        return subprocess.run(
+            arguments,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except (OSError, subprocess.TimeoutExpired) as error:
+        raise RuntimeError(f"{arguments[0]} failed: {error}") from error
+
+
+def count_repository_updates():
+    result = run_command(["checkupdates", "--nocolor"], timeout=180)
+    if result.returncode not in (0, 2):
+        message = result.stderr.strip() or f"exit status {result.returncode}"
+        raise RuntimeError(f"checkupdates failed: {message}")
+    return sum(bool(line.strip()) for line in result.stdout.splitlines())
+
+
+def get_foreign_packages():
+    result = run_command(["pacman", "-Qm"], timeout=20)
+    if result.returncode != 0:
+        message = result.stderr.strip() or f"exit status {result.returncode}"
+        raise RuntimeError(f"pacman -Qm failed: {message}")
+
+    packages = {}
+    for line in result.stdout.splitlines():
+        fields = line.split(maxsplit=1)
+        if len(fields) != 2:
+            raise RuntimeError("pacman -Qm returned an invalid package list")
+        packages[fields[0]] = fields[1]
+    return packages
+
+
+def get_aur_versions(package_names):
+    versions = {}
+    for start in range(0, len(package_names), AUR_BATCH_SIZE):
+        batch = package_names[start : start + AUR_BATCH_SIZE]
+        query = [("type", "info")]
+        query.extend(("arg[]", name) for name in batch)
+        request = Request(
+            f"{AUR_RPC_URL}?{urlencode(query)}",
+            headers={"User-Agent": "desktop-status-update-checker/1.0"},
+        )
+        try:
+            with urlopen(request, timeout=20) as response:
+                data = json.load(response)
+        except (
+            URLError,
+            TimeoutError,
+            UnicodeDecodeError,
+            json.JSONDecodeError,
+        ) as error:
+            raise RuntimeError(f"AUR RPC request failed: {error}") from error
+
+        if (
+            not isinstance(data, dict)
+            or data.get("type") != "multiinfo"
+            or not isinstance(data.get("results"), list)
+        ):
+            raise RuntimeError("AUR RPC returned an invalid response")
+        for package in data["results"]:
+            if not isinstance(package, dict):
+                raise RuntimeError("AUR RPC returned an invalid package record")
+            name = package.get("Name")
+            version = package.get("Version")
+            if isinstance(name, str) and isinstance(version, str):
+                versions[name] = version
+    return versions
+
+
+def count_aur_updates():
+    installed = get_foreign_packages()
+    if not installed:
+        return 0
+
+    available = get_aur_versions(list(installed))
+    count = 0
+    for name, installed_version in installed.items():
+        available_version = available.get(name)
+        if available_version is None:
+            continue
+        result = run_command(
+            ["vercmp", installed_version, available_version], timeout=5
+        )
+        if result.returncode != 0:
+            message = result.stderr.strip() or f"exit status {result.returncode}"
+            raise RuntimeError(f"vercmp failed for {name}: {message}")
+        try:
+            comparison = int(result.stdout.strip())
+        except ValueError as error:
+            raise RuntimeError(
+                f"vercmp returned an invalid result for {name}"
+            ) from error
+        if comparison < 0:
+            count += 1
+    return count
+
+
+def count_chrome_updates():
+    installed = run_command(
+        ["pacman", "-Q", "google-chrome-stable"], timeout=20
+    )
+    if installed.returncode != 0:
+        if "was not found" in installed.stderr:
+            return 0
+        message = installed.stderr.strip() or f"exit status {installed.returncode}"
+        raise RuntimeError(f"pacman -Q google-chrome-stable failed: {message}")
+
+    fields = installed.stdout.split()
+    if len(fields) != 2 or fields[0] != "google-chrome-stable":
+        raise RuntimeError("pacman returned an invalid Chrome package record")
+
+    request = Request(
+        CHROME_PACKAGES_URL,
+        headers={"User-Agent": "desktop-status-update-checker/1.0"},
+    )
+    try:
+        with urlopen(request, timeout=20) as response:
+            package_index = response.read().decode("utf-8")
+    except (
+        URLError,
+        TimeoutError,
+        UnicodeDecodeError,
+    ) as error:
+        raise RuntimeError(f"Chrome release information request failed: {error}") from error
+
+    latest = None
+    for stanza in package_index.split("\n\n"):
+        package_name = None
+        version = None
+        for line in stanza.splitlines():
+            if line.startswith("Package: "):
+                package_name = line.removeprefix("Package: ").strip()
+            elif line.startswith("Version: "):
+                version = line.removeprefix("Version: ").strip()
+        if package_name == "google-chrome-stable":
+            latest = version
+            break
+    if not latest:
+        raise RuntimeError(
+            "Chrome release information has no google-chrome-stable version"
+        )
+
+    comparison = run_command(
+        ["vercmp", fields[1], latest], timeout=5
+    )
+    if comparison.returncode != 0:
+        message = comparison.stderr.strip() or f"exit status {comparison.returncode}"
+        raise RuntimeError(f"vercmp failed for google-chrome-stable: {message}")
+    try:
+        return int(comparison.stdout.strip()) < 0
+    except ValueError as error:
+        raise RuntimeError(
+            "vercmp returned an invalid result for google-chrome-stable"
+        ) from error
+
+
+def main():
+    failures = 0
+    for label, count_updates in (
+        ("aur", count_aur_updates),
+        ("chrome", count_chrome_updates),
+        ("arch", count_repository_updates),
+    ):
+        try:
+            result = count_updates()
+        except RuntimeError as error:
+            print(f"desktop-updates: {error}", file=sys.stderr)
+            print(f"{label} -1", flush=True)
+            failures += 1
+        else:
+            print(f"{label} {int(result)}", flush=True)
+
+    return int(failures == 2)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
