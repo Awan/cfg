@@ -1478,7 +1478,7 @@ init_bar(void)
     }
 
     bar_font = XftFontOpenName(bar_display, screen,
-        "MesloLGM Nerd Font Mono:size=10");
+        "MonaspiceRn NF Medium:size=10");
     if (bar_font == NULL)
         bar_font = XftFontOpenName(bar_display, screen, "monospace:size=10");
     if (bar_font == NULL) {
