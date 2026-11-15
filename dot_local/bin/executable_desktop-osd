@@ -5,7 +5,7 @@ notify_volume() {
 
     case "$volume_info" in
         *"[MUTED]"*)
-            dunstify -a Spectrwm -i audio-volume-muted -t 1200 \
+            dunstify -a Desktop -i audio-volume-muted -t 1200 \
                 -h int:value:0 \
                 -h string:hlcolor:#50e050 \
                 -h string:x-canonical-private-synchronous:volume \
@@ -48,7 +48,7 @@ notify_volume() {
         icon=audio-volume-high
     fi
 
-    dunstify -a Spectrwm -i "$icon" -t 1200 \
+    dunstify -a Desktop -i "$icon" -t 1200 \
         -h "int:value:$progress" \
         -h string:hlcolor:#50e050 \
         -h string:x-canonical-private-synchronous:volume \
@@ -81,7 +81,7 @@ notify_mic() {
         *) state=Unmuted ;;
     esac
 
-    dunstify -a Spectrwm -t 1200 \
+    dunstify -a Desktop -t 1200 \
         -h string:x-canonical-private-synchronous:microphone \
         "Microphone" "$state"
 }
@@ -96,7 +96,7 @@ notify_bluetooth() {
         *) return 1 ;;
     esac
 
-    dunstify -a Spectrwm -i bluetooth -t 1200 \
+    dunstify -a Desktop -i bluetooth -t 1200 \
         -h string:x-canonical-private-synchronous:bluetooth \
         "Bluetooth" "$state"
 }
@@ -117,7 +117,7 @@ notify_wlan() {
         Mixed) icon=network-wireless ;;
     esac
 
-    dunstify -a Spectrwm -i "$icon" -t 1200 \
+    dunstify -a Desktop -i "$icon" -t 1200 \
         -h string:x-canonical-private-synchronous:wlan \
         "Wi-Fi" "$state"
 }

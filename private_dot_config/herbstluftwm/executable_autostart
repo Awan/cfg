@@ -90,14 +90,14 @@ hc mousebind Mod4-Button1 move
 hc mousebind Mod4-Button2 zoom
 hc mousebind Mod4-Button3 resize
 
-hc keybind XF86AudioRaiseVolume spawn ~/.local/bin/spectrwm-osd volume-up
-hc keybind XF86AudioLowerVolume spawn ~/.local/bin/spectrwm-osd volume-down
-hc keybind XF86AudioMute spawn ~/.local/bin/spectrwm-osd volume-mute
-hc keybind XF86Bluetooth spawn sh -c 'rfkill toggle bluetooth && ~/.local/bin/spectrwm-osd bluetooth-toggle'
-hc keybind XF86WLAN spawn ~/.local/bin/spectrwm-osd wlan-status
-hc keybind XF86AudioMicMute spawn ~/.local/bin/spectrwm-osd mic-mute
-hc keybind XF86MonBrightnessUp spawn ~/.local/bin/spectrwm-osd brightness-up
-hc keybind XF86MonBrightnessDown spawn ~/.local/bin/spectrwm-osd brightness-down
+hc keybind XF86AudioRaiseVolume spawn ~/.local/bin/desktop-osd volume-up
+hc keybind XF86AudioLowerVolume spawn ~/.local/bin/desktop-osd volume-down
+hc keybind XF86AudioMute spawn ~/.local/bin/desktop-osd volume-mute
+hc keybind XF86Bluetooth spawn sh -c 'rfkill toggle bluetooth && ~/.local/bin/desktop-osd bluetooth-toggle'
+hc keybind XF86WLAN spawn ~/.local/bin/desktop-osd wlan-status
+hc keybind XF86AudioMicMute spawn ~/.local/bin/desktop-osd mic-mute
+hc keybind XF86MonBrightnessUp spawn ~/.local/bin/desktop-osd brightness-up
+hc keybind XF86MonBrightnessDown spawn ~/.local/bin/desktop-osd brightness-down
 hc keybind Mod1-b spawn mpc toggle
 hc keybind Mod1-bracketleft spawn mpc seek -10
 hc keybind Mod1-bracketright spawn mpc seek +10
@@ -109,7 +109,7 @@ hc keybind Mod4-Shift-Print spawn bash -o pipefail -c 'import -window "$(xdotool
 # Keybindings carried over from the spectrwm setup.
 hc keybind Mod4-Shift-Return spawn alacritty
 hc keybind Mod4-Shift-d spawn rofi -show combi
-hc keybind Mod4-w spawn ~/.local/bin/spectrwm-browser
+hc keybind Mod4-w spawn ~/.local/bin/desktop-browser
 hc keybind Mod4-x spawn xset s activate
 hc keybind Mod4-Mod1-w spawn ~/.local/bin/artwall
 hc keybind Mod4-Mod1-Shift-w spawn ~/.local/bin/artwall --reject

@@ -3,7 +3,7 @@
 browser_workspace=1
 
 if ! xdotool set_desktop "$browser_workspace"; then
-    printf '%s\n' 'spectrwm-browser: unable to switch to workspace 2' >&2
+    printf '%s\n' 'desktop-browser: unable to switch to workspace 2' >&2
     exit 1
 fi
 

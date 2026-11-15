@@ -4,8 +4,8 @@
   </a>
 </p>
 
-![spectrwm-multimonitor](https://github.com/user-attachments/assets/8997e1a7-94be-4b21-9bda-bab70bb043a6)
-![spectrwm](https://github.com/user-attachments/assets/7455f68a-e10d-47b9-83af-4fb32ea68bab)
+![Archived Spectrwm multi-monitor setup](https://github.com/user-attachments/assets/8997e1a7-94be-4b21-9bda-bab70bb043a6)
+![Archived Spectrwm setup](https://github.com/user-attachments/assets/7455f68a-e10d-47b9-83af-4fb32ea68bab)
 ![bspwm](https://user-images.githubusercontent.com/42554663/100934595-ca9d7e00-3510-11eb-8943-4061ea1040ea.png)
 ![dwm](https://user-images.githubusercontent.com/42554663/62346164-8827f380-b50e-11e9-8538-a25c46c51af9.png)
 ![lewany](https://user-images.githubusercontent.com/42554663/68199427-d8b45e80-ffdf-11e9-80d5-b8666ceff734.png)
@@ -29,8 +29,8 @@
  zsh        > vanilla Zsh setup with a lightweight Git-aware prompt
  tmux       > terminal multiplexer
  alacritty  > terminal emulator configuration
- spectrwm   > current tiling window manager configuration
- status bar > native C status program used by Spectrwm
+ herbstluftwm > current tiling window manager and status bar
+ status bar   > standalone native C bar for Herbstluftwm
  picom      > compositor configuration
  dunst      > notification daemon
  ranger     > file manager configuration
@@ -305,10 +305,10 @@ The repository contains the Zsh configuration and package references, while the 
 My current graphical setup is based on:
 
 * **Alacritty** as the terminal emulator
-* **Spectrwm** as the tiling window manager and for window-manager keybindings
+* **Herbstluftwm** as the tiling window manager and for window-manager keybindings
 * **picom** as the compositor
 * **dunst** for notifications
-* **a native C status program** integrated into Spectrwm's bar
+* **a standalone native C status bar** with clickable workspaces and status modules
 
 The status program reports music, audio, Wi-Fi, Maildir, CPU, memory, brightness,
 battery, temperature, and pending package updates. MPD, audio, Wi-Fi, and
@@ -316,10 +316,10 @@ Maildir changes use event notifications; sampled system metrics refresh every
 five seconds. Package updates are checked hourly for official repositories and
 installed AUR packages. AUR checks compare published package versions and do
 not detect upstream VCS changes that have not been published as a new AUR
-version. Chezmoi builds the program from
-`dot_local/share/spectrwm-status/spectrwm-status.c` when its source changes.
-Building requires a C compiler, `pkg-config`, and the PulseAudio, MPD client,
-and libnl development libraries.
+version. Chezmoi builds the bar from
+`dot_local/share/herbstluftwm-status/herbstluftwm-status.c` when its source
+changes. Building requires a C compiler, `pkg-config`, and the PulseAudio, MPD
+client, libnl, X11, and Xft development libraries.
 
 The repository also contains configurations for other window managers, compositors, terminal emulators and status bars that are not necessarily part of the current setup. These are retained as optional configurations rather than indicating that every application is currently installed or in use.
 
@@ -327,7 +327,7 @@ The repository also contains configurations for other window managers, composito
 
 The `archive/` directory contains configurations retained for historical reference or optional use. These files are kept in the repository but are **not managed or deployed by chezmoi**.
 
-Archived configurations include older desktop environments, terminal emulators, status bars, and applications that are no longer part of the current setup. They can be restored or adapted for use on another system without affecting the active configuration.
+Archived configurations include the former Spectrwm setup, older desktop environments, terminal emulators, status bars, and applications that are no longer part of the current setup. Spectrwm is preserved under `archive/desktop/spectrwm/`; the `spectrwm-with-status-bar` tag also preserves the complete pre-Herbst main branch. Archived files can be restored or adapted without affecting the active configuration.
 
 The active configuration remains in the chezmoi source tree and represents the setup currently deployed on my system.
 
@@ -383,7 +383,7 @@ These configurations remain available in the repository even when the correspond
 
 # Lemonbar NG (retained project)
 
-Lemonbar NG is my maintained fork of Lemonbar XFT, focused on improved Unicode and Nerd Font support while preserving the lightweight design and XCB-based architecture of the original project. It and its configuration are retained in this repository, but Lemonbar NG is not the status bar in my current Spectrwm setup.
+Lemonbar NG is my maintained fork of Lemonbar XFT, focused on improved Unicode and Nerd Font support while preserving the lightweight design and XCB-based architecture of the original project. It and its configuration are retained in this repository, but Lemonbar NG is not the status bar in my current Herbstluftwm setup.
 
 It provides XFT rendering, full UTF-8/32-bit Unicode support, Nerd Font compatibility, basic formatting, RandR and Xinerama support, and EWMH compliance without wasting precious memory.
 

@@ -22,10 +22,10 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 fi
 
 # Identify the desktop session to applications that use XDG metadata.
-export DESKTOP_SESSION="${DESKTOP_SESSION:-spectrwm}"
+export DESKTOP_SESSION="${DESKTOP_SESSION:-herbstluftwm}"
 export XDG_SESSION_TYPE=x11
 
-# SXHKD contains BSPWM-specific bindings and is not used by Spectrwm.
+# SXHKD contains BSPWM-specific bindings and is not used by Herbstluftwm.
 [ "$DESKTOP_SESSION" = bspwm ] && run sxhkd
 
 # Merge user-defined X resources when the file exists.
