@@ -114,7 +114,9 @@ hc keybind Mod4-x spawn xset s activate
 hc keybind Mod4-Mod1-w spawn ~/.local/bin/artwall
 hc keybind Mod4-Mod1-Shift-w spawn ~/.local/bin/artwall --reject
 hc keybind Mod4-Mod1-e spawn ~/.local/bin/touchpad
-hc keybind Mod4-i spawn ~/.local/bin/herbstluftwm-scratchpad toggle
+hc keybind Mod4-Mod1-i spawn ~/.local/bin/herbstluftwm-scratchpad toggle
+hc keybind Mod4-Shift-i set_attr clients.focus.minimized on
+hc keybind Mod4-i spawn sh -c 'for id in $(herbstclient list_clients); do herbstclient set_attr "clients.$id.minimized" off; done'
 hc keybind Mod4-e spawn ~/.local/bin/herbstluftwm-populated-tag empty
 hc keybind Mod4-Shift-e spawn ~/.local/bin/herbstluftwm-populated-tag move-empty
 hc keybind Mod4-n use_previous
