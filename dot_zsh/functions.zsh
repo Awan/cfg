@@ -1325,7 +1325,7 @@ ghsubdomains_takeover() {
 chromeupdate () {
     # checks if google chrome is updated or not, if its not updated, it will ask
     # me to update it
-    chrome_repo_path="$HOME/git/chrome"
+    chrome_repo_path="$HOME/git/arch-pkgbuilds/google-chrome-stable"
     current_chrome_version_installed="$(google-chrome-stable --version | awk '{print $3}')"
     latest_chrome_version="$(curl -sSf https://dl.google.com/linux/chrome/deb/dists/stable/main/binary-amd64/Packages 2>/dev/null | awk -F ': ' '/^Package: google-chrome-stable$/{getline; if ($1 == "Version") { split($2, v, "-"); print v[1]; exit; } }')"
 
@@ -1342,7 +1342,7 @@ chromeupdate () {
             [Yy]*)
                 printf '%s\n' 'Updating Chrome...'
                 cd "$chrome_repo_path"
-                git pull && makepkg -sirc --noconfirm && notify-send "Chrome is updated successfully!"
+                python update.py && makepkg -Csirc --noconfirm && notify-send "Chrome is updated successfully!"
                 ;;
             *)
                 printf '%s\n' 'No update performed!'
