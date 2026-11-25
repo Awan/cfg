@@ -130,3 +130,7 @@ autostart
 Monaspice
 MonaspiceRn
 monospace
+IPv6
+GLX
+noatime
+cmdline

@@ -5,6 +5,7 @@
 # Author        : Abdullah Khabir <https://abdullah.support>
 # Description   : Automates creating a Wi-Fi Access Point (Hotspot) on Arch Linux
 #                 sharing internet from a single wireless interface via NAT.
+#                 Private upstream networks and IPv6 forwarding are blocked.
 #                 Automatically syncs AP radio channel with upstream Wi-Fi.
 # ==============================================================================
 #
@@ -53,6 +54,7 @@
 #   INTERFACE_AP  : Name of virtual access point interface (e.g., uap0)
 #   HOSTAPD_CONF  : Path to hostapd configuration file (/etc/hostapd/hostapd.conf)
 #   SUBNET        : Gateway IP for the virtual hotspot network (e.g., 192.168.150.1/24)
+#   HOTSPOT_NETWORK: Network range matching SUBNET (e.g., 192.168.150.0/24)
 #
 #
 # 4. HOW TO RUN
@@ -69,6 +71,7 @@ INTERFACE_AP="uap0"
 HOSTAPD_CONF="/etc/hostapd/hostapd.conf"
 HOSTAPD_RUNTIME_CONF="/run/chezmoi-hotspot-hostapd.conf"
 SUBNET="192.168.150.1/24"
+HOTSPOT_NETWORK="192.168.150.0/24"
 if [ -z "${PRIVILEGE_COMMAND:-}" ]; then
     if command -v doas >/dev/null 2>&1; then
         PRIVILEGE_COMMAND=doas
@@ -136,6 +139,11 @@ start_hotspot() {
 
     if [ -z "$INTERFACE_UPLINK" ]; then
         echo "Error: no Internet uplink interface found."
+        exit 1
+    fi
+
+    if ! run_privileged nft list chain inet filter forward >/dev/null 2>&1; then
+        echo "Error: nftables inet filter forward chain must be active." >&2
         exit 1
     fi
 
@@ -228,15 +236,29 @@ start_hotspot() {
     cleanup_firewall
     if ! run_privileged iptables -t nat -N "$HOTSPOT_NAT_CHAIN" ||
        ! run_privileged iptables -N "$HOTSPOT_FWD_CHAIN" ||
-       ! run_privileged iptables -t nat -A "$HOTSPOT_NAT_CHAIN" -o "$INTERFACE_UPLINK" -j MASQUERADE ||
-       ! run_privileged iptables -A "$HOTSPOT_FWD_CHAIN" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT ||
-       ! run_privileged iptables -A "$HOTSPOT_FWD_CHAIN" -i "$INTERFACE_AP" -o "$INTERFACE_UPLINK" -j ACCEPT ||
-       ! run_privileged iptables -t nat -A POSTROUTING -j "$HOTSPOT_NAT_CHAIN" ||
-       ! run_privileged iptables -A FORWARD -j "$HOTSPOT_FWD_CHAIN"; then
+       ! run_privileged iptables -t nat -A "$HOTSPOT_NAT_CHAIN" -s "$HOTSPOT_NETWORK" -o "$INTERFACE_UPLINK" -j MASQUERADE ||
+       ! run_privileged iptables -A "$HOTSPOT_FWD_CHAIN" -i "$INTERFACE_UPLINK" -o "$INTERFACE_AP" -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT; then
         echo "Error: failed to configure hotspot iptables rules." >&2
         stop_hotspot
         exit 1
     fi
+
+    for network in 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 169.254.0.0/16; do
+        if ! run_privileged iptables -A "$HOTSPOT_FWD_CHAIN" -i "$INTERFACE_AP" -o "$INTERFACE_UPLINK" -d "$network" -j DROP; then
+            echo "Error: failed to restrict hotspot access to private networks." >&2
+            stop_hotspot
+            exit 1
+        fi
+    done
+
+    if ! run_privileged iptables -A "$HOTSPOT_FWD_CHAIN" -i "$INTERFACE_AP" -o "$INTERFACE_UPLINK" -j ACCEPT ||
+       ! run_privileged iptables -t nat -A POSTROUTING -j "$HOTSPOT_NAT_CHAIN" ||
+       ! run_privileged iptables -I FORWARD 1 -j "$HOTSPOT_FWD_CHAIN"; then
+        echo "Error: failed to configure hotspot forwarding." >&2
+        stop_hotspot
+        exit 1
+    fi
+
     if run_privileged nft list chain inet filter input >/dev/null 2>&1; then
         run_privileged nft add rule inet filter input iifname "$INTERFACE_AP" udp dport 67 accept comment "CFG_HOTSPOT_DHCP" || {
             echo "Error: failed to add the hotspot DHCP firewall rule." >&2
@@ -244,18 +266,28 @@ start_hotspot() {
             exit 1
         }
     fi
-    if run_privileged nft list chain inet filter forward >/dev/null 2>&1; then
-        run_privileged nft add rule inet filter forward iifname "$INTERFACE_AP" oifname "$INTERFACE_UPLINK" accept comment "CFG_HOTSPOT_FWD" || {
-            echo "Error: failed to add the hotspot forwarding firewall rule." >&2
+    run_privileged nft add rule inet filter forward iifname "$INTERFACE_UPLINK" oifname "$INTERFACE_AP" ct state established,related accept comment "CFG_HOTSPOT_FWD" || {
+        echo "Error: failed to add the hotspot return-traffic firewall rule." >&2
+        stop_hotspot
+        exit 1
+    }
+    for network in 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 169.254.0.0/16; do
+        run_privileged nft add rule inet filter forward iifname "$INTERFACE_AP" oifname "$INTERFACE_UPLINK" ip daddr "$network" drop comment "CFG_HOTSPOT_FWD" || {
+            echo "Error: failed to restrict hotspot access to private networks." >&2
             stop_hotspot
             exit 1
         }
-        run_privileged nft add rule inet filter forward iifname "$INTERFACE_UPLINK" oifname "$INTERFACE_AP" ct state established,related accept comment "CFG_HOTSPOT_FWD" || {
-            echo "Error: failed to add the hotspot return-traffic firewall rule." >&2
-            stop_hotspot
-            exit 1
-        }
-    fi
+    done
+    run_privileged nft add rule inet filter forward iifname "$INTERFACE_AP" oifname "$INTERFACE_UPLINK" meta nfproto ipv6 drop comment "CFG_HOTSPOT_FWD" || {
+        echo "Error: failed to block unsupported IPv6 hotspot forwarding." >&2
+        stop_hotspot
+        exit 1
+    }
+    run_privileged nft add rule inet filter forward iifname "$INTERFACE_AP" oifname "$INTERFACE_UPLINK" meta nfproto ipv4 accept comment "CFG_HOTSPOT_FWD" || {
+        echo "Error: failed to add the restricted hotspot forwarding rule." >&2
+        stop_hotspot
+        exit 1
+    }
 
     # Start dnsmasq only if it was not already active, and remember ownership.
     if ! run_privileged systemctl is-active --quiet dnsmasq; then

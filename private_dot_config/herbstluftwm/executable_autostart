@@ -21,6 +21,7 @@ hc set smart_frame_surroundings hide_gaps
 hc set smart_window_surroundings on
 hc set focus_follows_mouse false
 hc set swap_monitors_to_get_tag true
+hc set default_frame_layout vertical
 
 if hc tag_status | grep -Eq '(^|[[:space:]])[#:.+!]default([[:space:]]|$)'; then
   hc rename default 1
@@ -32,18 +33,11 @@ for tag in 1 2 3 4 5 6 7 8 9; do
   fi
 done
 
-current_tag=$(hc get_attr tags.focus.name)
-for tag in 1 2 3 4 5 6 7 8 9; do
-  hc use "$tag"
-  hc set_layout grid
-done
-hc use "$current_tag"
-
 hc keybind Mod4-Shift-q quit
 hc keybind Mod4-Shift-r reload
 hc keybind Mod4-Return spawn alacritty
 hc keybind Mod4-d spawn rofi -show drun
-hc keybind Mod4-q close
+hc keybind Mod4-q close_and_remove
 
 hc keybind Mod4-h focus left
 hc keybind Mod4-j focus down
@@ -64,6 +58,7 @@ hc keybind Mod4-Shift-Right shift right
 
 hc keybind Mod4-u split bottom 0.5
 hc keybind Mod4-o split right 0.5
+hc keybind Mod4-Shift-v chain , split right 0.5 , focus right , set_layout vertical
 hc keybind Mod4-f fullscreen toggle
 hc keybind Mod4-s floating toggle
 hc keybind Mod4-r remove
@@ -148,6 +143,11 @@ hc rule class=Gimp tag=5
 # The scratchpad terminal floats in the centre and is managed by
 # herbstluftwm-scratchpad, so it must not steal focus when it appears.
 hc rule class=Alacritty instance=scratchpad floating=on floatplacement=center focus=off
+hc rule hook=master-stack-init
+
+# Give each untouched tag a left master and a right vertical stack when its
+# first tiled window appears. Existing multi-frame layouts are left alone.
+~/.local/bin/herbstluftwm-master-stack-init &
 
 # Reserve the bar strip on every monitor and (re)start the status bar. After
 # plugging or unplugging a display, Super+P runs "herbstluftwm-monitors rescan".
