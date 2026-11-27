@@ -36,12 +36,11 @@ done
 # Set the client arrangement in every existing leaf frame to side by side.
 # This preserves any manually created frame splits.
 set_frame_client_layout() {
-  frame=$1
-  if hc get_attr "$frame.split_type" >/dev/null 2>&1; then
-    set_frame_client_layout "$frame.0"
-    set_frame_client_layout "$frame.1"
+  if hc get_attr "$1.split_type" >/dev/null 2>&1; then
+    set_frame_client_layout "$1.0"
+    set_frame_client_layout "$1.1"
   else
-    hc set_attr "$frame.algorithm" horizontal
+    hc set_attr "$1.algorithm" horizontal
   fi
 }
 
