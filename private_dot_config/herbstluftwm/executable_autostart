@@ -74,7 +74,7 @@ hc keybind Mod4-Shift-Right shift right
 hc keybind Mod4-u split bottom 0.5
 hc keybind Mod4-o split right 0.5
 hc keybind Mod4-f fullscreen toggle
-hc keybind Mod4-s floating toggle
+hc keybind Mod4-s attr clients.focus.floating toggle
 hc keybind Mod4-r remove
 hc keybind Mod4-space cycle_layout +1
 hc keybind Mod4-Tab cycle_all +1
