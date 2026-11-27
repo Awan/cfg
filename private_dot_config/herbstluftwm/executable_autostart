@@ -21,7 +21,7 @@ hc set smart_frame_surroundings hide_gaps
 hc set smart_window_surroundings on
 hc set focus_follows_mouse false
 hc set swap_monitors_to_get_tag true
-hc set default_frame_layout vertical
+hc set default_frame_layout horizontal
 
 if hc tag_status | grep -Eq '(^|[[:space:]])[#:.+!]default([[:space:]]|$)'; then
   hc rename default 1
@@ -31,6 +31,22 @@ for tag in 1 2 3 4 5 6 7 8 9; do
   if ! hc tag_status | grep -Eq "(^|[[:space:]])[#:.+!]?$tag([[:space:]]|$)"; then
     hc add "$tag"
   fi
+done
+
+# Set the client arrangement in every existing leaf frame to side by side.
+# This preserves any manually created frame splits.
+set_frame_client_layout() {
+  frame=$1
+  if hc get_attr "$frame.split_type" >/dev/null 2>&1; then
+    set_frame_client_layout "$frame.0"
+    set_frame_client_layout "$frame.1"
+  else
+    hc set_attr "$frame.algorithm" horizontal
+  fi
+}
+
+for tag in 1 2 3 4 5 6 7 8 9; do
+  set_frame_client_layout "tags.by-name.$tag.tiling.root"
 done
 
 hc keybind Mod4-Shift-q quit
@@ -58,7 +74,6 @@ hc keybind Mod4-Shift-Right shift right
 
 hc keybind Mod4-u split bottom 0.5
 hc keybind Mod4-o split right 0.5
-hc keybind Mod4-Shift-v chain , split right 0.5 , focus right , set_layout vertical
 hc keybind Mod4-f fullscreen toggle
 hc keybind Mod4-s floating toggle
 hc keybind Mod4-r remove
@@ -70,10 +85,10 @@ hc keybind Mod4-period use_index +1 --skip-visible
 hc keybind Mod4-comma use_index -1 --skip-visible
 hc keybind Mod4-semicolon spawn ~/.local/bin/herbstluftwm-populated-tag next
 hc keybind Mod4-apostrophe spawn ~/.local/bin/herbstluftwm-populated-tag previous
-hc keybind Mod4-Control-h resize left +0.02
-hc keybind Mod4-Control-j resize down +0.02
-hc keybind Mod4-Control-k resize up +0.02
-hc keybind Mod4-Control-l resize right +0.02
+hc keybind Mod4-Mod1-h resize left +0.02
+hc keybind Mod4-Mod1-j resize down +0.02
+hc keybind Mod4-Mod1-k resize up +0.02
+hc keybind Mod4-Mod1-l resize right +0.02
 
 for tag in 1 2 3 4 5 6 7 8 9; do
   index=$((tag - 1))
@@ -143,11 +158,6 @@ hc rule class=Gimp tag=5
 # The scratchpad terminal floats in the centre and is managed by
 # herbstluftwm-scratchpad, so it must not steal focus when it appears.
 hc rule class=Alacritty instance=scratchpad floating=on floatplacement=center focus=off
-hc rule hook=master-stack-init
-
-# Give each untouched tag a left master and a right vertical stack when its
-# first tiled window appears. Existing multi-frame layouts are left alone.
-~/.local/bin/herbstluftwm-master-stack-init &
 
 # Reserve the bar strip on every monitor and (re)start the status bar. After
 # plugging or unplugging a display, Super+P runs "herbstluftwm-monitors rescan".
