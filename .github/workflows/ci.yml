@@ -67,7 +67,7 @@ jobs:
       - name: Compile native Herbstluftwm status bar
         run: |
           cflags=$(pkg-config --cflags libpulse libmpdclient libnl-3.0 libnl-genl-3.0 xft x11 gio-2.0)
-          libs=$(pkg-config --libs libpulse libmpdclient libnl-3.0 libnl-genl-3.0 xft x11)
+          libs=$(pkg-config --libs libpulse libmpdclient libnl-3.0 libnl-genl-3.0 xft x11 gio-2.0)
           # shellcheck disable=SC2086
           cc -O2 -std=c11 -Wall -Wextra -Werror $cflags dot_local/share/herbstluftwm-status/herbstluftwm-status.c -o /tmp/herbstluftwm-status-native $libs -pthread
           test -x /tmp/herbstluftwm-status-native
