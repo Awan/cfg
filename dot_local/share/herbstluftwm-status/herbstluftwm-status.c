@@ -2,6 +2,7 @@
 
 #include <ctype.h>
 #include <dirent.h>
+#include <gio/gio.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -37,6 +38,11 @@
 #include <X11/Xft/Xft.h>
 
 #define MPD_RECONNECT_SECONDS 2
+#define LOLLYPOP_RECONNECT_SECONDS 2
+#define LOLLYPOP_STOP_CHECK_MILLISECONDS 500
+#define LOLLYPOP_BUS_NAME "org.mpris.MediaPlayer2.Lollypop"
+#define MPRIS_OBJECT_PATH "/org/mpris/MediaPlayer2"
+#define MPRIS_PLAYER_INTERFACE "org.mpris.MediaPlayer2.Player"
 #define STATUS_REFRESH_SECONDS 5
 #define UPDATE_REFRESH_SECONDS 3600
 #define UPDATE_CHECK_TIMEOUT_SECONDS 300
@@ -49,6 +55,19 @@ extern char **environ;
 struct music_snapshot {
     char title[1024];
     enum mpd_state state;
+};
+
+enum lollypop_playback_state {
+    LOLLYPOP_STATE_UNKNOWN,
+    LOLLYPOP_STATE_STOPPED,
+    LOLLYPOP_STATE_PAUSED,
+    LOLLYPOP_STATE_PLAYING,
+};
+
+struct lollypop_snapshot {
+    char title[1024];
+    char artist[512];
+    enum lollypop_playback_state state;
 };
 
 struct audio_snapshot {
@@ -72,6 +91,7 @@ enum module_action {
     MODULE_ACTION_BRIGHTNESS,
     MODULE_ACTION_WIFI,
     MODULE_ACTION_MUSIC,
+    MODULE_ACTION_LOLLYPOP_MUSIC,
     MODULE_ACTION_MAIL,
     MODULE_ACTION_UPDATES,
     MODULE_ACTION_SYSTEM,
@@ -85,9 +105,11 @@ struct module_hit {
 };
 
 static pthread_mutex_t music_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t lollypop_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t wifi_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t updates_mutex = PTHREAD_MUTEX_INITIALIZER;
 static struct music_snapshot music;
+static struct lollypop_snapshot lollypop;
 static struct audio_snapshot audio = {
     .icon = "",
     .volume = -1,
@@ -575,6 +597,292 @@ mpd_worker(void *unused)
     }
 
     return NULL;
+}
+
+static void
+clear_lollypop_snapshot(void)
+{
+    pthread_mutex_lock(&lollypop_mutex);
+    memset(&lollypop, 0, sizeof(lollypop));
+    pthread_mutex_unlock(&lollypop_mutex);
+    notify_status_change();
+}
+
+static void
+update_lollypop_snapshot(GDBusConnection *connection)
+{
+    GError *error = NULL;
+    GVariant *reply;
+    GVariant *properties = NULL;
+    GVariant *metadata = NULL;
+    GVariant *value = NULL;
+    struct lollypop_snapshot next = {0};
+    const gchar *playback_status = NULL;
+
+    reply = g_dbus_connection_call_sync(connection, LOLLYPOP_BUS_NAME,
+        MPRIS_OBJECT_PATH, "org.freedesktop.DBus.Properties", "GetAll",
+        g_variant_new("(s)", MPRIS_PLAYER_INTERFACE),
+        G_VARIANT_TYPE("(a{sv})"), G_DBUS_CALL_FLAGS_NONE, 2000, NULL,
+        &error);
+    if (reply == NULL) {
+        g_clear_error(&error);
+        clear_lollypop_snapshot();
+        return;
+    }
+
+    g_variant_get(reply, "(@a{sv})", &properties);
+    if (g_variant_lookup(properties, "PlaybackStatus", "&s",
+            &playback_status)) {
+        if (strcmp(playback_status, "Playing") == 0)
+            next.state = LOLLYPOP_STATE_PLAYING;
+        else if (strcmp(playback_status, "Paused") == 0)
+            next.state = LOLLYPOP_STATE_PAUSED;
+        else if (strcmp(playback_status, "Stopped") == 0)
+            next.state = LOLLYPOP_STATE_STOPPED;
+    }
+
+    metadata = g_variant_lookup_value(properties, "Metadata",
+        G_VARIANT_TYPE_VARDICT);
+    if (metadata != NULL) {
+        value = g_variant_lookup_value(metadata, "xesam:title",
+            G_VARIANT_TYPE_STRING);
+        if (value != NULL) {
+            copy_status_title(next.title, sizeof(next.title),
+                g_variant_get_string(value, NULL));
+            g_variant_unref(value);
+        }
+
+        value = g_variant_lookup_value(metadata, "xesam:artist",
+            G_VARIANT_TYPE_STRING_ARRAY);
+        if (value != NULL) {
+            gsize artist_count = 0;
+            gchar **artists = g_variant_dup_strv(value, &artist_count);
+
+            if (artist_count > 0)
+                copy_status_title(next.artist, sizeof(next.artist),
+                    artists[0]);
+            g_strfreev(artists);
+            g_variant_unref(value);
+        }
+        g_variant_unref(metadata);
+    }
+
+    pthread_mutex_lock(&lollypop_mutex);
+    lollypop = next;
+    pthread_mutex_unlock(&lollypop_mutex);
+    g_variant_unref(properties);
+    g_variant_unref(reply);
+    notify_status_change();
+}
+
+static void
+lollypop_properties_changed(GDBusConnection *connection,
+    const gchar *sender_name, const gchar *object_path,
+    const gchar *interface_name, const gchar *signal_name,
+    GVariant *parameters, gpointer userdata)
+{
+    const gchar *changed_interface = NULL;
+    const gchar *invalidated_name = NULL;
+    GVariant *changed_properties = NULL;
+    GVariant *invalidated_properties = NULL;
+    GVariant *value;
+    GVariantIter invalidated_iter;
+    bool refresh = false;
+
+    (void)sender_name;
+    (void)object_path;
+    (void)interface_name;
+    (void)signal_name;
+    (void)userdata;
+
+    g_variant_get(parameters, "(&s@a{sv}@as)", &changed_interface,
+        &changed_properties, &invalidated_properties);
+    if (strcmp(changed_interface, MPRIS_PLAYER_INTERFACE) == 0) {
+        value = g_variant_lookup_value(changed_properties, "PlaybackStatus",
+            NULL);
+        if (value != NULL) {
+            refresh = true;
+            g_variant_unref(value);
+        }
+        value = g_variant_lookup_value(changed_properties, "Metadata", NULL);
+        if (value != NULL) {
+            refresh = true;
+            g_variant_unref(value);
+        }
+        g_variant_iter_init(&invalidated_iter, invalidated_properties);
+        while (g_variant_iter_next(&invalidated_iter, "&s",
+                &invalidated_name)) {
+            if (strcmp(invalidated_name, "PlaybackStatus") == 0 ||
+                strcmp(invalidated_name, "Metadata") == 0) {
+                refresh = true;
+                break;
+            }
+        }
+        if (refresh)
+            update_lollypop_snapshot(connection);
+    }
+    g_variant_unref(changed_properties);
+    g_variant_unref(invalidated_properties);
+}
+
+static void
+lollypop_name_owner_changed(GDBusConnection *connection,
+    const gchar *sender_name, const gchar *object_path,
+    const gchar *interface_name, const gchar *signal_name,
+    GVariant *parameters, gpointer userdata)
+{
+    const gchar *name = NULL;
+    const gchar *old_owner = NULL;
+    const gchar *new_owner = NULL;
+
+    (void)sender_name;
+    (void)object_path;
+    (void)interface_name;
+    (void)signal_name;
+    (void)userdata;
+
+    g_variant_get(parameters, "(&s&s&s)", &name, &old_owner, &new_owner);
+    (void)old_owner;
+    if (strcmp(name, LOLLYPOP_BUS_NAME) != 0)
+        return;
+    if (new_owner[0] == '\0')
+        clear_lollypop_snapshot();
+    else
+        update_lollypop_snapshot(connection);
+}
+
+static void
+lollypop_connection_closed(GDBusConnection *connection,
+    gboolean remote_peer_vanished, GError *error, gpointer userdata)
+{
+    (void)connection;
+    (void)remote_peer_vanished;
+    (void)error;
+    g_main_loop_quit((GMainLoop *)userdata);
+}
+
+static gboolean
+lollypop_stop_check(gpointer userdata)
+{
+    GMainLoop *loop = userdata;
+
+    if (atomic_load_explicit(&stopping, memory_order_relaxed)) {
+        g_main_loop_quit(loop);
+        return G_SOURCE_REMOVE;
+    }
+    return G_SOURCE_CONTINUE;
+}
+
+static void *
+lollypop_worker(void *unused)
+{
+    (void)unused;
+
+    while (!atomic_load_explicit(&stopping, memory_order_relaxed)) {
+        GError *error = NULL;
+        gchar *address;
+        GDBusConnection *connection;
+        GMainContext *context;
+        GMainLoop *loop;
+        GSource *stop_source;
+        guint properties_subscription;
+        guint owner_subscription;
+
+        address = g_dbus_address_get_for_bus_sync(G_BUS_TYPE_SESSION, NULL,
+            &error);
+        if (address == NULL) {
+            fprintf(stderr, "herbstluftwm-status: session D-Bus: %s\n",
+                error == NULL ? "unable to find session bus" : error->message);
+            g_clear_error(&error);
+            sleep(LOLLYPOP_RECONNECT_SECONDS);
+            continue;
+        }
+
+        connection = g_dbus_connection_new_for_address_sync(address,
+            G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_CLIENT |
+                G_DBUS_CONNECTION_FLAGS_MESSAGE_BUS_CONNECTION,
+            NULL, NULL, &error);
+        g_free(address);
+        if (connection == NULL) {
+            fprintf(stderr, "herbstluftwm-status: connect to session D-Bus: %s\n",
+                error == NULL ? "connection failed" : error->message);
+            g_clear_error(&error);
+            sleep(LOLLYPOP_RECONNECT_SECONDS);
+            continue;
+        }
+        g_dbus_connection_set_exit_on_close(connection, FALSE);
+
+        context = g_main_context_new();
+        g_main_context_push_thread_default(context);
+        loop = g_main_loop_new(context, FALSE);
+        properties_subscription = g_dbus_connection_signal_subscribe(connection,
+            LOLLYPOP_BUS_NAME, "org.freedesktop.DBus.Properties",
+            "PropertiesChanged", MPRIS_OBJECT_PATH,
+            MPRIS_PLAYER_INTERFACE, G_DBUS_SIGNAL_FLAGS_NONE,
+            lollypop_properties_changed, NULL, NULL);
+        owner_subscription = g_dbus_connection_signal_subscribe(connection,
+            "org.freedesktop.DBus", "org.freedesktop.DBus", "NameOwnerChanged",
+            "/org/freedesktop/DBus", LOLLYPOP_BUS_NAME,
+            G_DBUS_SIGNAL_FLAGS_NONE, lollypop_name_owner_changed, NULL, NULL);
+        g_signal_connect(connection, "closed",
+            G_CALLBACK(lollypop_connection_closed), loop);
+
+        update_lollypop_snapshot(connection);
+
+        stop_source = g_timeout_source_new(
+            LOLLYPOP_STOP_CHECK_MILLISECONDS);
+        g_source_set_callback(stop_source, lollypop_stop_check, loop, NULL);
+        g_source_attach(stop_source, context);
+        g_main_loop_run(loop);
+
+        g_source_destroy(stop_source);
+        g_source_unref(stop_source);
+        if (properties_subscription != 0)
+            g_dbus_connection_signal_unsubscribe(connection,
+                properties_subscription);
+        if (owner_subscription != 0)
+            g_dbus_connection_signal_unsubscribe(connection, owner_subscription);
+        g_signal_handlers_disconnect_by_data(connection, loop);
+        g_main_loop_unref(loop);
+        g_main_context_pop_thread_default(context);
+        g_main_context_unref(context);
+        g_object_unref(connection);
+
+        clear_lollypop_snapshot();
+        if (!atomic_load_explicit(&stopping, memory_order_relaxed))
+            sleep(LOLLYPOP_RECONNECT_SECONDS);
+    }
+    return NULL;
+}
+
+static bool
+lollypop_player_call(const char *method)
+{
+    GError *error = NULL;
+    GDBusConnection *connection;
+    GVariant *reply;
+
+    connection = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, &error);
+    if (connection == NULL) {
+        fprintf(stderr, "herbstluftwm-status: connect to session D-Bus: %s\n",
+            error == NULL ? "connection failed" : error->message);
+        g_clear_error(&error);
+        return false;
+    }
+
+    reply = g_dbus_connection_call_sync(connection, LOLLYPOP_BUS_NAME,
+        MPRIS_OBJECT_PATH, MPRIS_PLAYER_INTERFACE, method, NULL, NULL,
+        G_DBUS_CALL_FLAGS_NONE, 2000, NULL, &error);
+    g_object_unref(connection);
+    if (reply == NULL) {
+        fprintf(stderr, "herbstluftwm-status: Lollypop %s: %s\n", method,
+            error == NULL ? "D-Bus call failed" : error->message);
+        g_clear_error(&error);
+        return false;
+    }
+
+    g_variant_unref(reply);
+    return true;
 }
 
 static void
@@ -1567,6 +1875,7 @@ module_action_from_name(const unsigned char *name, size_t length)
     ACTION_NAME("brightness", MODULE_ACTION_BRIGHTNESS);
     ACTION_NAME("wifi", MODULE_ACTION_WIFI);
     ACTION_NAME("music", MODULE_ACTION_MUSIC);
+    ACTION_NAME("lollypop-music", MODULE_ACTION_LOLLYPOP_MUSIC);
     ACTION_NAME("mail", MODULE_ACTION_MAIL);
     ACTION_NAME("updates", MODULE_ACTION_UPDATES);
     ACTION_NAME("system", MODULE_ACTION_SYSTEM);
@@ -1921,6 +2230,7 @@ handle_module_click(enum module_action action, unsigned button)
     char *music_next[] = {"mpc", "next", NULL};
     char *music_previous[] = {"mpc", "prev", NULL};
     char *music_stop[] = {"mpc", "stop", NULL};
+    char *lollypop_app[] = {"lollypop", NULL};
     char *mail[] = {"alacritty", "-e", "mutt", NULL};
     char *updates[] = {
         "alacritty", "-e", "sh", "-c",
@@ -1967,6 +2277,18 @@ handle_module_click(enum module_action action, unsigned button)
             (void)run_click_command(music_next);
         else if (button == Button5)
             (void)run_click_command(music_previous);
+        break;
+    case MODULE_ACTION_LOLLYPOP_MUSIC:
+        if (button == Button1)
+            (void)lollypop_player_call("PlayPause");
+        else if (button == Button2)
+            (void)launch_click_application(lollypop_app);
+        else if (button == Button3)
+            (void)lollypop_player_call("Stop");
+        else if (button == Button4)
+            (void)lollypop_player_call("Next");
+        else if (button == Button5)
+            (void)lollypop_player_call("Previous");
         break;
     case MODULE_ACTION_MAIL:
         if (button == Button1)
@@ -2038,15 +2360,23 @@ static void
 print_status(void)
 {
     struct music_snapshot current_music;
+    struct lollypop_snapshot current_lollypop;
+    const char *selected_title = "";
+    const char *selected_artist = "";
+    const char *music_action = "music";
+    bool selected_lollypop = false;
+    bool selected_playing = false;
     char display_title[sizeof(music.title)];
-    char escaped_title[sizeof(music.title) * 2];
+    char display_artist[sizeof(current_lollypop.artist)];
+    char track_text[sizeof(display_title) + sizeof(display_artist) + 8];
+    char escaped_track[sizeof(track_text) * 2];
     char battery_status[128] = "";
     char temperature_status[128] = "";
     char mail_status[64] = "";
     char updates_status[128] = "";
     char update_labels[96] = "";
     char chrome_status[48] = "";
-    char music_status[sizeof(music.title) * 2 + 64] = "";
+    char music_status[sizeof(escaped_track) + 128] = "";
     char wifi_status[512] = "";
     char current_wifi_ssid[sizeof(wifi_ssid)];
     char escaped_wifi_ssid[sizeof(wifi_ssid) * 2];
@@ -2062,6 +2392,9 @@ print_status(void)
     pthread_mutex_lock(&music_mutex);
     current_music = music;
     pthread_mutex_unlock(&music_mutex);
+    pthread_mutex_lock(&lollypop_mutex);
+    current_lollypop = lollypop;
+    pthread_mutex_unlock(&lollypop_mutex);
     pthread_mutex_lock(&wifi_mutex);
     current_wifi_connected = wifi_connected;
     copy_string(current_wifi_ssid, sizeof(current_wifi_ssid), wifi_ssid);
@@ -2072,8 +2405,34 @@ print_status(void)
     current_chrome_update_count = chrome_update_count;
     pthread_mutex_unlock(&updates_mutex);
 
-    copy_title_words(display_title, sizeof(display_title), current_music.title);
-    escape_markup(display_title, escaped_title, sizeof(escaped_title));
+    if (current_lollypop.state == LOLLYPOP_STATE_PLAYING) {
+        selected_title = current_lollypop.title[0] == '\0' ?
+            "Lollypop" : current_lollypop.title;
+        selected_artist = current_lollypop.artist;
+        selected_lollypop = true;
+        selected_playing = true;
+    } else if (current_music.state == MPD_STATE_PLAY) {
+        selected_title = current_music.title;
+        selected_playing = true;
+    } else if (current_lollypop.state == LOLLYPOP_STATE_PAUSED) {
+        selected_title = current_lollypop.title[0] == '\0' ?
+            "Lollypop" : current_lollypop.title;
+        selected_artist = current_lollypop.artist;
+        selected_lollypop = true;
+    } else if (current_music.state == MPD_STATE_PAUSE) {
+        selected_title = current_music.title;
+    }
+
+    copy_title_words(display_title, sizeof(display_title), selected_title);
+    copy_title_words(display_artist, sizeof(display_artist), selected_artist);
+    if (display_artist[0] != '\0')
+        (void)snprintf(track_text, sizeof(track_text), "%s — %s",
+            display_title, display_artist);
+    else
+        copy_string(track_text, sizeof(track_text), display_title);
+    escape_markup(track_text, escaped_track, sizeof(escaped_track));
+    if (selected_lollypop)
+        music_action = "lollypop-music";
 
     if (strcmp(volume_icon, "") == 0)
         volume_action = "bluetooth";
@@ -2088,12 +2447,10 @@ print_status(void)
         strcpy(volume, " ?");
     }
 
-    if (current_music.state != MPD_STATE_UNKNOWN &&
-        current_music.title[0] != '\0') {
+    if (track_text[0] != '\0') {
         snprintf(music_status, sizeof(music_status),
-            "  +@act=music;+@fg=6;%s +@fg=10;%s+@fg=0;+@act=none;",
-            current_music.state == MPD_STATE_PLAY ? "" : "",
-            escaped_title);
+            "  +@act=%s;+@fg=6;%s +@fg=10;%s+@fg=0;+@act=none;",
+            music_action, selected_playing ? "" : "", escaped_track);
     }
 
     unsigned current_mail_count =
@@ -2193,6 +2550,8 @@ status_io_callback(pa_mainloop_api *api, pa_io_event *event, int fd,
     }
     if (quit_requested) {
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
+        if (lollypop_thread_started)
+            pthread_join(lollypop_thread, NULL);
         api->quit(api, 0);
         return;
     }
@@ -2211,6 +2570,8 @@ tick_callback(pa_mainloop_api *api, pa_time_event *event,
 
     if (stop_requested) {
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
+        if (lollypop_thread_started)
+            pthread_join(lollypop_thread, NULL);
         api->quit(api, 0);
         return;
     }
@@ -2377,6 +2738,8 @@ herbst_io_callback(pa_mainloop_api *api, pa_io_event *event, int fd,
     }
     if (quit_requested) {
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
+        if (lollypop_thread_started)
+            pthread_join(lollypop_thread, NULL);
         api->quit(api, 0);
     }
 }
@@ -2384,12 +2747,14 @@ herbst_io_callback(pa_mainloop_api *api, pa_io_event *event, int fd,
 int
 main(void)
 {
-    pthread_t mpd_thread, wifi_thread_id, maildir_thread_id, updates_thread_id;
+    pthread_t mpd_thread, lollypop_thread, wifi_thread_id;
+    pthread_t maildir_thread_id, updates_thread_id;
     struct timeval first_tick;
     struct sigaction action = {0};
     pa_mainloop_api *mainloop_api;
     int result;
     int thread_error;
+    bool lollypop_thread_started = false;
     bool updates_thread_started = false;
 
     action.sa_handler = handle_signal;
@@ -2426,6 +2791,8 @@ main(void)
     if (pthread_create(&wifi_thread_id, NULL, wifi_worker, NULL) != 0) {
         fprintf(stderr, "herbstluftwm-status: unable to start Wi-Fi listener\n");
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
+        if (lollypop_thread_started)
+            pthread_join(lollypop_thread, NULL);
         pthread_cancel(mpd_thread);
         pthread_join(mpd_thread, NULL);
         stop_herbst_listener();
@@ -2437,6 +2804,8 @@ main(void)
     if (pthread_create(&maildir_thread_id, NULL, maildir_worker, NULL) != 0) {
         fprintf(stderr, "herbstluftwm-status: unable to start Maildir listener\n");
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
+        if (lollypop_thread_started)
+            pthread_join(lollypop_thread, NULL);
         pthread_cancel(mpd_thread);
         pthread_join(mpd_thread, NULL);
         pthread_cancel(wifi_thread_id);
@@ -2448,10 +2817,21 @@ main(void)
         return EXIT_FAILURE;
     }
 
+    thread_error = pthread_create(&lollypop_thread, NULL, lollypop_worker,
+        NULL);
+    if (thread_error != 0) {
+        fprintf(stderr, "herbstluftwm-status: unable to start Lollypop listener: %s\\n",
+            strerror(thread_error));
+    } else {
+        lollypop_thread_started = true;
+    }
+
     pulse_mainloop = pa_mainloop_new();
     if (pulse_mainloop == NULL) {
         fprintf(stderr, "herbstluftwm-status: unable to create PulseAudio event loop\n");
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
+        if (lollypop_thread_started)
+            pthread_join(lollypop_thread, NULL);
         pthread_cancel(mpd_thread);
         pthread_join(mpd_thread, NULL);
         pthread_cancel(wifi_thread_id);
@@ -2474,6 +2854,8 @@ main(void)
         fprintf(stderr, "herbstluftwm-status: unable to create status timer\n");
         pa_mainloop_free(pulse_mainloop);
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
+        if (lollypop_thread_started)
+            pthread_join(lollypop_thread, NULL);
         pthread_cancel(mpd_thread);
         pthread_join(mpd_thread, NULL);
         pthread_cancel(wifi_thread_id);
@@ -2494,6 +2876,8 @@ main(void)
         mainloop_api->time_free(tick_event);
         pa_mainloop_free(pulse_mainloop);
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
+        if (lollypop_thread_started)
+            pthread_join(lollypop_thread, NULL);
         pthread_cancel(mpd_thread);
         pthread_join(mpd_thread, NULL);
         pthread_cancel(wifi_thread_id);
@@ -2523,6 +2907,8 @@ main(void)
         mainloop_api->time_free(tick_event);
         pa_mainloop_free(pulse_mainloop);
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
+        if (lollypop_thread_started)
+            pthread_join(lollypop_thread, NULL);
         pthread_cancel(mpd_thread);
         pthread_join(mpd_thread, NULL);
         pthread_cancel(wifi_thread_id);
@@ -2555,6 +2941,8 @@ main(void)
     atomic_store_explicit(&stopping, true, memory_order_relaxed);
     if (updates_thread_started)
         pthread_join(updates_thread_id, NULL);
+    if (lollypop_thread_started)
+        pthread_join(lollypop_thread, NULL);
     mainloop_api->time_free(tick_event);
     mainloop_api->io_free(status_io_event);
     mainloop_api->io_free(herbst_io_event);
