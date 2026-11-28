@@ -311,15 +311,19 @@ My current graphical setup is based on:
 * **a standalone native C status bar** with clickable workspaces and status modules
 
 The status program reports music, audio, Wi-Fi, Maildir, CPU, memory, brightness,
-battery, temperature, and pending package updates. MPD, audio, Wi-Fi, and
-Maildir changes use event notifications; sampled system metrics refresh every
-five seconds. Package updates are checked hourly for official repositories and
-installed AUR packages. AUR checks compare published package versions and do
-not detect upstream VCS changes that have not been published as a new AUR
-version. Chezmoi builds the bar from
+battery, temperature, and pending package updates. MPD, Lollypop, audio, Wi-Fi,
+and Maildir changes use event notifications. When both music players are
+playing, Lollypop takes display priority; MPD remains available whenever
+Lollypop is not playing. Sampled system metrics refresh every five seconds.
+Package updates are checked hourly for official repositories and installed AUR
+packages. AUR checks compare published package versions and do not detect
+upstream VCS changes that have not been published as a new AUR version.
+Chezmoi builds the bar from
 `dot_local/share/herbstluftwm-status/herbstluftwm-status.c` when its source
-changes. Building requires a C compiler, `pkg-config`, and the PulseAudio, MPD
-client, libnl, X11, and Xft development libraries.
+changes. Building requires a C compiler, `pkg-config`, GLib/GIO, the PulseAudio
+client library, the MPD client, libnl, X11, and Xft development libraries.
+The bar continues to use the PulseAudio client API for audio status; on the
+PipeWire setup this connects through `pipewire-pulse`.
 
 The repository also contains configurations for other window managers, compositors, terminal emulators and status bars that are not necessarily part of the current setup. These are retained as optional configurations rather than indicating that every application is currently installed or in use.
 

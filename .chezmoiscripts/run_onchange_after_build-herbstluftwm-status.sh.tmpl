@@ -6,8 +6,8 @@ set -eu
 source_file="$HOME/.local/share/herbstluftwm-status/herbstluftwm-status.c"
 output_file="$HOME/.local/bin/herbstluftwm-status"
 temporary_file="${output_file}.tmp.$$"
-cflags=$(pkg-config --cflags libpulse libmpdclient libnl-3.0 libnl-genl-3.0 xft x11)
-libs=$(pkg-config --libs libpulse libmpdclient libnl-3.0 libnl-genl-3.0 xft x11)
+cflags=$(pkg-config --cflags libpulse libmpdclient libnl-3.0 libnl-genl-3.0 xft x11 gio-2.0)
+libs=$(pkg-config --libs libpulse libmpdclient libnl-3.0 libnl-genl-3.0 xft x11 gio-2.0)
 
 trap 'rm -f "$temporary_file"' EXIT
 trap 'exit 1' HUP INT TERM
