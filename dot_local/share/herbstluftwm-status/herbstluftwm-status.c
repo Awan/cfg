@@ -2550,8 +2550,6 @@ status_io_callback(pa_mainloop_api *api, pa_io_event *event, int fd,
     }
     if (quit_requested) {
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
-        if (lollypop_thread_started)
-            pthread_join(lollypop_thread, NULL);
         api->quit(api, 0);
         return;
     }
@@ -2570,8 +2568,6 @@ tick_callback(pa_mainloop_api *api, pa_time_event *event,
 
     if (stop_requested) {
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
-        if (lollypop_thread_started)
-            pthread_join(lollypop_thread, NULL);
         api->quit(api, 0);
         return;
     }
@@ -2738,8 +2734,6 @@ herbst_io_callback(pa_mainloop_api *api, pa_io_event *event, int fd,
     }
     if (quit_requested) {
         atomic_store_explicit(&stopping, true, memory_order_relaxed);
-        if (lollypop_thread_started)
-            pthread_join(lollypop_thread, NULL);
         api->quit(api, 0);
     }
 }
